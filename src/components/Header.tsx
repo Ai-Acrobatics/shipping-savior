@@ -10,6 +10,7 @@ const navLinks = [
   { label: "Routes", href: "/#routes" },
   { label: "FTZ Strategy", href: "/#ftz" },
   { label: "Knowledge Base", href: "/knowledge-base" },
+  { label: "Data Intelligence", href: "/data-intelligence" },
   { label: "Monetization", href: "/monetization" },
   { label: "Six Sigma", href: "/six-sigma" },
   { label: "Proposal", href: "/agreement" },
