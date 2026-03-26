@@ -692,3 +692,520 @@ export const customsForms = [
   { code: "CBP-434", name: "NAFTA/USMCA Certificate of Origin", use: "Claim preferential duty treatment under USMCA" },
   { code: "CBP-4648", name: "Binding Ruling Request", use: "Request advance ruling on classification, valuation, or origin" },
 ];
+
+// ---- Import Process Steps ----
+export interface ImportProcessStep {
+  step: number;
+  slug: string;
+  title: string;
+  overview: string;
+  procedures: string[];
+  requiredDocs: string[];
+  commonMistakes: string[];
+  timeline: string;
+  officialSources: { label: string; url: string }[];
+}
+
+export const importProcessSteps: ImportProcessStep[] = [
+  {
+    step: 1,
+    slug: "sourcing",
+    title: "Sourcing & Purchase",
+    overview: "The import process begins with identifying and negotiating with suppliers, typically in SE Asia. Key decisions include trade terms (Incoterms), payment methods, quality standards, and order quantities. The purchase order is the foundational document that drives every downstream step.",
+    procedures: [
+      "Identify potential suppliers through trade shows, Alibaba, or local agents",
+      "Request samples and verify product quality against specifications",
+      "Negotiate pricing, MOQ (minimum order quantity), and trade terms (FOB, CIF, DDP)",
+      "Agree on payment terms: T/T (wire transfer), Letter of Credit, or escrow",
+      "Issue a formal Purchase Order with all specifications, quantities, and delivery terms",
+      "Arrange pre-shipment inspection (PSI) through SGS, Bureau Veritas, or similar",
+      "Confirm factory production schedule and expected cargo-ready date",
+    ],
+    requiredDocs: ["Purchase Order", "Proforma Invoice", "Product Specifications", "Supplier Agreement/Contract"],
+    commonMistakes: [
+      "Not specifying Incoterms clearly — leads to disputes over who pays for what",
+      "Skipping pre-shipment inspection — quality issues discovered at destination are expensive to resolve",
+      "Using EXW when you lack freight expertise — FCA or FOB gives you more control",
+      "Not confirming HTS classification before ordering — unexpected duties can destroy margins",
+    ],
+    timeline: "2–8 weeks (supplier sourcing through production)",
+    officialSources: [
+      { label: "ICC Incoterms 2020", url: "https://iccwbo.org/business-solutions/incoterms-rules/" },
+      { label: "Export.gov — Sourcing Guide", url: "https://www.trade.gov/sourcing-products-services" },
+    ],
+  },
+  {
+    step: 2,
+    slug: "documentation-isf",
+    title: "Documentation & ISF Filing",
+    overview: "Before goods leave the origin country, critical documentation must be prepared and the Importer Security Filing (ISF, aka '10+2') must be submitted to CBP at least 24 hours before the vessel departs. Late or inaccurate ISF filings trigger $5,000 penalties per violation.",
+    procedures: [
+      "Collect Commercial Invoice from the supplier with accurate values, quantities, and HTS codes",
+      "Obtain Packing List detailing contents, weights, and dimensions per package/pallet",
+      "Secure Bill of Lading (BOL) from the carrier or freight forwarder",
+      "File ISF (10+2) via ABI or ACE portal at least 24 hours before vessel departure",
+      "Provide 10 importer data elements: seller, buyer, importer of record, consignee, manufacturer, ship-to party, country of origin, HTS number, container stuffing location, consolidator",
+      "Confirm ISF accepted — check for 'Do Not Load' holds",
+      "Obtain Certificate of Origin if claiming FTA preferences",
+    ],
+    requiredDocs: ["Commercial Invoice", "Packing List", "Bill of Lading", "ISF Filing (10+2)", "Certificate of Origin (if applicable)"],
+    commonMistakes: [
+      "Filing ISF late — $5,000 penalty per violation, non-negotiable",
+      "Incorrect HTS codes on ISF — triggers CBP scrutiny and potential exam",
+      "Mismatched values between Commercial Invoice and ISF",
+      "Not obtaining Certificate of Origin when FTA savings are available",
+    ],
+    timeline: "1–3 days before vessel departure",
+    officialSources: [
+      { label: "CBP ISF Requirements", url: "https://www.cbp.gov/trade/trade-community/isf" },
+      { label: "ACE Portal", url: "https://www.cbp.gov/trade/automated" },
+    ],
+  },
+  {
+    step: 3,
+    slug: "ocean-transit",
+    title: "Ocean Transit",
+    overview: "Goods travel by ocean vessel from the origin port to a US port of entry. Transit times vary from 14 days (direct service from SE Asia to West Coast) to 35+ days (transshipment routes to East Coast). Tracking, transshipment connections, and weather/congestion delays are key concerns.",
+    procedures: [
+      "Book vessel space with carrier or through NVOCC/freight forwarder",
+      "Confirm booking: vessel name, voyage number, port of loading, ETA at US port",
+      "Track container using carrier's online tracking or AIS vessel tracking",
+      "Monitor transshipment connections (if applicable) — Panama, Singapore, Colombo are major hubs",
+      "Confirm arrival notice from carrier or agent at destination port",
+      "Arrange drayage (truck transport from port to warehouse/FTZ) before vessel arrives",
+      "Prepare for potential weather delays, port congestion, or labor disruptions",
+    ],
+    requiredDocs: ["Bill of Lading", "Booking Confirmation", "Cargo Insurance Certificate"],
+    commonMistakes: [
+      "Not booking drayage early enough — container sits at port accruing demurrage",
+      "Ignoring transit time variability — plan for 5–7 day buffer on transshipment routes",
+      "Not purchasing cargo insurance — carrier liability under Hague-Visby Rules is very limited ($500/package)",
+      "Choosing cheapest transit option without considering demurrage risk from missed connections",
+    ],
+    timeline: "14–35 days depending on route and transshipment",
+    officialSources: [
+      { label: "MarineTraffic — Vessel Tracking", url: "https://www.marinetraffic.com" },
+      { label: "Port of Los Angeles — Vessel Schedule", url: "https://www.portoflosangeles.org/business/statistics/vessel-visits" },
+    ],
+  },
+  {
+    step: 4,
+    slug: "customs-clearance",
+    title: "US Customs Clearance",
+    overview: "When goods arrive at a US port, they must clear CBP (Customs and Border Protection). A licensed customs broker files the entry, duties are calculated and paid, and CBP may select the shipment for examination. This is the most compliance-sensitive step.",
+    procedures: [
+      "Customs broker files CBP Form 3461 (Entry/Immediate Delivery) for cargo release",
+      "CBP reviews entry — may release, hold for documentation, or select for exam",
+      "If released, cargo can be picked up while entry summary is completed",
+      "Customs broker files CBP Form 7501 (Entry Summary) within 10 working days of entry",
+      "Duties, MPF (0.3464%), and HMF (0.125%) calculated and paid",
+      "If CBP selects for exam: tailgate exam (at terminal, $300-500) or intensive exam (VACIS/x-ray, $500-1,000+)",
+      "Entry liquidates (finalizes) approximately 314 days after entry — CBP can adjust duties within this period",
+    ],
+    requiredDocs: ["CBP Form 3461", "CBP Form 7501 (Entry Summary)", "Commercial Invoice", "Packing List", "Bill of Lading", "Customs Bond (single entry or continuous)"],
+    commonMistakes: [
+      "Not having a continuous bond — single entry bonds are more expensive per shipment for frequent importers",
+      "Undervaluing goods on entry — CBP audits thoroughly and penalties for fraud reach 4x duties",
+      "Not responding to CBP requests within deadlines — goods can be seized or destroyed",
+      "Failing to account for Section 301 tariffs on Chinese goods in addition to MFN rates",
+    ],
+    timeline: "1–5 days (without exam); 5–15 days (with exam or hold)",
+    officialSources: [
+      { label: "CBP Entry Process", url: "https://www.cbp.gov/trade/basic-import-export/importing-goods" },
+      { label: "USITC Tariff Database", url: "https://hts.usitc.gov" },
+    ],
+  },
+  {
+    step: 5,
+    slug: "ftz-entry",
+    title: "FTZ Entry or Direct Delivery",
+    overview: "After customs clearance (or in lieu of it), goods can be admitted to a Foreign Trade Zone where duties are deferred until goods enter US commerce. Alternatively, goods go directly to the importer's warehouse. FTZ admission locks duty rates at the date of entry — a powerful hedge against tariff increases.",
+    procedures: [
+      "Choose: direct delivery to warehouse (duties paid at entry) OR FTZ admission (duties deferred)",
+      "For FTZ: file CBP Form 214 (Application for FTZ Admission)",
+      "Elect Privileged Foreign (PF) status to lock current duty rate, or Non-Privileged Foreign (NPF) for flexibility",
+      "WARNING: PF/NPF election is IRREVOCABLE for the admitted merchandise",
+      "Goods admitted to FTZ — duty clock stops until goods are withdrawn for consumption",
+      "Withdraw goods incrementally (e.g., 100 pallets at a time) — pay duties only on what leaves the zone",
+      "For direct delivery: arrange receiving at warehouse/3PL, confirm appointment",
+    ],
+    requiredDocs: ["CBP Form 214 (FTZ Admission)", "FTZ Operator Agreement", "Inventory Control Documentation"],
+    commonMistakes: [
+      "Not choosing PF status before a known tariff increase — missed duty-locking opportunity",
+      "Choosing PF when NPF would be better (e.g., if tariff rates might decrease)",
+      "Not having FTZ bond in place before goods arrive",
+      "Failing to maintain CBP-approved inventory control system — can lose FTZ privileges",
+    ],
+    timeline: "1–3 days for FTZ admission; same-day for direct delivery",
+    officialSources: [
+      { label: "CBP Foreign Trade Zones", url: "https://www.cbp.gov/border-security/ports-entry/cargo-security/ftz" },
+      { label: "FTZ Board", url: "https://enforcement.trade.gov/ftzpage/" },
+    ],
+  },
+  {
+    step: 6,
+    slug: "fulfillment",
+    title: "Fulfillment & Sale",
+    overview: "The final step: goods are received at a warehouse or 3PL, inventoried, and distributed to buyers through wholesale, e-commerce, or retail channels. This is where the unit economics model plays out — the spread between landed cost and sale price determines profitability.",
+    procedures: [
+      "Receive goods at warehouse — unload, count, inspect for damage",
+      "Scan and inventory each SKU into warehouse management system (WMS)",
+      "Quality check a sample against pre-shipment inspection report",
+      "Shelve/rack product in designated storage locations",
+      "Process orders: pick, pack, and ship to customers or retailers",
+      "Track unit economics: landed cost per unit vs. wholesale/retail selling price",
+      "Monitor sell-through rate and reorder timing for next container",
+    ],
+    requiredDocs: ["Warehouse Receiving Report", "Inventory Records", "Damage Claims (if applicable)"],
+    commonMistakes: [
+      "Not inspecting goods at receiving — damage claims must be filed within carrier's time limit",
+      "Poor inventory tracking — leads to stockouts or overstock",
+      "Not calculating true landed cost per unit — underpricing or overpricing product",
+      "Ordering next container too late — 45-60 day lead time from order to delivery",
+    ],
+    timeline: "1–3 days for receiving; ongoing for fulfillment",
+    officialSources: [
+      { label: "SBA Import Guide", url: "https://www.sba.gov/business-guide/grow-your-business/import-products" },
+    ],
+  },
+];
+
+// ---- FTZ Guide Articles ----
+export interface FTZArticle {
+  slug: string;
+  title: string;
+  content: string;
+  keyPoints: string[];
+  officialSources: { label: string; url: string }[];
+}
+
+export const ftzGuideArticles: FTZArticle[] = [
+  {
+    slug: "what-is-ftz",
+    title: "What is a Foreign Trade Zone?",
+    content: "A Foreign Trade Zone (FTZ) is a designated area within the United States that is legally considered outside of US customs territory for duty purposes. Authorized under the Foreign Trade Zones Act of 1934 (19 U.S.C. §81a-81u), FTZs allow companies to defer, reduce, or eliminate customs duties on imported goods. There are approximately 195 general-purpose FTZ zones and over 500 subzones across the US. FTZs are supervised by CBP and authorized by the Foreign-Trade Zones Board (Commerce Department + Treasury Department).",
+    keyPoints: [
+      "Legally outside US customs territory — duties not owed until goods enter US commerce",
+      "Authorized under Foreign Trade Zones Act of 1934 (19 U.S.C. §81a-81u)",
+      "~195 general-purpose zones and 500+ subzones across the US",
+      "Supervised by CBP, authorized by FTZ Board (Commerce + Treasury)",
+      "Can store, test, sort, relabel, repackage, assemble, and manufacture goods",
+      "Goods can be re-exported from FTZ without ever paying US duties",
+    ],
+    officialSources: [
+      { label: "FTZ Board", url: "https://enforcement.trade.gov/ftzpage/" },
+      { label: "CBP FTZ Information", url: "https://www.cbp.gov/border-security/ports-entry/cargo-security/ftz" },
+    ],
+  },
+  {
+    slug: "ftz-benefits",
+    title: "FTZ Benefits for Importers",
+    content: "FTZs provide five core financial benefits: duty deferral (don't pay until goods leave the zone), duty elimination on re-exports (goods shipped abroad never incur US duties), inverted tariff relief (pay the lower finished-goods rate when manufacturing in the zone), zone-to-zone transfers (move goods between FTZs without triggering duties), and weekly entry processing (one customs entry per week instead of per shipment).",
+    keyPoints: [
+      "Duty Deferral: pay duties only when goods are withdrawn into US commerce — improves cash flow",
+      "Duty Elimination: goods re-exported from FTZ never pay US duties",
+      "Inverted Tariff: if finished product duty < component duty, pay the lower rate by manufacturing in FTZ",
+      "Zone-to-Zone Transfers: move goods between FTZs without triggering duty payment",
+      "Weekly Entry: file one customs entry per week — reduces brokerage fees significantly",
+      "Cash Flow: duty deferral on $1M of goods at 25% duty = $250K in float",
+      "Duty Rate Locking: PF status locks the duty rate at the date of FTZ admission",
+    ],
+    officialSources: [
+      { label: "NAFTZ — Benefits of FTZs", url: "https://www.naftz.org/ftz-basics" },
+    ],
+  },
+  {
+    slug: "pf-vs-npf",
+    title: "Privileged Foreign (PF) vs Non-Privileged Foreign (NPF) Status",
+    content: "When goods are admitted to an FTZ, the importer must elect either Privileged Foreign (PF) or Non-Privileged Foreign (NPF) status. This election is IRREVOCABLE for the admitted merchandise. PF status locks the duty rate at the date of admission — critical when tariffs are expected to increase. NPF status defers the classification until withdrawal, allowing the importer to apply the rate in effect at the time goods leave the zone — useful when rates are expected to decrease or when manufacturing in the zone changes the classification.",
+    keyPoints: [
+      "PF Status: locks duty rate AND classification at date of FTZ admission",
+      "NPF Status: duty rate and classification determined when goods are withdrawn from FTZ",
+      "Election is IRREVOCABLE — once chosen, cannot be changed for that merchandise",
+      "PF is advantageous when tariffs are expected to increase (locks lower current rate)",
+      "NPF is advantageous when manufacturing in FTZ changes HTS to a lower-duty classification",
+      "NPF allows benefit of any future tariff reductions",
+      "Example: Admit goods today at 10% duty (PF). If tariff rises to 25%, you still pay 10%.",
+      "Example: Admit components at 15% duty (NPF). Assemble into finished goods classified at 5%. Withdraw at 5%.",
+    ],
+    officialSources: [
+      { label: "19 CFR 146.41 — Privileged Foreign Status", url: "https://www.ecfr.gov/current/title-19/chapter-I/part-146/subpart-D/section-146.41" },
+    ],
+  },
+  {
+    slug: "ftz-application",
+    title: "How to Apply for FTZ Usage",
+    content: "Using an FTZ involves either applying to operate within an existing general-purpose zone (through a zone grantee/operator) or applying for a subzone designation for your own facility. Most importers start with a general-purpose zone. The process involves contacting the zone grantee, executing an operator agreement, getting CBP activation, and setting up an approved inventory control system.",
+    keyPoints: [
+      "Step 1: Identify nearest general-purpose FTZ — use FTZ Board locator",
+      "Step 2: Contact the zone grantee/operator to discuss space, services, and fees",
+      "Step 3: Execute an Operator Agreement with the zone grantee",
+      "Step 4: Apply for CBP activation of the FTZ site",
+      "Step 5: Establish a CBP-approved inventory control and recordkeeping system",
+      "Step 6: Obtain FTZ Operator Bond (CBP Form 301)",
+      "Timeline: 3-6 months for general-purpose zone usage; 6-12+ months for subzone designation",
+      "Costs: zone fees vary ($0.50-$2.00/sq ft/month for warehouse space), plus CBP operator costs",
+    ],
+    officialSources: [
+      { label: "FTZ Board — How to Use FTZs", url: "https://enforcement.trade.gov/ftzpage/info/board.html" },
+    ],
+  },
+  {
+    slug: "ftz-compliance",
+    title: "FTZ Compliance Requirements",
+    content: "Operating within an FTZ carries significant compliance obligations. CBP monitors FTZ activity through inventory audits, annual reconciliation requirements, and periodic compliance assessments. Operators must maintain detailed records, conduct annual inventories, and respond promptly to CBP inquiries. Non-compliance can result in loss of FTZ privileges and back duties on all discrepancies.",
+    keyPoints: [
+      "Inventory Control System: must be CBP-approved, track all movements in/out/within zone",
+      "Annual Reconciliation: compare FTZ records to CBP records within 30 days of year-end",
+      "Record Retention: minimum 5 years for all FTZ documents",
+      "CBP Access: CBP personnel must have unrestricted access to FTZ premises during business hours",
+      "Manipulation Rules: CBP Form 216 required before manipulating, examining, or transferring goods",
+      "Destruction: waste/scrap destruction requires CBP supervision",
+      "Weekly Entry: must file by Monday for the prior week's withdrawals",
+      "Compliance Assessment: CBP conducts periodic audits — self-assessment reduces risk",
+    ],
+    officialSources: [
+      { label: "19 CFR Part 146 — FTZ Regulations", url: "https://www.ecfr.gov/current/title-19/chapter-I/part-146" },
+    ],
+  },
+  {
+    slug: "ftz-tariff-strategy",
+    title: "FTZ and Tariff Strategy",
+    content: "FTZs are a powerful tool for tariff optimization, especially in the current environment of Section 301 tariffs on Chinese goods (7.5–100%+) and ongoing trade policy uncertainty. By admitting goods under PF status, importers can lock today's duty rate regardless of future increases. For companies importing from SE Asia to hedge against potential tariff changes, FTZ admission is a form of tariff insurance.",
+    keyPoints: [
+      "Duty Locking: PF status freezes duty rate at date of FTZ admission — hedge against increases",
+      "Section 301 Strategy: admit Chinese goods before tariff increases take effect",
+      "Incremental Withdrawal: withdraw only what you need, when you need it — pay duties on demand",
+      "Re-export Advantage: goods re-exported never pay US duties — useful for international distribution",
+      "Scenario Planning: model different tariff scenarios to determine optimal PF vs NPF election",
+      "April 2025 Executive Order: additional tariffs announced — FTZ admission before effective date locked lower rates",
+      "Cost Example: 40ft container of goods worth $200K at 25% duty = $50K. FTZ duty locking at pre-increase 10% saves $30K per container.",
+    ],
+    officialSources: [
+      { label: "USTR Section 301 Actions", url: "https://ustr.gov/issue-areas/enforcement/section-301-investigations" },
+      { label: "FTZ Board Annual Report", url: "https://enforcement.trade.gov/ftzpage/annual-report.html" },
+    ],
+  },
+];
+
+// ---- Compliance Checklists ----
+export interface ChecklistItem {
+  id: string;
+  label: string;
+  detail: string;
+}
+
+export interface ComplianceChecklist {
+  id: string;
+  title: string;
+  description: string;
+  items: ChecklistItem[];
+}
+
+export const complianceChecklists: ComplianceChecklist[] = [
+  {
+    id: "general-cargo",
+    title: "General Cargo Import Checklist",
+    description: "Complete checklist covering all steps from sourcing to delivery for standard (non-regulated) cargo.",
+    items: [
+      { id: "gc-1", label: "Supplier agreement/contract executed", detail: "Ensure terms cover quality standards, Incoterms, payment, and dispute resolution." },
+      { id: "gc-2", label: "Purchase Order issued", detail: "Include all product specs, quantities, pricing, delivery terms, and HTS codes." },
+      { id: "gc-3", label: "HTS classification confirmed", detail: "Verify correct 10-digit HTS code using USITC tariff database or CBP binding ruling." },
+      { id: "gc-4", label: "Pre-shipment inspection completed", detail: "Third-party inspection (SGS, Bureau Veritas) before goods leave factory." },
+      { id: "gc-5", label: "Commercial Invoice obtained", detail: "Must show: buyer/seller, description, quantity, unit price, total value, Incoterms, country of origin." },
+      { id: "gc-6", label: "Packing List obtained", detail: "Itemize contents per package: weight, dimensions, marks and numbers." },
+      { id: "gc-7", label: "Bill of Lading issued", detail: "Verify: shipper, consignee, notify party, ports, container numbers, seal numbers." },
+      { id: "gc-8", label: "Customs bond in place", detail: "Continuous bond for 3+ imports/year. Single entry bond for one-off shipments." },
+      { id: "gc-9", label: "ISF filed (24h before vessel departure)", detail: "10 importer data elements + 2 carrier elements via ABI or ACE." },
+      { id: "gc-10", label: "Cargo insurance arranged", detail: "Minimum 110% of invoice value. Carrier liability is limited under Hague-Visby Rules." },
+      { id: "gc-11", label: "Drayage booked before vessel arrival", detail: "Book trucking from port to warehouse 3-5 days before ETA to avoid demurrage." },
+      { id: "gc-12", label: "Customs entry filed (Form 3461)", detail: "Filed by licensed customs broker. Allows cargo release before entry summary." },
+      { id: "gc-13", label: "Entry Summary filed (Form 7501)", detail: "Due within 10 working days of entry. Declares values, duties, and fees." },
+      { id: "gc-14", label: "Duties and fees paid", detail: "MFN duty + MPF (0.3464%) + HMF (0.125%) + any Section 301 tariffs." },
+      { id: "gc-15", label: "Goods received and inspected at warehouse", detail: "Count, inspect for damage, compare to packing list. File damage claims within carrier time limits." },
+      { id: "gc-16", label: "Inventory entered into WMS", detail: "Scan/enter all SKUs into warehouse management system with location assignments." },
+    ],
+  },
+  {
+    id: "cold-chain",
+    title: "Cold Chain Import Checklist",
+    description: "Additional requirements for temperature-controlled cargo: perishables, frozen goods, pharmaceuticals.",
+    items: [
+      { id: "cc-1", label: "Temperature requirements documented", detail: "Specify required temp range for entire transit. Frozen: -18°C. Chilled: 2-8°C. Pharma: per product specs." },
+      { id: "cc-2", label: "Reefer container booked", detail: "Confirm reefer unit type (20RF/40RH), temperature range, and genset availability." },
+      { id: "cc-3", label: "Temperature monitoring device installed", detail: "Data logger or real-time IoT tracker recording temps throughout transit." },
+      { id: "cc-4", label: "FDA Prior Notice filed (food products)", detail: "Submit 8 hours before vessel arrival. Required for ALL food products." },
+      { id: "cc-5", label: "Food Facility Registration current", detail: "Foreign food facility must be registered with FDA per FSMA requirements." },
+      { id: "cc-6", label: "Phytosanitary Certificate obtained (if applicable)", detail: "Required for fresh fruits, vegetables, and plant products. Issued by exporting country's NPPO." },
+      { id: "cc-7", label: "USDA APHIS permit (if applicable)", detail: "Required for certain plant materials, meat, poultry, and egg products." },
+      { id: "cc-8", label: "Cold chain receiving facility confirmed", detail: "Warehouse must have appropriate cold storage capacity and dock-level temperature control." },
+      { id: "cc-9", label: "Temperature data reviewed upon arrival", detail: "Check data logger for temperature excursions during transit. Document any deviations." },
+      { id: "cc-10", label: "HACCP documentation maintained", detail: "Hazard Analysis and Critical Control Points documentation for food safety compliance." },
+    ],
+  },
+  {
+    id: "apparel",
+    title: "Apparel Import Checklist",
+    description: "Specific requirements for importing clothing and textiles into the United States.",
+    items: [
+      { id: "ap-1", label: "Fiber content labeling verified", detail: "Textile Fiber Products Identification Act requires percentage by weight of each fiber." },
+      { id: "ap-2", label: "Country of origin marking on each garment", detail: "19 USC 1304: every imported article must be marked with English name of country of origin." },
+      { id: "ap-3", label: "Care labeling attached", detail: "FTC Care Labeling Rule requires washing/drying/ironing instructions on all textile products." },
+      { id: "ap-4", label: "CPSIA compliance (children's products)", detail: "If for children under 12: lead testing, phthalate limits, tracking labels, third-party testing required." },
+      { id: "ap-5", label: "Quota/visa requirements checked", detail: "Some textile categories require export visa from the producing country. Check CBP textile status report." },
+      { id: "ap-6", label: "UFLPA supply chain audit completed", detail: "Verify no Xinjiang-origin cotton, yarn, or fabric in supply chain. Document supplier attestations." },
+      { id: "ap-7", label: "Section 301 tariff rate verified", detail: "Chinese apparel (HTS Ch. 61-62) subject to 7.5-25% additional tariffs. Check current rates." },
+      { id: "ap-8", label: "Correct HTS code for each style", detail: "Apparel classification depends on: fiber, knit vs. woven, gender, garment type. Get binding ruling for complex items." },
+    ],
+  },
+  {
+    id: "food-cpg",
+    title: "Food & CPG Import Checklist",
+    description: "Requirements for importing food, beverages, and consumer packaged goods.",
+    items: [
+      { id: "fc-1", label: "FDA Prior Notice submitted", detail: "Required for ALL food imports. Submit via FDA Portal 8 hours before vessel arrival (sea)." },
+      { id: "fc-2", label: "Food Facility Registration verified", detail: "Foreign manufacturer/processor must have current FDA registration (renew biannually)." },
+      { id: "fc-3", label: "FSVP importer program in place", detail: "Foreign Supplier Verification Program: verify that foreign suppliers meet US food safety standards." },
+      { id: "fc-4", label: "Nutrition Facts label compliant", detail: "FDA requires Nutrition Facts panel in specific format. Updated format required since 2020." },
+      { id: "fc-5", label: "Ingredient list accurate and in English", detail: "List all ingredients in descending order by weight. Declare major allergens (FALCPA)." },
+      { id: "fc-6", label: "Allergen declarations present", detail: "Must declare: milk, eggs, fish, shellfish, tree nuts, peanuts, wheat, soybeans, sesame." },
+      { id: "fc-7", label: "Net quantity statement correct", detail: "Must be in both metric and US customary units. Specific placement requirements." },
+      { id: "fc-8", label: "Country of origin clearly marked", detail: "Required on the product label. Must be in English." },
+      { id: "fc-9", label: "Bioterrorism Act compliance", detail: "Registration, prior notice, and record-keeping requirements under the Bioterrorism Act of 2002." },
+      { id: "fc-10", label: "State-specific labeling requirements checked", detail: "California Prop 65, New York sodium warnings, etc. Check requirements for distribution states." },
+    ],
+  },
+  {
+    id: "ftz-admission",
+    title: "FTZ Admission Checklist",
+    description: "Steps required to admit merchandise into a Foreign Trade Zone.",
+    items: [
+      { id: "ftz-1", label: "FTZ Operator Agreement in place", detail: "Executed with the zone grantee. Covers space, services, fees, and compliance responsibilities." },
+      { id: "ftz-2", label: "FTZ Bond filed (CBP Form 301)", detail: "Separate bond specifically for FTZ operations. Amount based on estimated duties." },
+      { id: "ftz-3", label: "Inventory control system CBP-approved", detail: "Must track all merchandise movements: admission, manipulation, transfer, withdrawal, destruction." },
+      { id: "ftz-4", label: "CBP Form 214 prepared", detail: "Application for FTZ Admission and/or Status Designation. Filed before goods enter the zone." },
+      { id: "ftz-5", label: "PF or NPF status elected", detail: "IRREVOCABLE decision. PF locks duty rate at admission. NPF defers to withdrawal date." },
+      { id: "ftz-6", label: "Supporting documents assembled", detail: "Commercial Invoice, Packing List, Bill of Lading, and any certificates of origin." },
+      { id: "ftz-7", label: "CBP Form 214 filed and accepted", detail: "Confirm CBP acceptance before physically moving goods into the zone." },
+      { id: "ftz-8", label: "Goods physically received in FTZ", detail: "Unload, inspect, and inventory goods. Record lot numbers, quantities, and locations in FTZ." },
+      { id: "ftz-9", label: "FTZ inventory records updated", detail: "Enter all admitted merchandise into the CBP-approved inventory system immediately." },
+      { id: "ftz-10", label: "Weekly Entry schedule established", detail: "If using weekly entry privilege: file by Monday for prior week's withdrawals." },
+    ],
+  },
+];
+
+// ---- Documentation Matrix ----
+export interface DocumentMatrixEntry {
+  document: string;
+  description: string;
+  preparedBy: string;
+  commonMistakes: string;
+  steps: {
+    sourcing: boolean;
+    isf: boolean;
+    transit: boolean;
+    customs: boolean;
+    ftz: boolean;
+    fulfillment: boolean;
+  };
+}
+
+export const documentationMatrix: DocumentMatrixEntry[] = [
+  {
+    document: "Purchase Order",
+    description: "Formal order from buyer to seller specifying products, quantities, prices, and delivery terms.",
+    preparedBy: "Buyer (importer)",
+    commonMistakes: "Missing Incoterms, vague product specs, no HTS codes referenced.",
+    steps: { sourcing: true, isf: false, transit: false, customs: false, ftz: false, fulfillment: false },
+  },
+  {
+    document: "Commercial Invoice",
+    description: "Seller's invoice showing goods sold, quantities, unit prices, total value, and trade terms.",
+    preparedBy: "Seller (exporter/supplier)",
+    commonMistakes: "Values don't match ISF/entry; missing country of origin; wrong Incoterms.",
+    steps: { sourcing: true, isf: true, transit: true, customs: true, ftz: true, fulfillment: false },
+  },
+  {
+    document: "Packing List",
+    description: "Itemized list of package contents with weights and dimensions per carton/pallet.",
+    preparedBy: "Seller (exporter/supplier)",
+    commonMistakes: "Weight/quantity mismatches with Commercial Invoice; missing marks & numbers.",
+    steps: { sourcing: false, isf: true, transit: true, customs: true, ftz: true, fulfillment: true },
+  },
+  {
+    document: "Bill of Lading (B/L)",
+    description: "Legal shipping document: contract of carriage, receipt of goods, and document of title.",
+    preparedBy: "Ocean carrier or NVOCC",
+    commonMistakes: "Wrong consignee/notify party; missing container/seal numbers; incorrect port codes.",
+    steps: { sourcing: false, isf: false, transit: true, customs: true, ftz: true, fulfillment: false },
+  },
+  {
+    document: "ISF (10+2) Filing",
+    description: "Importer Security Filing with 10 data elements from importer + 2 from carrier.",
+    preparedBy: "Customs broker or importer via ACE",
+    commonMistakes: "Filed late (after 24h deadline); wrong HTS codes; manufacturer info mismatch.",
+    steps: { sourcing: false, isf: true, transit: false, customs: false, ftz: false, fulfillment: false },
+  },
+  {
+    document: "CBP Entry Summary (Form 7501)",
+    description: "Official customs declaration of imported merchandise with duty/fee calculation.",
+    preparedBy: "Licensed customs broker",
+    commonMistakes: "Wrong tariff classification; incorrect valuation method; missed Section 301 duties.",
+    steps: { sourcing: false, isf: false, transit: false, customs: true, ftz: false, fulfillment: false },
+  },
+  {
+    document: "FTZ Admission (Form 214)",
+    description: "Application to admit merchandise into a Foreign Trade Zone with status designation.",
+    preparedBy: "FTZ operator or customs broker",
+    commonMistakes: "Wrong PF/NPF election; filing after goods already in zone; missing supporting docs.",
+    steps: { sourcing: false, isf: false, transit: false, customs: false, ftz: true, fulfillment: false },
+  },
+  {
+    document: "Certificate of Origin",
+    description: "Certifies country where goods were produced. Required for FTA duty preferences.",
+    preparedBy: "Seller or Chamber of Commerce in origin country",
+    commonMistakes: "Not obtaining when FTA savings available; expired certificate; wrong rules of origin criteria.",
+    steps: { sourcing: false, isf: false, transit: false, customs: true, ftz: false, fulfillment: false },
+  },
+  {
+    document: "Phytosanitary Certificate",
+    description: "Plant health certificate issued by exporting country's NPPO for agricultural products.",
+    preparedBy: "National Plant Protection Organization (origin country)",
+    commonMistakes: "Not obtaining for products that require it; certificate not in English; expired.",
+    steps: { sourcing: false, isf: false, transit: false, customs: true, ftz: false, fulfillment: false },
+  },
+  {
+    document: "Cargo Insurance Certificate",
+    description: "Proof of marine cargo insurance covering goods during transit.",
+    preparedBy: "Insurance company or broker",
+    commonMistakes: "Insufficient coverage (should be 110%+ of invoice); not covering warehouse-to-warehouse.",
+    steps: { sourcing: false, isf: false, transit: true, customs: false, ftz: false, fulfillment: false },
+  },
+  {
+    document: "Customs Bond (Form 301)",
+    description: "Surety bond guaranteeing payment of duties, taxes, and fees to CBP.",
+    preparedBy: "Surety company via customs broker",
+    commonMistakes: "Bond amount too low for duties owed; not renewing continuous bond before expiry.",
+    steps: { sourcing: false, isf: false, transit: false, customs: true, ftz: true, fulfillment: false },
+  },
+];
+
+// ---- Hidden Costs ----
+export interface HiddenCost {
+  cost: string;
+  typicalRange: string;
+  whenIncurred: string;
+  notes: string;
+}
+
+export const hiddenCosts: HiddenCost[] = [
+  { cost: "Customs Broker Fee", typicalRange: "$150–$250/entry", whenIncurred: "At customs clearance", notes: "Per entry, not per container. Continuous bond clients may get volume discounts." },
+  { cost: "ISF Filing Penalty", typicalRange: "$5,000/violation", whenIncurred: "If ISF not filed 24h before departure", notes: "Non-negotiable CBP penalty. Can also result in 'Do Not Load' hold." },
+  { cost: "Demurrage", typicalRange: "$150–$300/day", whenIncurred: "After free time at port (4–5 days)", notes: "Charged by the port/terminal. Can escalate quickly during port congestion." },
+  { cost: "Detention", typicalRange: "$100–$200/day", whenIncurred: "Container not returned on time", notes: "Charged by the shipping line. Free time typically 4–7 days after pickup." },
+  { cost: "Drayage", typicalRange: "$500–$1,500/container", whenIncurred: "Port to warehouse transport", notes: "Varies by distance, congestion, fuel surcharges. LA/LB most expensive." },
+  { cost: "CBP Exam Fee", typicalRange: "$300–$1,000", whenIncurred: "If CBP selects for inspection", notes: "Tailgate exam: $300–500. Intensive/VACIS x-ray exam: $500–1,000+." },
+  { cost: "Warehouse Handling", typicalRange: "$0.15–$0.50/unit", whenIncurred: "At receiving warehouse/3PL", notes: "Unloading, scanning, shelving. Higher for fragile or oversized items." },
+  { cost: "Harbor Maintenance Fee", typicalRange: "0.125% of cargo value", whenIncurred: "At US port entry", notes: "Federal fee, non-waivable. Applied to the value of commercial cargo." },
+  { cost: "Merchandise Processing Fee", typicalRange: "0.3464% (min $31.67, max $614.35)", whenIncurred: "At customs entry", notes: "Per entry. FTZ Weekly Entry can reduce total MPF by consolidating entries." },
+];

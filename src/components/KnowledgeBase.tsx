@@ -1,16 +1,18 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Search, BookOpen, Globe, FileText, Scale, ChevronDown, ChevronUp,
-  AlertTriangle, CheckCircle, Info, Filter, X, ExternalLink
+  AlertTriangle, CheckCircle, Info, Filter, X, ExternalLink, Truck,
+  Shield, Table2, DollarSign, ArrowRight, RotateCcw
 } from "lucide-react";
 import {
   glossaryTerms, incoterms, complianceGuides, tradeRegulations, customsForms,
+  importProcessSteps, ftzGuideArticles, complianceChecklists, documentationMatrix, hiddenCosts,
   type GlossaryTerm, type Incoterm, type ComplianceGuide, type TradeRegulation
 } from "@/lib/knowledge-base-data";
 
-type Tab = "glossary" | "incoterms" | "compliance" | "regulations" | "forms";
+type Tab = "process" | "ftz-guide" | "checklists" | "docs-matrix" | "hidden-costs" | "glossary" | "incoterms" | "compliance" | "regulations" | "forms";
 
 const categoryColors: Record<string, string> = {
   customs: "text-ocean-300 bg-ocean-500/10 border-ocean-500/20",
@@ -44,6 +46,481 @@ const riskColors: Record<string, string> = {
   split: "text-purple-300",
 };
 
+// ---- Import Process ----
+function ImportProcessSection({ query }: { query: string }) {
+  const [openStep, setOpenStep] = useState<number | null>(null);
+
+  const filtered = useMemo(() => {
+    const q = query.toLowerCase();
+    return importProcessSteps.filter(
+      (s) =>
+        !q ||
+        s.title.toLowerCase().includes(q) ||
+        s.overview.toLowerCase().includes(q) ||
+        s.procedures.some((p) => p.toLowerCase().includes(q)) ||
+        s.requiredDocs.some((d) => d.toLowerCase().includes(q))
+    );
+  }, [query]);
+
+  return (
+    <div>
+      <p className="text-sm text-navy-300 mb-6 leading-relaxed">
+        The complete 6-step process for importing goods into the United States — from sourcing suppliers in SE Asia to fulfillment and sale.
+      </p>
+      <div className="space-y-3">
+        {filtered.map((step) => (
+          <div key={step.step} className="glass rounded-xl overflow-hidden">
+            <button
+              className="w-full flex items-start justify-between gap-4 p-5 text-left hover:bg-white/5 transition-colors"
+              onClick={() => setOpenStep(openStep === step.step ? null : step.step)}
+            >
+              <div className="flex items-start gap-4 flex-1 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-ocean-500 to-ocean-700 flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-sm">{step.step}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-white mb-1">{step.title}</div>
+                  <p className="text-sm text-navy-300 leading-relaxed line-clamp-2">{step.overview}</p>
+                </div>
+              </div>
+              {openStep === step.step ? (
+                <ChevronUp className="w-4 h-4 text-navy-400 flex-shrink-0 mt-1" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-navy-400 flex-shrink-0 mt-1" />
+              )}
+            </button>
+
+            {openStep === step.step && (
+              <div className="px-5 pb-5 border-t border-white/5 space-y-5 pt-4">
+                <div>
+                  <div className="text-xs font-semibold text-ocean-400 uppercase tracking-wide mb-2">Step-by-Step Procedure</div>
+                  <ol className="space-y-1.5">
+                    {step.procedures.map((proc, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-navy-200">
+                        <span className="text-ocean-500 font-mono text-xs mt-0.5 flex-shrink-0">{i + 1}.</span>
+                        {proc}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-white/5 rounded-xl p-4">
+                    <div className="text-xs font-semibold text-green-400 uppercase tracking-wide mb-2">Required Documents</div>
+                    {step.requiredDocs.map((doc, i) => (
+                      <div key={i} className="flex items-center gap-2 text-sm text-navy-200 py-0.5">
+                        <FileText className="w-3 h-3 text-green-500 flex-shrink-0" />
+                        {doc}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="bg-red-500/5 rounded-xl p-4 border border-red-500/10">
+                    <div className="text-xs font-semibold text-red-400 uppercase tracking-wide mb-2 flex items-center gap-1">
+                      <AlertTriangle className="w-3 h-3" /> Common Mistakes
+                    </div>
+                    {step.commonMistakes.map((m, i) => (
+                      <div key={i} className="text-xs text-red-300/80 py-1 leading-relaxed">• {m}</div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-4 text-xs">
+                  <div className="bg-white/5 rounded-lg px-3 py-2">
+                    <span className="text-navy-500">Timeline: </span>
+                    <span className="text-navy-200 font-medium">{step.timeline}</span>
+                  </div>
+                </div>
+
+                {step.officialSources.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {step.officialSources.map((src, i) => (
+                      <a
+                        key={i}
+                        href={src.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs text-ocean-400 hover:text-ocean-300 bg-ocean-500/10 px-3 py-1.5 rounded-lg transition-colors"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        {src.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+
+        {filtered.length === 0 && (
+          <div className="text-center py-12 text-navy-500">
+            <Truck className="w-8 h-8 mx-auto mb-3 opacity-50" />
+            No import steps match your search.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---- FTZ Guide ----
+function FTZGuideSection({ query }: { query: string }) {
+  const [openArticle, setOpenArticle] = useState<string | null>(null);
+
+  const filtered = useMemo(() => {
+    const q = query.toLowerCase();
+    return ftzGuideArticles.filter(
+      (a) =>
+        !q ||
+        a.title.toLowerCase().includes(q) ||
+        a.content.toLowerCase().includes(q) ||
+        a.keyPoints.some((p) => p.toLowerCase().includes(q))
+    );
+  }, [query]);
+
+  return (
+    <div>
+      <p className="text-sm text-navy-300 mb-6 leading-relaxed">
+        Comprehensive guide to Foreign Trade Zones — benefits, application process, compliance, and tariff strategy.
+      </p>
+      <div className="space-y-3">
+        {filtered.map((article) => (
+          <div key={article.slug} className="glass rounded-xl overflow-hidden">
+            <button
+              className="w-full flex items-start justify-between gap-4 p-5 text-left hover:bg-white/5 transition-colors"
+              onClick={() => setOpenArticle(openArticle === article.slug ? null : article.slug)}
+            >
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-white mb-1">{article.title}</div>
+                <p className="text-sm text-navy-300 leading-relaxed line-clamp-2">{article.content}</p>
+              </div>
+              {openArticle === article.slug ? (
+                <ChevronUp className="w-4 h-4 text-navy-400 flex-shrink-0 mt-1" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-navy-400 flex-shrink-0 mt-1" />
+              )}
+            </button>
+
+            {openArticle === article.slug && (
+              <div className="px-5 pb-5 border-t border-white/5 space-y-4 pt-4">
+                <p className="text-sm text-navy-200 leading-relaxed">{article.content}</p>
+
+                <div>
+                  <div className="text-xs font-semibold text-green-400 uppercase tracking-wide mb-2">Key Points</div>
+                  <ul className="space-y-1.5">
+                    {article.keyPoints.map((point, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-navy-200">
+                        <CheckCircle className="w-3.5 h-3.5 text-green-500 flex-shrink-0 mt-0.5" />
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {article.officialSources.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {article.officialSources.map((src, i) => (
+                      <a
+                        key={i}
+                        href={src.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs text-ocean-400 hover:text-ocean-300 bg-ocean-500/10 px-3 py-1.5 rounded-lg transition-colors"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        {src.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+
+        {filtered.length === 0 && (
+          <div className="text-center py-12 text-navy-500">
+            <Shield className="w-8 h-8 mx-auto mb-3 opacity-50" />
+            No FTZ articles match your search.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---- Checklists ----
+function useChecklist(checklistId: string) {
+  const [checked, setChecked] = useState<Set<string>>(() => {
+    if (typeof window === "undefined") return new Set<string>();
+    try {
+      const saved = localStorage.getItem(`kb-checklist-${checklistId}`);
+      return saved ? new Set<string>(JSON.parse(saved)) : new Set<string>();
+    } catch {
+      return new Set<string>();
+    }
+  });
+
+  const toggle = useCallback(
+    (itemId: string) => {
+      setChecked((prev) => {
+        const next = new Set(prev);
+        if (next.has(itemId)) next.delete(itemId);
+        else next.add(itemId);
+        localStorage.setItem(`kb-checklist-${checklistId}`, JSON.stringify(Array.from(next)));
+        return next;
+      });
+    },
+    [checklistId]
+  );
+
+  const reset = useCallback(() => {
+    setChecked(new Set<string>());
+    localStorage.removeItem(`kb-checklist-${checklistId}`);
+  }, [checklistId]);
+
+  return { checked, toggle, reset };
+}
+
+function ChecklistSection({ query }: { query: string }) {
+  const [activeChecklist, setActiveChecklist] = useState(complianceChecklists[0].id);
+
+  const checklist = complianceChecklists.find((c) => c.id === activeChecklist) ?? complianceChecklists[0];
+  const { checked, toggle, reset } = useChecklist(checklist.id);
+
+  const filteredItems = useMemo(() => {
+    const q = query.toLowerCase();
+    if (!q) return checklist.items;
+    return checklist.items.filter(
+      (item) => item.label.toLowerCase().includes(q) || item.detail.toLowerCase().includes(q)
+    );
+  }, [query, checklist]);
+
+  const progress = checklist.items.length > 0 ? Math.round((checked.size / checklist.items.length) * 100) : 0;
+
+  return (
+    <div>
+      <div className="flex flex-wrap gap-2 mb-6">
+        {complianceChecklists.map((cl) => (
+          <button
+            key={cl.id}
+            onClick={() => setActiveChecklist(cl.id)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+              activeChecklist === cl.id
+                ? "bg-ocean-500/30 border-ocean-500/50 text-ocean-200"
+                : "bg-white/5 border-white/10 text-navy-400 hover:text-navy-200"
+            }`}
+          >
+            {cl.title.replace(" Import Checklist", "").replace(" Checklist", "")}
+          </button>
+        ))}
+      </div>
+
+      <p className="text-sm text-navy-300 mb-4">{checklist.description}</p>
+
+      {/* Progress bar */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-ocean-500 to-green-500 rounded-full transition-all duration-500"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <span className="text-xs text-navy-400 font-medium w-24 text-right">
+          {checked.size} / {checklist.items.length} ({progress}%)
+        </span>
+        <button
+          onClick={reset}
+          className="text-xs text-navy-500 hover:text-navy-300 transition-colors flex items-center gap-1"
+          title="Reset checklist"
+        >
+          <RotateCcw className="w-3 h-3" />
+        </button>
+      </div>
+
+      <div className="space-y-2">
+        {filteredItems.map((item) => (
+          <div key={item.id} className="glass rounded-xl p-4">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={checked.has(item.id)}
+                onChange={() => toggle(item.id)}
+                className="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/5 text-ocean-500 focus:ring-ocean-500/30 flex-shrink-0"
+              />
+              <div className="flex-1">
+                <div className={`text-sm font-medium transition-colors ${checked.has(item.id) ? "text-navy-500 line-through" : "text-white"}`}>
+                  {item.label}
+                </div>
+                <p className="text-xs text-navy-400 mt-1 leading-relaxed">{item.detail}</p>
+              </div>
+            </label>
+          </div>
+        ))}
+
+        {filteredItems.length === 0 && (
+          <div className="text-center py-12 text-navy-500">
+            <CheckCircle className="w-8 h-8 mx-auto mb-3 opacity-50" />
+            No checklist items match your search.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---- Documentation Matrix ----
+function DocMatrixSection({ query }: { query: string }) {
+  const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
+
+  const filtered = useMemo(() => {
+    const q = query.toLowerCase();
+    return documentationMatrix.filter(
+      (d) =>
+        !q ||
+        d.document.toLowerCase().includes(q) ||
+        d.description.toLowerCase().includes(q) ||
+        d.preparedBy.toLowerCase().includes(q)
+    );
+  }, [query]);
+
+  const stepLabels = [
+    { key: "sourcing" as const, label: "Sourcing" },
+    { key: "isf" as const, label: "ISF" },
+    { key: "transit" as const, label: "Transit" },
+    { key: "customs" as const, label: "Customs" },
+    { key: "ftz" as const, label: "FTZ" },
+    { key: "fulfillment" as const, label: "Fulfill" },
+  ];
+
+  const selected = documentationMatrix.find((d) => d.document === selectedDoc);
+
+  return (
+    <div>
+      <p className="text-sm text-navy-300 mb-6 leading-relaxed">
+        Which documents are required at each step of the import process. Click a document name for details.
+      </p>
+
+      <div className="overflow-x-auto -mx-2 px-2">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-white/10">
+              <th className="text-left text-xs font-semibold text-navy-400 uppercase tracking-wide py-3 pr-4 sticky left-0 bg-transparent">
+                Document
+              </th>
+              {stepLabels.map((s) => (
+                <th key={s.key} className="text-center text-xs font-semibold text-navy-400 uppercase tracking-wide py-3 px-2 min-w-[60px]">
+                  {s.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((doc) => (
+              <tr
+                key={doc.document}
+                className="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
+                onClick={() => setSelectedDoc(selectedDoc === doc.document ? null : doc.document)}
+              >
+                <td className="py-3 pr-4">
+                  <span className="text-ocean-400 font-medium hover:text-ocean-300 transition-colors">
+                    {doc.document}
+                  </span>
+                </td>
+                {stepLabels.map((s) => (
+                  <td key={s.key} className="text-center py-3 px-2">
+                    {doc.steps[s.key] ? (
+                      <span className="inline-block w-6 h-6 rounded-md bg-green-500/20 text-green-400 text-xs font-bold leading-6">
+                        ✓
+                      </span>
+                    ) : (
+                      <span className="inline-block w-6 h-6 rounded-md bg-white/5 text-navy-600 text-xs leading-6">
+                        —
+                      </span>
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {selected && (
+        <div className="mt-6 glass rounded-xl p-5 border-ocean-500/20">
+          <div className="font-semibold text-white mb-2">{selected.document}</div>
+          <p className="text-sm text-navy-200 leading-relaxed mb-3">{selected.description}</p>
+          <div className="grid md:grid-cols-2 gap-3 text-xs">
+            <div className="bg-white/5 rounded-lg p-3">
+              <span className="text-navy-500">Prepared by: </span>
+              <span className="text-navy-200">{selected.preparedBy}</span>
+            </div>
+            <div className="bg-red-500/5 rounded-lg p-3 border border-red-500/10">
+              <span className="text-red-400">Common mistakes: </span>
+              <span className="text-red-300/80">{selected.commonMistakes}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {filtered.length === 0 && (
+        <div className="text-center py-12 text-navy-500">
+          <Table2 className="w-8 h-8 mx-auto mb-3 opacity-50" />
+          No documents match your search.
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---- Hidden Costs ----
+function HiddenCostsSection({ query }: { query: string }) {
+  const filtered = useMemo(() => {
+    const q = query.toLowerCase();
+    return hiddenCosts.filter(
+      (c) =>
+        !q ||
+        c.cost.toLowerCase().includes(q) ||
+        c.notes.toLowerCase().includes(q) ||
+        c.whenIncurred.toLowerCase().includes(q)
+    );
+  }, [query]);
+
+  return (
+    <div>
+      <p className="text-sm text-navy-300 mb-6 leading-relaxed">
+        Beyond duties and freight, these are the costs that catch importers off guard. Know them before they hit your margin.
+      </p>
+
+      <div className="space-y-3">
+        {filtered.map((cost) => (
+          <div key={cost.cost} className="glass rounded-xl p-4">
+            <div className="flex items-start justify-between gap-4 mb-2">
+              <div className="font-semibold text-white">{cost.cost}</div>
+              <div className="text-sm font-mono text-cargo-400 bg-cargo-500/10 px-2 py-0.5 rounded whitespace-nowrap">
+                {cost.typicalRange}
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-navy-400 mb-2">
+              <ArrowRight className="w-3 h-3" />
+              {cost.whenIncurred}
+            </div>
+            <p className="text-xs text-navy-300 leading-relaxed">{cost.notes}</p>
+          </div>
+        ))}
+
+        {filtered.length === 0 && (
+          <div className="text-center py-12 text-navy-500">
+            <DollarSign className="w-8 h-8 mx-auto mb-3 opacity-50" />
+            No costs match your search.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ---- Glossary ----
 function GlossarySection({ query }: { query: string }) {
   const [openTerm, setOpenTerm] = useState<string | null>(null);
@@ -66,7 +543,6 @@ function GlossarySection({ query }: { query: string }) {
 
   return (
     <div>
-      {/* Category filter */}
       <div className="flex flex-wrap gap-2 mb-6">
         {categories.map((cat) => (
           <button
@@ -159,7 +635,6 @@ function IncotermsSection({ query }: { query: string }) {
 
   return (
     <div>
-      {/* Transport filter */}
       <div className="flex gap-2 mb-6">
         {(["all", "any", "sea"] as const).map((t) => (
           <button
@@ -578,16 +1053,34 @@ function FormsSection({ query }: { query: string }) {
 
 // ---- Main Component ----
 export default function KnowledgeBase() {
-  const [activeTab, setActiveTab] = useState<Tab>("glossary");
+  const [activeTab, setActiveTab] = useState<Tab>("process");
   const [searchQuery, setSearchQuery] = useState("");
 
   const tabs: { id: Tab; label: string; icon: React.ElementType; count: number }[] = [
+    { id: "process", label: "Import Process", icon: Truck, count: importProcessSteps.length },
+    { id: "ftz-guide", label: "FTZ Guide", icon: Shield, count: ftzGuideArticles.length },
+    { id: "checklists", label: "Checklists", icon: CheckCircle, count: complianceChecklists.length },
+    { id: "docs-matrix", label: "Documents", icon: Table2, count: documentationMatrix.length },
+    { id: "hidden-costs", label: "Hidden Costs", icon: DollarSign, count: hiddenCosts.length },
     { id: "glossary", label: "Glossary", icon: BookOpen, count: glossaryTerms.length },
     { id: "incoterms", label: "Incoterms", icon: Globe, count: incoterms.length },
-    { id: "compliance", label: "Compliance Guides", icon: Scale, count: complianceGuides.length },
-    { id: "regulations", label: "Trade Regulations", icon: AlertTriangle, count: tradeRegulations.length },
+    { id: "compliance", label: "Compliance", icon: Scale, count: complianceGuides.length },
+    { id: "regulations", label: "Regulations", icon: AlertTriangle, count: tradeRegulations.length },
     { id: "forms", label: "CBP Forms", icon: FileText, count: customsForms.length },
   ];
+
+  const searchPlaceholders: Record<Tab, string> = {
+    process: "Search import steps, procedures...",
+    "ftz-guide": "Search FTZ articles...",
+    checklists: "Search checklist items...",
+    "docs-matrix": "Search documents...",
+    "hidden-costs": "Search costs...",
+    glossary: "Search terms, abbreviations...",
+    incoterms: "Search incoterms...",
+    compliance: "Search compliance topics...",
+    regulations: "Search regulations, countries...",
+    forms: "Search CBP forms...",
+  };
 
   return (
     <div className="space-y-6">
@@ -598,7 +1091,7 @@ export default function KnowledgeBase() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={`Search ${activeTab === "glossary" ? "terms, abbreviations..." : activeTab === "incoterms" ? "incoterms..." : activeTab === "compliance" ? "compliance topics..." : activeTab === "regulations" ? "regulations, countries..." : "CBP forms..."}` }
+          placeholder={searchPlaceholders[activeTab]}
           className="w-full glass rounded-xl pl-12 pr-10 py-3 text-sm text-white placeholder-navy-500 focus:outline-none focus:border-ocean-500/50 focus:ring-1 focus:ring-ocean-500/30 transition-all"
         />
         {searchQuery && (
@@ -624,7 +1117,7 @@ export default function KnowledgeBase() {
             }`}
           >
             <tab.icon className="w-4 h-4" />
-            <span>{tab.label}</span>
+            <span className="hidden sm:inline">{tab.label}</span>
             <span
               className={`text-xs px-1.5 py-0.5 rounded-full ${
                 activeTab === tab.id ? "bg-ocean-500/30 text-ocean-300" : "bg-white/10 text-navy-500"
@@ -638,6 +1131,11 @@ export default function KnowledgeBase() {
 
       {/* Content */}
       <div>
+        {activeTab === "process" && <ImportProcessSection query={searchQuery} />}
+        {activeTab === "ftz-guide" && <FTZGuideSection query={searchQuery} />}
+        {activeTab === "checklists" && <ChecklistSection query={searchQuery} />}
+        {activeTab === "docs-matrix" && <DocMatrixSection query={searchQuery} />}
+        {activeTab === "hidden-costs" && <HiddenCostsSection query={searchQuery} />}
         {activeTab === "glossary" && <GlossarySection query={searchQuery} />}
         {activeTab === "incoterms" && <IncotermsSection query={searchQuery} />}
         {activeTab === "compliance" && <ComplianceSection query={searchQuery} />}
