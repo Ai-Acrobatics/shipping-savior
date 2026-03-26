@@ -6,6 +6,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import HTSCodeLookup from "@/components/HTSCodeLookup";
 import TariffScenarioBuilder from "@/components/TariffScenarioBuilder";
 import FTZAnalyzer from "@/components/FTZAnalyzer";
+import PFNPFCalculator from "@/components/PFNPFCalculator";
 import {
   Shield,
   GitCompare,
@@ -17,6 +18,7 @@ import {
   BarChart3,
   Warehouse,
   Globe,
+  Scale,
 } from "lucide-react";
 
 const WORKFLOW_STEPS = [
@@ -42,6 +44,16 @@ const WORKFLOW_STEPS = [
   },
   {
     step: "03",
+    icon: Scale,
+    title: "PF vs NPF + Tariff Scenarios",
+    description: "Compare zone status elections, model +10%/+25%/−5% tariff shifts, see monthly withdrawal schedule",
+    iconColor: "text-purple-600",
+    bgLight: "bg-purple-50",
+    borderColor: "border-purple-200",
+    anchor: "pfnpf",
+  },
+  {
+    step: "04",
     icon: Shield,
     title: "FTZ Savings Modeler",
     description: "Lock duty rates, choose an FTZ zone, and model incremental withdrawal schedules",
@@ -214,7 +226,41 @@ export default function FTZAnalyzerPage() {
         </div>
       </section>
 
-      {/* Step 3: FTZ Analyzer */}
+      {/* Step 3: PF vs NPF Calculator + Tariff Scenarios */}
+      <section id="pfnpf" className="py-20 px-6 bg-navy-950/30">
+        <div className="max-w-5xl mx-auto">
+          <ScrollReveal>
+            <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-purple-50 border border-purple-200">
+                <Scale className="w-5 h-5 text-purple-600" />
+              </div>
+              <div>
+                <div className="text-xs text-purple-600 font-semibold mb-0.5 uppercase tracking-wide">STEP 3</div>
+                <h2 className="text-2xl font-bold text-white">PF vs NPF Status Election + Tariff Scenarios</h2>
+              </div>
+              <div className="flex-1 h-px bg-navy-700 hidden sm:block" />
+              <div className="text-xs text-navy-400 hidden sm:block font-medium">Break-even + withdrawal schedule</div>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal>
+            <div className="bg-navy-900 border border-purple-900/30 rounded-2xl p-6">
+              <div className="mb-6">
+                <p className="text-sm text-navy-300 leading-relaxed">
+                  Compare <strong className="text-ocean-400">Privileged Foreign (PF)</strong> vs{" "}
+                  <strong className="text-emerald-400">Non-Privileged Foreign (NPF)</strong> zone
+                  status elections side-by-side. Model what happens to your duty bill under four
+                  tariff scenarios. See a full month-by-month withdrawal schedule with cumulative
+                  net savings.
+                </p>
+              </div>
+              <PFNPFCalculator />
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Step 4: FTZ Analyzer */}
       <section id="ftz" className="py-20 px-6 bg-navy-50">
         <div className="max-w-5xl mx-auto">
           <ScrollReveal>
@@ -223,7 +269,7 @@ export default function FTZAnalyzerPage() {
                 <Shield className="w-5 h-5 text-emerald-600" />
               </div>
               <div>
-                <div className="text-xs text-emerald-600 font-semibold mb-0.5 uppercase tracking-wide">STEP 3</div>
+                <div className="text-xs text-emerald-600 font-semibold mb-0.5 uppercase tracking-wide">STEP 4</div>
                 <h2 className="text-2xl font-bold text-navy-900">FTZ Savings Modeler</h2>
               </div>
               <div className="flex-1 h-px bg-navy-200 hidden sm:block" />
