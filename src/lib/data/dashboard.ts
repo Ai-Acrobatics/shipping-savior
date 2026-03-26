@@ -1,55 +1,30 @@
 // Dashboard mock data — notifications, shipment stats, activity feed
 
+export type NotificationType = "shipment" | "customs" | "cost" | "partner" | "system";
+export type AlertSeverity = "critical" | "warning" | "info";
+export type CargoType = "general" | "cold-chain";
+
 export interface Notification {
   id: string;
   title: string;
   message: string;
-  type: "info" | "warning" | "success" | "error";
+  type: NotificationType;
+  severity: AlertSeverity;
   timestamp: string;
   read: boolean;
+  shipmentId?: string;
+  actionLabel?: string;
 }
 
 export const notifications: Notification[] = [
-  {
-    id: "n1",
-    title: "Container MSCU-4821937 arrived at Long Beach",
-    message: "Your 40ft refrigerated container has cleared customs and is ready for pickup at Pier J.",
-    type: "success",
-    timestamp: "2026-03-26T08:30:00Z",
-    read: false,
-  },
-  {
-    id: "n2",
-    title: "Section 301 tariff update — List 4A",
-    message: "USTR announced rate adjustments effective April 15. Review impacted HTS codes in the tariff scenario builder.",
-    type: "warning",
-    timestamp: "2026-03-25T14:15:00Z",
-    read: false,
-  },
-  {
-    id: "n3",
-    title: "FTZ #50 storage invoice ready",
-    message: "Monthly storage invoice for Long Beach FTZ available. $2,340 for March 2026.",
-    type: "info",
-    timestamp: "2026-03-24T09:00:00Z",
-    read: true,
-  },
-  {
-    id: "n4",
-    title: "Vessel MSC ANNA ETA updated",
-    message: "New ETA for Ho Chi Minh City → Long Beach route: April 2 (was April 5). 3-day improvement.",
-    type: "info",
-    timestamp: "2026-03-23T16:45:00Z",
-    read: true,
-  },
-  {
-    id: "n5",
-    title: "Withdrawal batch processed",
-    message: "50,000 units released from FTZ #50 at locked rate 6.5%. Duty payment of $1,625 queued.",
-    type: "success",
-    timestamp: "2026-03-22T11:30:00Z",
-    read: true,
-  },
+  { id: "n1", title: "Container MSCU-4821937 arrived at Long Beach", message: "Your 40ft refrigerated container has cleared customs and is ready for pickup at Pier J.", type: "shipment", severity: "info", timestamp: "2026-03-26T08:30:00Z", read: false, shipmentId: "MSCU-4821937", actionLabel: "View shipment" },
+  { id: "n2", title: "Section 301 tariff update — List 4A", message: "USTR announced rate adjustments effective April 15. Review impacted HTS codes in the tariff scenario builder.", type: "customs", severity: "warning", timestamp: "2026-03-25T14:15:00Z", read: false, actionLabel: "Review tariffs" },
+  { id: "n3", title: "FTZ #50 storage invoice ready", message: "Monthly storage invoice for Long Beach FTZ available. $2,340 for March 2026.", type: "cost", severity: "info", timestamp: "2026-03-24T09:00:00Z", read: true },
+  { id: "n4", title: "Vessel MSC ANNA ETA updated", message: "New ETA for Ho Chi Minh City → Long Beach route: April 2 (was April 5). 3-day improvement.", type: "shipment", severity: "info", timestamp: "2026-03-23T16:45:00Z", read: true, shipmentId: "MAEU-9304712" },
+  { id: "n5", title: "Withdrawal batch processed", message: "50,000 units released from FTZ #50 at locked rate 6.5%. Duty payment of $1,625 queued.", type: "system", severity: "info", timestamp: "2026-03-22T11:30:00Z", read: true },
+  { id: "n6", title: "Typhoon warning — South China Sea", message: "Active typhoon may impact Jakarta → LA shipment. CMA CGM MARCO POLO rerouting adds ~6 days.", type: "shipment", severity: "critical", timestamp: "2026-03-23T14:30:00Z", read: false, shipmentId: "CMAU-5529817", actionLabel: "Track vessel" },
+  { id: "n7", title: "Carrier rate increase — Evergreen", message: "Evergreen announced 8% GRI effective April 1 on all transpacific eastbound lanes.", type: "cost", severity: "warning", timestamp: "2026-03-21T10:00:00Z", read: true, actionLabel: "Compare rates" },
+  { id: "n8", title: "CBP inspection — HLCU-2194830", message: "Random CBP exam in progress at Port Newark. May add 1-2 business days.", type: "customs", severity: "warning", timestamp: "2026-03-26T09:00:00Z", read: false, shipmentId: "HLCU-2194830" },
 ];
 
 export interface ShipmentSummary {
@@ -114,6 +89,7 @@ export interface ShipmentCosts {
   customs: number;
   storage: number;
   total: number;
+  budgeted: number;
   perUnit: string;
   variance: number;
 }
@@ -140,6 +116,7 @@ export interface DashboardShipment {
   volume: string;
   timeline: TimelineEvent[];
   alerts: ShipmentAlert[];
+  currentLocation?: string;
   temperature?: TemperatureData;
   costs: ShipmentCosts;
 }
@@ -160,6 +137,7 @@ export const dashboardShipments: DashboardShipment[] = [
     containers: 2,
     containerType: "40ft Reefer",
     cargoType: "cold-chain",
+    currentLocation: "FTZ #50 — Long Beach",
     eta: "Mar 24, 2026",
     etd: "Feb 28, 2026",
     value: "$124,500",
@@ -201,6 +179,7 @@ export const dashboardShipments: DashboardShipment[] = [
       customs: 385,
       storage: 780,
       total: 16285,
+      budgeted: 16630,
       perUnit: "0.033",
       variance: -2.1,
     },
@@ -220,6 +199,7 @@ export const dashboardShipments: DashboardShipment[] = [
     containers: 1,
     containerType: "40ft HC",
     cargoType: "general",
+    currentLocation: "Pacific Ocean — en route to Long Beach",
     eta: "Apr 8, 2026",
     etd: "Mar 14, 2026",
     value: "$87,200",
@@ -243,6 +223,7 @@ export const dashboardShipments: DashboardShipment[] = [
       customs: 340,
       storage: 0,
       total: 9900,
+      budgeted: 9750,
       perUnit: "0.045",
       variance: 1.5,
     },
@@ -262,6 +243,7 @@ export const dashboardShipments: DashboardShipment[] = [
     containers: 3,
     containerType: "40ft HC",
     cargoType: "general",
+    currentLocation: "South China Sea — weather reroute",
     eta: "Apr 18, 2026 (was Apr 12)",
     etd: "Mar 18, 2026",
     value: "$215,600",
@@ -292,6 +274,7 @@ export const dashboardShipments: DashboardShipment[] = [
       customs: 720,
       storage: 0,
       total: 26740,
+      budgeted: 25420,
       perUnit: "0.041",
       variance: 5.2,
     },
@@ -311,6 +294,7 @@ export const dashboardShipments: DashboardShipment[] = [
     containers: 1,
     containerType: "40ft HC",
     cargoType: "general",
+    currentLocation: "Port Newark — CBP inspection",
     eta: "Mar 28, 2026",
     etd: "Feb 25, 2026",
     value: "$63,900",
@@ -342,6 +326,7 @@ export const dashboardShipments: DashboardShipment[] = [
       customs: 650,
       storage: 0,
       total: 9290,
+      budgeted: 8950,
       perUnit: "0.052",
       variance: 3.8,
     },
@@ -361,6 +346,7 @@ export const dashboardShipments: DashboardShipment[] = [
     containers: 2,
     containerType: "40ft HC",
     cargoType: "general",
+    currentLocation: "Long Beach — awaiting customs",
     eta: "Mar 27, 2026",
     etd: "Mar 4, 2026",
     value: "$156,300",
@@ -383,6 +369,7 @@ export const dashboardShipments: DashboardShipment[] = [
       customs: 520,
       storage: 0,
       total: 23350,
+      budgeted: 23540,
       perUnit: "0.074",
       variance: -0.8,
     },
@@ -400,6 +387,7 @@ export const dashboardShipments: DashboardShipment[] = [
     containers: 2,
     containerType: "40ft Reefer",
     cargoType: "cold-chain",
+    currentLocation: "Ho Chi Minh City — awaiting pickup",
     eta: "May 15, 2026",
     etd: "Apr 10, 2026",
     value: "$198,000",
@@ -421,6 +409,7 @@ export const dashboardShipments: DashboardShipment[] = [
       customs: 480,
       storage: 0,
       total: 20070,
+      budgeted: 20070,
       perUnit: "0.040",
       variance: 0,
     },
@@ -464,3 +453,69 @@ export const recentActivity: ActivityItem[] = [
     category: "shipment",
   },
 ];
+
+
+// Activity Feed
+export interface ActivityEvent { id: string; type: "shipment_created" | "status_change" | "document_uploaded" | "cost_alert" | "customs_cleared" | "delivery_confirmed" | "rate_quote" | "partner_update"; title: string; description: string; timestamp: string; shipmentId?: string; }
+export const activityFeed: ActivityEvent[] = [
+  { id: "af1", type: "delivery_confirmed", title: "Delivery confirmed", description: "MSCU-4821937 to FTZ #50", timestamp: "2h ago", shipmentId: "MSCU-4821937" },
+  { id: "af2", type: "customs_cleared", title: "Customs cleared", description: "CBP cleared at Long Beach", timestamp: "4h ago", shipmentId: "MSCU-4821937" },
+  { id: "af3", type: "cost_alert", title: "Weather delay cost", description: "MARCO POLO +$1,200 demurrage", timestamp: "8h ago", shipmentId: "CMAU-5529817" },
+  { id: "af4", type: "status_change", title: "CBP inspection", description: "HLCU-2194830 exam at Newark", timestamp: "12h ago", shipmentId: "HLCU-2194830" },
+  { id: "af5", type: "document_uploaded", title: "ISF filed", description: "ISF for Bangkok-LB shipment", timestamp: "1d ago", shipmentId: "OOLU-7391024" },
+  { id: "af6", type: "shipment_created", title: "New booking", description: "Maersk HCMC-Savannah Apr 10", timestamp: "2d ago", shipmentId: "MAEU-9304712" },
+  { id: "af7", type: "rate_quote", title: "Rate quote ONE", description: "$4,350/TEU HCMC-LB", timestamp: "2d ago" },
+  { id: "af8", type: "partner_update", title: "FTZ #50 update", description: "Rates unchanged Q2 2026", timestamp: "3d ago" },
+];
+
+// Analytics
+export function formatCurrency(v: number): string { return v >= 1e6 ? "$" + (v/1e6).toFixed(1) + "M" : v >= 1e3 ? "$" + (v/1e3).toFixed(0) + "K" : "$" + v.toLocaleString(); }
+export interface MonthlyCost { month: string; freight: number; duty: number; insurance: number; drayage: number; storage: number; total: number; avgPerUnit: number; shipments: number; }
+export const monthlyCosts: MonthlyCost[] = [
+  { month: "Oct 2025", freight: 28400, duty: 18200, insurance: 3100, drayage: 7200, storage: 2800, total: 59700, avgPerUnit: 0.048, shipments: 5 },
+  { month: "Nov 2025", freight: 32100, duty: 21400, insurance: 3600, drayage: 8100, storage: 3200, total: 68400, avgPerUnit: 0.046, shipments: 6 },
+  { month: "Dec 2025", freight: 35800, duty: 24600, insurance: 4200, drayage: 9400, storage: 3600, total: 77600, avgPerUnit: 0.044, shipments: 7 },
+  { month: "Jan 2026", freight: 30200, duty: 19800, insurance: 3400, drayage: 7800, storage: 3100, total: 64300, avgPerUnit: 0.045, shipments: 6 },
+  { month: "Feb 2026", freight: 38400, duty: 26200, insurance: 4500, drayage: 10200, storage: 4100, total: 83400, avgPerUnit: 0.042, shipments: 8 },
+  { month: "Mar 2026", freight: 41200, duty: 28900, insurance: 4800, drayage: 11400, storage: 4600, total: 90900, avgPerUnit: 0.041, shipments: 9 },
+];
+export interface CostCategory { category: string; amount: number; percentage: number; color: string; trend: number; }
+export const costCategories: CostCategory[] = [
+  { category: "Freight", amount: 41200, percentage: 45, color: "#00bcd4", trend: 7.3 },
+  { category: "Duty/Tariff", amount: 28900, percentage: 32, color: "#e6a800", trend: 10.3 },
+  { category: "Drayage", amount: 11400, percentage: 13, color: "#a855f7", trend: 11.8 },
+  { category: "Insurance", amount: 4800, percentage: 5, color: "#6366f1", trend: 6.7 },
+  { category: "Storage", amount: 4600, percentage: 5, color: "#3b82f6", trend: 12.2 },
+  { category: "Gross Margin", amount: 16800, percentage: 18.6, color: "#22c55e", trend: 2.1 },
+];
+export interface RoutePerformance { route: string; origin: string; destination: string; shipments: number; avgCost: number; avgTransitDays: number; onTimeRate: number; trend: number; }
+export const routePerformance: RoutePerformance[] = [
+  { route: "VNCLI-USLGB", origin: "Ho Chi Minh City", destination: "Long Beach", shipments: 14, avgCost: 12400, avgTransitDays: 24, onTimeRate: 92, trend: 3.2 },
+  { route: "THBKK-USLGB", origin: "Bangkok", destination: "Long Beach", shipments: 8, avgCost: 9800, avgTransitDays: 26, onTimeRate: 88, trend: 1.5 },
+  { route: "CNTAO-USLGB", origin: "Qingdao", destination: "Long Beach", shipments: 6, avgCost: 11200, avgTransitDays: 19, onTimeRate: 85, trend: -2.1 },
+  { route: "IDJKT-USLAX", origin: "Jakarta", destination: "Los Angeles", shipments: 5, avgCost: 10600, avgTransitDays: 28, onTimeRate: 78, trend: -4.3 },
+  { route: "KHSHV-USEWR", origin: "Sihanoukville", destination: "Newark", shipments: 4, avgCost: 14200, avgTransitDays: 32, onTimeRate: 91, trend: 2.8 },
+];
+export interface CarrierMetric { carrier: string; shipments: number; avgRate: number; onTimeRate: number; reliability: number; rating: number; }
+export const carrierMetrics: CarrierMetric[] = [
+  { carrier: "MSC", shipments: 12, avgRate: 4800, onTimeRate: 93, reliability: 91, rating: 4.3 },
+  { carrier: "Maersk", shipments: 9, avgRate: 5200, onTimeRate: 96, reliability: 95, rating: 4.6 },
+  { carrier: "CMA CGM", shipments: 7, avgRate: 4600, onTimeRate: 84, reliability: 82, rating: 3.8 },
+  { carrier: "OOCL", shipments: 5, avgRate: 4400, onTimeRate: 90, reliability: 88, rating: 4.1 },
+  { carrier: "Evergreen", shipments: 4, avgRate: 4200, onTimeRate: 87, reliability: 85, rating: 3.9 },
+  { carrier: "Hapag-Lloyd", shipments: 3, avgRate: 5500, onTimeRate: 94, reliability: 93, rating: 4.4 },
+];
+export interface SavingsEntry { id: string; type: "ftz" | "rate-negotiation" | "route-optimization" | "consolidation" | "duty-drawback"; source: string; description: string; amount: number; date: string; }
+export const savingsEntries: SavingsEntry[] = [
+  { id: "s1", type: "ftz", source: "FTZ #50", description: "Rate lock Vietnam apparel", amount: 14200, date: "Mar 2026" },
+  { id: "s2", type: "rate-negotiation", source: "MSC Contract", description: "Renewal discount", amount: 8400, date: "Mar 2026" },
+  { id: "s3", type: "route-optimization", source: "Singapore Hub", description: "Transshipment savings", amount: 3200, date: "Feb 2026" },
+  { id: "s4", type: "consolidation", source: "Vietnam Suppliers", description: "3 LCL merged to FCL", amount: 5600, date: "Feb 2026" },
+  { id: "s5", type: "ftz", source: "FTZ #202", description: "Withdrawal timing electronics", amount: 9800, date: "Jan 2026" },
+  { id: "s6", type: "duty-drawback", source: "CBP Drawback", description: "Re-export drawback", amount: 4100, date: "Jan 2026" },
+  { id: "s7", type: "rate-negotiation", source: "OOCL Spot", description: "Below market rate", amount: 2800, date: "Dec 2025" },
+  { id: "s8", type: "ftz", source: "FTZ #50", description: "Rate lock kitchenware", amount: 7600, date: "Dec 2025" },
+  { id: "s9", type: "route-optimization", source: "Qingdao Direct", description: "Direct vs transshipment", amount: 1900, date: "Nov 2025" },
+  { id: "s10", type: "consolidation", source: "Singapore Hub", description: "Multi-origin consolidation", amount: 4300, date: "Nov 2025" },
+];
+export interface ExecutiveSummary { period: string; revenue: { current: number; previous: number; target: number }; volume: { containers: number; teus: number; weight: string }; savings: { total: number; ftz: number; rateOpt: number }; onTime: { rate: number; target: number }; topRisks: string[]; topWins: string[]; }

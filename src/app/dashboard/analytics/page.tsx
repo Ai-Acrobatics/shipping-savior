@@ -201,7 +201,7 @@ export default function AnalyticsPage() {
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(value: number) => [`$${value.toLocaleString()}`, ""]}
+                  formatter={(value) => [`$${Number(value).toLocaleString()}`, ""]}
                   contentStyle={{ background: "#0a1929", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "12px" }}
                   itemStyle={{ color: "#e7f0ff" }}
                 />
@@ -235,7 +235,7 @@ export default function AnalyticsPage() {
                 <Tooltip
                   contentStyle={{ background: "#0a1929", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "12px" }}
                   itemStyle={{ color: "#e7f0ff" }}
-                  formatter={(value: number) => [`$${value.toFixed(2)}`, "Cost/Unit"]}
+                  formatter={(value) => [`$${Number(value).toFixed(2)}`, "Cost/Unit"]}
                 />
                 <Line type="monotone" dataKey="costPerUnit" stroke="#22c55e" strokeWidth={2} dot={{ fill: "#22c55e", r: 4 }} />
               </LineChart>
@@ -255,7 +255,7 @@ export default function AnalyticsPage() {
                 <Tooltip
                   contentStyle={{ background: "#0a1929", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "12px" }}
                   itemStyle={{ color: "#e7f0ff" }}
-                  formatter={(value: number) => [value, "Shipments"]}
+                  formatter={(value) => [value, "Shipments"]}
                 />
                 <Bar dataKey="shipments" fill="#00bcd4" radius={[4, 4, 0, 0]} barSize={32} />
               </BarChart>

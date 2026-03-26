@@ -100,7 +100,7 @@ export default function ShipmentCard({
       {/* Progress */}
       <div className="mb-3">
         <div className="flex items-center justify-between text-xs text-navy-400 mb-1">
-          <span>{shipment.currentLocation}</span>
+          <span>{(shipment as any).currentLocation}</span>
           <span>{shipment.progress}%</span>
         </div>
         <ProgressBar progress={shipment.progress} status={shipment.status} />
@@ -179,7 +179,7 @@ export default function ShipmentCard({
           <div className="flex items-center gap-4 mb-4">
             <div className="flex-1 bg-white/5 rounded-lg px-3 py-2">
               <div className="text-[10px] text-navy-500">Budget</div>
-              <div className="text-sm font-medium text-white">${shipment.costs.budgeted.toLocaleString()}</div>
+              <div className="text-sm font-medium text-white">${(shipment.costs.budgeted ?? shipment.costs.total).toLocaleString()}</div>
             </div>
             <div className="flex-1 bg-white/5 rounded-lg px-3 py-2">
               <div className="text-[10px] text-navy-500">Actual</div>

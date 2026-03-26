@@ -130,7 +130,8 @@ export default function SavingsPage() {
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(value: number) => [`$${value.toLocaleString()}`, ""]}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  formatter={(value: any) => [`$${Number(value).toLocaleString()}`, ""]}
                   contentStyle={{ background: "#0a1929", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "12px" }}
                   itemStyle={{ color: "#e7f0ff" }}
                 />
@@ -169,7 +170,8 @@ export default function SavingsPage() {
                 <Tooltip
                   contentStyle={{ background: "#0a1929", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "12px" }}
                   itemStyle={{ color: "#e7f0ff" }}
-                  formatter={(value: number) => [`$${value.toLocaleString()}`, "Savings"]}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  formatter={(value: any) => [`$${Number(value).toLocaleString()}`, "Savings"]}
                 />
                 <Bar dataKey="savings" fill="#22c55e" radius={[4, 4, 0, 0]} barSize={40} />
               </BarChart>
