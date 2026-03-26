@@ -107,7 +107,7 @@ const roadmapPhases = [
   {
     phase: 4,
     title: "FTZ Analyzer + Tariff Scenarios",
-    status: "Planned",
+    status: "In Progress",
     items: ["Full FTZ savings modeler", "Tariff scenario analysis", "Multi-scenario comparison", "What-if modeling"],
     color: "border-green-500",
   },
@@ -366,6 +366,21 @@ export default function Home() {
                   protected, secure, duty-deferred until you need them.
                 </div>
               </div>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={300}>
+            <div className="mt-6 text-center">
+              <a
+                href="/ftz-analyzer"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-semibold px-6 py-3 rounded-xl transition-all hover:scale-105 shadow-lg shadow-green-500/20"
+              >
+                Open Full FTZ Analyzer + Tariff Scenarios
+                <ArrowRight className="w-4 h-4" />
+              </a>
+              <p className="text-xs text-navy-500 mt-2">
+                HTS code lookup · multi-scenario comparison · zone finder · withdrawal scheduling
+              </p>
             </div>
           </ScrollReveal>
         </div>

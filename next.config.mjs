@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  distDir: '.next-agent4',
+  distDir: '.next',
 };
 
 export default nextConfig;
