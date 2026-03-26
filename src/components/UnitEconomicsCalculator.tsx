@@ -1,79 +1,36 @@
 "use client";
 
-import { useState } from "react";
-import { DollarSign, TrendingUp, Package, Truck } from "lucide-react";
-
-interface EconomicsResult {
-  originCost: number;
-  shippingPerUnit: number;
-  dutyPerUnit: number;
-  fulfillmentPerUnit: number;
-  landedCost: number;
-  wholesalePrice: number;
-  retailPrice: number;
-  wholesaleMargin: number;
-  retailMargin: number;
-  profitPerUnit: number;
-  containerProfit: number;
-}
-
-function calculate(
-  unitCost: number,
-  unitsPerContainer: number,
-  containerCost: number,
-  dutyRate: number,
-  fulfillmentCost: number,
-  wholesaleMarkup: number,
-  retailPrice: number
-): EconomicsResult {
-  const shippingPerUnit = containerCost / unitsPerContainer;
-  const dutyPerUnit = unitCost * (dutyRate / 100);
-  const landedCost = unitCost + shippingPerUnit + dutyPerUnit + fulfillmentCost;
-  const wholesalePrice = landedCost * (1 + wholesaleMarkup / 100);
-  const wholesaleMargin = ((wholesalePrice - landedCost) / wholesalePrice) * 100;
-  const retailMargin = ((retailPrice - wholesalePrice) / retailPrice) * 100;
-  const profitPerUnit = wholesalePrice - landedCost;
-  const containerProfit = profitPerUnit * unitsPerContainer;
-
-  return {
-    originCost: unitCost,
-    shippingPerUnit,
-    dutyPerUnit,
-    fulfillmentPerUnit: fulfillmentCost,
-    landedCost,
-    wholesalePrice,
-    retailPrice,
-    wholesaleMargin,
-    retailMargin,
-    profitPerUnit,
-    containerProfit,
-  };
-}
+import { useState, useMemo } from "react";
+import { DollarSign, TrendingUp, Package } from "lucide-react";
+import {
+  calculateUnitEconomics,
+  createDefaultUnitEconomicsInput,
+  type UnitEconomicsInput,
+} from "@/lib/calculators/unit-economics";
 
 export default function UnitEconomicsCalculator() {
-  const [unitCost, setUnitCost] = useState(0.1);
-  const [unitsPerContainer, setUnitsPerContainer] = useState(500000);
-  const [containerCost, setContainerCost] = useState(5000);
-  const [dutyRate, setDutyRate] = useState(6.5);
-  const [fulfillmentCost, setFulfillmentCost] = useState(0.15);
-  const [wholesaleMarkup, setWholesaleMarkup] = useState(300);
-  const [retailPrice, setRetailPrice] = useState(5.0);
-
-  const result = calculate(
-    unitCost,
-    unitsPerContainer,
-    containerCost,
-    dutyRate,
-    fulfillmentCost,
-    wholesaleMarkup,
-    retailPrice
+  const [input, setInput] = useState<UnitEconomicsInput>(
+    createDefaultUnitEconomicsInput()
   );
+
+  const result = useMemo(() => calculateUnitEconomics(input), [input]);
+
+  const update = (field: keyof UnitEconomicsInput, value: number) => {
+    setInput((prev) => ({ ...prev, [field]: value }));
+  };
 
   const costBreakdown = [
     { label: "Origin Cost", value: result.originCost, color: "bg-ocean-500" },
     { label: "Shipping", value: result.shippingPerUnit, color: "bg-ocean-400" },
     { label: "Duty/Tariff", value: result.dutyPerUnit, color: "bg-cargo-500" },
-    { label: "Fulfillment", value: result.fulfillmentPerUnit, color: "bg-cargo-400" },
+    { label: "Insurance", value: result.insurancePerUnit, color: "bg-cargo-400" },
+    { label: "Fulfillment", value: result.fulfillmentPerUnit, color: "bg-purple-500" },
+    ...(result.returnsCostPerUnit > 0
+      ? [{ label: "Returns", value: result.returnsCostPerUnit, color: "bg-red-400" }]
+      : []),
+    ...(result.paymentFeePerUnit > 0
+      ? [{ label: "Payment Fee", value: result.paymentFeePerUnit, color: "bg-amber-400" }]
+      : []),
   ];
 
   const totalCost = costBreakdown.reduce((sum, item) => sum + item.value, 0);
@@ -97,8 +54,8 @@ export default function UnitEconomicsCalculator() {
               <input
                 type="number"
                 step="0.01"
-                value={unitCost}
-                onChange={(e) => setUnitCost(parseFloat(e.target.value) || 0)}
+                value={input.unitCostOrigin}
+                onChange={(e) => update("unitCostOrigin", parseFloat(e.target.value) || 0)}
                 className="input-light pl-7"
               />
             </div>
@@ -110,8 +67,8 @@ export default function UnitEconomicsCalculator() {
             </label>
             <input
               type="number"
-              value={unitsPerContainer}
-              onChange={(e) => setUnitsPerContainer(parseInt(e.target.value) || 0)}
+              value={input.unitsPerContainer}
+              onChange={(e) => update("unitsPerContainer", parseInt(e.target.value) || 0)}
               className="input-light"
             />
           </div>
@@ -124,8 +81,8 @@ export default function UnitEconomicsCalculator() {
               <span className="absolute left-3 top-2.5 text-navy-400 text-sm">$</span>
               <input
                 type="number"
-                value={containerCost}
-                onChange={(e) => setContainerCost(parseFloat(e.target.value) || 0)}
+                value={input.containerShippingCost}
+                onChange={(e) => update("containerShippingCost", parseFloat(e.target.value) || 0)}
                 className="input-light pl-7"
               />
             </div>
@@ -138,8 +95,8 @@ export default function UnitEconomicsCalculator() {
             <input
               type="number"
               step="0.1"
-              value={dutyRate}
-              onChange={(e) => setDutyRate(parseFloat(e.target.value) || 0)}
+              value={input.dutyRate}
+              onChange={(e) => update("dutyRate", parseFloat(e.target.value) || 0)}
               className="input-light"
             />
           </div>
@@ -153,8 +110,8 @@ export default function UnitEconomicsCalculator() {
               <input
                 type="number"
                 step="0.01"
-                value={fulfillmentCost}
-                onChange={(e) => setFulfillmentCost(parseFloat(e.target.value) || 0)}
+                value={input.fulfillmentCostPerUnit}
+                onChange={(e) => update("fulfillmentCostPerUnit", parseFloat(e.target.value) || 0)}
                 className="input-light pl-7"
               />
             </div>
@@ -166,25 +123,39 @@ export default function UnitEconomicsCalculator() {
             </label>
             <input
               type="number"
-              value={wholesaleMarkup}
-              onChange={(e) => setWholesaleMarkup(parseFloat(e.target.value) || 0)}
+              value={input.wholesaleMarkup}
+              onChange={(e) => update("wholesaleMarkup", parseFloat(e.target.value) || 0)}
               className="input-light"
             />
           </div>
         </div>
 
-        <div>
-          <label className="text-xs font-medium text-navy-500 block mb-1.5">
-            Target Retail Price
-          </label>
-          <div className="relative">
-            <span className="absolute left-3 top-2.5 text-navy-400 text-sm">$</span>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-xs font-medium text-navy-500 block mb-1.5">
+              Target Retail Price
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-2.5 text-navy-400 text-sm">$</span>
+              <input
+                type="number"
+                step="0.01"
+                value={input.targetRetailPrice}
+                onChange={(e) => update("targetRetailPrice", parseFloat(e.target.value) || 0)}
+                className="input-light pl-7"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="text-xs font-medium text-navy-500 block mb-1.5">
+              Returns Rate (%)
+            </label>
             <input
               type="number"
-              step="0.01"
-              value={retailPrice}
-              onChange={(e) => setRetailPrice(parseFloat(e.target.value) || 0)}
-              className="input-light pl-7"
+              step="0.1"
+              value={input.returnsRate}
+              onChange={(e) => update("returnsRate", parseFloat(e.target.value) || 0)}
+              className="input-light"
             />
           </div>
         </div>
@@ -204,7 +175,7 @@ export default function UnitEconomicsCalculator() {
               <div
                 key={item.label}
                 className={`${item.color} flex items-center justify-center text-[10px] font-medium text-white transition-all duration-500`}
-                style={{ width: `${(item.value / totalCost) * 100}%` }}
+                style={{ width: `${Math.max((item.value / totalCost) * 100, 1)}%` }}
               >
                 {((item.value / totalCost) * 100).toFixed(0)}%
               </div>
@@ -233,7 +204,7 @@ export default function UnitEconomicsCalculator() {
             <div className="text-center">
               <div className="text-navy-400 text-xs font-medium">Landed</div>
               <div className="text-xl font-bold text-ocean-700">
-                ${result.landedCost.toFixed(2)}
+                ${result.landedCostPerUnit.toFixed(2)}
               </div>
             </div>
             <div className="text-navy-300 text-lg">&rarr;</div>
@@ -255,19 +226,19 @@ export default function UnitEconomicsCalculator() {
           <div className="grid grid-cols-3 gap-4 pt-4 border-t border-navy-200">
             <div className="text-center">
               <div className="text-xs text-navy-400 font-medium">Profit/Unit</div>
-              <div className="text-lg font-bold text-emerald-600">
+              <div className={`text-lg font-bold ${result.profitPerUnit > 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                 ${result.profitPerUnit.toFixed(2)}
               </div>
             </div>
             <div className="text-center">
-              <div className="text-xs text-navy-400 font-medium">Wholesale Margin</div>
-              <div className="text-lg font-bold text-emerald-600">
-                {result.wholesaleMargin.toFixed(1)}%
+              <div className="text-xs text-navy-400 font-medium">Net Margin</div>
+              <div className={`text-lg font-bold ${result.netMarginPct > 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                {result.netMarginPct.toFixed(1)}%
               </div>
             </div>
             <div className="text-center">
               <div className="text-xs text-navy-400 font-medium">Container Profit</div>
-              <div className="text-lg font-bold text-emerald-600">
+              <div className={`text-lg font-bold ${result.containerProfit > 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                 ${result.containerProfit.toLocaleString("en-US", { maximumFractionDigits: 0 })}
               </div>
             </div>
@@ -281,13 +252,15 @@ export default function UnitEconomicsCalculator() {
           </div>
           <p className="text-sm text-navy-600">
             At <strong className="text-navy-900">${result.originCost.toFixed(2)}/unit</strong> origin cost
-            with <strong className="text-navy-900">{unitsPerContainer.toLocaleString()}</strong> units per container,
-            you generate <strong className="text-emerald-600">${result.containerProfit.toLocaleString("en-US", { maximumFractionDigits: 0 })}</strong> profit
+            with <strong className="text-navy-900">{input.unitsPerContainer.toLocaleString()}</strong> units per container,
+            you generate <strong className={result.containerProfit > 0 ? "text-emerald-600" : "text-red-500"}>
+              ${result.containerProfit.toLocaleString("en-US", { maximumFractionDigits: 0 })}
+            </strong> profit
             per container after all costs. That&apos;s a{" "}
-            <strong className="text-emerald-600">
-              {((result.profitPerUnit / result.landedCost) * 100).toFixed(0)}%
+            <strong className={result.roi > 0 ? "text-emerald-600" : "text-red-500"}>
+              {result.roi.toFixed(0)}%
             </strong>{" "}
-            return on landed cost.
+            return on total cost.
           </p>
         </div>
       </div>
