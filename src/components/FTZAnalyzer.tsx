@@ -222,15 +222,15 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
   return (
     <div className="space-y-6">
       {/* Section Tabs */}
-      <div className="flex gap-1 glass rounded-xl p-1 w-fit">
+      <div className="flex gap-1 bg-white border border-navy-100 shadow-soft rounded-xl p-1 w-fit">
         {(["model", "zones", "schedule"] as const).map((section) => (
           <button
             key={section}
             onClick={() => setActiveSection(section)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all capitalize ${
               activeSection === section
-                ? "bg-green-600 text-white"
-                : "text-navy-300 hover:text-white"
+                ? "bg-green-600 text-navy-900"
+                : "text-navy-500 hover:text-navy-900"
             }`}
           >
             {section === "model"
@@ -247,13 +247,13 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Inputs */}
           <div className="space-y-5">
-            <h3 className="text-lg font-semibold text-navy-100 flex items-center gap-2">
-              <Warehouse className="w-5 h-5 text-green-400" />
+            <h3 className="text-lg font-semibold text-navy-700 flex items-center gap-2">
+              <Warehouse className="w-5 h-5 text-emerald-600" />
               FTZ Parameters
             </h3>
 
             {initialCountry && (
-              <div className="flex items-center gap-2 text-xs text-ocean-300 glass rounded-lg px-3 py-2">
+              <div className="flex items-center gap-2 text-xs text-ocean-600 bg-white border border-navy-100 shadow-soft rounded-lg px-3 py-2">
                 <Info className="w-3 h-3" />
                 Pre-filled from tariff scenario: country {initialCountry}, rate {initialDutyRate?.toFixed(1)}%
               </div>
@@ -261,18 +261,18 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-navy-300 block mb-1">Total Units to Import</label>
+                <label className="text-xs text-navy-500 block mb-1">Total Units to Import</label>
                 <input
                   type="number"
                   step="10000"
                   value={totalUnits}
                   onChange={(e) => setTotalUnits(parseInt(e.target.value) || 0)}
-                  className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-900/50"
+                  className="w-full bg-white border border-navy-100 shadow-soft rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-50"
                 />
               </div>
 
               <div>
-                <label className="text-xs text-navy-300 block mb-1">Unit Value FOB ($)</label>
+                <label className="text-xs text-navy-500 block mb-1">Unit Value FOB ($)</label>
                 <div className="relative">
                   <span className="absolute left-3 top-2.5 text-navy-400 text-sm">$</span>
                   <input
@@ -280,40 +280,40 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
                     step="0.01"
                     value={unitValue}
                     onChange={(e) => setUnitValue(parseFloat(e.target.value) || 0)}
-                    className="w-full glass rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-900/50"
+                    className="w-full bg-white border border-navy-100 shadow-soft rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs text-navy-300 block mb-1">
-                  <span className="text-green-400 font-medium">Locked</span> Rate at FTZ Entry (%)
+                <label className="text-xs text-navy-500 block mb-1">
+                  <span className="text-emerald-600 font-medium">Locked</span> Rate at FTZ Entry (%)
                 </label>
                 <input
                   type="number"
                   step="0.1"
                   value={lockedRate}
                   onChange={(e) => setLockedRate(parseFloat(e.target.value) || 0)}
-                  className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-900/50 border border-green-500/30"
+                  className="w-full bg-white border border-navy-100 shadow-soft rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-50 border border-emerald-200"
                 />
               </div>
 
               <div>
-                <label className="text-xs text-navy-300 block mb-1">
-                  <span className="text-red-400 font-medium">Current</span> Market Rate (%)
+                <label className="text-xs text-navy-500 block mb-1">
+                  <span className="text-red-600 font-medium">Current</span> Market Rate (%)
                 </label>
                 <input
                   type="number"
                   step="0.1"
                   value={currentRate}
                   onChange={(e) => setCurrentRate(parseFloat(e.target.value) || 0)}
-                  className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-500 bg-navy-900/50 border border-red-500/30"
+                  className="w-full bg-white border border-navy-100 shadow-soft rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-500 bg-navy-50 border border-red-200"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-xs text-navy-300 block mb-2">
+              <label className="text-xs text-navy-500 block mb-2">
                 <Calendar className="w-3 h-3 inline mr-1" />
                 Withdrawal Period: {totalMonths} months
               </label>
@@ -333,7 +333,7 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
             </div>
 
             <div>
-              <label className="text-xs text-navy-300 block mb-2">Withdrawal Pattern</label>
+              <label className="text-xs text-navy-500 block mb-2">Withdrawal Pattern</label>
               <div className="grid grid-cols-3 gap-2">
                 {(["uniform", "front-loaded", "back-loaded"] as const).map((p) => (
                   <button
@@ -341,8 +341,8 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
                     onClick={() => setWithdrawalPattern(p)}
                     className={`py-2 px-3 rounded-lg text-xs font-medium transition-all capitalize ${
                       withdrawalPattern === p
-                        ? "bg-green-600/40 border border-green-500/60 text-green-300"
-                        : "glass text-navy-400 hover:text-navy-200"
+                        ? "bg-green-600/40 border border-green-500/60 text-emerald-600"
+                        : "bg-white border border-navy-100 shadow-soft text-navy-400 hover:text-navy-400"
                     }`}
                   >
                     {p.replace("-", " ")}
@@ -352,7 +352,7 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
             </div>
 
             <div>
-              <label className="text-xs text-navy-300 block mb-1">
+              <label className="text-xs text-navy-500 block mb-1">
                 FTZ Storage Cost ($/unit/month)
               </label>
               <div className="relative">
@@ -364,7 +364,7 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
                   onChange={(e) =>
                     setStorageCostPerUnitMonth(parseFloat(e.target.value) || 0)
                   }
-                  className="w-full glass rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/50"
+                  className="w-full bg-white border border-navy-100 shadow-soft rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500/30 focus:border-ocean-500 bg-navy-50"
                 />
               </div>
               <div className="text-xs text-navy-500 mt-1">
@@ -375,38 +375,38 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
 
           {/* Results */}
           <div className="space-y-5">
-            <h3 className="text-lg font-semibold text-navy-100 flex items-center gap-2">
-              <Shield className="w-5 h-5 text-green-400" />
+            <h3 className="text-lg font-semibold text-navy-700 flex items-center gap-2">
+              <Shield className="w-5 h-5 text-emerald-600" />
               FTZ Analysis Results
             </h3>
 
             {/* Main savings card */}
-            <div className="glass rounded-2xl p-6 border border-green-500/30 bg-green-500/5">
+            <div className="bg-white border border-navy-100 shadow-soft rounded-2xl p-6 border border-emerald-200 bg-emerald-50">
               <div className="text-center mb-5">
                 <div className="text-xs text-navy-400 mb-1">Gross Duty Savings</div>
-                <div className="text-4xl font-bold text-green-400">
+                <div className="text-4xl font-bold text-emerald-600">
                   ${analysis.totalSavings.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                 </div>
-                <div className="text-sm text-green-300 mt-1">
+                <div className="text-sm text-emerald-600 mt-1">
                   {analysis.savingsPercent.toFixed(1)}% reduction
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3 pt-4 border-t border-white/10">
+              <div className="grid grid-cols-3 gap-3 pt-4 border-t border-navy-200">
                 <div className="text-center">
-                  <div className="text-xs text-red-300">Without FTZ</div>
-                  <div className="text-base font-bold text-red-400">
+                  <div className="text-xs text-red-600">Without FTZ</div>
+                  <div className="text-base font-bold text-red-600">
                     ${analysis.dutyWithoutFTZ.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xs text-green-300">With FTZ</div>
-                  <div className="text-base font-bold text-green-400">
+                  <div className="text-xs text-emerald-600">With FTZ</div>
+                  <div className="text-base font-bold text-emerald-600">
                     ${analysis.dutyWithFTZ.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xs text-cargo-300">Storage Cost</div>
+                  <div className="text-xs text-cargo-600">Storage Cost</div>
                   <div className="text-base font-bold text-cargo-400">
                     ${analysis.ftzStorageCost.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </div>
@@ -416,14 +416,14 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
 
             {/* Net savings + break-even */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="glass rounded-xl p-4 border border-green-500/20">
+              <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-4 border border-emerald-200">
                 <div className="flex items-center gap-2 mb-2">
-                  <DollarSign className="w-4 h-4 text-green-400" />
+                  <DollarSign className="w-4 h-4 text-emerald-600" />
                   <span className="text-xs text-navy-400">Net Savings</span>
                 </div>
                 <div
                   className={`text-2xl font-bold ${
-                    analysis.netSavings >= 0 ? "text-green-400" : "text-red-400"
+                    analysis.netSavings >= 0 ? "text-emerald-600" : "text-red-600"
                   }`}
                 >
                   ${Math.abs(analysis.netSavings).toLocaleString("en-US", {
@@ -433,12 +433,12 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
                 <div className="text-xs text-navy-500 mt-1">after FTZ storage fees</div>
               </div>
 
-              <div className="glass rounded-xl p-4 border border-ocean-500/20">
+              <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-4 border border-ocean-200">
                 <div className="flex items-center gap-2 mb-2">
                   <Calendar className="w-4 h-4 text-ocean-400" />
                   <span className="text-xs text-navy-400">Break-Even</span>
                 </div>
-                <div className="text-2xl font-bold text-ocean-300">
+                <div className="text-2xl font-bold text-ocean-600">
                   Month {analysis.breakEvenMonth}
                 </div>
                 <div className="text-xs text-navy-500 mt-1">savings exceed storage costs</div>
@@ -446,8 +446,8 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
             </div>
 
             {/* Shipment summary */}
-            <div className="glass rounded-xl p-4 space-y-2">
-              <div className="text-xs font-medium text-navy-300 mb-3">Shipment Summary</div>
+            <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-4 space-y-2">
+              <div className="text-xs font-medium text-navy-500 mb-3">Shipment Summary</div>
               {[
                 { label: "Total Units", value: analysis.totalUnits.toLocaleString() },
                 {
@@ -457,34 +457,34 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
                 {
                   label: "Locked Rate",
                   value: `${lockedRate}%`,
-                  color: "text-green-400",
+                  color: "text-emerald-600",
                 },
                 {
                   label: "Market Rate",
                   value: `${currentRate}%`,
-                  color: "text-red-400",
+                  color: "text-red-600",
                 },
                 {
                   label: "Rate Delta",
                   value: `${(currentRate - lockedRate).toFixed(1)}% saved per withdrawal`,
-                  color: "text-cargo-300",
+                  color: "text-cargo-600",
                 },
               ].map((row) => (
                 <div key={row.label} className="flex justify-between text-sm">
                   <span className="text-navy-400">{row.label}</span>
-                  <span className={row.color ?? "text-white"}>{row.value}</span>
+                  <span className={row.color ?? "text-navy-900"}>{row.value}</span>
                 </div>
               ))}
             </div>
 
             {/* Selected zone badge */}
             {selectedZone && (
-              <div className="glass rounded-xl p-4 border border-green-500/20 bg-green-500/5">
-                <div className="flex items-center gap-2 text-sm font-medium text-green-300 mb-1">
+              <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-4 border border-emerald-200 bg-emerald-50">
+                <div className="flex items-center gap-2 text-sm font-medium text-emerald-600 mb-1">
                   <MapPin className="w-4 h-4" />
                   Selected FTZ Zone
                 </div>
-                <div className="text-white font-semibold">{selectedZone.name}</div>
+                <div className="text-navy-900 font-semibold">{selectedZone.name}</div>
                 <div className="text-xs text-navy-400">
                   FTZ #{selectedZone.id} · {selectedZone.state} · {selectedZone.nearbyPort}
                 </div>
@@ -504,7 +504,7 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
               placeholder="Filter by zone name, state, or port..."
               value={zoneFilter}
               onChange={(e) => setZoneFilter(e.target.value)}
-              className="w-full glass rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-900/60"
+              className="w-full bg-white border border-navy-100 shadow-soft rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-900/60"
             />
           </div>
 
@@ -524,7 +524,7 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
                 }}
                 className={`glass glass-hover rounded-xl p-4 cursor-pointer transition-all ${
                   selectedZone?.id === zone.id
-                    ? "border border-green-500/50 bg-green-500/5"
+                    ? "border border-green-500/50 bg-emerald-50"
                     : "border border-transparent"
                 }`}
               >
@@ -535,14 +535,14 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
                       <span
                         className={`text-xs px-2 py-0.5 rounded-full ${
                           zone.type === "general-purpose"
-                            ? "bg-green-500/20 text-green-300"
-                            : "bg-purple-500/20 text-purple-300"
+                            ? "bg-emerald-50 text-emerald-600"
+                            : "bg-purple-50 text-purple-600"
                         }`}
                       >
                         {zone.type === "general-purpose" ? "General" : "Subzone"}
                       </span>
                     </div>
-                    <div className="text-sm font-semibold text-white truncate">{zone.name}</div>
+                    <div className="text-sm font-semibold text-navy-900 truncate">{zone.name}</div>
                     <div className="text-xs text-navy-400 mt-0.5">
                       {zone.state} · Near: {zone.nearbyPort}
                     </div>
@@ -564,9 +564,9 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
       {/* WITHDRAWAL SCHEDULE */}
       {activeSection === "schedule" && (
         <div className="space-y-5">
-          <div className="glass rounded-xl p-5 border border-green-500/20">
-            <div className="text-sm font-medium text-navy-200 mb-4 flex items-center gap-2">
-              <TrendingDown className="w-4 h-4 text-green-400" />
+          <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-5 border border-emerald-200">
+            <div className="text-sm font-medium text-navy-400 mb-4 flex items-center gap-2">
+              <TrendingDown className="w-4 h-4 text-emerald-600" />
               Month-by-Month Withdrawal Schedule
               <span className="text-xs text-navy-500">({withdrawalPattern} pattern)</span>
             </div>
@@ -583,7 +583,7 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
                       style={{ height: `${height}%` }}
                       title={`Month ${w.month}: ${w.units.toLocaleString()} units`}
                     />
-                    <div className="text-xs text-navy-600 hidden sm:block">{w.label}</div>
+                    <div className="text-xs text-navy-400 hidden sm:block">{w.label}</div>
                   </div>
                 );
               })}
@@ -593,27 +593,27 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
               <div className="grid grid-cols-5 gap-2 text-xs text-navy-500 px-2 mb-2 font-medium">
                 <span>Month</span>
                 <span className="text-right">Units</span>
-                <span className="text-right text-green-400">FTZ Duty</span>
-                <span className="text-right text-red-400">Market Duty</span>
-                <span className="text-right text-cargo-300">Cum. Savings</span>
+                <span className="text-right text-emerald-600">FTZ Duty</span>
+                <span className="text-right text-red-600">Market Duty</span>
+                <span className="text-right text-cargo-600">Cum. Savings</span>
               </div>
 
               {analysis.withdrawalSchedule.map((w) => (
                 <div
                   key={w.month}
-                  className="grid grid-cols-5 gap-2 text-xs px-2 py-2 rounded-lg hover:bg-white/3 border-b border-white/5"
+                  className="grid grid-cols-5 gap-2 text-xs px-2 py-2 rounded-lg hover:bg-white/3 border-b border-navy-100"
                 >
-                  <span className="text-navy-300">
+                  <span className="text-navy-500">
                     {w.label} (M{w.month})
                   </span>
-                  <span className="text-right text-navy-200">{w.units.toLocaleString()}</span>
-                  <span className="text-right text-green-400">
+                  <span className="text-right text-navy-400">{w.units.toLocaleString()}</span>
+                  <span className="text-right text-emerald-600">
                     ${w.dutyAtLockedRate.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </span>
-                  <span className="text-right text-red-400">
+                  <span className="text-right text-red-600">
                     ${w.dutyAtCurrentRate.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </span>
-                  <span className="text-right text-cargo-300 font-medium">
+                  <span className="text-right text-cargo-600 font-medium">
                     $
                     {w.cumulativeSavings.toLocaleString("en-US", {
                       maximumFractionDigits: 0,
@@ -625,8 +625,8 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
           </div>
 
           {/* Cumulative savings progress */}
-          <div className="glass rounded-xl p-5">
-            <div className="text-sm font-medium text-navy-200 mb-3">Cumulative Savings Progress</div>
+          <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-5">
+            <div className="text-sm font-medium text-navy-400 mb-3">Cumulative Savings Progress</div>
             <div className="space-y-2">
               {analysis.withdrawalSchedule.map((w) => {
                 const progress = (w.cumulativeSavings / analysis.totalSavings) * 100;
@@ -634,11 +634,11 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
                   <div key={w.month}>
                     <div className="flex justify-between text-xs text-navy-400 mb-1">
                       <span>{w.label}</span>
-                      <span className="text-green-400">
+                      <span className="text-emerald-600">
                         ${w.cumulativeSavings.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                       </span>
                     </div>
-                    <div className="h-1.5 glass rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-white border border-navy-100 shadow-soft rounded-full overflow-hidden">
                       <div
                         className="h-full bg-green-500/70 rounded-full transition-all duration-500"
                         style={{ width: `${progress}%` }}
@@ -651,20 +651,20 @@ export default function FTZAnalyzer({ initialDutyRate, initialCountry }: Props) 
           </div>
 
           {/* Cash flow benefit */}
-          <div className="glass rounded-xl p-5 border border-cargo-500/20">
+          <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-5 border border-amber-200">
             <div className="flex items-start gap-3">
               <ArrowRight className="w-5 h-5 text-cargo-400 flex-shrink-0 mt-0.5" />
               <div>
-                <div className="text-sm font-semibold text-cargo-300 mb-1">Cash Flow Benefit</div>
-                <p className="text-xs text-navy-300 leading-relaxed">
+                <div className="text-sm font-semibold text-cargo-600 mb-1">Cash Flow Benefit</div>
+                <p className="text-xs text-navy-500 leading-relaxed">
                   Without FTZ, you pay{" "}
-                  <strong className="text-red-400">
+                  <strong className="text-red-600">
                     ${analysis.dutyWithoutFTZ.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </strong>{" "}
                   upfront at customs. With FTZ + {withdrawalPattern} withdrawal over {totalMonths}{" "}
                   months, you spread duty payments incrementally — improving cash flow while locking
                   the lower {lockedRate}% rate instead of {currentRate}%. Net benefit:{" "}
-                  <strong className="text-green-400">
+                  <strong className="text-emerald-600">
                     ${analysis.netSavings.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </strong>{" "}
                   after all FTZ storage costs.

@@ -94,8 +94,8 @@ interface CustomTooltipProps {
 function BarTooltip({ active, payload, label }: CustomTooltipProps) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="glass rounded-lg p-3 border border-white/20 text-xs min-w-[160px]">
-      <div className="font-semibold text-white mb-2">{label}</div>
+    <div className="bg-white border border-navy-100 shadow-soft rounded-lg p-3 border border-navy-200 text-xs min-w-[160px]">
+      <div className="font-semibold text-navy-900 mb-2">{label}</div>
       {payload.map((p) => (
         <div key={p.name} className="flex justify-between gap-4" style={{ color: p.color }}>
           <span>{p.name}</span>
@@ -110,9 +110,9 @@ function PieTooltip({ active, payload }: CustomTooltipProps) {
   if (!active || !payload?.length) return null;
   const p = payload[0];
   return (
-    <div className="glass rounded-lg p-3 border border-white/20 text-xs">
+    <div className="bg-white border border-navy-100 shadow-soft rounded-lg p-3 border border-navy-200 text-xs">
       <div style={{ color: p.color }} className="font-semibold">{p.name}</div>
-      <div className="text-white">${p.value}/unit</div>
+      <div className="text-navy-900">${p.value}/unit</div>
     </div>
   );
 }
@@ -128,7 +128,7 @@ export default function TariffBreakdownChart() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <h3 className="text-lg font-semibold text-navy-100 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-navy-700 flex items-center gap-2">
           <Globe className="w-5 h-5 text-ocean-400" />
           Tariff Analysis by Country of Origin
         </h3>
@@ -137,8 +137,8 @@ export default function TariffBreakdownChart() {
             onClick={() => setView("comparison")}
             className={`text-xs px-3 py-1.5 rounded-full transition-all ${
               view === "comparison"
-                ? "bg-ocean-600 text-white"
-                : "glass text-navy-300 hover:text-white"
+                ? "bg-ocean-600 text-navy-900"
+                : "bg-white border border-navy-100 shadow-soft text-navy-500 hover:text-navy-900"
             }`}
           >
             Country Comparison
@@ -147,8 +147,8 @@ export default function TariffBreakdownChart() {
             onClick={() => setView("breakdown")}
             className={`text-xs px-3 py-1.5 rounded-full transition-all ${
               view === "breakdown"
-                ? "bg-cargo-600 text-white"
-                : "glass text-navy-300 hover:text-white"
+                ? "bg-cargo-600 text-navy-900"
+                : "bg-white border border-navy-100 shadow-soft text-navy-500 hover:text-navy-900"
             }`}
           >
             Landed Cost Breakdown
@@ -196,17 +196,17 @@ export default function TariffBreakdownChart() {
                 }
                 className={`glass rounded-xl p-3 text-left transition-all ${
                   selectedCountry === t.country
-                    ? "border-ocean-500/60 bg-ocean-500/10"
+                    ? "border-ocean-500/60 bg-ocean-50"
                     : "glass-hover"
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium text-white">
+                  <span className="text-sm font-medium text-navy-900">
                     {t.flag} {t.country}
                   </span>
                   <span
                     className={`text-sm font-bold ${
-                      t.total > 20 ? "text-red-400" : t.total > 12 ? "text-yellow-400" : "text-green-400"
+                      t.total > 20 ? "text-red-600" : t.total > 12 ? "text-yellow-400" : "text-emerald-600"
                     }`}
                   >
                     {t.total}%
@@ -214,14 +214,14 @@ export default function TariffBreakdownChart() {
                 </div>
                 <div className="text-xs text-navy-400 leading-relaxed">{t.note}</div>
                 {selectedCountry === t.country && (
-                  <div className="mt-2 pt-2 border-t border-white/10 grid grid-cols-3 gap-1 text-xs">
+                  <div className="mt-2 pt-2 border-t border-navy-200 grid grid-cols-3 gap-1 text-xs">
                     <div className="text-center">
                       <div className="text-navy-400">Base</div>
-                      <div className="text-ocean-300">{t.baseRate}%</div>
+                      <div className="text-ocean-600">{t.baseRate}%</div>
                     </div>
                     <div className="text-center">
                       <div className="text-navy-400">Sec.301</div>
-                      <div className="text-red-400">{t.section301}%</div>
+                      <div className="text-red-600">{t.section301}%</div>
                     </div>
                     <div className="text-center">
                       <div className="text-navy-400">A/D</div>
@@ -261,7 +261,7 @@ export default function TariffBreakdownChart() {
           <div className="space-y-2">
             <div className="flex items-center gap-2 mb-3">
               <FileText className="w-4 h-4 text-ocean-400" />
-              <span className="text-sm font-medium text-navy-200">
+              <span className="text-sm font-medium text-navy-400">
                 Sample: Plastic goods from Vietnam
               </span>
             </div>
@@ -272,7 +272,7 @@ export default function TariffBreakdownChart() {
                     className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                     style={{ background: item.color }}
                   />
-                  <span className="text-navy-300">{item.name}</span>
+                  <span className="text-navy-500">{item.name}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div
@@ -283,15 +283,15 @@ export default function TariffBreakdownChart() {
                       opacity: 0.6,
                     }}
                   />
-                  <span className="text-white font-medium w-12 text-right">
+                  <span className="text-navy-900 font-medium w-12 text-right">
                     ${item.value.toFixed(2)}
                   </span>
                 </div>
               </div>
             ))}
-            <div className="pt-2 mt-2 border-t border-white/10 flex justify-between text-sm">
-              <span className="text-navy-300">Total Landed Cost</span>
-              <span className="text-white font-bold">
+            <div className="pt-2 mt-2 border-t border-navy-200 flex justify-between text-sm">
+              <span className="text-navy-500">Total Landed Cost</span>
+              <span className="text-navy-900 font-bold">
                 ${landedCostData.reduce((s, i) => s + i.value, 0).toFixed(2)}/unit
               </span>
             </div>

@@ -109,7 +109,7 @@ export default function ShippingRouteMap() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-navy-100 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-navy-700 flex items-center gap-2">
           <Ship className="w-5 h-5 text-ocean-400" />
           SE Asia → US Shipping Routes
         </h3>
@@ -132,8 +132,8 @@ export default function ShippingRouteMap() {
           onClick={() => setActiveRoute(null)}
           className={`text-xs px-3 py-1.5 rounded-full transition-all ${
             activeRoute === null
-              ? "bg-ocean-600 text-white"
-              : "glass text-navy-300 hover:text-white"
+              ? "bg-ocean-600 text-navy-900"
+              : "bg-white border border-navy-100 shadow-soft text-navy-500 hover:text-navy-900"
           }`}
         >
           All Routes
@@ -144,8 +144,8 @@ export default function ShippingRouteMap() {
             onClick={() => setActiveRoute(activeRoute === route.id ? null : route.id)}
             className={`text-xs px-3 py-1.5 rounded-full transition-all ${
               activeRoute === route.id
-                ? "text-white"
-                : "glass text-navy-300 hover:text-white"
+                ? "text-navy-900"
+                : "bg-white border border-navy-100 shadow-soft text-navy-500 hover:text-navy-900"
             }`}
             style={
               activeRoute === route.id
@@ -341,13 +341,13 @@ export default function ShippingRouteMap() {
       {/* Active route details */}
       {activeRouteData && (
         <div
-          className="glass rounded-xl p-4 border"
+          className="bg-white border border-navy-100 shadow-soft rounded-xl p-4 border"
           style={{ borderColor: activeRouteData.color + "40" }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 rounded-full" style={{ background: activeRouteData.color }} />
-              <span className="font-semibold text-white">{activeRouteData.label}</span>
+              <span className="font-semibold text-navy-900">{activeRouteData.label}</span>
               {activeRouteData.type === "transship" && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-300">
                   Transshipment
@@ -357,11 +357,11 @@ export default function ShippingRouteMap() {
             <div className="flex gap-6 text-sm">
               <div className="text-center">
                 <div className="text-xs text-navy-400">Transit Time</div>
-                <div className="font-semibold text-ocean-300">{activeRouteData.transitDays} days</div>
+                <div className="font-semibold text-ocean-600">{activeRouteData.transitDays} days</div>
               </div>
               <div className="text-center">
                 <div className="text-xs text-navy-400">Cost/TEU</div>
-                <div className="font-semibold text-cargo-300">${activeRouteData.costPerTEU.toLocaleString()}</div>
+                <div className="font-semibold text-cargo-600">${activeRouteData.costPerTEU.toLocaleString()}</div>
               </div>
             </div>
           </div>

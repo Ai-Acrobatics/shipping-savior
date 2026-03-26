@@ -20,11 +20,11 @@ import {
 
 function StatusBadge({ status }: { status: ShipmentStatus }) {
   const config: Record<ShipmentStatus, { label: string; className: string; icon: typeof Ship }> = {
-    "in-transit": { label: "In Transit", className: "bg-ocean-500/20 text-ocean-300 border-ocean-500/30", icon: Ship },
-    "at-port": { label: "At Port", className: "bg-blue-500/20 text-blue-300 border-blue-500/30", icon: Anchor },
-    customs: { label: "Customs", className: "bg-cargo-500/20 text-cargo-300 border-cargo-500/30", icon: Shield },
-    delivered: { label: "Delivered", className: "bg-green-500/20 text-green-300 border-green-500/30", icon: CheckCircle2 },
-    delayed: { label: "Delayed", className: "bg-red-500/20 text-red-300 border-red-500/30", icon: AlertTriangle },
+    "in-transit": { label: "In Transit", className: "bg-ocean-50 text-ocean-600 border-ocean-200", icon: Ship },
+    "at-port": { label: "At Port", className: "bg-blue-50 text-blue-600 border-blue-500/30", icon: Anchor },
+    customs: { label: "Customs", className: "bg-amber-50 text-cargo-600 border-cargo-500/30", icon: Shield },
+    delivered: { label: "Delivered", className: "bg-emerald-50 text-emerald-600 border-green-500/30", icon: CheckCircle2 },
+    delayed: { label: "Delayed", className: "bg-red-50 text-red-600 border-red-500/30", icon: AlertTriangle },
     booked: { label: "Booked", className: "bg-purple-500/20 text-purple-300 border-purple-500/30", icon: Calendar },
   };
   const c = config[status];
@@ -49,7 +49,7 @@ function ShipmentTimeline({ shipment }: { shipment: DashboardShipment }) {
           "bg-navy-600";
         const lineColor =
           event.status === "completed" ? "bg-green-500/30" :
-          "bg-white/5";
+          "bg-navy-50";
 
         return (
           <div key={idx} className="flex gap-4 relative">
@@ -70,7 +70,7 @@ function ShipmentTimeline({ shipment }: { shipment: DashboardShipment }) {
 
             {/* Content */}
             <div className={`flex-1 pb-5 ${event.status === "upcoming" ? "opacity-50" : ""}`}>
-              <div className="text-sm font-medium text-white">{event.event}</div>
+              <div className="text-sm font-medium text-navy-900">{event.event}</div>
               <div className="flex items-center gap-3 mt-1">
                 <span className="text-xs text-navy-400 flex items-center gap-1">
                   <MapPin className="w-3 h-3" />
@@ -82,7 +82,7 @@ function ShipmentTimeline({ shipment }: { shipment: DashboardShipment }) {
                 </span>
               </div>
               {event.details && (
-                <div className="mt-1 text-xs bg-cargo-500/10 text-cargo-300 border border-cargo-500/20 rounded px-2 py-1 inline-block">
+                <div className="mt-1 text-xs bg-cargo-500/10 text-cargo-600 border border-amber-200 rounded px-2 py-1 inline-block">
                   {event.details}
                 </div>
               )}
@@ -123,10 +123,10 @@ function TemperatureMonitor({ shipment }: { shipment: DashboardShipment }) {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Thermometer className="w-4 h-4 text-blue-400" />
-          <span className="text-sm font-medium text-white">Temperature Monitor</span>
+          <span className="text-sm font-medium text-navy-900">Temperature Monitor</span>
         </div>
         <span className={`text-xs px-2 py-0.5 rounded-full ${
-          isInRange ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300"
+          isInRange ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
         }`}>
           {isInRange ? "In Range" : "Out of Range"}
         </span>
@@ -135,24 +135,24 @@ function TemperatureMonitor({ shipment }: { shipment: DashboardShipment }) {
       <div className="grid grid-cols-4 gap-3 mb-3">
         <div>
           <div className="text-[10px] text-navy-500">Current</div>
-          <div className="text-lg font-bold text-blue-300">{temp.current}°{temp.unit}</div>
+          <div className="text-lg font-bold text-blue-600">{temp.current}°{temp.unit}</div>
         </div>
         <div>
           <div className="text-[10px] text-navy-500">Set Point</div>
-          <div className="text-sm font-medium text-white">{temp.setPoint}°{temp.unit}</div>
+          <div className="text-sm font-medium text-navy-900">{temp.setPoint}°{temp.unit}</div>
         </div>
         <div>
           <div className="text-[10px] text-navy-500">Min</div>
-          <div className="text-sm font-medium text-white">{temp.min}°{temp.unit}</div>
+          <div className="text-sm font-medium text-navy-900">{temp.min}°{temp.unit}</div>
         </div>
         <div>
           <div className="text-[10px] text-navy-500">Max</div>
-          <div className="text-sm font-medium text-white">{temp.max}°{temp.unit}</div>
+          <div className="text-sm font-medium text-navy-900">{temp.max}°{temp.unit}</div>
         </div>
       </div>
 
       {/* Temperature Chart */}
-      <div className="bg-white/5 rounded-lg p-2">
+      <div className="bg-navy-50 rounded-lg p-2">
         <svg width="100%" viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="overflow-visible">
           {/* Set point line */}
           <line
@@ -202,18 +202,18 @@ function RouteVisualization({ shipment }: { shipment: DashboardShipment }) {
     "#00bcd4";
 
   return (
-    <div className="bg-white/5 rounded-xl p-4">
+    <div className="bg-navy-50 rounded-xl p-4">
       <div className="flex items-center gap-2 mb-3">
         <Globe className="w-4 h-4 text-ocean-400" />
-        <span className="text-sm font-medium text-white">Route Progress</span>
+        <span className="text-sm font-medium text-navy-900">Route Progress</span>
       </div>
 
       <div className="relative">
         {/* Route Bar */}
         <div className="flex items-center gap-3 mb-2">
-          <div className="text-xs text-navy-300 w-20 text-right truncate">{shipment.originPort}</div>
+          <div className="text-xs text-navy-500 w-20 text-right truncate">{shipment.originPort}</div>
           <div className="flex-1 relative">
-            <div className="w-full bg-white/5 rounded-full h-3">
+            <div className="w-full bg-navy-50 rounded-full h-3">
               <div
                 className="h-full rounded-full transition-all relative"
                 style={{ width: `${shipment.progress}%`, backgroundColor: progressColor }}
@@ -226,7 +226,7 @@ function RouteVisualization({ shipment }: { shipment: DashboardShipment }) {
               </div>
             </div>
           </div>
-          <div className="text-xs text-navy-300 w-20 truncate">{shipment.destPort}</div>
+          <div className="text-xs text-navy-500 w-20 truncate">{shipment.destPort}</div>
         </div>
 
         {/* Route Info */}
@@ -290,7 +290,7 @@ export default function TrackingPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Shipment Tracking</h1>
+          <h1 className="text-2xl font-bold text-navy-900">Shipment Tracking</h1>
           <p className="text-sm text-navy-400 mt-1">
             Real-time tracking for all active and completed shipments
           </p>
@@ -306,10 +306,10 @@ export default function TrackingPage() {
             placeholder="Search by ID, reference, origin, destination, or carrier..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-navy-500 focus:outline-none focus:border-ocean-500/50 focus:bg-white/10 transition-all"
+            className="w-full bg-navy-50 border border-navy-200 rounded-xl pl-10 pr-4 py-2.5 text-sm text-navy-900 placeholder:text-navy-500 focus:outline-none focus:border-ocean-500/50 focus:bg-navy-100 transition-all"
           />
         </div>
-        <div className="flex items-center gap-1 glass rounded-xl p-1 overflow-x-auto">
+        <div className="flex items-center gap-1 bg-white border border-navy-100 shadow-soft rounded-xl p-1 overflow-x-auto">
           {[
             { key: "all", label: "All", count: dashboardShipments.length },
             { key: "in-transit", label: "Transit", count: statusCounts["in-transit"] || 0 },
@@ -323,13 +323,13 @@ export default function TrackingPage() {
               onClick={() => setStatusFilter(tab.key as ShipmentStatus | "all")}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                 statusFilter === tab.key
-                  ? "bg-ocean-500/30 text-ocean-300"
-                  : "text-navy-400 hover:text-navy-200"
+                  ? "bg-ocean-500/30 text-ocean-600"
+                  : "text-navy-400 hover:text-navy-600"
               }`}
             >
               {tab.label}
               <span className={`text-[10px] px-1 py-0.5 rounded ${
-                statusFilter === tab.key ? "bg-ocean-500/30" : "bg-white/5"
+                statusFilter === tab.key ? "bg-ocean-500/30" : "bg-navy-50"
               }`}>{tab.count}</span>
             </button>
           ))}
@@ -341,7 +341,7 @@ export default function TrackingPage() {
         {/* Shipment List */}
         <div className="lg:col-span-2 space-y-2">
           {filtered.length === 0 && (
-            <div className="glass rounded-xl p-8 text-center">
+            <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-8 text-center">
               <Search className="w-8 h-8 text-navy-500 mx-auto mb-3" />
               <p className="text-sm text-navy-400">No shipments match your filters</p>
             </div>
@@ -358,7 +358,7 @@ export default function TrackingPage() {
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-white">{shipment.id}</span>
+                  <span className="text-sm font-semibold text-navy-900">{shipment.id}</span>
                   {shipment.cargoType === "cold-chain" && (
                     <Thermometer className="w-3 h-3 text-blue-400" />
                   )}
@@ -373,7 +373,7 @@ export default function TrackingPage() {
               </div>
 
               {/* Mini progress bar */}
-              <div className="w-full bg-white/5 rounded-full h-1 mb-2">
+              <div className="w-full bg-navy-50 rounded-full h-1 mb-2">
                 <div
                   className={`h-full rounded-full ${
                     shipment.status === "delayed" ? "bg-red-500" :
@@ -391,7 +391,7 @@ export default function TrackingPage() {
               </div>
 
               {shipment.alerts.filter((a) => !a.resolved).length > 0 && (
-                <div className="mt-2 flex items-center gap-1 text-[10px] text-red-300">
+                <div className="mt-2 flex items-center gap-1 text-[10px] text-red-600">
                   <AlertTriangle className="w-3 h-3" />
                   {shipment.alerts.filter((a) => !a.resolved).length} active alert{shipment.alerts.filter((a) => !a.resolved).length !== 1 ? "s" : ""}
                 </div>
@@ -403,9 +403,9 @@ export default function TrackingPage() {
         {/* Detail Panel */}
         <div className="lg:col-span-3 space-y-4">
           {!selectedShipment ? (
-            <div className="glass rounded-xl p-12 text-center">
+            <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-12 text-center">
               <Ship className="w-12 h-12 text-navy-600 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-navy-300 mb-2">Select a Shipment</h3>
+              <h3 className="text-lg font-medium text-navy-500 mb-2">Select a Shipment</h3>
               <p className="text-sm text-navy-500">
                 Click on a shipment from the list to view detailed tracking information,
                 timeline, temperature data, and cost breakdown.
@@ -414,11 +414,11 @@ export default function TrackingPage() {
           ) : (
             <>
               {/* Shipment Header */}
-              <div className="glass rounded-xl p-5">
+              <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-5">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <div className="flex items-center gap-3 mb-1">
-                      <h2 className="text-xl font-bold text-white">{selectedShipment.id}</h2>
+                      <h2 className="text-xl font-bold text-navy-900">{selectedShipment.id}</h2>
                       <StatusBadge status={selectedShipment.status} />
                     </div>
                     <div className="text-sm text-navy-400">
@@ -426,7 +426,7 @@ export default function TrackingPage() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg font-bold text-white">{selectedShipment.value}</div>
+                    <div className="text-lg font-bold text-navy-900">{selectedShipment.value}</div>
                     <div className="text-xs text-navy-500">{selectedShipment.weight}</div>
                   </div>
                 </div>
@@ -443,9 +443,9 @@ export default function TrackingPage() {
                     { label: "Volume", value: selectedShipment.volume },
                     { label: "Reference", value: selectedShipment.reference },
                   ].map((item) => (
-                    <div key={item.label} className="bg-white/5 rounded-lg px-3 py-2">
+                    <div key={item.label} className="bg-navy-50 rounded-lg px-3 py-2">
                       <div className="text-[10px] text-navy-500">{item.label}</div>
-                      <div className="text-xs font-medium text-white truncate">{item.value}</div>
+                      <div className="text-xs font-medium text-navy-900 truncate">{item.value}</div>
                     </div>
                   ))}
                 </div>
@@ -465,22 +465,22 @@ export default function TrackingPage() {
                       key={alert.id}
                       className={`rounded-xl px-4 py-3 flex items-start gap-3 ${
                         alert.severity === "critical"
-                          ? "bg-red-500/10 border border-red-500/20"
+                          ? "bg-red-50 border border-red-500/20"
                           : alert.severity === "warning"
-                          ? "bg-cargo-500/10 border border-cargo-500/20"
-                          : "bg-ocean-500/10 border border-ocean-500/20"
+                          ? "bg-cargo-500/10 border border-amber-200"
+                          : "bg-ocean-50 border border-ocean-200"
                       }`}
                     >
                       <AlertTriangle className={`w-4 h-4 flex-shrink-0 mt-0.5 ${
-                        alert.severity === "critical" ? "text-red-400" :
+                        alert.severity === "critical" ? "text-red-600" :
                         alert.severity === "warning" ? "text-cargo-400" :
                         "text-ocean-400"
                       }`} />
                       <div>
                         <div className={`text-sm font-medium ${
-                          alert.severity === "critical" ? "text-red-300" :
-                          alert.severity === "warning" ? "text-cargo-300" :
-                          "text-ocean-300"
+                          alert.severity === "critical" ? "text-red-600" :
+                          alert.severity === "warning" ? "text-cargo-600" :
+                          "text-ocean-600"
                         }`}>
                           {alert.message}
                         </div>
@@ -492,10 +492,10 @@ export default function TrackingPage() {
               )}
 
               {/* Cost Summary */}
-              <div className="glass rounded-xl p-5">
+              <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-4">
                   <BarChart3 className="w-4 h-4 text-ocean-400" />
-                  <h3 className="text-sm font-semibold text-white">Cost Summary</h3>
+                  <h3 className="text-sm font-semibold text-navy-900">Cost Summary</h3>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
                   {[
@@ -504,9 +504,9 @@ export default function TrackingPage() {
                     { label: "Insurance", value: selectedShipment.costs.insurance, color: "text-blue-400" },
                     { label: "Drayage", value: selectedShipment.costs.drayage, color: "text-purple-400" },
                     { label: "Customs", value: selectedShipment.costs.customs, color: "text-pink-400" },
-                    { label: "Storage", value: selectedShipment.costs.storage, color: "text-green-400" },
+                    { label: "Storage", value: selectedShipment.costs.storage, color: "text-emerald-600" },
                   ].map((cost) => (
-                    <div key={cost.label} className="bg-white/5 rounded-lg px-3 py-2">
+                    <div key={cost.label} className="bg-navy-50 rounded-lg px-3 py-2">
                       <div className="text-[10px] text-navy-500">{cost.label}</div>
                       <div className={`text-sm font-medium ${cost.color}`}>
                         ${cost.value.toLocaleString()}
@@ -515,21 +515,21 @@ export default function TrackingPage() {
                   ))}
                 </div>
 
-                <div className="flex items-center gap-4 pt-3 border-t border-white/5">
+                <div className="flex items-center gap-4 pt-3 border-t border-navy-100">
                   <div className="flex-1">
                     <div className="text-[10px] text-navy-500">Total</div>
-                    <div className="text-lg font-bold text-white">${selectedShipment.costs.total.toLocaleString()}</div>
+                    <div className="text-lg font-bold text-navy-900">${selectedShipment.costs.total.toLocaleString()}</div>
                   </div>
                   <div className="flex-1">
                     <div className="text-[10px] text-navy-500">Per Unit</div>
-                    <div className="text-lg font-bold text-ocean-300">${selectedShipment.costs.perUnit}</div>
+                    <div className="text-lg font-bold text-ocean-600">${selectedShipment.costs.perUnit}</div>
                   </div>
                   <div className={`flex-1 ${
                     selectedShipment.costs.variance <= 0 ? "" : ""
                   }`}>
                     <div className="text-[10px] text-navy-500">vs Budget</div>
                     <div className={`text-lg font-bold ${
-                      selectedShipment.costs.variance <= 0 ? "text-green-400" : "text-red-400"
+                      selectedShipment.costs.variance <= 0 ? "text-emerald-600" : "text-red-600"
                     }`}>
                       {selectedShipment.costs.variance > 0 ? "+" : ""}{selectedShipment.costs.variance.toFixed(1)}%
                     </div>
@@ -538,10 +538,10 @@ export default function TrackingPage() {
               </div>
 
               {/* Timeline */}
-              <div className="glass rounded-xl p-5">
+              <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-4">
                   <Clock className="w-4 h-4 text-ocean-400" />
-                  <h3 className="text-sm font-semibold text-white">Shipment Timeline</h3>
+                  <h3 className="text-sm font-semibold text-navy-900">Shipment Timeline</h3>
                 </div>
                 <ShipmentTimeline shipment={selectedShipment} />
               </div>

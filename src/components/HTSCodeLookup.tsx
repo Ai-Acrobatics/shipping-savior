@@ -234,7 +234,7 @@ export default function HTSCodeLookup({ onSelectRate }: Props) {
             placeholder="Search HTS code or product description..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full glass rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/60"
+            className="w-full bg-white border border-navy-100 shadow-soft rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500/30 focus:border-ocean-500 bg-navy-900/60"
           />
         </div>
         <div className="relative">
@@ -242,7 +242,7 @@ export default function HTSCodeLookup({ onSelectRate }: Props) {
           <select
             value={selectedCountry}
             onChange={(e) => setSelectedCountry(e.target.value)}
-            className="glass rounded-xl pl-9 pr-8 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/60 appearance-none cursor-pointer"
+            className="bg-white border border-navy-100 shadow-soft rounded-xl pl-9 pr-8 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500/30 focus:border-ocean-500 bg-navy-900/60 appearance-none cursor-pointer"
           >
             {COUNTRY_ORIGINS.map((c) => (
               <option key={c.code} value={c.code}>
@@ -258,7 +258,7 @@ export default function HTSCodeLookup({ onSelectRate }: Props) {
         <Info className="w-3 h-3" />
         <span>
           Showing duty rates for goods originating in{" "}
-          <span className="text-ocean-300 font-medium">
+          <span className="text-ocean-600 font-medium">
             {selectedCountryInfo?.flag} {selectedCountryInfo?.label}
           </span>
           . Rates are MFN (Column 1) unless noted. Verify at{" "}
@@ -281,28 +281,28 @@ export default function HTSCodeLookup({ onSelectRate }: Props) {
           return (
             <div
               key={item.code}
-              className="glass rounded-xl overflow-hidden"
+              className="bg-white border border-navy-100 shadow-soft rounded-xl overflow-hidden"
             >
               {/* Main row */}
               <div
-                className="flex items-center gap-3 p-4 cursor-pointer hover:bg-white/5 transition-colors"
+                className="flex items-center gap-3 p-4 cursor-pointer hover:bg-navy-50 transition-colors"
                 onClick={() => setExpandedCode(isExpanded ? null : item.code)}
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-sm text-ocean-300 font-semibold">
+                    <span className="font-mono text-sm text-ocean-600 font-semibold">
                       {item.code}
                     </span>
                     <span className="text-xs text-navy-500 hidden sm:inline">
                       Ch. {item.chapter}
                     </span>
                     {countryRate?.program && (
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-cargo-500/20 text-cargo-300">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-cargo-600">
                         {countryRate.program}
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-navy-300 truncate">{item.description}</p>
+                  <p className="text-xs text-navy-500 truncate">{item.description}</p>
                 </div>
 
                 <div className="flex items-center gap-3 flex-shrink-0">
@@ -310,10 +310,10 @@ export default function HTSCodeLookup({ onSelectRate }: Props) {
                     <div
                       className={`text-lg font-bold ${
                         countryRate?.rateNum === 0
-                          ? "text-green-400"
+                          ? "text-emerald-600"
                           : countryRate?.rateNum > 20
-                          ? "text-red-400"
-                          : "text-cargo-300"
+                          ? "text-red-600"
+                          : "text-cargo-600"
                       }`}
                     >
                       {countryRate?.rate ?? "N/A"}
@@ -332,7 +332,7 @@ export default function HTSCodeLookup({ onSelectRate }: Props) {
                           selectedCountry
                         );
                       }}
-                      className="text-xs px-3 py-1.5 rounded-lg bg-ocean-600/30 hover:bg-ocean-600/50 text-ocean-300 transition-colors"
+                      className="text-xs px-3 py-1.5 rounded-lg bg-ocean-600/30 hover:bg-ocean-600/50 text-ocean-600 transition-colors"
                     >
                       Use Rate
                     </button>
@@ -348,13 +348,13 @@ export default function HTSCodeLookup({ onSelectRate }: Props) {
 
               {/* Expanded: all country rates */}
               {isExpanded && (
-                <div className="border-t border-white/5 p-4 bg-navy-950/30">
+                <div className="border-t border-navy-100 p-4 bg-white/30">
                   <div className="text-xs text-navy-400 mb-3 font-medium">
                     {item.section} · Unit: {item.unit}
                   </div>
 
                   {item.notes && (
-                    <div className="flex items-start gap-2 text-xs text-cargo-300 bg-cargo-500/10 rounded-lg p-3 mb-3">
+                    <div className="flex items-start gap-2 text-xs text-cargo-600 bg-amber-50 rounded-lg p-3 mb-3">
                       <Info className="w-3 h-3 mt-0.5 flex-shrink-0" />
                       {item.notes}
                     </div>
@@ -368,7 +368,7 @@ export default function HTSCodeLookup({ onSelectRate }: Props) {
                           key={country.code}
                           className={`rounded-lg p-2 text-center ${
                             country.code === selectedCountry
-                              ? "bg-ocean-600/20 border border-ocean-500/30"
+                              ? "bg-ocean-600/20 border border-ocean-200"
                               : "bg-white/3"
                           }`}
                         >
@@ -377,10 +377,10 @@ export default function HTSCodeLookup({ onSelectRate }: Props) {
                           <div
                             className={`text-sm font-semibold mt-1 ${
                               rate?.rateNum === 0
-                                ? "text-green-400"
+                                ? "text-emerald-600"
                                 : rate?.rateNum > 20
-                                ? "text-red-400"
-                                : "text-cargo-300"
+                                ? "text-red-600"
+                                : "text-cargo-600"
                             }`}
                           >
                             {rate?.rate ?? "N/A"}
@@ -399,7 +399,7 @@ export default function HTSCodeLookup({ onSelectRate }: Props) {
         })}
       </div>
 
-      <div className="text-xs text-navy-600 text-center">
+      <div className="text-xs text-navy-400 text-center">
         Sample HTS codes for SE Asia import categories. Full database: 100K+ codes at hts.usitc.gov
       </div>
     </div>

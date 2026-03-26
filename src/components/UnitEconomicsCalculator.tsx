@@ -70,26 +70,26 @@ export default function UnitEconomicsCalculator() {
   );
 
   const costBreakdown = [
-    { label: "Origin Cost", value: result.originCost, color: "bg-ocean-600" },
-    { label: "Shipping", value: result.shippingPerUnit, color: "bg-ocean-500" },
-    { label: "Duty/Tariff", value: result.dutyPerUnit, color: "bg-cargo-600" },
-    { label: "Fulfillment", value: result.fulfillmentPerUnit, color: "bg-cargo-500" },
+    { label: "Origin Cost", value: result.originCost, color: "bg-ocean-500" },
+    { label: "Shipping", value: result.shippingPerUnit, color: "bg-ocean-400" },
+    { label: "Duty/Tariff", value: result.dutyPerUnit, color: "bg-cargo-500" },
+    { label: "Fulfillment", value: result.fulfillmentPerUnit, color: "bg-cargo-400" },
   ];
 
   const totalCost = costBreakdown.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="grid lg:grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-2 gap-10">
       {/* Inputs */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-navy-100 flex items-center gap-2">
-          <Package className="w-5 h-5 text-ocean-400" />
+      <div className="space-y-5">
+        <h3 className="text-lg font-semibold text-navy-900 flex items-center gap-2">
+          <Package className="w-5 h-5 text-ocean-500" />
           Import Parameters
         </h3>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-xs text-navy-300 block mb-1">
+            <label className="text-xs font-medium text-navy-500 block mb-1.5">
               Unit Cost at Origin
             </label>
             <div className="relative">
@@ -99,25 +99,25 @@ export default function UnitEconomicsCalculator() {
                 step="0.01"
                 value={unitCost}
                 onChange={(e) => setUnitCost(parseFloat(e.target.value) || 0)}
-                className="w-full glass rounded-lg px-7 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/50"
+                className="input-light pl-7"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-xs text-navy-300 block mb-1">
+            <label className="text-xs font-medium text-navy-500 block mb-1.5">
               Units per Container
             </label>
             <input
               type="number"
               value={unitsPerContainer}
               onChange={(e) => setUnitsPerContainer(parseInt(e.target.value) || 0)}
-              className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/50"
+              className="input-light"
             />
           </div>
 
           <div>
-            <label className="text-xs text-navy-300 block mb-1">
+            <label className="text-xs font-medium text-navy-500 block mb-1.5">
               Container Shipping Cost
             </label>
             <div className="relative">
@@ -126,13 +126,13 @@ export default function UnitEconomicsCalculator() {
                 type="number"
                 value={containerCost}
                 onChange={(e) => setContainerCost(parseFloat(e.target.value) || 0)}
-                className="w-full glass rounded-lg px-7 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/50"
+                className="input-light pl-7"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-xs text-navy-300 block mb-1">
+            <label className="text-xs font-medium text-navy-500 block mb-1.5">
               Duty Rate (%)
             </label>
             <input
@@ -140,12 +140,12 @@ export default function UnitEconomicsCalculator() {
               step="0.1"
               value={dutyRate}
               onChange={(e) => setDutyRate(parseFloat(e.target.value) || 0)}
-              className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/50"
+              className="input-light"
             />
           </div>
 
           <div>
-            <label className="text-xs text-navy-300 block mb-1">
+            <label className="text-xs font-medium text-navy-500 block mb-1.5">
               Fulfillment Cost/Unit
             </label>
             <div className="relative">
@@ -155,26 +155,26 @@ export default function UnitEconomicsCalculator() {
                 step="0.01"
                 value={fulfillmentCost}
                 onChange={(e) => setFulfillmentCost(parseFloat(e.target.value) || 0)}
-                className="w-full glass rounded-lg px-7 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/50"
+                className="input-light pl-7"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-xs text-navy-300 block mb-1">
+            <label className="text-xs font-medium text-navy-500 block mb-1.5">
               Wholesale Markup (%)
             </label>
             <input
               type="number"
               value={wholesaleMarkup}
               onChange={(e) => setWholesaleMarkup(parseFloat(e.target.value) || 0)}
-              className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/50"
+              className="input-light"
             />
           </div>
         </div>
 
         <div>
-          <label className="text-xs text-navy-300 block mb-1">
+          <label className="text-xs font-medium text-navy-500 block mb-1.5">
             Target Retail Price
           </label>
           <div className="relative">
@@ -184,7 +184,7 @@ export default function UnitEconomicsCalculator() {
               step="0.01"
               value={retailPrice}
               onChange={(e) => setRetailPrice(parseFloat(e.target.value) || 0)}
-              className="w-full glass rounded-lg px-7 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/50"
+              className="input-light pl-7"
             />
           </div>
         </div>
@@ -192,14 +192,14 @@ export default function UnitEconomicsCalculator() {
 
       {/* Results */}
       <div className="space-y-6">
-        <h3 className="text-lg font-semibold text-navy-100 flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-cargo-400" />
+        <h3 className="text-lg font-semibold text-navy-900 flex items-center gap-2">
+          <TrendingUp className="w-5 h-5 text-cargo-500" />
           Unit Economics
         </h3>
 
         {/* Cost breakdown bar */}
         <div>
-          <div className="flex rounded-lg overflow-hidden h-8 mb-2">
+          <div className="flex rounded-lg overflow-hidden h-8 mb-3 shadow-inner-soft">
             {costBreakdown.map((item) => (
               <div
                 key={item.label}
@@ -212,8 +212,8 @@ export default function UnitEconomicsCalculator() {
           </div>
           <div className="flex gap-4 flex-wrap">
             {costBreakdown.map((item) => (
-              <div key={item.label} className="flex items-center gap-1.5 text-xs text-navy-300">
-                <div className={`w-2 h-2 rounded-full ${item.color}`} />
+              <div key={item.label} className="flex items-center gap-1.5 text-xs text-navy-600">
+                <div className={`w-2.5 h-2.5 rounded-full ${item.color}`} />
                 {item.label}: ${item.value.toFixed(4)}
               </div>
             ))}
@@ -221,70 +221,70 @@ export default function UnitEconomicsCalculator() {
         </div>
 
         {/* Value chain */}
-        <div className="glass rounded-xl p-4">
+        <div className="bg-navy-50 border border-navy-100 rounded-xl p-5">
           <div className="flex items-center justify-between text-sm mb-6">
             <div className="text-center">
-              <div className="text-navy-400 text-xs">Origin</div>
-              <div className="text-xl font-bold text-ocean-300">
+              <div className="text-navy-400 text-xs font-medium">Origin</div>
+              <div className="text-xl font-bold text-ocean-600">
                 ${result.originCost.toFixed(2)}
               </div>
             </div>
-            <div className="text-navy-600">→</div>
+            <div className="text-navy-300 text-lg">&rarr;</div>
             <div className="text-center">
-              <div className="text-navy-400 text-xs">Landed</div>
-              <div className="text-xl font-bold text-ocean-400">
+              <div className="text-navy-400 text-xs font-medium">Landed</div>
+              <div className="text-xl font-bold text-ocean-700">
                 ${result.landedCost.toFixed(2)}
               </div>
             </div>
-            <div className="text-navy-600">→</div>
+            <div className="text-navy-300 text-lg">&rarr;</div>
             <div className="text-center">
-              <div className="text-navy-400 text-xs">Wholesale</div>
-              <div className="text-xl font-bold text-cargo-400">
+              <div className="text-navy-400 text-xs font-medium">Wholesale</div>
+              <div className="text-xl font-bold text-cargo-600">
                 ${result.wholesalePrice.toFixed(2)}
               </div>
             </div>
-            <div className="text-navy-600">→</div>
+            <div className="text-navy-300 text-lg">&rarr;</div>
             <div className="text-center">
-              <div className="text-navy-400 text-xs">Retail</div>
-              <div className="text-xl font-bold text-cargo-300">
+              <div className="text-navy-400 text-xs font-medium">Retail</div>
+              <div className="text-xl font-bold text-cargo-700">
                 ${result.retailPrice.toFixed(2)}
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10">
+          <div className="grid grid-cols-3 gap-4 pt-4 border-t border-navy-200">
             <div className="text-center">
-              <div className="text-xs text-navy-400">Profit/Unit</div>
-              <div className="text-lg font-bold text-green-400">
+              <div className="text-xs text-navy-400 font-medium">Profit/Unit</div>
+              <div className="text-lg font-bold text-emerald-600">
                 ${result.profitPerUnit.toFixed(2)}
               </div>
             </div>
             <div className="text-center">
-              <div className="text-xs text-navy-400">Wholesale Margin</div>
-              <div className="text-lg font-bold text-green-400">
+              <div className="text-xs text-navy-400 font-medium">Wholesale Margin</div>
+              <div className="text-lg font-bold text-emerald-600">
                 {result.wholesaleMargin.toFixed(1)}%
               </div>
             </div>
             <div className="text-center">
-              <div className="text-xs text-navy-400">Container Profit</div>
-              <div className="text-lg font-bold text-green-400">
+              <div className="text-xs text-navy-400 font-medium">Container Profit</div>
+              <div className="text-lg font-bold text-emerald-600">
                 ${result.containerProfit.toLocaleString("en-US", { maximumFractionDigits: 0 })}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="glass rounded-xl p-4 border-cargo-500/30">
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
           <div className="flex items-center gap-2 mb-2">
-            <DollarSign className="w-4 h-4 text-cargo-400" />
-            <span className="text-sm font-medium text-cargo-300">ROI Highlight</span>
+            <DollarSign className="w-4 h-4 text-amber-600" />
+            <span className="text-sm font-semibold text-amber-700">ROI Highlight</span>
           </div>
-          <p className="text-sm text-navy-300">
-            At <strong className="text-white">${result.originCost.toFixed(2)}/unit</strong> origin cost
-            with <strong className="text-white">{unitsPerContainer.toLocaleString()}</strong> units per container,
-            you generate <strong className="text-green-400">${result.containerProfit.toLocaleString("en-US", { maximumFractionDigits: 0 })}</strong> profit
+          <p className="text-sm text-navy-600">
+            At <strong className="text-navy-900">${result.originCost.toFixed(2)}/unit</strong> origin cost
+            with <strong className="text-navy-900">{unitsPerContainer.toLocaleString()}</strong> units per container,
+            you generate <strong className="text-emerald-600">${result.containerProfit.toLocaleString("en-US", { maximumFractionDigits: 0 })}</strong> profit
             per container after all costs. That&apos;s a{" "}
-            <strong className="text-green-400">
+            <strong className="text-emerald-600">
               {((result.profitPerUnit / result.landedCost) * 100).toFixed(0)}%
             </strong>{" "}
             return on landed cost.

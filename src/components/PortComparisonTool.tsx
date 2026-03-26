@@ -118,9 +118,9 @@ const portsData: PortData[] = [
 ];
 
 const congestionColors = {
-  Low: "text-green-400 bg-green-400/10",
+  Low: "text-emerald-600 bg-green-400/10",
   Medium: "text-yellow-400 bg-yellow-400/10",
-  High: "text-red-400 bg-red-400/10",
+  High: "text-red-600 bg-red-400/10",
 };
 
 interface RadarTooltipProps {
@@ -132,9 +132,9 @@ interface RadarTooltipProps {
 function RadarTooltip({ active, payload, label }: RadarTooltipProps) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="glass rounded-lg p-2 border border-white/20 text-xs">
-      <div className="text-white font-medium">{label}</div>
-      <div className="text-ocean-300">{payload[0].value}/100</div>
+    <div className="bg-white border border-navy-100 shadow-soft rounded-lg p-2 border border-navy-200 text-xs">
+      <div className="text-navy-900 font-medium">{label}</div>
+      <div className="text-ocean-600">{payload[0].value}/100</div>
     </div>
   );
 }
@@ -172,7 +172,7 @@ export default function PortComparisonTool() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <h3 className="text-lg font-semibold text-navy-100 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-navy-700 flex items-center gap-2">
           <Anchor className="w-5 h-5 text-ocean-400" />
           US Port Comparison Tool
         </h3>
@@ -190,8 +190,8 @@ export default function PortComparisonTool() {
             onClick={() => togglePort(port.id)}
             className={`text-xs px-3 py-1.5 rounded-full transition-all ${
               selectedPorts.includes(port.id)
-                ? "bg-ocean-600 text-white border border-ocean-500"
-                : "glass text-navy-300 hover:text-white"
+                ? "bg-ocean-600 text-navy-900 border border-ocean-500"
+                : "bg-white border border-navy-100 shadow-soft text-navy-500 hover:text-navy-900"
             }`}
           >
             {port.code} — {port.name}
@@ -206,7 +206,7 @@ export default function PortComparisonTool() {
             <tr className="text-navy-400">
               <th className="text-left py-2 pr-4 font-medium">Metric</th>
               {selectedPortData.map((port) => (
-                <th key={port.id} className="text-center py-2 px-3 font-medium text-white">
+                <th key={port.id} className="text-center py-2 px-3 font-medium text-navy-900">
                   {port.code}
                   <div className="text-navy-400 font-normal text-[10px]">{port.state}</div>
                 </th>
@@ -264,7 +264,7 @@ export default function PortComparisonTool() {
                 icon: Anchor,
                 render: (p: PortData) =>
                   p.ftzNearby ? (
-                    <span className="text-green-400">{p.ftzName}</span>
+                    <span className="text-emerald-600">{p.ftzName}</span>
                   ) : (
                     <span className="text-navy-500">None</span>
                   ),
@@ -275,7 +275,7 @@ export default function PortComparisonTool() {
                 icon: Anchor,
                 render: (p: PortData) =>
                   p.coldChain ? (
-                    <span className="text-ocean-300">Available</span>
+                    <span className="text-ocean-600">Available</span>
                   ) : (
                     <span className="text-navy-500">N/A</span>
                   ),
@@ -293,7 +293,7 @@ export default function PortComparisonTool() {
                   : null;
 
               return (
-                <tr key={row.label} className="border-t border-white/5">
+                <tr key={row.label} className="border-t border-navy-100">
                   <td className="py-2 pr-4 text-navy-400">{row.label}</td>
                   {selectedPortData.map((port) => {
                     const val =
@@ -303,7 +303,7 @@ export default function PortComparisonTool() {
                       <td
                         key={port.id}
                         className={`py-2 px-3 text-center ${
-                          isBest ? "text-green-400 font-semibold" : "text-navy-200"
+                          isBest ? "text-emerald-600 font-semibold" : "text-navy-400"
                         }`}
                       >
                         {row.render(port)}
@@ -318,9 +318,9 @@ export default function PortComparisonTool() {
       </div>
 
       {/* Radar chart */}
-      <div className="glass rounded-xl p-4">
+      <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-4">
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-          <span className="text-sm font-medium text-navy-200">Port Performance Radar</span>
+          <span className="text-sm font-medium text-navy-400">Port Performance Radar</span>
           <div className="flex gap-1 flex-wrap">
             {portsData.map((port) => (
               <button
@@ -328,8 +328,8 @@ export default function PortComparisonTool() {
                 onClick={() => setRadarPort(port.id)}
                 className={`text-xs px-2.5 py-1 rounded-full transition-all ${
                   radarPort === port.id
-                    ? "bg-ocean-600 text-white"
-                    : "glass text-navy-300 hover:text-white"
+                    ? "bg-ocean-600 text-navy-900"
+                    : "bg-white border border-navy-100 shadow-soft text-navy-500 hover:text-navy-900"
                 }`}
               >
                 {port.code}

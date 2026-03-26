@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Header from "@/components/Header";
 import ScrollReveal from "@/components/ScrollReveal";
+import ParallaxSection from "@/components/ParallaxSection";
+import AnimatedCounter from "@/components/AnimatedCounter";
 import UnitEconomicsCalculator from "@/components/UnitEconomicsCalculator";
 import FTZSavingsCalculator from "@/components/FTZSavingsCalculator";
 import ShippingRouteMap from "@/components/ShippingRouteMap";
@@ -19,37 +21,49 @@ const platformFeatures = [
     icon: Calculator,
     title: "Landed Cost Calculator",
     description: "Unit cost + shipping + duties + fulfillment = true per-unit landed cost with multi-currency support",
-    color: "from-ocean-500 to-ocean-700",
+    color: "from-ocean-500 to-ocean-600",
+    bgLight: "bg-ocean-50",
+    iconColor: "text-ocean-600",
   },
   {
     icon: Shield,
     title: "FTZ Savings Analyzer",
     description: "Lock duty rates at entry, model incremental withdrawals, compare FTZ vs non-FTZ scenarios",
-    color: "from-green-500 to-green-700",
+    color: "from-emerald-500 to-emerald-600",
+    bgLight: "bg-emerald-50",
+    iconColor: "text-emerald-600",
   },
   {
     icon: Route,
     title: "Route Comparison",
     description: "Compare carrier options with backhaul pricing, transshipment routes, and transit time analysis",
-    color: "from-cargo-500 to-cargo-700",
+    color: "from-cargo-500 to-cargo-600",
+    bgLight: "bg-amber-50",
+    iconColor: "text-amber-600",
   },
   {
     icon: Globe,
     title: "Tariff Estimator",
     description: "HTS code lookup with duty rates by country of origin. SE Asia focus: Vietnam, Thailand, Indonesia, Cambodia",
-    color: "from-purple-500 to-purple-700",
+    color: "from-purple-500 to-purple-600",
+    bgLight: "bg-purple-50",
+    iconColor: "text-purple-600",
   },
   {
     icon: Container,
     title: "Container Calculator",
     description: "Optimize utilization by volume AND weight. Shows which limit you hit first and cost-per-unit at scale",
-    color: "from-blue-500 to-blue-700",
+    color: "from-blue-500 to-blue-600",
+    bgLight: "bg-blue-50",
+    iconColor: "text-blue-600",
   },
   {
     icon: Map,
     title: "Interactive Route Map",
     description: "WebGL-powered visualization of shipping lanes, transshipment hubs, and port locations worldwide",
-    color: "from-teal-500 to-teal-700",
+    color: "from-teal-500 to-teal-600",
+    bgLight: "bg-teal-50",
+    iconColor: "text-teal-600",
   },
 ];
 
@@ -89,6 +103,7 @@ const roadmapPhases = [
     status: "In Progress",
     items: ["Interactive proposal website", "Platform wireframes", "Architecture diagrams", "Live calculators"],
     color: "border-ocean-500",
+    dotColor: "bg-ocean-500",
   },
   {
     phase: 2,
@@ -96,6 +111,7 @@ const roadmapPhases = [
     status: "Next",
     items: ["HTS tariff dataset (100K+ codes)", "Landed cost calculator", "Container utilization", "Port & route data"],
     color: "border-cargo-500",
+    dotColor: "bg-cargo-500",
   },
   {
     phase: 3,
@@ -103,13 +119,15 @@ const roadmapPhases = [
     status: "In Progress",
     items: ["Interactive shipping route map", "Port comparison tool", "Dashboard charts", "Carrier comparison UI"],
     color: "border-purple-500",
+    dotColor: "bg-purple-500",
   },
   {
     phase: 4,
     title: "FTZ Analyzer + Tariff Scenarios",
     status: "In Progress",
     items: ["Full FTZ savings modeler", "Tariff scenario analysis", "Multi-scenario comparison", "What-if modeling"],
-    color: "border-green-500",
+    color: "border-emerald-500",
+    dotColor: "bg-emerald-500",
   },
   {
     phase: 5,
@@ -117,6 +135,7 @@ const roadmapPhases = [
     status: "In Progress",
     items: ["40+ glossary terms", "All 11 Incoterms 2020", "CBP compliance guides", "Trade regulations by region"],
     color: "border-blue-500",
+    dotColor: "bg-blue-500",
   },
   {
     phase: 6,
@@ -124,87 +143,85 @@ const roadmapPhases = [
     status: "In Progress",
     items: ["Shipment tracking overview", "Cost/margin dashboard", "Cold chain vs general cargo", "Partner status"],
     color: "border-teal-500",
+    dotColor: "bg-teal-500",
   },
 ];
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-white">
       <Header />
 
-      {/* Hero */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-navy-950 via-navy-900 to-navy-950" />
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-ocean-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-cargo-500/10 rounded-full blur-3xl" />
+      {/* ===== HERO ===== */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden hero-gradient">
+        {/* Decorative blobs */}
+        <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-ocean-200/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 -right-32 w-[500px] h-[500px] bg-cargo-200/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-ocean-100/40 rounded-full blur-3xl" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-          <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-8">
-            <Zap className="w-4 h-4 text-cargo-400" />
-            <span className="text-sm text-navy-200">International Logistics Platform</span>
+          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-navy-200/60 rounded-full px-5 py-2.5 mb-8 shadow-soft">
+            <Zap className="w-4 h-4 text-ocean-500" />
+            <span className="text-sm font-medium text-navy-600">International Logistics Platform</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-            <span className="gradient-text">Shipping</span>{" "}
-            <span className="text-white">Savior</span>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-navy-900">
+            <span className="gradient-text-premium">Shipping</span>{" "}
+            <span>Savior</span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-navy-200 max-w-3xl mx-auto mb-4 leading-relaxed">
+          <p className="text-xl md:text-2xl text-navy-600 max-w-3xl mx-auto mb-4 leading-relaxed">
             Turn manual freight brokerage into{" "}
-            <span className="text-ocean-400 font-semibold">data-driven operations</span>.
+            <span className="text-ocean-600 font-semibold">data-driven operations</span>.
             Calculators, route comparison, FTZ strategy, and tariff optimization
             — all in one platform.
           </p>
 
-          <p className="text-lg text-navy-300 max-w-2xl mx-auto mb-10">
+          <p className="text-lg text-navy-400 max-w-2xl mx-auto mb-10">
             Built for international freight operators who dominate cold chain exports
             and are expanding into SE Asia consumer goods imports.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="#calculators"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-ocean-600 to-ocean-500 hover:from-ocean-500 hover:to-ocean-400 text-white font-semibold px-8 py-4 rounded-xl transition-all hover:scale-105 shadow-lg shadow-ocean-500/20"
-            >
+            <a href="#calculators" className="btn-primary px-8 py-4 text-base">
               Try Live Calculators
               <ArrowRight className="w-5 h-5" />
             </a>
-            <a
-              href="#platform"
-              className="inline-flex items-center gap-2 glass glass-hover text-navy-100 font-semibold px-8 py-4 rounded-xl"
-            >
+            <a href="#platform" className="btn-secondary px-8 py-4 text-base">
               Explore Platform
             </a>
           </div>
 
           {/* Stats bar */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { label: "HTS Codes", value: "100K+", icon: Database },
               { label: "Ports Mapped", value: "3,700+", icon: Anchor },
               { label: "FTZ Zones", value: "260+", icon: Shield },
               { label: "API Cost", value: "$0", icon: DollarSign },
             ].map((stat) => (
-              <div key={stat.label} className="glass rounded-xl p-4">
-                <stat.icon className="w-5 h-5 text-ocean-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-white">{stat.value}</div>
-                <div className="text-xs text-navy-400">{stat.label}</div>
+              <div key={stat.label} className="bg-white/70 backdrop-blur-sm border border-navy-200/50 rounded-xl p-5 shadow-soft hover:shadow-card transition-shadow">
+                <stat.icon className="w-5 h-5 text-ocean-500 mx-auto mb-2" />
+                <div className="text-2xl font-bold text-navy-900">
+                  <AnimatedCounter value={stat.value} />
+                </div>
+                <div className="text-xs font-medium text-navy-400 mt-1">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Platform Features */}
-      <section id="platform" className="py-24 px-6">
+      {/* ===== PLATFORM FEATURES ===== */}
+      <section id="platform" className="py-28 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-white mb-4">
+            <div className="text-center mb-20">
+              <p className="text-sm font-semibold text-ocean-600 tracking-wider uppercase mb-3">Platform</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-5">
                 Complete Logistics <span className="gradient-text">Toolkit</span>
               </h2>
-              <p className="text-lg text-navy-300 max-w-2xl mx-auto">
+              <p className="text-lg text-navy-500 max-w-2xl mx-auto">
                 Six core tools that systematize every aspect of international freight
                 operations — from sourcing to fulfillment.
               </p>
@@ -214,12 +231,12 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {platformFeatures.map((feature, i) => (
               <ScrollReveal key={feature.title} delay={i * 100}>
-                <div className="glass glass-hover rounded-2xl p-6 h-full">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4`}>
-                    <feature.icon className="w-6 h-6 text-white" />
+                <div className="group bg-white border border-navy-100 rounded-2xl p-7 h-full hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 card-shine">
+                  <div className={`w-14 h-14 rounded-2xl ${feature.bgLight} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
+                    <feature.icon className={`w-7 h-7 ${feature.iconColor}`} />
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-                  <p className="text-sm text-navy-300 leading-relaxed">{feature.description}</p>
+                  <h3 className="text-lg font-semibold text-navy-900 mb-2">{feature.title}</h3>
+                  <p className="text-sm text-navy-500 leading-relaxed">{feature.description}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -227,19 +244,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Live Calculator: Unit Economics */}
-      <section id="calculators" className="py-24 px-6 bg-navy-950/50">
+      {/* ===== CALCULATOR ===== */}
+      <section id="calculators" className="py-28 px-6 bg-navy-50">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-4">
-                <Calculator className="w-4 h-4 text-ocean-400" />
-                <span className="text-sm text-navy-200">Live Calculator</span>
+            <div className="text-center mb-14">
+              <div className="inline-flex items-center gap-2 bg-white border border-navy-200/60 rounded-full px-4 py-2 mb-4 shadow-soft">
+                <Calculator className="w-4 h-4 text-ocean-500" />
+                <span className="text-sm font-medium text-navy-600">Live Calculator</span>
               </div>
-              <h2 className="text-4xl font-bold text-white mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-5">
                 Unit Economics <span className="gradient-text-gold">Calculator</span>
               </h2>
-              <p className="text-lg text-navy-300 max-w-2xl mx-auto">
+              <p className="text-lg text-navy-500 max-w-2xl mx-auto">
                 Model the complete value chain from origin cost to retail price.
                 See exactly where your margin comes from.
               </p>
@@ -247,58 +264,82 @@ export default function Home() {
           </ScrollReveal>
 
           <ScrollReveal>
-            <div className="glass rounded-2xl p-8">
+            <div className="bg-white border border-navy-100 rounded-2xl p-8 md:p-10 shadow-card">
               <UnitEconomicsCalculator />
             </div>
           </ScrollReveal>
         </div>
       </section>
 
-      {/* Import Process Flow */}
-      <section id="routes" className="py-24 px-6">
+      {/* ===== IMPORT PIPELINE ===== */}
+      <section id="routes" className="py-28 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-white mb-4">
+            <div className="text-center mb-20">
+              <p className="text-sm font-semibold text-ocean-600 tracking-wider uppercase mb-3">Process</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-5">
                 The Import <span className="gradient-text">Pipeline</span>
               </h2>
-              <p className="text-lg text-navy-300 max-w-2xl mx-auto">
+              <p className="text-lg text-navy-500 max-w-2xl mx-auto">
                 From sourcing in SE Asia to fulfillment in the US —
                 every step systematized with the right tools.
               </p>
             </div>
           </ScrollReveal>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {importSteps.map((step, i) => (
-              <ScrollReveal key={step.step} delay={i * 100}>
-                <div className="glass glass-hover rounded-2xl p-6 relative overflow-hidden">
-                  <div className="absolute top-4 right-4 text-5xl font-bold text-white/5">
-                    {step.step}
+          {/* Alternating timeline layout */}
+          <div className="relative">
+            {/* Center line */}
+            <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-navy-200" />
+
+            <div className="space-y-8 lg:space-y-12">
+              {importSteps.map((step, i) => (
+                <ScrollReveal key={step.step} delay={i * 100} direction={i % 2 === 0 ? "left" : "right"}>
+                  <div className={`lg:flex items-center gap-8 ${i % 2 === 0 ? "" : "lg:flex-row-reverse"}`}>
+                    <div className={`flex-1 ${i % 2 === 0 ? "lg:text-right" : "lg:text-left"}`}>
+                      <div className="bg-white border border-navy-100 rounded-2xl p-6 shadow-card hover:shadow-card-hover transition-all duration-300 inline-block text-left">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-ocean-500 to-ocean-600 flex items-center justify-center shadow-sm">
+                            <step.icon className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <span className="text-xs font-semibold text-ocean-500 uppercase tracking-wide">{step.subtitle}</span>
+                            <h3 className="text-lg font-semibold text-navy-900">{step.title}</h3>
+                          </div>
+                        </div>
+                        <p className="text-sm text-navy-500 leading-relaxed">{step.description}</p>
+                      </div>
+                    </div>
+
+                    {/* Center dot */}
+                    <div className="hidden lg:flex items-center justify-center w-12 h-12 rounded-full bg-white border-2 border-ocean-500 shadow-md flex-shrink-0 z-10">
+                      <span className="text-sm font-bold text-ocean-600">{step.step}</span>
+                    </div>
+
+                    <div className="flex-1" />
                   </div>
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-ocean-600 to-ocean-800 flex items-center justify-center mb-4">
-                    <step.icon className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="text-xs text-ocean-400 font-medium mb-1">{step.subtitle}</div>
-                  <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
-                  <p className="text-sm text-navy-300">{step.description}</p>
-                </div>
-              </ScrollReveal>
-            ))}
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Hidden Costs Warning */}
-      <section className="py-24 px-6 bg-red-950/10">
+      {/* ===== HIDDEN COSTS ===== */}
+      <ParallaxSection
+        className="py-28 px-6"
+        bgClassName="bg-gradient-to-br from-rose-50 via-red-50 to-orange-50"
+        speed={0.15}
+      >
         <div className="max-w-5xl mx-auto">
           <ScrollReveal>
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-white mb-4">
+            <div className="text-center mb-14">
+              <p className="text-sm font-semibold text-red-500 tracking-wider uppercase mb-3">Warning</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-5">
                 Hidden Costs That Add{" "}
-                <span className="text-red-400">15-25%</span>
+                <span className="text-red-500">15-25%</span>
               </h2>
-              <p className="text-lg text-navy-300 max-w-2xl mx-auto">
+              <p className="text-lg text-navy-500 max-w-2xl mx-auto">
                 Most platforms miss these. Our calculators include ALL of them
                 so your landed cost is truly accurate.
               </p>
@@ -307,31 +348,35 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {hiddenCosts.map((cost, i) => (
-              <ScrollReveal key={cost.name} delay={i * 50}>
-                <div className="glass rounded-xl p-4 border-red-500/10 hover:border-red-500/30 transition-colors">
-                  <div className="text-sm font-semibold text-white">{cost.name}</div>
-                  <div className="text-lg font-bold text-red-400">{cost.range}</div>
-                  <div className="text-xs text-navy-400 mt-1">{cost.description}</div>
+              <ScrollReveal key={cost.name} delay={i * 60}>
+                <div className="bg-white border border-red-100 rounded-xl p-5 hover:shadow-card hover:border-red-200 transition-all duration-300">
+                  <div className="text-sm font-semibold text-navy-800">{cost.name}</div>
+                  <div className="text-xl font-bold text-red-500 mt-1">{cost.range}</div>
+                  <div className="text-xs text-navy-400 mt-2">{cost.description}</div>
                 </div>
               </ScrollReveal>
             ))}
           </div>
         </div>
-      </section>
+      </ParallaxSection>
 
-      {/* FTZ Strategy Section */}
-      <section id="ftz" className="py-24 px-6">
-        <div className="max-w-7xl mx-auto">
+      {/* ===== FTZ STRATEGY ===== */}
+      <ParallaxSection
+        className="py-28 px-6"
+        bgClassName="bg-gradient-to-br from-emerald-50/80 via-green-50/50 to-teal-50/30 pattern-dots"
+        speed={0.1}
+      >
+        <div id="ftz" className="max-w-7xl mx-auto">
           <ScrollReveal>
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-4 border-green-500/30">
-                <Shield className="w-4 h-4 text-green-400" />
-                <span className="text-sm text-green-300">#1 Differentiator — Zero Competitors Offer This</span>
+            <div className="text-center mb-14">
+              <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-full px-4 py-2 mb-4 shadow-soft">
+                <Shield className="w-4 h-4 text-emerald-600" />
+                <span className="text-sm font-medium text-emerald-700">#1 Differentiator — Zero Competitors Offer This</span>
               </div>
-              <h2 className="text-4xl font-bold text-white mb-4">
-                FTZ Savings <span className="text-green-400">Analyzer</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-5">
+                FTZ Savings <span className="text-emerald-600">Analyzer</span>
               </h2>
-              <p className="text-lg text-navy-300 max-w-2xl mx-auto">
+              <p className="text-lg text-navy-500 max-w-2xl mx-auto">
                 Foreign Trade Zones lock your duty rate on entry day.
                 Model the savings with incremental withdrawal scheduling.
               </p>
@@ -339,29 +384,29 @@ export default function Home() {
           </ScrollReveal>
 
           <ScrollReveal>
-            <div className="glass rounded-2xl p-8 border-green-500/10">
+            <div className="bg-white border border-emerald-100 rounded-2xl p-8 md:p-10 shadow-card">
               <FTZSavingsCalculator />
             </div>
           </ScrollReveal>
 
           <ScrollReveal delay={200}>
-            <div className="mt-8 glass rounded-xl p-6 border-cargo-500/20">
-              <h3 className="text-lg font-semibold text-cargo-300 mb-3">
+            <div className="mt-8 bg-white border border-amber-100 rounded-xl p-7 shadow-soft">
+              <h3 className="text-lg font-semibold text-amber-700 mb-4">
                 Why FTZ Strategy Matters
               </h3>
-              <div className="grid md:grid-cols-3 gap-4 text-sm text-navy-300">
+              <div className="grid md:grid-cols-3 gap-6 text-sm text-navy-600">
                 <div>
-                  <strong className="text-white block mb-1">Rate Locking</strong>
+                  <strong className="text-navy-900 block mb-1">Rate Locking</strong>
                   Duty rates are locked on the date goods enter the FTZ — regardless of
                   future tariff increases. With shifting trade policy, this is insurance.
                 </div>
                 <div>
-                  <strong className="text-white block mb-1">Incremental Withdrawal</strong>
+                  <strong className="text-navy-900 block mb-1">Incremental Withdrawal</strong>
                   Only pay duties on goods as they leave the FTZ. Spread cash flow over months
                   instead of paying everything upfront at customs.
                 </div>
                 <div>
-                  <strong className="text-white block mb-1">260+ US Zones</strong>
+                  <strong className="text-navy-900 block mb-1">260+ US Zones</strong>
                   FTZs exist near every major port. Goods sit in bonded warehouses —
                   protected, secure, duty-deferred until you need them.
                 </div>
@@ -370,38 +415,38 @@ export default function Home() {
           </ScrollReveal>
 
           <ScrollReveal delay={300}>
-            <div className="mt-6 text-center">
+            <div className="mt-8 text-center">
               <a
                 href="/ftz-analyzer"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-semibold px-6 py-3 rounded-xl transition-all hover:scale-105 shadow-lg shadow-green-500/20"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-semibold px-8 py-3.5 rounded-xl transition-all hover:scale-[1.02] shadow-lg shadow-emerald-500/20"
               >
                 Open Full FTZ Analyzer + Tariff Scenarios
                 <ArrowRight className="w-4 h-4" />
               </a>
-              <p className="text-xs text-navy-500 mt-2">
+              <p className="text-xs text-navy-400 mt-3">
                 HTS code lookup · multi-scenario comparison · zone finder · withdrawal scheduling
               </p>
             </div>
           </ScrollReveal>
         </div>
-      </section>
+      </ParallaxSection>
 
-      {/* Visualization Layer */}
-      <section id="visualization" className="py-24 px-6 bg-navy-950/50">
+      {/* ===== VISUALIZATION LAYER ===== */}
+      <section id="visualization" className="py-28 px-6 bg-navy-50">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-4 border-purple-500/30">
-                <BarChart3 className="w-4 h-4 text-purple-400" />
-                <span className="text-sm text-purple-300">Phase 3 — Visualization Layer</span>
+            <div className="text-center mb-14">
+              <div className="inline-flex items-center gap-2 bg-purple-50 border border-purple-200 rounded-full px-4 py-2 mb-4 shadow-soft">
+                <BarChart3 className="w-4 h-4 text-purple-600" />
+                <span className="text-sm font-medium text-purple-700">Phase 3 — Visualization Layer</span>
               </div>
-              <h2 className="text-4xl font-bold text-white mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-5">
                 Route Maps, Charts &amp;{" "}
-                <span className="bg-gradient-to-r from-purple-400 to-purple-200 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
                   Port Analysis
                 </span>
               </h2>
-              <p className="text-lg text-navy-300 max-w-2xl mx-auto">
+              <p className="text-lg text-navy-500 max-w-2xl mx-auto">
                 Interactive shipping route map, carrier rate comparisons, tariff breakdowns,
                 and port performance radar — all in one visualization toolkit.
               </p>
@@ -410,7 +455,7 @@ export default function Home() {
 
           {/* Shipping Route Map */}
           <ScrollReveal>
-            <div className="glass rounded-2xl p-6 md:p-8 mb-8">
+            <div className="bg-white border border-navy-100 rounded-2xl p-6 md:p-8 mb-8 shadow-card">
               <ShippingRouteMap />
             </div>
           </ScrollReveal>
@@ -418,12 +463,12 @@ export default function Home() {
           {/* Rate Comparison + Tariff Breakdown side by side */}
           <div className="grid lg:grid-cols-2 gap-6 mb-8">
             <ScrollReveal delay={100}>
-              <div className="glass rounded-2xl p-6">
+              <div className="bg-white border border-navy-100 rounded-2xl p-6 shadow-card h-full">
                 <RateComparisonChart />
               </div>
             </ScrollReveal>
             <ScrollReveal delay={200}>
-              <div className="glass rounded-2xl p-6">
+              <div className="bg-white border border-navy-100 rounded-2xl p-6 shadow-card h-full">
                 <TariffBreakdownChart />
               </div>
             </ScrollReveal>
@@ -431,37 +476,40 @@ export default function Home() {
 
           {/* Port Comparison Tool */}
           <ScrollReveal delay={150}>
-            <div className="glass rounded-2xl p-6 md:p-8">
+            <div className="bg-white border border-navy-100 rounded-2xl p-6 md:p-8 shadow-card">
               <PortComparisonTool />
             </div>
           </ScrollReveal>
         </div>
       </section>
 
-      {/* Architecture / Tech Stack */}
-      <section id="architecture" className="py-24 px-6 bg-navy-950/50">
+      {/* ===== ARCHITECTURE / TECH STACK ===== */}
+      <section id="architecture" className="py-28 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-white mb-4">
+            <div className="text-center mb-14">
+              <p className="text-sm font-semibold text-ocean-600 tracking-wider uppercase mb-3">Technology</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-5">
                 Built on <span className="gradient-text">Free Data Sources</span>
               </h2>
-              <p className="text-lg text-navy-300 max-w-2xl mx-auto">
+              <p className="text-lg text-navy-500 max-w-2xl mx-auto">
                 All critical data comes from US government sources — zero API costs.
                 Open-source mapping stack — zero licensing fees.
               </p>
             </div>
           </ScrollReveal>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-14">
             {techStack.map((tech, i) => (
               <ScrollReveal key={tech.name} delay={i * 80}>
-                <div className="glass glass-hover rounded-xl p-5">
+                <div className="bg-white border border-navy-100 rounded-xl p-5 hover:shadow-card hover:border-navy-200 transition-all duration-300">
                   <div className="flex items-center gap-3 mb-2">
-                    <Check className="w-4 h-4 text-green-400 flex-shrink-0" />
-                    <span className="font-semibold text-white text-sm">{tech.name}</span>
+                    <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    </div>
+                    <span className="font-semibold text-navy-900 text-sm">{tech.name}</span>
                   </div>
-                  <p className="text-xs text-navy-400 ml-7">{tech.purpose}</p>
+                  <p className="text-xs text-navy-500 ml-9">{tech.purpose}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -469,8 +517,8 @@ export default function Home() {
 
           {/* Architecture diagram */}
           <ScrollReveal>
-            <div className="glass rounded-2xl p-8 font-mono text-xs text-navy-300 overflow-x-auto">
-              <div className="text-sm font-semibold text-ocean-400 mb-4 font-sans">System Architecture</div>
+            <div className="bg-navy-50 border border-navy-200 rounded-2xl p-8 font-mono text-xs text-navy-600 overflow-x-auto">
+              <div className="text-sm font-semibold text-ocean-600 mb-4 font-sans">System Architecture</div>
               <pre className="whitespace-pre leading-relaxed">{`
 ┌─────────────────────────────────────────────────────────────┐
 │  BROWSER                                                     │
@@ -505,93 +553,101 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Roadmap */}
-      <section id="roadmap" className="py-24 px-6">
+      {/* ===== ROADMAP ===== */}
+      <section id="roadmap" className="py-28 px-6 bg-navy-50">
         <div className="max-w-5xl mx-auto">
           <ScrollReveal>
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-white mb-4">
+            <div className="text-center mb-20">
+              <p className="text-sm font-semibold text-cargo-600 tracking-wider uppercase mb-3">Timeline</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-5">
                 Development <span className="gradient-text-gold">Roadmap</span>
               </h2>
-              <p className="text-lg text-navy-300 max-w-2xl mx-auto">
+              <p className="text-lg text-navy-500 max-w-2xl mx-auto">
                 Six phases from proposal to full platform.
                 Each phase delivers working, deployable features.
               </p>
             </div>
           </ScrollReveal>
 
-          <div className="space-y-6">
-            {roadmapPhases.map((phase, i) => (
-              <ScrollReveal key={phase.phase} delay={i * 100}>
-                <div className={`glass rounded-2xl p-6 border-l-4 ${phase.color}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl font-bold text-white/20">
-                        0{phase.phase}
-                      </span>
-                      <div>
-                        <h3 className="text-lg font-semibold text-white">{phase.title}</h3>
+          {/* Timeline layout */}
+          <div className="relative">
+            {/* Vertical line */}
+            <div className="absolute left-6 md:left-8 top-0 bottom-0 w-0.5 bg-navy-200" />
+
+            <div className="space-y-8">
+              {roadmapPhases.map((phase, i) => (
+                <ScrollReveal key={phase.phase} delay={i * 100}>
+                  <div className="relative pl-16 md:pl-20">
+                    {/* Timeline dot */}
+                    <div className={`absolute left-4 md:left-6 top-6 w-4 h-4 rounded-full ${phase.dotColor} ring-4 ring-white shadow-sm`} />
+
+                    <div className={`bg-white border border-navy-100 rounded-2xl p-6 shadow-soft hover:shadow-card transition-all duration-300 border-l-4 ${phase.color}`}>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl font-bold text-navy-200">
+                            0{phase.phase}
+                          </span>
+                          <h3 className="text-lg font-semibold text-navy-900">{phase.title}</h3>
+                        </div>
+                        <span
+                          className={`text-xs font-medium px-3 py-1.5 rounded-full ${
+                            phase.status === "In Progress"
+                              ? "bg-ocean-50 text-ocean-700 border border-ocean-200"
+                              : phase.status === "Next"
+                              ? "bg-cargo-50 text-cargo-700 border border-cargo-200"
+                              : "bg-navy-50 text-navy-500 border border-navy-200"
+                          }`}
+                        >
+                          {phase.status}
+                        </span>
                       </div>
-                    </div>
-                    <span
-                      className={`text-xs font-medium px-3 py-1 rounded-full ${
-                        phase.status === "In Progress"
-                          ? "bg-ocean-500/20 text-ocean-300"
-                          : phase.status === "Next"
-                          ? "bg-cargo-500/20 text-cargo-300"
-                          : phase.status === "Future"
-                          ? "bg-navy-700/50 text-navy-400"
-                          : "bg-white/5 text-navy-400"
-                      }`}
-                    >
-                      {phase.status}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {phase.items.map((item) => (
-                      <div key={item} className="flex items-center gap-2 text-sm text-navy-300">
-                        <Check className="w-3 h-3 text-ocean-500 flex-shrink-0" />
-                        {item}
+                      <div className="grid grid-cols-2 gap-2">
+                        {phase.items.map((item) => (
+                          <div key={item} className="flex items-center gap-2 text-sm text-navy-600">
+                            <Check className="w-3.5 h-3.5 text-ocean-500 flex-shrink-0" />
+                            {item}
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                      {phase.phase === 5 && phase.status === "In Progress" && (
+                        <div className="mt-4">
+                          <Link
+                            href="/knowledge-base"
+                            className="inline-flex items-center gap-2 text-sm bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 px-4 py-2 rounded-lg transition-colors"
+                          >
+                            <FileText className="w-4 h-4" />
+                            Open Knowledge Base
+                            <ArrowRight className="w-4 h-4" />
+                          </Link>
+                        </div>
+                      )}
+                      {phase.phase === 6 && phase.status === "In Progress" && (
+                        <div className="mt-4">
+                          <Link
+                            href="/dashboard"
+                            className="inline-flex items-center gap-2 text-sm bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 px-4 py-2 rounded-lg transition-colors"
+                          >
+                            <LayoutDashboard className="w-4 h-4" />
+                            View Live Demo
+                            <ArrowRight className="w-4 h-4" />
+                          </Link>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  {phase.phase === 5 && phase.status === "In Progress" && (
-                    <div className="mt-4">
-                      <Link
-                        href="/knowledge-base"
-                        className="inline-flex items-center gap-2 text-sm bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/30 px-4 py-2 rounded-lg transition-colors"
-                      >
-                        <FileText className="w-4 h-4" />
-                        Open Knowledge Base
-                        <ArrowRight className="w-4 h-4" />
-                      </Link>
-                    </div>
-                  )}
-                  {phase.phase === 6 && phase.status === "In Progress" && (
-                    <div className="mt-4">
-                      <Link
-                        href="/dashboard"
-                        className="inline-flex items-center gap-2 text-sm bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 px-4 py-2 rounded-lg transition-colors"
-                      >
-                        <LayoutDashboard className="w-4 h-4" />
-                        View Live Demo
-                        <ArrowRight className="w-4 h-4" />
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              </ScrollReveal>
-            ))}
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Competitive Advantage */}
-      <section className="py-24 px-6 bg-gradient-to-b from-navy-950/50 to-navy-950">
+      {/* ===== COMPETITIVE ADVANTAGE ===== */}
+      <section className="py-28 px-6 bg-gradient-to-b from-white to-navy-50">
         <div className="max-w-5xl mx-auto">
           <ScrollReveal>
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-white mb-4">
+            <div className="text-center mb-14">
+              <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-5">
                 Why <span className="gradient-text">Shipping Savior</span>
               </h2>
             </div>
@@ -604,27 +660,33 @@ export default function Home() {
                 title: "FTZ Strategy — Nobody Else Has This",
                 description:
                   "Zero competitors combine FTZ savings modeling with freight brokerage tools. Flexport handles compliance but not FTZ optimization. This is the gap.",
+                gradient: "from-emerald-500 to-teal-600",
+                bgLight: "bg-emerald-50",
               },
               {
                 icon: TrendingUp,
                 title: "Backhaul Intelligence",
                 description:
                   "Backhaul pricing is invisible in every existing platform. Surfacing return-leg pricing advantages as a selection criterion is unique and valuable.",
+                gradient: "from-ocean-500 to-blue-600",
+                bgLight: "bg-ocean-50",
               },
               {
                 icon: Clock,
                 title: "Cold Chain + General Cargo Hybrid",
                 description:
                   "Built by someone who handles 96-97% of a Lineage terminal. No platform serves the operator who does both cold chain and general imports.",
+                gradient: "from-cargo-500 to-orange-600",
+                bgLight: "bg-amber-50",
               },
             ].map((item, i) => (
               <ScrollReveal key={item.title} delay={i * 150}>
-                <div className="glass glass-hover rounded-2xl p-8 text-center h-full">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-ocean-600 to-ocean-800 flex items-center justify-center mx-auto mb-5">
-                    <item.icon className="w-7 h-7 text-white" />
+                <div className="gradient-border bg-white rounded-2xl p-8 text-center h-full hover:shadow-premium transition-all duration-300">
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mx-auto mb-6 shadow-lg`}>
+                    <item.icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-3">{item.title}</h3>
-                  <p className="text-sm text-navy-300 leading-relaxed">{item.description}</p>
+                  <h3 className="text-lg font-bold text-navy-900 mb-3">{item.title}</h3>
+                  <p className="text-sm text-navy-500 leading-relaxed">{item.description}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -632,21 +694,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-6 border-t border-white/5">
+      {/* ===== FOOTER ===== */}
+      <footer className="py-14 px-6 border-t border-navy-100 bg-white">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-ocean-500 to-ocean-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-ocean-500 to-ocean-700 flex items-center justify-center shadow-sm">
               <Ship className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold">
+            <span className="font-bold text-navy-900">
               Shipping<span className="gradient-text">Savior</span>
             </span>
           </div>
-          <div className="text-sm text-navy-500">
+          <div className="text-sm text-navy-400">
             International Logistics Platform — Built with AI Acrobatics
           </div>
-          <div className="text-xs text-navy-600">
+          <div className="text-xs text-navy-400">
             Tariff data for informational purposes only. Verify at hts.usitc.gov
           </div>
         </div>

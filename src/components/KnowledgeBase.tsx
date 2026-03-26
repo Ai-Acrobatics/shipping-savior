@@ -13,35 +13,35 @@ import {
 type Tab = "glossary" | "incoterms" | "compliance" | "regulations" | "forms";
 
 const categoryColors: Record<string, string> = {
-  customs: "text-ocean-300 bg-ocean-500/10 border-ocean-500/20",
-  freight: "text-blue-300 bg-blue-500/10 border-blue-500/20",
-  trade: "text-purple-300 bg-purple-500/10 border-purple-500/20",
-  ftz: "text-green-300 bg-green-500/10 border-green-500/20",
-  documentation: "text-cargo-300 bg-cargo-500/10 border-cargo-500/20",
-  finance: "text-pink-300 bg-pink-500/10 border-pink-500/20",
+  customs: "text-ocean-600 bg-ocean-50 border-ocean-200",
+  freight: "text-blue-600 bg-blue-50 border-blue-200",
+  trade: "text-purple-600 bg-purple-50 border-purple-200",
+  ftz: "text-emerald-600 bg-emerald-50 border-emerald-200",
+  documentation: "text-cargo-600 bg-amber-50 border-amber-200",
+  finance: "text-pink-600 bg-pink-50 border-pink-200",
 };
 
 const regulationTypeColors: Record<string, string> = {
-  tariff: "text-cargo-300 bg-cargo-500/10 border-cargo-500/20",
-  restriction: "text-red-300 bg-red-500/10 border-red-500/20",
-  fta: "text-green-300 bg-green-500/10 border-green-500/20",
-  embargo: "text-red-400 bg-red-500/20 border-red-500/30",
-  quota: "text-orange-300 bg-orange-500/10 border-orange-500/20",
+  tariff: "text-cargo-600 bg-amber-50 border-amber-200",
+  restriction: "text-red-600 bg-red-50 border-red-200",
+  fta: "text-emerald-600 bg-emerald-50 border-emerald-200",
+  embargo: "text-red-600 bg-red-50 border-red-200",
+  quota: "text-orange-600 bg-orange-50 border-orange-200",
 };
 
 const complianceCategoryColors: Record<string, string> = {
-  cbp: "text-ocean-300 bg-ocean-500/10 border-ocean-500/20",
-  itar: "text-red-300 bg-red-500/10 border-red-500/20",
-  export: "text-purple-300 bg-purple-500/10 border-purple-500/20",
-  fda: "text-green-300 bg-green-500/10 border-green-500/20",
-  aphis: "text-cargo-300 bg-cargo-500/10 border-cargo-500/20",
-  general: "text-navy-300 bg-white/5 border-white/10",
+  cbp: "text-ocean-600 bg-ocean-50 border-ocean-200",
+  itar: "text-red-600 bg-red-50 border-red-200",
+  export: "text-purple-600 bg-purple-50 border-purple-200",
+  fda: "text-emerald-600 bg-emerald-50 border-emerald-200",
+  aphis: "text-cargo-600 bg-amber-50 border-amber-200",
+  general: "text-navy-500 bg-navy-50 border-navy-200",
 };
 
 const riskColors: Record<string, string> = {
-  buyer: "text-ocean-300",
-  seller: "text-cargo-300",
-  split: "text-purple-300",
+  buyer: "text-ocean-600",
+  seller: "text-cargo-600",
+  split: "text-purple-600",
 };
 
 // ---- Glossary ----
@@ -74,8 +74,8 @@ function GlossarySection({ query }: { query: string }) {
             onClick={() => setActiveCategory(cat)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all capitalize ${
               activeCategory === cat
-                ? "bg-ocean-500/30 border-ocean-500/50 text-ocean-200"
-                : "bg-white/5 border-white/10 text-navy-400 hover:text-navy-200"
+                ? "bg-ocean-100 border-ocean-500/50 text-ocean-500"
+                : "bg-navy-50 border-navy-200 text-navy-400 hover:text-navy-400"
             }`}
           >
             {cat}
@@ -87,23 +87,23 @@ function GlossarySection({ query }: { query: string }) {
 
       <div className="space-y-2">
         {filtered.map((term) => (
-          <div key={term.term} className="glass rounded-xl overflow-hidden">
+          <div key={term.term} className="bg-white border border-navy-100 shadow-soft rounded-xl overflow-hidden">
             <button
-              className="w-full flex items-start justify-between gap-4 p-4 text-left hover:bg-white/5 transition-colors"
+              className="w-full flex items-start justify-between gap-4 p-4 text-left hover:bg-navy-50 transition-colors"
               onClick={() => setOpenTerm(openTerm === term.term ? null : term.term)}
             >
               <div className="flex items-start gap-3 flex-1 min-w-0">
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-semibold text-white">{term.term}</span>
+                    <span className="font-semibold text-navy-900">{term.term}</span>
                     {term.abbreviation && (
-                      <span className="text-xs font-mono text-ocean-400 bg-ocean-500/10 px-2 py-0.5 rounded">
+                      <span className="text-xs font-mono text-ocean-400 bg-ocean-50 px-2 py-0.5 rounded">
                         {term.abbreviation}
                       </span>
                     )}
                     <span
                       className={`text-xs px-2 py-0.5 rounded border capitalize ${
-                        categoryColors[term.category] || "text-navy-400 bg-white/5 border-white/10"
+                        categoryColors[term.category] || "text-navy-400 bg-navy-50 border-navy-200"
                       }`}
                     >
                       {term.category}
@@ -119,8 +119,8 @@ function GlossarySection({ query }: { query: string }) {
             </button>
 
             {openTerm === term.term && (
-              <div className="px-4 pb-4 border-t border-white/5">
-                <p className="text-sm text-navy-200 leading-relaxed pt-3">{term.definition}</p>
+              <div className="px-4 pb-4 border-t border-navy-100">
+                <p className="text-sm text-navy-400 leading-relaxed pt-3">{term.definition}</p>
               </div>
             )}
           </div>
@@ -167,8 +167,8 @@ function IncotermsSection({ query }: { query: string }) {
             onClick={() => setTransport(t)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
               transport === t
-                ? "bg-ocean-500/30 border-ocean-500/50 text-ocean-200"
-                : "bg-white/5 border-white/10 text-navy-400 hover:text-navy-200"
+                ? "bg-ocean-100 border-ocean-500/50 text-ocean-500"
+                : "bg-navy-50 border-navy-200 text-navy-400 hover:text-navy-400"
             }`}
           >
             {t === "all" ? "All Modes" : t === "any" ? "Any Transport" : "Sea Only"}
@@ -182,7 +182,7 @@ function IncotermsSection({ query }: { query: string }) {
             key={term.code}
             onClick={() => setSelected(selected === term.code ? null : term.code)}
             className={`glass glass-hover rounded-xl p-4 text-left transition-all ${
-              selected === term.code ? "border-ocean-500/40 bg-ocean-500/5" : ""
+              selected === term.code ? "border-ocean-200 bg-ocean-500/5" : ""
             }`}
           >
             <div className="flex items-start justify-between gap-2">
@@ -192,14 +192,14 @@ function IncotermsSection({ query }: { query: string }) {
                   <span
                     className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                       term.transport === "sea"
-                        ? "bg-blue-500/10 text-blue-300"
-                        : "bg-purple-500/10 text-purple-300"
+                        ? "bg-blue-50 text-blue-600"
+                        : "bg-purple-50 text-purple-600"
                     }`}
                   >
                     {term.transport === "sea" ? "Sea Only" : "Any Mode"}
                   </span>
                 </div>
-                <div className="text-sm font-medium text-white">{term.name}</div>
+                <div className="text-sm font-medium text-navy-900">{term.name}</div>
                 <div className="text-xs text-navy-400 mt-1">{term.riskTransferPoint}</div>
               </div>
               <div className={`text-xs font-medium capitalize ${riskColors[term.risk]}`}>
@@ -211,11 +211,11 @@ function IncotermsSection({ query }: { query: string }) {
       </div>
 
       {selectedTerm && (
-        <div className="glass rounded-2xl p-6 border-ocean-500/20">
+        <div className="bg-white border border-navy-100 shadow-soft rounded-2xl p-6 border-ocean-200">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-3xl font-bold text-ocean-400">{selectedTerm.code}</span>
             <div>
-              <div className="font-semibold text-white">{selectedTerm.name}</div>
+              <div className="font-semibold text-navy-900">{selectedTerm.name}</div>
               <div className="text-xs text-navy-400">Risk transfers at: {selectedTerm.riskTransferPoint}</div>
             </div>
           </div>
@@ -225,7 +225,7 @@ function IncotermsSection({ query }: { query: string }) {
               <div className="text-xs font-semibold text-cargo-400 uppercase tracking-wide mb-2">Seller Covers</div>
               <ul className="space-y-1">
                 {selectedTerm.sellerCovers.map((item, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-navy-200">
+                  <li key={i} className="flex items-start gap-2 text-sm text-navy-400">
                     <CheckCircle className="w-3 h-3 text-cargo-500 flex-shrink-0 mt-0.5" />
                     {item}
                   </li>
@@ -236,7 +236,7 @@ function IncotermsSection({ query }: { query: string }) {
               <div className="text-xs font-semibold text-ocean-400 uppercase tracking-wide mb-2">Buyer Covers</div>
               <ul className="space-y-1">
                 {selectedTerm.buyerCovers.map((item, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-navy-200">
+                  <li key={i} className="flex items-start gap-2 text-sm text-navy-400">
                     <CheckCircle className="w-3 h-3 text-ocean-500 flex-shrink-0 mt-0.5" />
                     {item}
                   </li>
@@ -245,9 +245,9 @@ function IncotermsSection({ query }: { query: string }) {
             </div>
           </div>
 
-          <div className="bg-white/5 rounded-xl p-3 flex items-start gap-2">
+          <div className="bg-navy-50 rounded-xl p-3 flex items-start gap-2">
             <Info className="w-4 h-4 text-ocean-400 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-navy-200">{selectedTerm.bestFor}</p>
+            <p className="text-sm text-navy-400">{selectedTerm.bestFor}</p>
           </div>
         </div>
       )}
@@ -291,8 +291,8 @@ function ComplianceSection({ query }: { query: string }) {
             onClick={() => setActiveCategory(cat)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all uppercase ${
               activeCategory === cat
-                ? "bg-ocean-500/30 border-ocean-500/50 text-ocean-200"
-                : "bg-white/5 border-white/10 text-navy-400 hover:text-navy-200"
+                ? "bg-ocean-100 border-ocean-500/50 text-ocean-500"
+                : "bg-navy-50 border-navy-200 text-navy-400 hover:text-navy-400"
             }`}
           >
             {cat}
@@ -302,23 +302,23 @@ function ComplianceSection({ query }: { query: string }) {
 
       <div className="space-y-3">
         {filtered.map((guide) => (
-          <div key={guide.id} className="glass rounded-xl overflow-hidden">
+          <div key={guide.id} className="bg-white border border-navy-100 shadow-soft rounded-xl overflow-hidden">
             <button
-              className="w-full flex items-start justify-between gap-4 p-5 text-left hover:bg-white/5 transition-colors"
+              className="w-full flex items-start justify-between gap-4 p-5 text-left hover:bg-navy-50 transition-colors"
               onClick={() => setOpenGuide(openGuide === guide.id ? null : guide.id)}
             >
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <span className="font-semibold text-white">{guide.title}</span>
+                  <span className="font-semibold text-navy-900">{guide.title}</span>
                   <span
                     className={`text-xs px-2 py-0.5 rounded border uppercase ${
-                      complianceCategoryColors[guide.category] || "text-navy-400 bg-white/5 border-white/10"
+                      complianceCategoryColors[guide.category] || "text-navy-400 bg-navy-50 border-navy-200"
                     }`}
                   >
                     {guide.category}
                   </span>
                 </div>
-                <p className="text-sm text-navy-300 leading-relaxed">{guide.summary}</p>
+                <p className="text-sm text-navy-500 leading-relaxed">{guide.summary}</p>
               </div>
               {openGuide === guide.id ? (
                 <ChevronUp className="w-4 h-4 text-navy-400 flex-shrink-0 mt-1" />
@@ -328,12 +328,12 @@ function ComplianceSection({ query }: { query: string }) {
             </button>
 
             {openGuide === guide.id && (
-              <div className="px-5 pb-5 border-t border-white/5 space-y-4 pt-4">
+              <div className="px-5 pb-5 border-t border-navy-100 space-y-4 pt-4">
                 <div>
                   <div className="text-xs font-semibold text-ocean-400 uppercase tracking-wide mb-2">Key Requirements</div>
                   <ul className="space-y-1.5">
                     {guide.keyPoints.map((point, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-navy-200">
+                      <li key={i} className="flex items-start gap-2 text-sm text-navy-400">
                         <CheckCircle className="w-3.5 h-3.5 text-ocean-500 flex-shrink-0 mt-0.5" />
                         {point}
                       </li>
@@ -343,29 +343,29 @@ function ComplianceSection({ query }: { query: string }) {
 
                 <div className="grid md:grid-cols-3 gap-3">
                   {guide.forms && guide.forms.length > 0 && (
-                    <div className="bg-white/5 rounded-xl p-3">
+                    <div className="bg-navy-50 rounded-xl p-3">
                       <div className="text-xs font-semibold text-cargo-400 uppercase tracking-wide mb-2">Forms</div>
                       {guide.forms.map((f, i) => (
-                        <div key={i} className="text-xs text-navy-300 py-0.5">{f}</div>
+                        <div key={i} className="text-xs text-navy-500 py-0.5">{f}</div>
                       ))}
                     </div>
                   )}
 
                   {guide.deadlines && guide.deadlines.length > 0 && (
-                    <div className="bg-white/5 rounded-xl p-3">
+                    <div className="bg-navy-50 rounded-xl p-3">
                       <div className="text-xs font-semibold text-purple-400 uppercase tracking-wide mb-2">Deadlines</div>
                       {guide.deadlines.map((d, i) => (
-                        <div key={i} className="text-xs text-navy-300 py-0.5">{d}</div>
+                        <div key={i} className="text-xs text-navy-500 py-0.5">{d}</div>
                       ))}
                     </div>
                   )}
 
                   {guide.penalties && (
                     <div className="bg-red-500/5 rounded-xl p-3 border border-red-500/10">
-                      <div className="text-xs font-semibold text-red-400 uppercase tracking-wide mb-2 flex items-center gap-1">
+                      <div className="text-xs font-semibold text-red-600 uppercase tracking-wide mb-2 flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" /> Penalties
                       </div>
-                      <div className="text-xs text-red-300">{guide.penalties}</div>
+                      <div className="text-xs text-red-600">{guide.penalties}</div>
                     </div>
                   )}
                 </div>
@@ -417,8 +417,8 @@ function RegulationsSection({ query }: { query: string }) {
             onClick={() => setActiveType(t)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all capitalize ${
               activeType === t
-                ? "bg-ocean-500/30 border-ocean-500/50 text-ocean-200"
-                : "bg-white/5 border-white/10 text-navy-400 hover:text-navy-200"
+                ? "bg-ocean-100 border-ocean-500/50 text-ocean-500"
+                : "bg-navy-50 border-navy-200 text-navy-400 hover:text-navy-400"
             }`}
           >
             {t}
@@ -437,7 +437,7 @@ function RegulationsSection({ query }: { query: string }) {
             className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
               activeRegion === r
                 ? "bg-purple-500/30 border-purple-500/50 text-purple-200"
-                : "bg-white/5 border-white/10 text-navy-400 hover:text-navy-200"
+                : "bg-navy-50 border-navy-200 text-navy-400 hover:text-navy-400"
             }`}
           >
             {r === "all" ? "All Regions" : r}
@@ -447,26 +447,26 @@ function RegulationsSection({ query }: { query: string }) {
 
       <div className="space-y-3">
         {filtered.map((reg) => (
-          <div key={reg.id} className="glass rounded-xl overflow-hidden">
+          <div key={reg.id} className="bg-white border border-navy-100 shadow-soft rounded-xl overflow-hidden">
             <button
-              className="w-full flex items-start justify-between gap-4 p-5 text-left hover:bg-white/5 transition-colors"
+              className="w-full flex items-start justify-between gap-4 p-5 text-left hover:bg-navy-50 transition-colors"
               onClick={() => setOpenReg(openReg === reg.id ? null : reg.id)}
             >
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <span className="font-semibold text-white">{reg.title}</span>
+                  <span className="font-semibold text-navy-900">{reg.title}</span>
                   <span
                     className={`text-xs px-2 py-0.5 rounded border capitalize ${
-                      regulationTypeColors[reg.type] || "text-navy-400 bg-white/5 border-white/10"
+                      regulationTypeColors[reg.type] || "text-navy-400 bg-navy-50 border-navy-200"
                     }`}
                   >
                     {reg.type}
                   </span>
-                  <span className="text-xs text-navy-500 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
+                  <span className="text-xs text-navy-500 bg-navy-50 border border-navy-200 px-2 py-0.5 rounded">
                     {reg.region}{reg.country ? ` (${reg.country})` : ""}
                   </span>
                 </div>
-                <p className="text-sm text-navy-300 leading-relaxed line-clamp-2">{reg.description}</p>
+                <p className="text-sm text-navy-500 leading-relaxed line-clamp-2">{reg.description}</p>
               </div>
               {openReg === reg.id ? (
                 <ChevronUp className="w-4 h-4 text-navy-400 flex-shrink-0 mt-1" />
@@ -476,28 +476,28 @@ function RegulationsSection({ query }: { query: string }) {
             </button>
 
             {openReg === reg.id && (
-              <div className="px-5 pb-5 border-t border-white/5 pt-4 space-y-3">
-                <p className="text-sm text-navy-200 leading-relaxed">{reg.description}</p>
+              <div className="px-5 pb-5 border-t border-navy-100 pt-4 space-y-3">
+                <p className="text-sm text-navy-400 leading-relaxed">{reg.description}</p>
 
                 <div className="flex flex-wrap gap-3 text-xs text-navy-400">
                   {reg.effectiveDate && (
                     <span className="flex items-center gap-1">
                       <span className="text-navy-500">Effective:</span>
-                      <span className="text-navy-200">{reg.effectiveDate}</span>
+                      <span className="text-navy-400">{reg.effectiveDate}</span>
                     </span>
                   )}
                   <span className="flex items-center gap-1">
                     <span className="text-navy-500">Source:</span>
-                    <span className="text-navy-200">{reg.source}</span>
+                    <span className="text-navy-400">{reg.source}</span>
                   </span>
                 </div>
 
                 {reg.htsCodes && reg.htsCodes.length > 0 && (
-                  <div className="bg-white/5 rounded-xl p-3">
+                  <div className="bg-navy-50 rounded-xl p-3">
                     <div className="text-xs font-semibold text-cargo-400 uppercase tracking-wide mb-2">Affected HTS Chapters</div>
                     <div className="flex flex-wrap gap-2">
                       {reg.htsCodes.map((code, i) => (
-                        <span key={i} className="text-xs font-mono bg-cargo-500/10 text-cargo-300 px-2 py-0.5 rounded border border-cargo-500/20">
+                        <span key={i} className="text-xs font-mono bg-amber-50 text-cargo-600 px-2 py-0.5 rounded border border-amber-200">
                           {code}
                         </span>
                       ))}
@@ -538,16 +538,16 @@ function FormsSection({ query }: { query: string }) {
       <div className="text-xs text-navy-500 mb-4">{filtered.length} forms</div>
       <div className="grid gap-3">
         {filtered.map((form) => (
-          <div key={form.code} className="glass glass-hover rounded-xl p-4">
+          <div key={form.code} className="bg-white border border-navy-100 shadow-soft glass-hover rounded-xl p-4">
             <div className="flex items-start gap-4">
               <div className="w-24 flex-shrink-0">
-                <span className="text-xs font-mono font-bold text-ocean-400 bg-ocean-500/10 px-2 py-1 rounded border border-ocean-500/20">
+                <span className="text-xs font-mono font-bold text-ocean-400 bg-ocean-50 px-2 py-1 rounded border border-ocean-200">
                   {form.code}
                 </span>
               </div>
               <div>
-                <div className="font-semibold text-white text-sm mb-1">{form.name}</div>
-                <p className="text-xs text-navy-300 leading-relaxed">{form.use}</p>
+                <div className="font-semibold text-navy-900 text-sm mb-1">{form.name}</div>
+                <p className="text-xs text-navy-500 leading-relaxed">{form.use}</p>
               </div>
             </div>
           </div>
@@ -561,11 +561,11 @@ function FormsSection({ query }: { query: string }) {
         )}
       </div>
 
-      <div className="mt-6 glass rounded-xl p-4 border-cargo-500/20">
+      <div className="mt-6 bg-white border border-navy-100 shadow-soft rounded-xl p-4 border-amber-200">
         <div className="flex items-start gap-2">
           <ExternalLink className="w-4 h-4 text-cargo-400 flex-shrink-0 mt-0.5" />
-          <div className="text-xs text-navy-300">
-            <span className="font-semibold text-cargo-300">Official Sources: </span>
+          <div className="text-xs text-navy-500">
+            <span className="font-semibold text-cargo-600">Official Sources: </span>
             All CBP forms available at{" "}
             <span className="text-ocean-400">cbp.gov/trade/programs-administration/entry-summary/cbp-forms</span>
             {" "}— always download the current version before use.
@@ -599,12 +599,12 @@ export default function KnowledgeBase() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={`Search ${activeTab === "glossary" ? "terms, abbreviations..." : activeTab === "incoterms" ? "incoterms..." : activeTab === "compliance" ? "compliance topics..." : activeTab === "regulations" ? "regulations, countries..." : "CBP forms..."}` }
-          className="w-full glass rounded-xl pl-12 pr-10 py-3 text-sm text-white placeholder-navy-500 focus:outline-none focus:border-ocean-500/50 focus:ring-1 focus:ring-ocean-500/30 transition-all"
+          className="w-full bg-white border border-navy-100 shadow-soft rounded-xl pl-12 pr-10 py-3 text-sm text-navy-900 placeholder-navy-500 focus:outline-none focus:border-ocean-500/50 focus:ring-1 focus:ring-ocean-500/30 focus:border-ocean-500/30 transition-all"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery("")}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-navy-400 hover:text-navy-200 transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-navy-400 hover:text-navy-400 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -619,15 +619,15 @@ export default function KnowledgeBase() {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-all ${
               activeTab === tab.id
-                ? "bg-ocean-500/20 border-ocean-500/40 text-ocean-200"
-                : "glass glass-hover text-navy-300 hover:text-white"
+                ? "bg-ocean-50 border-ocean-200 text-ocean-500"
+                : "bg-white border border-navy-100 shadow-soft glass-hover text-navy-500 hover:text-navy-900"
             }`}
           >
             <tab.icon className="w-4 h-4" />
             <span>{tab.label}</span>
             <span
               className={`text-xs px-1.5 py-0.5 rounded-full ${
-                activeTab === tab.id ? "bg-ocean-500/30 text-ocean-300" : "bg-white/10 text-navy-500"
+                activeTab === tab.id ? "bg-ocean-100 text-ocean-600" : "bg-navy-100 text-navy-500"
               }`}
             >
               {tab.count}

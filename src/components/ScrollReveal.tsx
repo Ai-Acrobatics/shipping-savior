@@ -6,10 +6,12 @@ export default function ScrollReveal({
   children,
   className = "",
   delay = 0,
+  direction = "up",
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
+  direction?: "up" | "left" | "right" | "scale";
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -31,8 +33,21 @@ export default function ScrollReveal({
     return () => observer.disconnect();
   }, [delay]);
 
+  const directionStyles: Record<string, string> = {
+    up: "",
+    left: "translate-x-[-30px]",
+    right: "translate-x-[30px]",
+    scale: "scale-95",
+  };
+
   return (
-    <div ref={ref} className={`animate-on-scroll ${className}`}>
+    <div
+      ref={ref}
+      className={`animate-on-scroll ${className}`}
+      style={{
+        ...(direction !== "up" ? { transform: directionStyles[direction] } : {}),
+      }}
+    >
       {children}
     </div>
   );

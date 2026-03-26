@@ -135,7 +135,7 @@ export default function SavedScenariosManager({
       <div className="flex items-center gap-3 flex-wrap">
         <button
           onClick={() => setShowSaveModal(true)}
-          className="flex items-center gap-2 text-sm px-4 py-2.5 rounded-xl bg-green-600/30 hover:bg-green-600/50 text-green-300 border border-green-500/30 transition-all"
+          className="flex items-center gap-2 text-sm px-4 py-2.5 rounded-xl bg-green-600/30 hover:bg-green-600/50 text-emerald-600 border border-emerald-200 transition-all"
         >
           <Save className="w-4 h-4" />
           Save Current
@@ -143,7 +143,7 @@ export default function SavedScenariosManager({
 
         <button
           onClick={() => setShowPresets(!showPresets)}
-          className="flex items-center gap-2 text-sm px-4 py-2.5 rounded-xl glass glass-hover text-ocean-300 border border-ocean-500/20 transition-all"
+          className="flex items-center gap-2 text-sm px-4 py-2.5 rounded-xl bg-white border border-navy-100 hover:shadow-card hover:border-navy-200 transition-all text-ocean-600 border border-ocean-200 transition-all"
         >
           <Sparkles className="w-4 h-4" />
           Policy Presets
@@ -151,7 +151,7 @@ export default function SavedScenariosManager({
         </button>
 
         {saveSuccess && (
-          <div className="text-xs text-green-400 flex items-center gap-1 animate-fade-in">
+          <div className="text-xs text-emerald-600 flex items-center gap-1 animate-fade-in">
             ✓ Saved successfully
           </div>
         )}
@@ -163,15 +163,15 @@ export default function SavedScenariosManager({
 
       {/* Save Modal */}
       {showSaveModal && (
-        <div className="glass rounded-2xl p-6 border border-green-500/20 bg-green-500/5 animate-fade-in">
+        <div className="bg-white border border-navy-100 shadow-soft rounded-2xl p-6 border border-emerald-200 bg-emerald-50 animate-fade-in">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-sm font-semibold text-green-300 flex items-center gap-2">
+            <h4 className="text-sm font-semibold text-emerald-600 flex items-center gap-2">
               <Save className="w-4 h-4" />
               Save Scenario Set
             </h4>
             <button
               onClick={() => setShowSaveModal(false)}
-              className="text-navy-500 hover:text-navy-300"
+              className="text-navy-500 hover:text-navy-500"
             >
               <X className="w-4 h-4" />
             </button>
@@ -179,34 +179,34 @@ export default function SavedScenariosManager({
 
           <div className="space-y-3">
             <div>
-              <label className="text-xs text-navy-300 block mb-1">Name *</label>
+              <label className="text-xs text-navy-500 block mb-1">Name *</label>
               <input
                 type="text"
                 value={saveName}
                 onChange={(e) => setSaveName(e.target.value)}
                 placeholder="e.g., SE Asia Q1 2026 Analysis"
-                className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-900/50"
+                className="w-full bg-white border border-navy-100 shadow-soft rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-50"
                 autoFocus
               />
             </div>
             <div>
-              <label className="text-xs text-navy-300 block mb-1">Description</label>
+              <label className="text-xs text-navy-500 block mb-1">Description</label>
               <input
                 type="text"
                 value={saveDescription}
                 onChange={(e) => setSaveDescription(e.target.value)}
                 placeholder="Brief description of this scenario set"
-                className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-900/50"
+                className="w-full bg-white border border-navy-100 shadow-soft rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-50"
               />
             </div>
             <div>
-              <label className="text-xs text-navy-300 block mb-1">Tags (comma-separated)</label>
+              <label className="text-xs text-navy-500 block mb-1">Tags (comma-separated)</label>
               <input
                 type="text"
                 value={saveTags}
                 onChange={(e) => setSaveTags(e.target.value)}
                 placeholder="e.g., vietnam, apparel, q1"
-                className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-900/50"
+                className="w-full bg-white border border-navy-100 shadow-soft rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 bg-navy-50"
               />
             </div>
 
@@ -219,7 +219,7 @@ export default function SavedScenariosManager({
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setShowSaveModal(false)}
-                className="text-xs px-3 py-1.5 rounded-lg text-navy-400 hover:text-navy-200 transition-colors"
+                className="text-xs px-3 py-1.5 rounded-lg text-navy-400 hover:text-navy-400 transition-colors"
               >
                 Cancel
               </button>
@@ -248,11 +248,11 @@ export default function SavedScenariosManager({
               <button
                 key={preset.id}
                 onClick={() => handleLoadPreset(preset)}
-                className="glass glass-hover rounded-xl p-4 text-left group border border-transparent hover:border-ocean-500/30 transition-all"
+                className="bg-white border border-navy-100 shadow-soft glass-hover rounded-xl p-4 text-left group border border-transparent hover:border-ocean-200 transition-all"
               >
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">{preset.icon}</span>
-                  <span className="text-sm font-semibold text-white group-hover:text-ocean-300 transition-colors">
+                  <span className="text-sm font-semibold text-navy-900 group-hover:text-ocean-600 transition-colors">
                     {preset.name}
                   </span>
                 </div>
@@ -282,15 +282,15 @@ export default function SavedScenariosManager({
             );
 
             return (
-              <div key={set.id} className="glass rounded-xl overflow-hidden">
+              <div key={set.id} className="bg-white border border-navy-100 shadow-soft rounded-xl overflow-hidden">
                 {/* Header */}
                 <div
-                  className="flex items-center gap-3 p-4 cursor-pointer hover:bg-white/5 transition-colors"
+                  className="flex items-center gap-3 p-4 cursor-pointer hover:bg-navy-50 transition-colors"
                   onClick={() => setExpandedSet(isExpanded ? null : set.id)}
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-semibold text-white truncate">{set.name}</span>
+                      <span className="text-sm font-semibold text-navy-900 truncate">{set.name}</span>
                       <span className="text-xs text-navy-500">
                         {set.scenarios.length} scenario{set.scenarios.length !== 1 ? "s" : ""}
                       </span>
@@ -325,7 +325,7 @@ export default function SavedScenariosManager({
                         e.stopPropagation();
                         handleLoad(set);
                       }}
-                      className="text-xs px-3 py-1.5 rounded-lg bg-ocean-600/30 hover:bg-ocean-600/50 text-ocean-300 transition-colors"
+                      className="text-xs px-3 py-1.5 rounded-lg bg-ocean-600/30 hover:bg-ocean-600/50 text-ocean-600 transition-colors"
                     >
                       Load
                     </button>
@@ -339,7 +339,7 @@ export default function SavedScenariosManager({
 
                 {/* Expanded detail */}
                 {isExpanded && (
-                  <div className="border-t border-white/5 p-4 bg-navy-950/30 space-y-3">
+                  <div className="border-t border-navy-100 p-4 bg-white/30 space-y-3">
                     {/* Scenario summary */}
                     <div className="space-y-1">
                       {set.scenarios.map((s) => {
@@ -350,19 +350,19 @@ export default function SavedScenariosManager({
                           <div
                             key={s.id}
                             className={`flex items-center justify-between text-xs py-1.5 px-2 rounded-lg ${
-                              isBest ? "bg-green-500/10" : ""
+                              isBest ? "bg-emerald-50" : ""
                             }`}
                           >
                             <div className="flex items-center gap-2">
-                              {isBest && <span className="text-green-400 text-xs">★</span>}
-                              <span className="text-navy-200">{s.name}</span>
+                              {isBest && <span className="text-emerald-600 text-xs">★</span>}
+                              <span className="text-navy-400">{s.name}</span>
                               <span className="text-navy-500">{s.country}</span>
                             </div>
                             <div className="flex items-center gap-4">
-                              <span className={rate >= 25 ? "text-red-400" : rate >= 10 ? "text-cargo-300" : "text-green-400"}>
+                              <span className={rate >= 25 ? "text-red-600" : rate >= 10 ? "text-cargo-600" : "text-emerald-600"}>
                                 {rate.toFixed(1)}%
                               </span>
-                              <span className="text-navy-300 font-medium">
+                              <span className="text-navy-500 font-medium">
                                 ${cost.toLocaleString("en-US", { maximumFractionDigits: 0 })}/yr
                               </span>
                             </div>
@@ -372,31 +372,31 @@ export default function SavedScenariosManager({
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center gap-2 pt-2 border-t border-white/5">
+                    <div className="flex items-center gap-2 pt-2 border-t border-navy-100">
                       <button
                         onClick={() => handleLoad(set)}
-                        className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-ocean-600/30 hover:bg-ocean-600/50 text-ocean-300 transition-colors"
+                        className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-ocean-600/30 hover:bg-ocean-600/50 text-ocean-600 transition-colors"
                       >
                         <ArrowRight className="w-3 h-3" />
                         Load into Builder
                       </button>
                       <button
                         onClick={() => handleDuplicate(set.id)}
-                        className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg glass glass-hover text-navy-300 transition-colors"
+                        className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-white border border-navy-100 hover:shadow-card hover:border-navy-200 transition-all text-navy-500 transition-colors"
                       >
                         <Copy className="w-3 h-3" />
                         Duplicate
                       </button>
                       <button
                         onClick={() => handleExportJSON(set)}
-                        className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg glass glass-hover text-navy-300 transition-colors"
+                        className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-white border border-navy-100 hover:shadow-card hover:border-navy-200 transition-all text-navy-500 transition-colors"
                       >
                         <Download className="w-3 h-3" />
                         Export
                       </button>
                       <button
                         onClick={() => handleDelete(set.id)}
-                        className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg glass hover:bg-red-500/20 text-navy-500 hover:text-red-400 transition-colors ml-auto"
+                        className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-white border border-navy-100 shadow-soft hover:bg-red-50 text-navy-500 hover:text-red-600 transition-colors ml-auto"
                       >
                         <Trash2 className="w-3 h-3" />
                         Delete

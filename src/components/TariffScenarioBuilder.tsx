@@ -58,39 +58,39 @@ const SCENARIO_COLORS = [
 
 const COLOR_CLASSES: Record<string, { bg: string; border: string; text: string; badge: string }> = {
   ocean: {
-    bg: "bg-ocean-500/10",
-    border: "border-ocean-500/40",
-    text: "text-ocean-300",
+    bg: "bg-ocean-50",
+    border: "border-ocean-200",
+    text: "text-ocean-600",
     badge: "bg-ocean-500",
   },
   cargo: {
-    bg: "bg-cargo-500/10",
+    bg: "bg-amber-50",
     border: "border-cargo-500/40",
-    text: "text-cargo-300",
+    text: "text-cargo-600",
     badge: "bg-cargo-500",
   },
   green: {
-    bg: "bg-green-500/10",
+    bg: "bg-emerald-50",
     border: "border-green-500/40",
-    text: "text-green-300",
+    text: "text-emerald-600",
     badge: "bg-green-500",
   },
   purple: {
-    bg: "bg-purple-500/10",
+    bg: "bg-purple-50",
     border: "border-purple-500/40",
-    text: "text-purple-300",
+    text: "text-purple-600",
     badge: "bg-purple-500",
   },
   red: {
-    bg: "bg-red-500/10",
+    bg: "bg-red-50",
     border: "border-red-500/40",
-    text: "text-red-300",
+    text: "text-red-600",
     badge: "bg-red-500",
   },
   blue: {
-    bg: "bg-blue-500/10",
+    bg: "bg-blue-50",
     border: "border-blue-500/40",
-    text: "text-blue-300",
+    text: "text-blue-600",
     badge: "bg-blue-500",
   },
 };
@@ -197,24 +197,24 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
   };
 
   const getRiskIcon = (level: string) => {
-    if (level === "high") return <AlertTriangle className="w-4 h-4 text-red-400" />;
+    if (level === "high") return <AlertTriangle className="w-4 h-4 text-red-600" />;
     if (level === "medium") return <TrendingUp className="w-4 h-4 text-cargo-400" />;
-    return <CheckCircle className="w-4 h-4 text-green-400" />;
+    return <CheckCircle className="w-4 h-4 text-emerald-600" />;
   };
 
   return (
     <div className="space-y-6">
       {/* Tab header */}
       <div className="flex items-center justify-between">
-        <div className="flex gap-1 glass rounded-xl p-1">
+        <div className="flex gap-1 bg-white border border-navy-100 shadow-soft rounded-xl p-1">
           {(["compare", "edit"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 activeTab === tab
-                  ? "bg-ocean-600 text-white"
-                  : "text-navy-300 hover:text-white"
+                  ? "bg-ocean-600 text-navy-900"
+                  : "text-navy-500 hover:text-navy-900"
               }`}
             >
               {tab === "compare" ? "Compare Scenarios" : "Edit Scenarios"}
@@ -225,7 +225,7 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
         <button
           onClick={addScenario}
           disabled={scenarios.length >= 6}
-          className="flex items-center gap-2 text-sm px-3 py-2 rounded-xl glass glass-hover text-navy-200 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 text-sm px-3 py-2 rounded-xl bg-white border border-navy-100 hover:shadow-card hover:border-navy-200 transition-all text-navy-400 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <Plus className="w-4 h-4" />
           Add Scenario
@@ -237,26 +237,26 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
         <div className="space-y-6">
           {/* Summary bar */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="glass rounded-xl p-4 border-green-500/20">
+            <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-4 border-emerald-200">
               <div className="text-xs text-navy-400 mb-1">Best Case</div>
-              <div className="text-sm font-semibold text-green-400">{bestScenario.name}</div>
-              <div className="text-lg font-bold text-green-300">
+              <div className="text-sm font-semibold text-emerald-600">{bestScenario.name}</div>
+              <div className="text-lg font-bold text-emerald-600">
                 ${bestScenario.annualDutyCost.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                 /yr
               </div>
             </div>
-            <div className="glass rounded-xl p-4 border-red-500/20">
+            <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-4 border-red-200">
               <div className="text-xs text-navy-400 mb-1">Worst Case</div>
-              <div className="text-sm font-semibold text-red-400">{worstScenario.name}</div>
-              <div className="text-lg font-bold text-red-300">
+              <div className="text-sm font-semibold text-red-600">{worstScenario.name}</div>
+              <div className="text-lg font-bold text-red-600">
                 ${worstScenario.annualDutyCost.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                 /yr
               </div>
             </div>
-            <div className="glass rounded-xl p-4 border-cargo-500/20">
+            <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-4 border-amber-200">
               <div className="text-xs text-navy-400 mb-1">Range / Exposure</div>
-              <div className="text-sm font-semibold text-cargo-300">Delta</div>
-              <div className="text-lg font-bold text-cargo-300">
+              <div className="text-sm font-semibold text-cargo-600">Delta</div>
+              <div className="text-lg font-bold text-cargo-600">
                 $
                 {(worstScenario.annualDutyCost - bestScenario.annualDutyCost).toLocaleString(
                   "en-US",
@@ -268,8 +268,8 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
           </div>
 
           {/* Horizontal bar chart */}
-          <div className="glass rounded-xl p-6">
-            <div className="text-sm font-medium text-navy-200 mb-4 flex items-center gap-2">
+          <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-6">
+            <div className="text-sm font-medium text-navy-400 mb-4 flex items-center gap-2">
               <GitCompare className="w-4 h-4 text-ocean-400" />
               Annual Duty Cost Comparison
             </div>
@@ -282,7 +282,7 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
                     <div className="flex justify-between items-center mb-1">
                       <div className="flex items-center gap-2">
                         <div className={`w-2.5 h-2.5 rounded-full ${colors.badge}`} />
-                        <span className="text-sm text-navy-200">{r.name}</span>
+                        <span className="text-sm text-navy-400">{r.name}</span>
                         <span className="text-xs text-navy-500">
                           {COUNTRY_FLAGS[r.country]} {r.country}
                         </span>
@@ -297,7 +297,7 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
                         </span>
                       </div>
                     </div>
-                    <div className="h-3 glass rounded-full overflow-hidden">
+                    <div className="h-3 bg-white border border-navy-100 shadow-soft rounded-full overflow-hidden">
                       <div
                         className={`h-full ${colors.badge} opacity-80 transition-all duration-700 rounded-full`}
                         style={{ width: `${barWidth}%` }}
@@ -310,14 +310,14 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
           </div>
 
           {/* Detailed comparison table */}
-          <div className="glass rounded-xl overflow-hidden">
-            <div className="text-sm font-medium text-navy-200 p-4 border-b border-white/5">
+          <div className="bg-white border border-navy-100 shadow-soft rounded-xl overflow-hidden">
+            <div className="text-sm font-medium text-navy-400 p-4 border-b border-navy-100">
               Per-Unit Impact Analysis
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/5">
+                  <tr className="border-b border-navy-100">
                     <th className="text-left px-4 py-3 text-xs text-navy-400 font-medium">Scenario</th>
                     <th className="text-right px-4 py-3 text-xs text-navy-400 font-medium">Base Rate</th>
                     <th className="text-right px-4 py-3 text-xs text-navy-400 font-medium">Add&apos;l Tariff</th>
@@ -332,19 +332,19 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
                     const s = scenarios[i];
                     const colors = COLOR_CLASSES[r.color] ?? COLOR_CLASSES.ocean;
                     return (
-                      <tr key={r.id} className="border-b border-white/5 hover:bg-white/3">
+                      <tr key={r.id} className="border-b border-navy-100 hover:bg-white/3">
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             <div className={`w-2 h-2 rounded-full ${colors.badge}`} />
-                            <span className="text-navy-200">{r.name}</span>
+                            <span className="text-navy-400">{r.name}</span>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-right text-navy-300">
+                        <td className="px-4 py-3 text-right text-navy-500">
                           {s.baseDutyRate.toFixed(1)}%
                         </td>
                         <td className="px-4 py-3 text-right">
                           <span
-                            className={s.section301Rate > 0 ? "text-red-400 font-medium" : "text-navy-500"}
+                            className={s.section301Rate > 0 ? "text-red-600 font-medium" : "text-navy-500"}
                           >
                             {s.section301Rate > 0 ? `+${s.section301Rate}%` : "—"}
                           </span>
@@ -353,16 +353,16 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
                           <span
                             className={
                               r.totalDutyRate >= 25
-                                ? "text-red-400 font-bold"
+                                ? "text-red-600 font-bold"
                                 : r.totalDutyRate >= 10
-                                ? "text-cargo-300 font-semibold"
-                                : "text-green-400"
+                                ? "text-cargo-600 font-semibold"
+                                : "text-emerald-600"
                             }
                           >
                             {r.totalDutyRate.toFixed(1)}%
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-right text-navy-300">
+                        <td className="px-4 py-3 text-right text-navy-500">
                           ${r.dutyPerUnit.toFixed(4)}
                         </td>
                         <td className={`px-4 py-3 text-right font-semibold ${colors.text}`}>
@@ -372,7 +372,7 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
                           {onSelectScenario && (
                             <button
                               onClick={() => onSelectScenario(r.totalDutyRate, r.country)}
-                              className="text-xs px-2 py-1 rounded-lg bg-ocean-600/30 hover:bg-ocean-600/50 text-ocean-300 transition-colors"
+                              className="text-xs px-2 py-1 rounded-lg bg-ocean-600/30 hover:bg-ocean-600/50 text-ocean-600 transition-colors"
                             >
                               Use
                             </button>
@@ -387,16 +387,16 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
           </div>
 
           {/* What-if insight */}
-          <div className="glass rounded-xl p-5 border-cargo-500/20">
+          <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-5 border-amber-200">
             <div className="flex items-start gap-3">
               <TrendingDown className="w-5 h-5 text-cargo-400 flex-shrink-0 mt-0.5" />
               <div>
-                <div className="text-sm font-semibold text-cargo-300 mb-1">What-If Insight</div>
-                <p className="text-xs text-navy-300 leading-relaxed">
+                <div className="text-sm font-semibold text-cargo-600 mb-1">What-If Insight</div>
+                <p className="text-xs text-navy-500 leading-relaxed">
                   The delta between{" "}
-                  <strong className="text-white">{bestScenario.name}</strong> and{" "}
-                  <strong className="text-white">{worstScenario.name}</strong> is{" "}
-                  <strong className="text-cargo-300">
+                  <strong className="text-navy-900">{bestScenario.name}</strong> and{" "}
+                  <strong className="text-navy-900">{worstScenario.name}</strong> is{" "}
+                  <strong className="text-cargo-600">
                     $
                     {(
                       worstScenario.annualDutyCost - bestScenario.annualDutyCost
@@ -405,7 +405,7 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
                   </strong>
                   . Sourcing from {COUNTRY_FLAGS[bestScenario.country]} {bestScenario.country} vs.{" "}
                   {COUNTRY_FLAGS[worstScenario.country]} {worstScenario.country} saves{" "}
-                  <strong className="text-green-400">
+                  <strong className="text-emerald-600">
                     {(
                       ((worstScenario.annualDutyCost - bestScenario.annualDutyCost) /
                         worstScenario.annualDutyCost) *
@@ -435,13 +435,13 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
                       type="text"
                       value={s.name}
                       onChange={(e) => updateScenario(s.id, { name: e.target.value })}
-                      className="bg-transparent text-sm font-semibold text-white focus:outline-none focus:border-b focus:border-ocean-500"
+                      className="bg-transparent text-sm font-semibold text-navy-900 focus:outline-none focus:border-b focus:border-ocean-500"
                     />
                   </div>
                   <button
                     onClick={() => removeScenario(s.id)}
                     disabled={scenarios.length <= 1}
-                    className="text-navy-500 hover:text-red-400 transition-colors disabled:opacity-20"
+                    className="text-navy-500 hover:text-red-600 transition-colors disabled:opacity-20"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -453,7 +453,7 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
                     <select
                       value={s.country}
                       onChange={(e) => updateScenario(s.id, { country: e.target.value })}
-                      className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/50"
+                      className="w-full bg-white border border-navy-100 shadow-soft rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500/30 focus:border-ocean-500 bg-navy-50"
                     >
                       {Object.entries(COUNTRY_FLAGS).map(([code, flag]) => (
                         <option key={code} value={code}>
@@ -472,7 +472,7 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
                       onChange={(e) =>
                         updateScenario(s.id, { baseDutyRate: parseFloat(e.target.value) || 0 })
                       }
-                      className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/50"
+                      className="w-full bg-white border border-navy-100 shadow-soft rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500/30 focus:border-ocean-500 bg-navy-50"
                     />
                   </div>
 
@@ -487,7 +487,7 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
                       onChange={(e) =>
                         updateScenario(s.id, { section301Rate: parseFloat(e.target.value) || 0 })
                       }
-                      className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-500 bg-navy-900/50 border-red-500/20"
+                      className="w-full bg-white border border-navy-100 shadow-soft rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-500 bg-navy-50 border-red-200"
                     />
                   </div>
 
@@ -502,7 +502,7 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
                         onChange={(e) =>
                           updateScenario(s.id, { unitValue: parseFloat(e.target.value) || 0 })
                         }
-                        className="w-full glass rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/50"
+                        className="w-full bg-white border border-navy-100 shadow-soft rounded-lg pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500/30 focus:border-ocean-500 bg-navy-50"
                       />
                     </div>
                   </div>
@@ -516,12 +516,12 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
                       onChange={(e) =>
                         updateScenario(s.id, { annualUnits: parseInt(e.target.value) || 0 })
                       }
-                      className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500 bg-navy-900/50"
+                      className="w-full bg-white border border-navy-100 shadow-soft rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ocean-500/30 focus:border-ocean-500 bg-navy-50"
                     />
                   </div>
 
                   <div className="flex items-end">
-                    <div className={`w-full glass rounded-xl p-3 ${colors.bg} ${colors.border} border`}>
+                    <div className={`w-full bg-white border border-navy-100 shadow-soft rounded-xl p-3 ${colors.bg} ${colors.border} border`}>
                       <div className="text-xs text-navy-400">Annual Duty</div>
                       <div className={`text-lg font-bold ${colors.text}`}>
                         $
@@ -542,7 +542,7 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
           {scenarios.length < 6 && (
             <button
               onClick={addScenario}
-              className="w-full glass glass-hover rounded-xl p-4 border-dashed border-white/20 text-sm text-navy-400 hover:text-navy-200 transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-white border border-navy-100 hover:shadow-card hover:border-navy-200 transition-all rounded-xl p-4 border-dashed border-navy-200 text-sm text-navy-400 hover:text-navy-400 transition-colors flex items-center justify-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Add Another Scenario (max 6)

@@ -86,8 +86,8 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   const cfg = metricConfig[metric] || metricConfig.costPerTEU;
   const value = payload[0].value;
   return (
-    <div className="glass rounded-lg p-3 border border-white/20 text-xs">
-      <div className="font-semibold text-white mb-1">{label}</div>
+    <div className="bg-white border border-navy-100 shadow-soft rounded-lg p-3 border border-navy-200 text-xs">
+      <div className="font-semibold text-navy-900 mb-1">{label}</div>
       <div style={{ color: cfg.color }}>
         {cfg.unit === "$" ? `$${value.toLocaleString()}` : `${value}${cfg.unit}`}
       </div>
@@ -112,7 +112,7 @@ export default function RateComparisonChart() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <h3 className="text-lg font-semibold text-navy-100 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-navy-700 flex items-center gap-2">
           <BarChart3 className="w-5 h-5 text-ocean-400" />
           Carrier Rate Comparison
         </h3>
@@ -126,8 +126,8 @@ export default function RateComparisonChart() {
               }}
               className={`text-xs px-3 py-1.5 rounded-full transition-all ${
                 metric === m
-                  ? "text-white"
-                  : "glass text-navy-300 hover:text-white"
+                  ? "text-navy-900"
+                  : "bg-white border border-navy-100 shadow-soft text-navy-500 hover:text-navy-900"
               }`}
               style={
                 metric === m
@@ -180,25 +180,25 @@ export default function RateComparisonChart() {
 
       {/* Best/worst callouts */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="glass rounded-xl p-4 border-green-500/20">
+        <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-4 border-emerald-200">
           <div className="flex items-center gap-2 mb-1">
-            <TrendingUp className="w-4 h-4 text-green-400" />
-            <span className="text-xs text-green-300 font-medium">Best Option</span>
+            <TrendingUp className="w-4 h-4 text-emerald-600" />
+            <span className="text-xs text-emerald-600 font-medium">Best Option</span>
           </div>
-          <div className="text-lg font-bold text-white">{best.carrier}</div>
+          <div className="text-lg font-bold text-navy-900">{best.carrier}</div>
           <div className="text-sm" style={{ color: cfg.color }}>
             {cfg.unit === "$"
               ? `$${best[metric].toLocaleString()}`
               : `${best[metric]}${cfg.unit}`}
           </div>
         </div>
-        <div className="glass rounded-xl p-4 border-red-500/20">
+        <div className="bg-white border border-navy-100 shadow-soft rounded-xl p-4 border-red-200">
           <div className="flex items-center gap-2 mb-1">
-            <TrendingUp className="w-4 h-4 text-red-400 rotate-180" />
-            <span className="text-xs text-red-300 font-medium">Most Expensive</span>
+            <TrendingUp className="w-4 h-4 text-red-600 rotate-180" />
+            <span className="text-xs text-red-600 font-medium">Most Expensive</span>
           </div>
-          <div className="text-lg font-bold text-white">{worst.carrier}</div>
-          <div className="text-sm text-red-400">
+          <div className="text-lg font-bold text-navy-900">{worst.carrier}</div>
+          <div className="text-sm text-red-600">
             {cfg.unit === "$"
               ? `$${worst[metric].toLocaleString()}`
               : `${worst[metric]}${cfg.unit}`}
