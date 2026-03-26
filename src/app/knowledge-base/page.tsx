@@ -1,12 +1,12 @@
 import Header from "@/components/Header";
 import ScrollReveal from "@/components/ScrollReveal";
 import KnowledgeBase from "@/components/KnowledgeBase";
-import { BookOpen, Globe, Scale, FileText, AlertTriangle, Lightbulb } from "lucide-react";
+import { BookOpen, Globe, Scale, FileText, AlertTriangle, Lightbulb, Anchor, Snowflake, ClipboardList } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Knowledge Base | Shipping Savior",
-  description: "Comprehensive reference for international shipping: glossary of 40+ terms, all 11 Incoterms 2020, CBP compliance guides, trade regulations, and customs forms.",
+  description: "Comprehensive reference for international shipping: glossary, Incoterms, port guides, compliance checklists, cold chain requirements, trade regulations, CBP forms, and document generation for commercial invoices and packing lists.",
 };
 
 const features = [
@@ -29,22 +29,40 @@ const features = [
     color: "from-green-500 to-green-700",
   },
   {
+    icon: Anchor,
+    title: "Port Guides",
+    description: "Detailed profiles for 8 major ports: congestion, costs, cold chain, FTZ proximity.",
+    color: "from-teal-500 to-teal-700",
+  },
+  {
+    icon: Snowflake,
+    title: "Cold Chain Requirements",
+    description: "Temperature zones, reefer specs, FSMA compliance, pharma GDP, and loading best practices.",
+    color: "from-blue-500 to-blue-700",
+  },
+  {
+    icon: ClipboardList,
+    title: "Document Generator",
+    description: "Generate commercial invoices and packing lists with all required fields for customs.",
+    color: "from-cargo-500 to-cargo-700",
+  },
+  {
     icon: AlertTriangle,
     title: "Trade Regulations",
     description: "Section 301 tariffs, GSP status by country, FTAs, UFLPA, and active embargoes.",
-    color: "from-cargo-500 to-cargo-700",
+    color: "from-red-500 to-red-700",
   },
   {
     icon: FileText,
     title: "CBP Forms Reference",
     description: "10 essential customs forms with purpose, use case, and official source links.",
-    color: "from-blue-500 to-blue-700",
+    color: "from-indigo-500 to-indigo-700",
   },
   {
     icon: Lightbulb,
     title: "SE Asia Focus",
     description: "Specific guidance on Vietnam, Thailand, Indonesia, and Cambodia trade status.",
-    color: "from-teal-500 to-teal-700",
+    color: "from-amber-500 to-amber-700",
   },
 ];
 
@@ -62,7 +80,7 @@ export default function KnowledgeBasePage() {
         <div className="relative z-10 max-w-5xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-6">
             <BookOpen className="w-4 h-4 text-ocean-400" />
-            <span className="text-sm text-navy-200">Phase 5 — Knowledge Base</span>
+            <span className="text-sm text-navy-200">Phase 5 — Knowledge Base + Documents</span>
           </div>
 
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-5">
@@ -72,10 +90,11 @@ export default function KnowledgeBasePage() {
 
           <p className="text-lg md:text-xl text-navy-200 max-w-3xl mx-auto mb-8 leading-relaxed">
             Everything you need to know about international shipping regulations,
-            trade terms, customs compliance, and documentation — in one searchable reference.
+            trade terms, customs compliance, port operations, cold chain handling,
+            and documentation — in one searchable reference.
           </p>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
             {features.map((feature) => (
               <div key={feature.title} className="glass rounded-xl p-4 text-left">
                 <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center mb-3`}>
