@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import {
   Ship,
@@ -177,35 +177,139 @@ const shipments: Shipment[] = [
 const kpis: KPI[] = [
   {
     label: "Active Shipments",
-    value: "14",
+    value: "12",
     change: 2,
     icon: Ship,
     color: "bg-ocean-50 text-ocean-600",
     subtitle: "Across 3 lanes",
   },
   {
-    label: "Monthly Revenue",
-    value: "$2.41M",
+    label: "Monthly Import Volume",
+    value: "$450K",
     change: 8.3,
     icon: DollarSign,
     color: "bg-emerald-50 text-emerald-600",
-    subtitle: "vs. $2.23M last mo.",
+    subtitle: "vs. $415K last mo.",
   },
   {
-    label: "Avg Landed Cost",
-    value: "$4.82/unit",
-    change: -3.1,
-    icon: TrendingDown,
+    label: "Duty Savings MTD",
+    value: "$18,500",
+    change: 12.4,
+    icon: TrendingUp,
     color: "bg-amber-50 text-amber-600",
-    subtitle: "Down from $4.97/unit",
+    subtitle: "via FTZ + HTS optimization",
   },
   {
-    label: "On-Time Rate",
-    value: "87.5%",
-    change: -2.1,
-    icon: Clock,
+    label: "Container Utilization",
+    value: "78%",
+    change: -1.8,
+    icon: Activity,
     color: "bg-purple-50 text-purple-600",
-    subtitle: "2 delayed shipments",
+    subtitle: "Avg across active lanes",
+  },
+];
+
+// ─── Recent Calculations (table data) ─────────────────────────────────────────
+
+interface RecentCalc {
+  type: string;
+  date: string;
+  route: string;
+  result: string;
+  status: "Saved" | "Draft";
+  icon: React.ElementType;
+  iconColor: string;
+  iconBg: string;
+}
+
+const recentCalculations: RecentCalc[] = [
+  {
+    type: "Landed Cost",
+    date: "Mar 25, 2026",
+    route: "Shanghai → Los Angeles",
+    result: "$4.92/unit",
+    status: "Saved",
+    icon: Calculator,
+    iconColor: "text-ocean-600",
+    iconBg: "bg-ocean-50",
+  },
+  {
+    type: "FTZ Analysis",
+    date: "Mar 24, 2026",
+    route: "Ho Chi Minh City → Long Beach",
+    result: "21.3% savings",
+    status: "Saved",
+    icon: Shield,
+    iconColor: "text-emerald-600",
+    iconBg: "bg-emerald-50",
+  },
+  {
+    type: "Container Util",
+    date: "Mar 23, 2026",
+    route: "Bangkok → Oakland",
+    result: "82% utilization",
+    status: "Draft",
+    icon: Box,
+    iconColor: "text-amber-600",
+    iconBg: "bg-amber-50",
+  },
+  {
+    type: "Landed Cost",
+    date: "Mar 22, 2026",
+    route: "Jakarta → Seattle",
+    result: "$6.18/unit",
+    status: "Saved",
+    icon: Calculator,
+    iconColor: "text-ocean-600",
+    iconBg: "bg-ocean-50",
+  },
+  {
+    type: "FTZ Analysis",
+    date: "Mar 20, 2026",
+    route: "Taipei → Los Angeles",
+    result: "14.7% savings",
+    status: "Draft",
+    icon: Shield,
+    iconColor: "text-emerald-600",
+    iconBg: "bg-emerald-50",
+  },
+];
+
+// ─── Active Routes ─────────────────────────────────────────────────────────────
+
+interface ActiveRoute {
+  origin: string;
+  destination: string;
+  rate: string;
+  transitDays: number;
+  status: "Active" | "Monitoring";
+  carrier: string;
+}
+
+const activeRoutes: ActiveRoute[] = [
+  {
+    origin: "Shanghai",
+    destination: "Los Angeles",
+    rate: "$1,850/TEU",
+    transitDays: 16,
+    status: "Active",
+    carrier: "COSCO / Evergreen",
+  },
+  {
+    origin: "Ho Chi Minh City",
+    destination: "Long Beach",
+    rate: "$2,100/TEU",
+    transitDays: 19,
+    status: "Active",
+    carrier: "MSC / ONE",
+  },
+  {
+    origin: "Bangkok",
+    destination: "Seattle",
+    rate: "$1,640/TEU",
+    transitDays: 21,
+    status: "Monitoring",
+    carrier: "APL / Hapag-Lloyd",
   },
 ];
 
@@ -661,13 +765,14 @@ export default function DashboardPage() {
               <h3 className="text-sm font-semibold text-navy-900 mb-3">Quick Actions</h3>
               <div className="space-y-2">
                 {[
-                  { icon: Ship, label: "New Shipment", color: "text-ocean-600" },
-                  { icon: BarChart3, label: "Generate Report", color: "text-amber-600" },
-                  { icon: Shield, label: "FTZ Analysis", color: "text-emerald-600" },
-                  { icon: MapPin, label: "Track Shipment", color: "text-purple-600" },
+                  { icon: Calculator, label: "Run Landed Cost Calc", color: "text-ocean-600", href: "/" },
+                  { icon: Shield, label: "FTZ Analysis", color: "text-emerald-600", href: "/ftz-analyzer" },
+                  { icon: BarChart3, label: "Route Compare", color: "text-amber-600", href: "/#route-compare" },
+                  { icon: Box, label: "Container Calc", color: "text-purple-600", href: "/#container-calc" },
                 ].map((action) => (
-                  <button
+                  <Link
                     key={action.label}
+                    href={action.href}
                     className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-navy-50 border border-transparent hover:border-navy-100 group transition-all"
                   >
                     <div className="flex items-center gap-2.5">
@@ -677,121 +782,139 @@ export default function DashboardPage() {
                       </span>
                     </div>
                     <ArrowRight className="w-3.5 h-3.5 text-navy-300 group-hover:text-navy-500 transition-colors" />
-                  </button>
+                  </Link>
                 ))}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom: Saved Calculations */}
+        {/* Recent Calculations Table */}
         <div className="bg-white border border-navy-100 rounded-2xl p-6 shadow-soft">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h2 className="text-base font-semibold text-navy-900">Saved Calculations</h2>
-              <p className="text-xs text-navy-400 mt-0.5">Your recent quotes and landed cost models</p>
+              <h2 className="text-base font-semibold text-navy-900">Recent Calculations</h2>
+              <p className="text-xs text-navy-400 mt-0.5">Last 5 calculations run across all tools</p>
             </div>
-            <button className="flex items-center gap-1.5 text-xs bg-ocean-50 hover:bg-ocean-100 text-ocean-700 border border-ocean-200 px-3 py-2 rounded-lg transition-colors font-medium">
+            <Link
+              href="/"
+              className="flex items-center gap-1.5 text-xs bg-ocean-50 hover:bg-ocean-100 text-ocean-700 border border-ocean-200 px-3 py-2 rounded-lg transition-colors font-medium"
+            >
               <Zap className="w-3.5 h-3.5" />
               New Calculation
-            </button>
+            </Link>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              {
-                name: "Vietnam Electronics — 40' HC",
-                type: "Landed Cost",
-                origin: "Ho Chi Minh City → Los Angeles",
-                savedAt: "2h ago",
-                result: "$5.14/unit",
-                resultLabel: "Landed cost",
-                status: "saved",
-                icon: Calculator,
-              },
-              {
-                name: "Bangkok Apparel FTZ Scenario",
-                type: "FTZ Analysis",
-                origin: "Bangkok → Long Beach (FTZ 202)",
-                savedAt: "Yesterday",
-                result: "18.4% savings",
-                resultLabel: "vs. direct import",
-                status: "ftz",
-                icon: Shield,
-              },
-              {
-                name: "Cold Chain Seattle–Anchorage",
-                type: "Route Comparison",
-                origin: "Seattle WA → Anchorage AK",
-                savedAt: "2 days ago",
-                result: "$0.82/kg",
-                resultLabel: "Best rate found",
-                status: "route",
-                icon: Truck,
-              },
-              {
-                name: "Indonesia Tariff — Section 301",
-                type: "Tariff Estimate",
-                origin: "Jakarta → Los Angeles",
-                savedAt: "3 days ago",
-                result: "25%",
-                resultLabel: "Effective duty rate",
-                status: "tariff",
-                icon: BarChart3,
-              },
-              {
-                name: "Thailand Consumer Goods — 20'",
-                type: "Landed Cost",
-                origin: "Laem Chabang → Oakland",
-                savedAt: "4 days ago",
-                result: "$3.87/unit",
-                resultLabel: "Landed cost",
-                status: "saved",
-                icon: Package,
-              },
-              {
-                name: "Air Freight vs Ocean — Electronics",
-                type: "Mode Comparison",
-                origin: "Shenzhen → SFO",
-                savedAt: "1 week ago",
-                result: "3.2x cost premium",
-                resultLabel: "Air vs. ocean",
-                status: "route",
-                icon: Plane,
-              },
-            ].map((calc) => (
+          {/* Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-navy-100">
+                  <th className="text-left text-xs text-navy-400 font-semibold uppercase tracking-wide pb-3 pr-4">Type</th>
+                  <th className="text-left text-xs text-navy-400 font-semibold uppercase tracking-wide pb-3 pr-4">Date</th>
+                  <th className="text-left text-xs text-navy-400 font-semibold uppercase tracking-wide pb-3 pr-4">Route</th>
+                  <th className="text-left text-xs text-navy-400 font-semibold uppercase tracking-wide pb-3 pr-4">Result</th>
+                  <th className="text-left text-xs text-navy-400 font-semibold uppercase tracking-wide pb-3">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentCalculations.map((calc, i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-navy-50 last:border-0 hover:bg-navy-50/50 transition-colors cursor-pointer group"
+                  >
+                    <td className="py-3 pr-4">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${calc.iconBg}`}>
+                          <calc.icon className={`w-3.5 h-3.5 ${calc.iconColor}`} />
+                        </div>
+                        <span className="text-sm font-medium text-navy-900">{calc.type}</span>
+                      </div>
+                    </td>
+                    <td className="py-3 pr-4 text-xs text-navy-500 whitespace-nowrap">{calc.date}</td>
+                    <td className="py-3 pr-4">
+                      <div className="flex items-center gap-1 text-xs text-navy-600">
+                        <MapPin className="w-3 h-3 text-navy-300 flex-shrink-0" />
+                        {calc.route}
+                      </div>
+                    </td>
+                    <td className="py-3 pr-4">
+                      <span className="text-sm font-semibold text-navy-900">{calc.result}</span>
+                    </td>
+                    <td className="py-3">
+                      <span className={`inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full border ${
+                        calc.status === "Saved"
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                          : "bg-amber-50 text-amber-700 border-amber-200"
+                      }`}>
+                        {calc.status === "Saved" ? (
+                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                        ) : (
+                          <Circle className="w-3 h-3 mr-1" />
+                        )}
+                        {calc.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Active Routes */}
+        <div className="bg-white border border-navy-100 rounded-2xl p-6 shadow-soft">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h2 className="text-base font-semibold text-navy-900">Active Routes</h2>
+              <p className="text-xs text-navy-400 mt-0.5">Current freight lanes being monitored</p>
+            </div>
+            <span className="text-xs text-navy-400 bg-navy-50 border border-navy-100 px-2.5 py-1 rounded-full">
+              {activeRoutes.length} lanes
+            </span>
+          </div>
+          <div className="grid md:grid-cols-3 gap-4">
+            {activeRoutes.map((route, i) => (
               <div
-                key={calc.name}
-                className="bg-white border border-navy-100 rounded-xl p-4 cursor-pointer group hover:shadow-card hover:border-navy-200 transition-all duration-300"
+                key={i}
+                className="border border-navy-100 rounded-xl p-4 hover:shadow-card hover:border-navy-200 transition-all duration-300 cursor-pointer group"
               >
+                {/* Route Header */}
                 <div className="flex items-start justify-between mb-3">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                    calc.status === "ftz" ? "bg-emerald-50" :
-                    calc.status === "tariff" ? "bg-amber-50" :
-                    calc.status === "route" ? "bg-purple-50" :
-                    "bg-ocean-50"
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-ocean-50 flex items-center justify-center">
+                      <Anchor className="w-4 h-4 text-ocean-600" />
+                    </div>
+                  </div>
+                  <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border ${
+                    route.status === "Active"
+                      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                      : "bg-amber-50 text-amber-700 border-amber-200"
                   }`}>
-                    <calc.icon className={`w-4 h-4 ${
-                      calc.status === "ftz" ? "text-emerald-600" :
-                      calc.status === "tariff" ? "text-amber-600" :
-                      calc.status === "route" ? "text-purple-600" :
-                      "text-ocean-600"
+                    <span className={`w-1.5 h-1.5 rounded-full ${
+                      route.status === "Active" ? "bg-emerald-400" : "bg-amber-400"
                     }`} />
-                  </div>
-                  <span className="text-[10px] text-navy-400">{calc.savedAt}</span>
+                    {route.status}
+                  </span>
                 </div>
-                <div className="mb-1">
-                  <div className="text-sm font-medium text-navy-900 group-hover:text-ocean-600 transition-colors line-clamp-1">
-                    {calc.name}
+                {/* Origin → Destination */}
+                <div className="mb-3">
+                  <div className="flex items-center gap-1.5 text-sm font-semibold text-navy-900">
+                    <span>{route.origin}</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-navy-400 flex-shrink-0" />
+                    <span>{route.destination}</span>
                   </div>
-                  <div className="text-xs text-navy-400 mt-0.5">{calc.type}</div>
+                  <div className="text-xs text-navy-400 mt-0.5">{route.carrier}</div>
                 </div>
-                <div className="text-xs text-navy-500 mb-3">{calc.origin}</div>
-                <div className="flex items-center justify-between">
+                {/* Stats */}
+                <div className="grid grid-cols-2 gap-3 pt-3 border-t border-navy-100">
                   <div>
-                    <div className="text-base font-bold text-navy-900">{calc.result}</div>
-                    <div className="text-[10px] text-navy-400">{calc.resultLabel}</div>
+                    <div className="text-[10px] text-navy-400 uppercase tracking-wide mb-0.5">Rate</div>
+                    <div className="text-sm font-bold text-navy-900">{route.rate}</div>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-navy-300 group-hover:text-ocean-500 transition-colors" />
+                  <div>
+                    <div className="text-[10px] text-navy-400 uppercase tracking-wide mb-0.5">Transit</div>
+                    <div className="text-sm font-bold text-navy-900">{route.transitDays} days</div>
+                  </div>
                 </div>
               </div>
             ))}
