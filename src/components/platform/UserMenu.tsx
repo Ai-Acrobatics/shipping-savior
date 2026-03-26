@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 import { LogOut, Settings, User } from "lucide-react";
 
 interface UserMenuProps {
@@ -37,8 +38,7 @@ export default function UserMenu({ user, collapsed }: UserMenuProps) {
   }, []);
 
   const handleLogout = async () => {
-    // Phase 2 will replace this with signOut() from next-auth/react
-    window.location.href = "/login";
+    await signOut({ callbackUrl: "/login" });
   };
 
   return (

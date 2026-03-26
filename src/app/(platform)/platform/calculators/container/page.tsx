@@ -3,11 +3,7 @@
 import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import ContainerUtilCalculator from "@/components/ContainerUtilCalculator";
-
-function ContainerContent() {
-  return <ContainerUtilCalculator showSaveButton />;
-}
+import ContainerUtilizationCalculator from "@/components/ContainerUtilizationCalculator";
 
 export default function ContainerUtilizationPage() {
   return (
@@ -20,16 +16,16 @@ export default function ContainerUtilizationPage() {
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Container Utilization</h1>
+          <h1 className="text-2xl font-bold text-navy-900">Container Utilization Calculator</h1>
           <p className="text-navy-500 text-sm mt-0.5">
-            Optimize container loading patterns and maximize space utilization.
+            Optimize container loading patterns and maximize space utilization efficiency.
           </p>
         </div>
       </div>
 
       <div className="bg-white border border-navy-200 rounded-xl p-6">
         <Suspense fallback={<div className="animate-pulse h-64 bg-navy-50 rounded-lg" />}>
-          <ContainerContent />
+          <ContainerUtilizationCalculator showSaveButton />
         </Suspense>
       </div>
     </div>

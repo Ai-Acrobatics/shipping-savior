@@ -5,10 +5,6 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import FTZSavingsCalculator from "@/components/FTZSavingsCalculator";
 
-function FTZSavingsContent() {
-  return <FTZSavingsCalculator showSaveButton />;
-}
-
 export default function FTZSavingsPage() {
   return (
     <div className="space-y-6">
@@ -22,14 +18,14 @@ export default function FTZSavingsPage() {
         <div>
           <h1 className="text-2xl font-bold text-navy-900">FTZ Savings Analyzer</h1>
           <p className="text-navy-500 text-sm mt-0.5">
-            Model Foreign Trade Zone savings with duty rate locking and incremental withdrawals.
+            Compare Foreign Trade Zone vs direct import costs and identify savings opportunities.
           </p>
         </div>
       </div>
 
       <div className="bg-white border border-navy-200 rounded-xl p-6">
         <Suspense fallback={<div className="animate-pulse h-64 bg-navy-50 rounded-lg" />}>
-          <FTZSavingsContent />
+          <FTZSavingsCalculator showSaveButton />
         </Suspense>
       </div>
     </div>

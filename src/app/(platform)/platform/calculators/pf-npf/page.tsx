@@ -5,10 +5,6 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import PFNPFCalculator from "@/components/PFNPFCalculator";
 
-function PFNPFContent() {
-  return <PFNPFCalculator showSaveButton />;
-}
-
 export default function PFNPFPage() {
   return (
     <div className="space-y-6">
@@ -20,16 +16,16 @@ export default function PFNPFPage() {
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">PF/NPF Comparison</h1>
+          <h1 className="text-2xl font-bold text-navy-900">PF vs NPF Comparison</h1>
           <p className="text-navy-500 text-sm mt-0.5">
-            Compare Privileged vs Non-Privileged Foreign status elections for duty optimization.
+            Privileged vs Non-Privileged Foreign status analysis for duty optimization.
           </p>
         </div>
       </div>
 
-      <div className="bg-navy-900 border border-purple-900/30 rounded-xl p-6">
-        <Suspense fallback={<div className="animate-pulse h-64 bg-navy-800 rounded-lg" />}>
-          <PFNPFContent />
+      <div className="bg-white border border-navy-200 rounded-xl p-6">
+        <Suspense fallback={<div className="animate-pulse h-64 bg-navy-50 rounded-lg" />}>
+          <PFNPFCalculator showSaveButton />
         </Suspense>
       </div>
     </div>

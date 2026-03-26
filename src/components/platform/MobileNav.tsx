@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import {
   Ship,
   Menu,
@@ -47,8 +48,8 @@ export default function MobileNav({ user }: MobileNavProps) {
     return pathname.startsWith(href);
   };
 
-  const handleLogout = () => {
-    window.location.href = "/login";
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: "/login" });
   };
 
   return (

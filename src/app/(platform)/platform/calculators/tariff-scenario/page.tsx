@@ -5,10 +5,6 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import TariffScenarioBuilder from "@/components/TariffScenarioBuilder";
 
-function TariffScenarioContent() {
-  return <TariffScenarioBuilder showSaveButton />;
-}
-
 export default function TariffScenarioPage() {
   return (
     <div className="space-y-6">
@@ -22,14 +18,14 @@ export default function TariffScenarioPage() {
         <div>
           <h1 className="text-2xl font-bold text-navy-900">Tariff Scenario Builder</h1>
           <p className="text-navy-500 text-sm mt-0.5">
-            Model tariff changes and compare sourcing scenarios side-by-side.
+            Model tariff changes and their cost impact across your supply chain.
           </p>
         </div>
       </div>
 
       <div className="bg-white border border-navy-200 rounded-xl p-6">
         <Suspense fallback={<div className="animate-pulse h-64 bg-navy-50 rounded-lg" />}>
-          <TariffScenarioContent />
+          <TariffScenarioBuilder showSaveButton />
         </Suspense>
       </div>
     </div>

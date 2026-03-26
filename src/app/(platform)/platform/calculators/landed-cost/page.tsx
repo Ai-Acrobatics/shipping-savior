@@ -5,10 +5,6 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import LandedCostCalculator from "@/components/LandedCostCalculator";
 
-function LandedCostContent() {
-  return <LandedCostCalculator showSaveButton />;
-}
-
 export default function LandedCostPage() {
   return (
     <div className="space-y-6">
@@ -29,7 +25,7 @@ export default function LandedCostPage() {
 
       <div className="bg-white border border-navy-200 rounded-xl p-6">
         <Suspense fallback={<div className="animate-pulse h-64 bg-navy-50 rounded-lg" />}>
-          <LandedCostContent />
+          <LandedCostCalculator showSaveButton />
         </Suspense>
       </div>
     </div>

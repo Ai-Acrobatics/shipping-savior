@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "@/components/platform/Sidebar";
 import UserMenu from "@/components/platform/UserMenu";
 import MobileNav from "@/components/platform/MobileNav";
 import { Bell } from "lucide-react";
+
+const SIDEBAR_KEY = "shipping-savior-sidebar-collapsed";
 
 interface PlatformShellProps {
   user: {
@@ -18,12 +20,28 @@ interface PlatformShellProps {
 export default function PlatformShell({ user, children }: PlatformShellProps) {
   const [collapsed, setCollapsed] = useState(false);
 
+  // Hydrate sidebar state from localStorage
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(SIDEBAR_KEY);
+      if (stored === "true") setCollapsed(true);
+    } catch {}
+  }, []);
+
+  const toggleCollapsed = () => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      try { localStorage.setItem(SIDEBAR_KEY, String(next)); } catch {}
+      return next;
+    });
+  };
+
   return (
     <div className="min-h-screen bg-white flex">
       {/* Desktop Sidebar — visibility handled inside Sidebar component (hidden lg:flex) */}
       <Sidebar
         collapsed={collapsed}
-        onToggle={() => setCollapsed(!collapsed)}
+        onToggle={toggleCollapsed}
         user={user}
       />
 
