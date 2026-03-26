@@ -36,6 +36,7 @@
   ],
   "exclude": [
     "node_modules",
+    "tmp",
     "src/components/dashboard-old",
     "src/lib/data-old"
   ]
