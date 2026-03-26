@@ -784,9 +784,9 @@ export default function PlatformArchitecturePage() {
                         <code className="text-sm font-mono text-navy-700 flex-shrink-0 pt-0.5">{ep.path}</code>
                         <span className="text-xs text-navy-500 flex-1 pt-0.5 hidden sm:block">{ep.desc}</span>
                         {ep.auth ? (
-                          <Lock className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" title="Auth required" />
+                          <Lock className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
                         ) : (
-                          <Globe className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" title="Public" />
+                          <Globe className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
                         )}
                       </div>
                     ))}

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   Ship, LayoutDashboard, MapPin, BarChart3, PiggyBank,
   Bell, Activity, ChevronLeft, ChevronRight, RefreshCw,
-  Menu, X, Settings, Monitor, TrendingUp,
+  Menu, X, Settings, Monitor, TrendingUp, Database,
 } from "lucide-react";
 import { notifications as notifData } from "@/lib/data/dashboard";
 
@@ -15,6 +15,7 @@ const sidebarLinks = [
   { label: "Tracking", href: "/dashboard/tracking", icon: MapPin },
   { label: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
   { label: "Monitoring", href: "/dashboard/monitoring", icon: Monitor },
+  { label: "Data Pipeline", href: "/dashboard/data-pipeline", icon: Database },
   { label: "Business KPIs", href: "/dashboard/business-kpi", icon: TrendingUp },
   { label: "Savings", href: "/dashboard/savings", icon: PiggyBank },
   { label: "Notifications", href: "/dashboard/notifications", icon: Bell },

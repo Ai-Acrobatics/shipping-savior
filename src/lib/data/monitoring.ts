@@ -574,6 +574,368 @@ export const featureComparison: CompetitorFeatureMatrix[] = [
   { feature: "Container Utilization", shippingSavior: true, flexport: false, freightos: false, project44: false, descartes: false },
 ];
 
+// ─── Carrier API Connections ──────────────────────────────────
+
+export interface CarrierAPIConnection {
+  carrierId: string;
+  carrierName: string;
+  logo: string; // carrier code used for display
+  connectionType: "REST API" | "EDI" | "SOAP" | "FTP" | "Webhook";
+  status: "connected" | "degraded" | "disconnected" | "maintenance";
+  lastPing: string;
+  avgLatencyMs: number;
+  uptime30d: number; // percent
+  rateLimit: { used: number; limit: number; resetIn: string };
+  dataTypes: string[];
+  lastSyncedAt: string;
+  recordsToday: number;
+  errorRate: number; // percent
+  authMethod: string;
+  region: string;
+  notes?: string;
+}
+
+export const carrierAPIConnections: CarrierAPIConnection[] = [
+  {
+    carrierId: "maersk",
+    carrierName: "Maersk",
+    logo: "MAERSK",
+    connectionType: "REST API",
+    status: "connected",
+    lastPing: "Mar 26, 14:43 UTC",
+    avgLatencyMs: 182,
+    uptime30d: 99.8,
+    rateLimit: { used: 4820, limit: 10000, resetIn: "5h 17m" },
+    dataTypes: ["Schedules", "Track & Trace", "Rates", "B/L Status"],
+    lastSyncedAt: "Mar 26, 14:43 UTC",
+    recordsToday: 8240,
+    errorRate: 0.04,
+    authMethod: "OAuth 2.0",
+    region: "Global (EU primary)",
+  },
+  {
+    carrierId: "msc",
+    carrierName: "MSC",
+    logo: "MSC",
+    connectionType: "REST API",
+    status: "connected",
+    lastPing: "Mar 26, 14:41 UTC",
+    avgLatencyMs: 248,
+    uptime30d: 99.2,
+    rateLimit: { used: 2140, limit: 5000, resetIn: "5h 17m" },
+    dataTypes: ["Track & Trace", "Schedules", "Rates"],
+    lastSyncedAt: "Mar 26, 14:41 UTC",
+    recordsToday: 3620,
+    errorRate: 0.12,
+    authMethod: "API Key",
+    region: "Geneva (CH)",
+  },
+  {
+    carrierId: "cmacgm",
+    carrierName: "CMA CGM",
+    logo: "CMA CGM",
+    connectionType: "REST API",
+    status: "degraded",
+    lastPing: "Mar 26, 13:58 UTC",
+    avgLatencyMs: 612,
+    uptime30d: 98.6,
+    rateLimit: { used: 1890, limit: 4000, resetIn: "5h 17m" },
+    dataTypes: ["Track & Trace", "Schedules", "Rates", "ETA Updates"],
+    lastSyncedAt: "Mar 26, 13:58 UTC",
+    recordsToday: 2840,
+    errorRate: 1.82,
+    authMethod: "API Key",
+    region: "Marseille (FR)",
+    notes: "Elevated response times since 11:30 UTC — vendor investigating",
+  },
+  {
+    carrierId: "hapag",
+    carrierName: "Hapag-Lloyd",
+    logo: "HAPAG",
+    connectionType: "REST API",
+    status: "connected",
+    lastPing: "Mar 26, 14:42 UTC",
+    avgLatencyMs: 210,
+    uptime30d: 99.5,
+    rateLimit: { used: 3100, limit: 8000, resetIn: "5h 17m" },
+    dataTypes: ["Track & Trace", "Schedules", "Rates", "B/L", "Customs"],
+    lastSyncedAt: "Mar 26, 14:42 UTC",
+    recordsToday: 5180,
+    errorRate: 0.06,
+    authMethod: "OAuth 2.0",
+    region: "Hamburg (DE)",
+  },
+  {
+    carrierId: "evergreen",
+    carrierName: "Evergreen",
+    logo: "EVERGREEN",
+    connectionType: "EDI",
+    status: "connected",
+    lastPing: "Mar 26, 14:00 UTC",
+    avgLatencyMs: 1840,
+    uptime30d: 99.0,
+    rateLimit: { used: 980, limit: 2000, resetIn: "9h 58m" },
+    dataTypes: ["Track & Trace", "Schedules", "B/L Status"],
+    lastSyncedAt: "Mar 26, 14:00 UTC",
+    recordsToday: 1620,
+    errorRate: 0.2,
+    authMethod: "X.509 Certificate",
+    region: "Taipei (TW)",
+  },
+  {
+    carrierId: "oocl",
+    carrierName: "OOCL",
+    logo: "OOCL",
+    connectionType: "REST API",
+    status: "connected",
+    lastPing: "Mar 26, 14:40 UTC",
+    avgLatencyMs: 290,
+    uptime30d: 99.3,
+    rateLimit: { used: 1450, limit: 3000, resetIn: "5h 17m" },
+    dataTypes: ["Track & Trace", "Schedules", "Rates"],
+    lastSyncedAt: "Mar 26, 14:40 UTC",
+    recordsToday: 2340,
+    errorRate: 0.09,
+    authMethod: "API Key",
+    region: "Hong Kong (HK)",
+  },
+  {
+    carrierId: "cosco",
+    carrierName: "COSCO",
+    logo: "COSCO",
+    connectionType: "SOAP",
+    status: "connected",
+    lastPing: "Mar 26, 14:30 UTC",
+    avgLatencyMs: 480,
+    uptime30d: 98.9,
+    rateLimit: { used: 820, limit: 2000, resetIn: "9h 28m" },
+    dataTypes: ["Track & Trace", "Schedules"],
+    lastSyncedAt: "Mar 26, 14:30 UTC",
+    recordsToday: 1280,
+    errorRate: 0.31,
+    authMethod: "API Key",
+    region: "Shanghai (CN)",
+  },
+  {
+    carrierId: "yang-ming",
+    carrierName: "Yang Ming",
+    logo: "YM",
+    connectionType: "FTP",
+    status: "disconnected",
+    lastPing: "Mar 25, 22:15 UTC",
+    avgLatencyMs: 0,
+    uptime30d: 96.4,
+    rateLimit: { used: 0, limit: 1000, resetIn: "—" },
+    dataTypes: ["Schedules", "B/L Status"],
+    lastSyncedAt: "Mar 25, 22:15 UTC",
+    recordsToday: 0,
+    errorRate: 100,
+    authMethod: "SFTP Key",
+    region: "Keelung (TW)",
+    notes: "FTP server unreachable since 22:15 UTC Mar 25 — attempting reconnect",
+  },
+];
+
+// ─── Ingestion Rate Timeline ───────────────────────────────────
+
+export interface IngestionRatePoint {
+  time: string;
+  recordsIngested: number;
+  errorsLogged: number;
+  avgLatencyMs: number;
+}
+
+export const ingestionRateTimeline: IngestionRatePoint[] = [
+  { time: "02:00", recordsIngested: 4200, errorsLogged: 2, avgLatencyMs: 210 },
+  { time: "04:00", recordsIngested: 3800, errorsLogged: 1, avgLatencyMs: 195 },
+  { time: "06:00", recordsIngested: 6400, errorsLogged: 4, avgLatencyMs: 225 },
+  { time: "08:00", recordsIngested: 12480, errorsLogged: 8, avgLatencyMs: 242 },
+  { time: "10:00", recordsIngested: 11200, errorsLogged: 12, avgLatencyMs: 318 },
+  { time: "12:00", recordsIngested: 9800, errorsLogged: 6, avgLatencyMs: 280 },
+  { time: "14:00", recordsIngested: 10600, errorsLogged: 9, avgLatencyMs: 295 },
+];
+
+// ─── Pipeline Error Log ────────────────────────────────────────
+
+export interface PipelineError {
+  id: string;
+  pipeline: string;
+  carrier?: string;
+  severity: "critical" | "warning" | "info";
+  message: string;
+  timestamp: string;
+  resolved: boolean;
+  count: number;
+}
+
+export const pipelineErrors: PipelineError[] = [
+  {
+    id: "pe-001",
+    pipeline: "FTZ Inventory Reconciliation",
+    severity: "warning",
+    message: "14 inventory count mismatches detected between local records and CBP system",
+    timestamp: "Mar 26, 07:12 UTC",
+    resolved: false,
+    count: 14,
+  },
+  {
+    id: "pe-002",
+    pipeline: "Carrier Rate Ingestion",
+    carrier: "CMA CGM",
+    severity: "warning",
+    message: "API response time exceeding 600ms threshold — fallback to cached rates active",
+    timestamp: "Mar 26, 11:30 UTC",
+    resolved: false,
+    count: 22,
+  },
+  {
+    id: "pe-003",
+    pipeline: "Carrier API Connection",
+    carrier: "Yang Ming",
+    severity: "critical",
+    message: "SFTP connection refused — server at ftp.yangming.com not responding",
+    timestamp: "Mar 25, 22:15 UTC",
+    resolved: false,
+    count: 1,
+  },
+  {
+    id: "pe-004",
+    pipeline: "Document OCR Pipeline",
+    severity: "info",
+    message: "1 document failed OCR confidence threshold (< 85%) — queued for manual review",
+    timestamp: "Mar 26, 11:42 UTC",
+    resolved: false,
+    count: 1,
+  },
+  {
+    id: "pe-005",
+    pipeline: "Shipment Position Updates",
+    carrier: "Evergreen",
+    severity: "info",
+    message: "EDI batch file delayed by 8 minutes — data gap patched from AIS fallback",
+    timestamp: "Mar 26, 10:04 UTC",
+    resolved: true,
+    count: 1,
+  },
+  {
+    id: "pe-006",
+    pipeline: "HTS Code Sync",
+    severity: "info",
+    message: "Delta sync completed successfully — 18,200 records verified, 0 anomalies",
+    timestamp: "Mar 26, 06:30 UTC",
+    resolved: true,
+    count: 0,
+  },
+];
+
+// ─── Data Freshness Indicators ─────────────────────────────────
+
+export interface DataFreshnessItem {
+  dataSource: string;
+  category: string;
+  lastUpdated: string;
+  updateFrequency: string;
+  ageMinutes: number; // how stale in minutes
+  slaMinutes: number; // freshness SLA
+  status: "fresh" | "stale" | "critical";
+  recordCount: number;
+}
+
+export const dataFreshnessItems: DataFreshnessItem[] = [
+  {
+    dataSource: "Vessel Positions (AIS)",
+    category: "Tracking",
+    lastUpdated: "Mar 26, 14:43 UTC",
+    updateFrequency: "Every 15 min",
+    ageMinutes: 2,
+    slaMinutes: 15,
+    status: "fresh",
+    recordCount: 342,
+  },
+  {
+    dataSource: "Carrier Freight Rates",
+    category: "Rates",
+    lastUpdated: "Mar 26, 08:00 UTC",
+    updateFrequency: "Twice daily",
+    ageMinutes: 403,
+    slaMinutes: 720,
+    status: "fresh",
+    recordCount: 12480,
+  },
+  {
+    dataSource: "Port Congestion Data",
+    category: "Port Ops",
+    lastUpdated: "Mar 26, 12:00 UTC",
+    updateFrequency: "Every 6h",
+    ageMinutes: 163,
+    slaMinutes: 360,
+    status: "fresh",
+    recordCount: 86,
+  },
+  {
+    dataSource: "HTS Tariff Schedule",
+    category: "Compliance",
+    lastUpdated: "Mar 26, 06:30 UTC",
+    updateFrequency: "Daily",
+    ageMinutes: 493,
+    slaMinutes: 1440,
+    status: "fresh",
+    recordCount: 18200,
+  },
+  {
+    dataSource: "FTZ Inventory Counts",
+    category: "FTZ",
+    lastUpdated: "Mar 26, 07:00 UTC",
+    updateFrequency: "Daily",
+    ageMinutes: 463,
+    slaMinutes: 480,
+    status: "stale",
+    recordCount: 4820,
+  },
+  {
+    dataSource: "Weather & Route Risks",
+    category: "Risk",
+    lastUpdated: "Mar 26, 14:00 UTC",
+    updateFrequency: "Hourly",
+    ageMinutes: 45,
+    slaMinutes: 60,
+    status: "fresh",
+    recordCount: 124,
+  },
+  {
+    dataSource: "Yang Ming Schedules",
+    category: "Schedules",
+    lastUpdated: "Mar 25, 22:15 UTC",
+    updateFrequency: "Daily",
+    ageMinutes: 988,
+    slaMinutes: 1440,
+    status: "critical",
+    recordCount: 0,
+  },
+  {
+    dataSource: "CMA CGM ETA Updates",
+    category: "Tracking",
+    lastUpdated: "Mar 26, 13:58 UTC",
+    updateFrequency: "Every 15 min",
+    ageMinutes: 50,
+    slaMinutes: 15,
+    status: "stale",
+    recordCount: 2840,
+  },
+];
+
+// ─── Pipeline Summary Stats ────────────────────────────────────
+
+export function getPipelineSummaryStats() {
+  const totalRecordsToday = carrierAPIConnections.reduce((sum, c) => sum + c.recordsToday, 0);
+  const connectedCarriers = carrierAPIConnections.filter(c => c.status === "connected").length;
+  const totalCarriers = carrierAPIConnections.length;
+  const activeErrors = pipelineErrors.filter(e => !e.resolved).length;
+  const healthyPipelines = dataPipelines.filter(p => p.status === "healthy").length;
+  const freshDataSources = dataFreshnessItems.filter(d => d.status === "fresh").length;
+  return { totalRecordsToday, connectedCarriers, totalCarriers, activeErrors, healthyPipelines, freshDataSources };
+}
+
 // ─── Utility ─────────────────────────────────────────────────
 
 export function getOverallPlatformStatus(): "operational" | "degraded" | "down" {
