@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DollarSign, TrendingUp, Package, Truck } from "lucide-react";
+import SaveCalculationButton from "@/components/platform/SaveCalculationButton";
+import { useLoadCalculation } from "@/lib/hooks/useLoadCalculation";
 
 interface EconomicsResult {
   originCost: number;
@@ -50,7 +52,11 @@ function calculate(
   };
 }
 
-export default function UnitEconomicsCalculator() {
+interface UnitEconomicsCalculatorProps {
+  showSaveButton?: boolean;
+}
+
+export default function UnitEconomicsCalculator({ showSaveButton }: UnitEconomicsCalculatorProps) {
   const [unitCost, setUnitCost] = useState(0.1);
   const [unitsPerContainer, setUnitsPerContainer] = useState(500000);
   const [containerCost, setContainerCost] = useState(5000);
@@ -58,6 +64,20 @@ export default function UnitEconomicsCalculator() {
   const [fulfillmentCost, setFulfillmentCost] = useState(0.15);
   const [wholesaleMarkup, setWholesaleMarkup] = useState(300);
   const [retailPrice, setRetailPrice] = useState(5.0);
+
+  const { loadedInputs } = useLoadCalculation("unit_economics");
+
+  useEffect(() => {
+    if (loadedInputs) {
+      setUnitCost(loadedInputs.unitCost as number ?? 0.1);
+      setUnitsPerContainer(loadedInputs.unitsPerContainer as number ?? 500000);
+      setContainerCost(loadedInputs.containerCost as number ?? 5000);
+      setDutyRate(loadedInputs.dutyRate as number ?? 6.5);
+      setFulfillmentCost(loadedInputs.fulfillmentCost as number ?? 0.15);
+      setWholesaleMarkup(loadedInputs.wholesaleMarkup as number ?? 300);
+      setRetailPrice(loadedInputs.retailPrice as number ?? 5.0);
+    }
+  }, [loadedInputs]);
 
   const result = calculate(
     unitCost,
@@ -290,6 +310,25 @@ export default function UnitEconomicsCalculator() {
             return on landed cost.
           </p>
         </div>
+
+        {showSaveButton && (
+          <div className="flex justify-end pt-2">
+            <SaveCalculationButton
+              calculatorType="unit_economics"
+              getInputs={() => ({
+                unitCost,
+                unitsPerContainer,
+                containerCost,
+                dutyRate,
+                fulfillmentCost,
+                wholesaleMarkup,
+                retailPrice,
+              })}
+              getOutputs={() => result as unknown as Record<string, unknown>}
+              defaultName={`Unit Economics - $${unitCost}/unit`}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

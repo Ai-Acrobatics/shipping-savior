@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Shield, TrendingDown, Calendar, Warehouse } from "lucide-react";
+import SaveCalculationButton from "@/components/platform/SaveCalculationButton";
+import { useLoadCalculation } from "@/lib/hooks/useLoadCalculation";
 
 interface FTZResult {
   totalUnits: number;
@@ -63,12 +65,28 @@ function calculateFTZ(
   };
 }
 
-export default function FTZSavingsCalculator() {
+interface FTZSavingsCalculatorProps {
+  showSaveButton?: boolean;
+}
+
+export default function FTZSavingsCalculator({ showSaveButton }: FTZSavingsCalculatorProps) {
   const [unitValue, setUnitValue] = useState(0.5);
   const [totalUnits, setTotalUnits] = useState(500000);
   const [lockedRate, setLockedRate] = useState(6.5);
   const [currentRate, setCurrentRate] = useState(12.0);
   const [months, setMonths] = useState(8);
+
+  const { loadedInputs } = useLoadCalculation("ftz_savings");
+
+  useEffect(() => {
+    if (loadedInputs) {
+      setUnitValue(loadedInputs.unitValue as number ?? 0.5);
+      setTotalUnits(loadedInputs.totalUnits as number ?? 500000);
+      setLockedRate(loadedInputs.lockedRate as number ?? 6.5);
+      setCurrentRate(loadedInputs.currentRate as number ?? 12.0);
+      setMonths(loadedInputs.months as number ?? 8);
+    }
+  }, [loadedInputs]);
 
   const result = calculateFTZ(unitValue, totalUnits, lockedRate, currentRate, months, 2);
 
@@ -220,6 +238,23 @@ export default function FTZSavingsCalculator() {
             ))}
           </div>
         </div>
+
+        {showSaveButton && (
+          <div className="flex justify-end pt-2">
+            <SaveCalculationButton
+              calculatorType="ftz_savings"
+              getInputs={() => ({
+                unitValue,
+                totalUnits,
+                lockedRate,
+                currentRate,
+                months,
+              })}
+              getOutputs={() => result as unknown as Record<string, unknown>}
+              defaultName={`FTZ Savings - ${totalUnits.toLocaleString()} units`}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   GitCompare,
   Plus,
@@ -12,6 +12,8 @@ import {
   AlertTriangle,
   CheckCircle,
 } from "lucide-react";
+import SaveCalculationButton from "@/components/platform/SaveCalculationButton";
+import { useLoadCalculation } from "@/lib/hooks/useLoadCalculation";
 
 interface TariffScenario {
   id: string;
@@ -156,11 +158,24 @@ const DEFAULT_SCENARIOS: TariffScenario[] = [
 
 interface Props {
   onSelectScenario?: (rate: number, country: string) => void;
+  showSaveButton?: boolean;
 }
 
-export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
+export default function TariffScenarioBuilder({ onSelectScenario, showSaveButton }: Props) {
   const [scenarios, setScenarios] = useState<TariffScenario[]>(DEFAULT_SCENARIOS);
   const [activeTab, setActiveTab] = useState<"edit" | "compare">("compare");
+
+  const { loadedInputs } = useLoadCalculation("tariff_scenario");
+
+  useEffect(() => {
+    if (loadedInputs && Array.isArray(loadedInputs.scenarios)) {
+      const loadedScenarios = (loadedInputs.scenarios as TariffScenario[]).map((s, i) => ({
+        ...s,
+        id: s.id ?? String(Date.now() + i),
+      }));
+      setScenarios(loadedScenarios);
+    }
+  }, [loadedInputs]);
 
   const results = scenarios.map(calculateScenario);
   const maxCost = Math.max(...results.map((r) => r.annualDutyCost));
@@ -222,14 +237,31 @@ export default function TariffScenarioBuilder({ onSelectScenario }: Props) {
           ))}
         </div>
 
-        <button
-          onClick={addScenario}
-          disabled={scenarios.length >= 6}
-          className="flex items-center gap-2 text-sm px-3 py-2 rounded-xl bg-white border border-navy-100 hover:shadow-card hover:border-navy-200 transition-all text-navy-400 disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          <Plus className="w-4 h-4" />
-          Add Scenario
-        </button>
+        <div className="flex items-center gap-2">
+          {showSaveButton && (
+            <SaveCalculationButton
+              calculatorType="tariff_scenario"
+              getInputs={() => ({
+                scenarios: scenarios.map(({ id, ...rest }) => rest),
+              })}
+              getOutputs={() => ({
+                results: results.map(({ id, ...rest }) => rest),
+                bestScenario: bestScenario.name,
+                worstScenario: worstScenario.name,
+                delta: worstScenario.annualDutyCost - bestScenario.annualDutyCost,
+              })}
+              defaultName={`Tariff Scenarios - ${scenarios.length} scenarios`}
+            />
+          )}
+          <button
+            onClick={addScenario}
+            disabled={scenarios.length >= 6}
+            className="flex items-center gap-2 text-sm px-3 py-2 rounded-xl bg-white border border-navy-100 hover:shadow-card hover:border-navy-200 transition-all text-navy-400 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Plus className="w-4 h-4" />
+            Add Scenario
+          </button>
+        </div>
       </div>
 
       {/* COMPARE VIEW */}

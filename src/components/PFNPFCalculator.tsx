@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Shield,
   TrendingDown,
@@ -13,6 +13,8 @@ import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
+import SaveCalculationButton from "@/components/platform/SaveCalculationButton";
+import { useLoadCalculation } from "@/lib/hooks/useLoadCalculation";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -207,13 +209,29 @@ const TARIFF_SCENARIOS: TariffScenario[] = [
 // Main Component
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function PFNPFCalculator() {
+interface PFNPFCalculatorProps {
+  showSaveButton?: boolean;
+}
+
+export default function PFNPFCalculator({ showSaveButton }: PFNPFCalculatorProps) {
   const [currentDutyRate, setCurrentDutyRate] = useState(6.5);
   const [futureDutyRate, setFutureDutyRate] = useState(12.0);
   const [monthlyImportVolume, setMonthlyImportVolume] = useState(50000);
   const [storageDurationMonths, setStorageDurationMonths] = useState(6);
   const [storagePerMonth, setStoragePerMonth] = useState(500);
   const [activeTab, setActiveTab] = useState<"pfnpf" | "scenarios" | "schedule">("pfnpf");
+
+  const { loadedInputs } = useLoadCalculation("pf_npf_comparison");
+
+  useEffect(() => {
+    if (loadedInputs) {
+      setCurrentDutyRate(loadedInputs.currentDutyRate as number ?? 6.5);
+      setFutureDutyRate(loadedInputs.futureDutyRate as number ?? 12.0);
+      setMonthlyImportVolume(loadedInputs.monthlyImportVolume as number ?? 50000);
+      setStorageDurationMonths(loadedInputs.storageDurationMonths as number ?? 6);
+      setStoragePerMonth(loadedInputs.storagePerMonth as number ?? 500);
+    }
+  }, [loadedInputs]);
 
   const inputs: PFNPFInputs = {
     currentDutyRate,
@@ -904,6 +922,23 @@ export default function PFNPFCalculator() {
               no FTZ, minus storage costs.
             </p>
           </div>
+        </div>
+      )}
+
+      {showSaveButton && (
+        <div className="flex justify-end pt-2">
+          <SaveCalculationButton
+            calculatorType="pf_npf_comparison"
+            getInputs={() => ({
+              currentDutyRate,
+              futureDutyRate,
+              monthlyImportVolume,
+              storageDurationMonths,
+              storagePerMonth,
+            })}
+            getOutputs={() => result as unknown as Record<string, unknown>}
+            defaultName={`PF vs NPF - ${currentDutyRate}% locked`}
+          />
         </div>
       )}
     </div>
