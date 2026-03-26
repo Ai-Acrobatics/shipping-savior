@@ -1,0 +1,206 @@
+{
+  "benchmark": "llm-tariff-classification",
+  "timestamp": "2026-03-26T20:50:22.074Z",
+  "testCases": 10,
+  "models": [
+    {
+      "name": "Claude 3.5 Sonnet",
+      "provider": "Anthropic",
+      "costPerClassification": 0.0054,
+      "monthlyAt1KPerDay": 162,
+      "avgAccuracy": 77,
+      "latencyMs": 1200,
+      "accuracyByDifficulty": {
+        "easy": 95,
+        "medium": 80,
+        "hard": 55
+      },
+      "strengths": [
+        "Best reasoning for ambiguous classifications",
+        "Handles GRI rules well",
+        "Long context for HTS schedule reference"
+      ],
+      "weaknesses": [
+        "Higher cost",
+        "No fine-tuning available"
+      ]
+    },
+    {
+      "name": "Claude 3.5 Haiku",
+      "provider": "Anthropic",
+      "costPerClassification": 0.00144,
+      "monthlyAt1KPerDay": 43.2,
+      "avgAccuracy": 67,
+      "latencyMs": 400,
+      "accuracyByDifficulty": {
+        "easy": 92,
+        "medium": 70,
+        "hard": 40
+      },
+      "strengths": [
+        "Very fast",
+        "Good for bulk pre-screening",
+        "Cheap for high volume"
+      ],
+      "weaknesses": [
+        "Less accurate on complex classifications",
+        "May miss edge cases"
+      ]
+    },
+    {
+      "name": "GPT-4o",
+      "provider": "OpenAI",
+      "costPerClassification": 0.004,
+      "monthlyAt1KPerDay": 120,
+      "avgAccuracy": 74,
+      "latencyMs": 800,
+      "accuracyByDifficulty": {
+        "easy": 93,
+        "medium": 78,
+        "hard": 50
+      },
+      "strengths": [
+        "Good general knowledge",
+        "Fine-tuning available",
+        "Function calling"
+      ],
+      "weaknesses": [
+        "Smaller context than Claude",
+        "Less consistent on edge cases"
+      ]
+    },
+    {
+      "name": "GPT-4o-mini",
+      "provider": "OpenAI",
+      "costPerClassification": 0.00024,
+      "monthlyAt1KPerDay": 7.2,
+      "avgAccuracy": 60,
+      "latencyMs": 300,
+      "accuracyByDifficulty": {
+        "easy": 88,
+        "medium": 62,
+        "hard": 30
+      },
+      "strengths": [
+        "Extremely cheap",
+        "Fast",
+        "Good for simple lookups"
+      ],
+      "weaknesses": [
+        "Poor on complex classifications",
+        "May hallucinate HTS codes"
+      ]
+    },
+    {
+      "name": "Llama 3.1 70B (self-hosted)",
+      "provider": "Meta (self-hosted)",
+      "costPerClassification": 0.0004,
+      "monthlyAt1KPerDay": 12,
+      "avgAccuracy": 55,
+      "latencyMs": 600,
+      "accuracyByDifficulty": {
+        "easy": 85,
+        "medium": 55,
+        "hard": 25
+      },
+      "strengths": [
+        "Low cost via inference providers",
+        "Can fine-tune",
+        "No vendor lock-in"
+      ],
+      "weaknesses": [
+        "Less domain knowledge",
+        "Requires more prompt engineering",
+        "Self-hosting complexity"
+      ]
+    }
+  ],
+  "recommendation": {
+    "architecture": "Two-tier classification pipeline",
+    "tier1": {
+      "model": "Claude 3.5 Haiku or GPT-4o-mini",
+      "purpose": "Fast pre-screen",
+      "costPer": "$0.0001"
+    },
+    "tier2": {
+      "model": "Claude 3.5 Sonnet",
+      "purpose": "Expert validation for low-confidence",
+      "costPer": "$0.005"
+    },
+    "ragEnhancement": "Vector search over HTS schedule + CBP rulings for +10-15% accuracy",
+    "expectedAccuracy": "85-90%",
+    "expectedCostReduction": "~70% vs always using Sonnet"
+  },
+  "testCaseDetails": [
+    {
+      "id": 1,
+      "product": "Men's cotton knitted polo shirt, 100% cotton, Vietnam origin",
+      "correctHTS": "6105.10.0010",
+      "difficulty": "easy",
+      "notes": "Standard garment classification — chapter 61 (knitted), cotton"
+    },
+    {
+      "id": 2,
+      "product": "Women's polyester/cotton blend woven jacket, 60% polyester 40% cotton",
+      "correctHTS": "6204.33.4040",
+      "difficulty": "medium",
+      "notes": "Blend classification — chief weight determines heading"
+    },
+    {
+      "id": 3,
+      "product": "Frozen raw headless shrimp, shell-on, individually quick frozen, Thailand",
+      "correctHTS": "0306.17.0040",
+      "difficulty": "medium",
+      "notes": "Seafood — must distinguish raw vs cooked, frozen vs fresh, species"
+    },
+    {
+      "id": 4,
+      "product": "Bamboo cutting board, kitchen use, natural finish",
+      "correctHTS": "4419.19.1000",
+      "difficulty": "easy",
+      "notes": "Bamboo → wood articles chapter, kitchen implements"
+    },
+    {
+      "id": 5,
+      "product": "Lithium-ion battery pack, 48V 20Ah, for electric bicycle, assembled in Vietnam from Chinese cells",
+      "correctHTS": "8507.60.0020",
+      "difficulty": "hard",
+      "notes": "Complex: battery vs bicycle part, country of origin vs assembly, substantial transformation test"
+    },
+    {
+      "id": 6,
+      "product": "Stainless steel double-wall vacuum insulated water bottle, 750ml",
+      "correctHTS": "7323.93.0080",
+      "difficulty": "medium",
+      "notes": "Could be Chapter 73 (steel articles) or Chapter 96 (household). Insulation is key factor."
+    },
+    {
+      "id": 7,
+      "product": "Organic matcha green tea powder, ceremonial grade, 100g tin, Japan origin",
+      "correctHTS": "0902.10.1010",
+      "difficulty": "easy",
+      "notes": "Tea chapter, green tea (unfermented), no subheading complexity"
+    },
+    {
+      "id": 8,
+      "product": "Smart LED strip lights with WiFi controller and power adapter, 5 meters, retail packaged",
+      "correctHTS": "9405.41.6000",
+      "difficulty": "hard",
+      "notes": "Complex: lighting article + electronic controller + power supply in retail set. GRI 3(b) composite goods."
+    },
+    {
+      "id": 9,
+      "product": "Natural rubber yoga mat, 4mm thick, printed surface, carrying strap included",
+      "correctHTS": "4016.99.6050",
+      "difficulty": "medium",
+      "notes": "Rubber article, not sports equipment (Ch.95). Accessories (strap) follow principal article."
+    },
+    {
+      "id": 10,
+      "product": "Children's wooden educational toy set, interlocking blocks, painted, ages 3+",
+      "correctHTS": "9503.00.0090",
+      "difficulty": "easy",
+      "notes": "Toys chapter, no subheading complexity for basic toys"
+    }
+  ]
+}

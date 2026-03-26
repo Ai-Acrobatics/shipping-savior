@@ -1,0 +1,63 @@
+{
+  "benchmark": "websocket-solutions",
+  "timestamp": "2026-03-26T20:50:23.837Z",
+  "localBenchmark": {
+    "throughput": {
+      "messages": 10000,
+      "note": "See console output for detailed results"
+    },
+    "concurrency": {
+      "connections": 200,
+      "connectTimeMs": 168,
+      "avgConnectMs": 0.8,
+      "broadcastMs": 205
+    }
+  },
+  "services": {
+    "pusher": {
+      "freeMessages": "200K/day",
+      "freeConnections": 100,
+      "pricing": "$49-499/mo",
+      "best": "simple pub/sub"
+    },
+    "ably": {
+      "freeMessages": "6M/month",
+      "freeConnections": 200,
+      "pricing": "$29-399/mo",
+      "best": "global distribution"
+    },
+    "supabaseRealtime": {
+      "freeConnections": 200,
+      "pricing": "included in Supabase plan",
+      "best": "Postgres changes"
+    },
+    "partyKit": {
+      "freeCompute": "limited",
+      "pricing": "CF Workers pricing",
+      "best": "stateful collaboration"
+    },
+    "sse": {
+      "cost": "free",
+      "infra": "Next.js API routes",
+      "best": "unidirectional updates"
+    }
+  },
+  "shippingAnalysis": {
+    "updateFrequency": {
+      "vessel": "3-6 min at sea",
+      "container": "2-5/day",
+      "reefer": "15 min"
+    },
+    "scaleEstimate": {
+      "containers": "50-200",
+      "users": "10-50",
+      "messagesPerDay": "5K-20K"
+    }
+  },
+  "recommendation": {
+    "phase1": "SSE via Next.js API routes (polling fallback)",
+    "phase2": "SSE with Vercel streaming",
+    "phase3": "Ably or Pusher for bidirectional + scale",
+    "rationale": "Tracking is unidirectional. SSE is simpler, cheaper, and sufficient for 50-200 containers."
+  }
+}

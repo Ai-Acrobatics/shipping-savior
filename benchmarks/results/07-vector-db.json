@@ -1,0 +1,225 @@
+{
+  "benchmark": "vector-db-evaluation",
+  "timestamp": "2026-03-26T20:50:33.117Z",
+  "vectorDBs": [
+    {
+      "name": "pgvector (PostgreSQL)",
+      "type": "Extension",
+      "freeTier": "Neon Free: 0.5GB storage",
+      "queryLatency": {
+        "p50": 5,
+        "p95": 15,
+        "p99": 30
+      },
+      "cost": "$0 (self-hosted) — $20-50/mo (managed)",
+      "htsRelevance": "EXCELLENT — HTS data already in PostgreSQL, vector search adds semantic capability to existing SQL queries",
+      "recommendation": "RECOMMENDED for Phase 1-2",
+      "strengths": [
+        "No extra service",
+        "SQL queries",
+        "Joins with HTS data",
+        "Neon free tier"
+      ],
+      "weaknesses": [
+        "Slower than dedicated vector DBs",
+        "HNSW requires more RAM",
+        "No built-in embedding"
+      ]
+    },
+    {
+      "name": "Pinecone",
+      "type": "Managed SaaS",
+      "freeTier": "Free: 1 index, 100K vectors",
+      "queryLatency": {
+        "p50": 10,
+        "p95": 25,
+        "p99": 50
+      },
+      "cost": "$70/mo (s1.x1 pod)",
+      "htsRelevance": "GOOD — free tier covers HTS dataset (100K entries < 100K vectors), but adds infrastructure complexity",
+      "recommendation": "Consider for Phase 3 if pgvector becomes bottleneck",
+      "strengths": [
+        "Zero ops",
+        "Real-time upsert",
+        "Excellent docs",
+        "Metadata filtering"
+      ],
+      "weaknesses": [
+        "Vendor lock-in",
+        "Expensive at scale",
+        "No SQL joins",
+        "Separate from main DB"
+      ]
+    },
+    {
+      "name": "Weaviate",
+      "type": "Self-hosted / Cloud",
+      "freeTier": "WCS Sandbox: 1 cluster",
+      "queryLatency": {
+        "p50": 3,
+        "p95": 10,
+        "p99": 20
+      },
+      "cost": "$25/mo (WCS Starter)",
+      "htsRelevance": "GOOD — built-in text2vec is convenient, but HTS data doesn't need multi-modal capabilities",
+      "recommendation": "Overengineered for this use case",
+      "strengths": [
+        "Built-in vectorizers",
+        "Multi-modal",
+        "GraphQL API",
+        "Fast HNSW"
+      ],
+      "weaknesses": [
+        "Self-hosting complexity",
+        "Docker required",
+        "More RAM usage",
+        "Overkill for simple use case"
+      ]
+    },
+    {
+      "name": "Qdrant",
+      "type": "Self-hosted / Cloud",
+      "freeTier": "Cloud: 1GB free cluster",
+      "queryLatency": {
+        "p50": 2,
+        "p95": 8,
+        "p99": 15
+      },
+      "cost": "$15/mo (Cloud Starter)",
+      "htsRelevance": "GOOD — fastest pure vector search, but adds operational complexity for a feature that pgvector handles adequately",
+      "recommendation": "Best if dedicated vector search is needed (Phase 3+)",
+      "strengths": [
+        "Fastest query speed",
+        "Rust-based",
+        "Excellent filtering",
+        "Good compression"
+      ],
+      "weaknesses": [
+        "Smaller ecosystem",
+        "Self-hosting for best cost",
+        "Separate from main DB"
+      ]
+    },
+    {
+      "name": "ChromaDB",
+      "type": "Embedded / Client",
+      "freeTier": "Free (open source)",
+      "queryLatency": {
+        "p50": 3,
+        "p95": 12,
+        "p99": 25
+      },
+      "cost": "$0 (self-hosted)",
+      "htsRelevance": "POOR — Python-only doesn't fit TypeScript/Next.js stack",
+      "recommendation": "Not recommended for this stack",
+      "strengths": [
+        "Zero cost",
+        "Simple API",
+        "Python-native",
+        "Good for prototyping"
+      ],
+      "weaknesses": [
+        "Python only (official)",
+        "Not suitable for edge/serverless",
+        "No TypeScript SDK",
+        "Single-node"
+      ]
+    }
+  ],
+  "embeddingModels": {
+    "recommended": "text-embedding-3-small",
+    "dimensions": 1536,
+    "costPerHTS": "$0.02 for 10K entries (one-time)",
+    "storageSize": "~60MB"
+  },
+  "recommendation": {
+    "phase1": "None needed — MiniSearch handles keyword/fuzzy search",
+    "phase2": "pgvector in Neon PostgreSQL — zero additional infra, hybrid search",
+    "phase3": "Qdrant Cloud if >100K queries/day or multi-modal needed",
+    "rationale": "pgvector keeps vector search in the same DB as HTS data. No extra service to manage. HNSW index gives sub-10ms queries for 10K vectors."
+  },
+  "searchQueries": [
+    {
+      "query": "cotton polo shirt for men",
+      "expectedCode": "6105.10"
+    },
+    {
+      "query": "frozen prawns from Thailand",
+      "expectedCode": "0306.17"
+    },
+    {
+      "query": "bamboo kitchen cutting board",
+      "expectedCode": "4419.19"
+    },
+    {
+      "query": "rechargeable lithium battery for e-bike",
+      "expectedCode": "8507.60"
+    },
+    {
+      "query": "stainless steel water bottle thermos",
+      "expectedCode": "7323.93"
+    },
+    {
+      "query": "LED strip light for room",
+      "expectedCode": "9405.41"
+    },
+    {
+      "query": "rubber exercise mat yoga",
+      "expectedCode": "4016.99"
+    },
+    {
+      "query": "children wooden building blocks toy",
+      "expectedCode": "9503.00"
+    },
+    {
+      "query": "green tea powder matcha japanese",
+      "expectedCode": "0902.10"
+    },
+    {
+      "query": "polyester blazer women formal",
+      "expectedCode": "6204.33"
+    }
+  ],
+  "sampleEntries": [
+    {
+      "code": "6105.10.0010",
+      "desc": "Men's or boys' shirts, knitted or crocheted, of cotton"
+    },
+    {
+      "code": "6204.33.4040",
+      "desc": "Women's or girls' suit-type jackets and blazers, of synthetic fibers, woven"
+    },
+    {
+      "code": "0306.17.0040",
+      "desc": "Frozen shrimp and prawns, even smoked, in shell or not"
+    },
+    {
+      "code": "4419.19.1000",
+      "desc": "Tableware and kitchenware, of bamboo"
+    },
+    {
+      "code": "8507.60.0020",
+      "desc": "Lithium-ion accumulators (batteries), for vehicles or industrial use"
+    },
+    {
+      "code": "7323.93.0080",
+      "desc": "Table, kitchen or household articles of stainless steel"
+    },
+    {
+      "code": "0902.10.1010",
+      "desc": "Green tea, not fermented, in immediate packings not exceeding 3 kg"
+    },
+    {
+      "code": "9405.41.6000",
+      "desc": "LED (light-emitting diode) lamps and luminaires"
+    },
+    {
+      "code": "4016.99.6050",
+      "desc": "Other articles of vulcanized rubber (mats, gaskets, etc.)"
+    },
+    {
+      "code": "9503.00.0090",
+      "desc": "Toys; scale models and similar recreational models, puzzles"
+    }
+  ]
+}
