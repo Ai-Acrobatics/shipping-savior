@@ -108,13 +108,36 @@ Give the founder a complete digital toolkit that turns manual freight brokerage 
 
 ---
 
-## Phase Status
+## Current Milestone: v1.0 M1 Foundation
 
-| Phase | Status | Notes |
-|-------|--------|-------|
-| Phase 1: Proposal Site (PRDs 01-05) | In Progress | 5 PRDs drafted; ready for implementation |
-| Phase 2: Planning — Architecture, Pipeline, AI Agents, GTM, Financial | **Complete** | All planning documents produced; see `.planning/prds/PHASE-2-PLANNING-SUMMARY.md` (AI-5407) |
-| Phase 3: Platform Implementation | Not Started | Awaiting Phase 2 gate decisions (auth provider, multi-tenant arch) |
+**Goal:** Turn the demo into a real platform with authentication, multi-tenant database, calculator persistence, and audit logging.
+
+**Target features:**
+- [ ] NextAuth v5 with email/password (bcrypt) — register, login, logout
+- [ ] Organization model — multi-tenant from day one with org_id on all rows
+- [ ] Role-based access: owner / admin / member / viewer
+- [ ] Invite-only registration (beta access control)
+- [ ] Neon PostgreSQL + Drizzle ORM migrations
+- [ ] Tables: organizations, users, shipments, calculations, audit_logs, hts_lookups
+- [ ] All calculator data persists to database (landed cost, FTZ, unit economics, container util, tariff scenarios)
+- [ ] Audit log captures all auth events
+- [ ] JWT sessions with 30-day expiry
+
+**Success criteria:**
+- Users can register, log in, and log out
+- Org owner can invite team members
+- All calculator results save to database and reload
+- Audit log captures every auth event
 
 ---
-*Last updated: 2026-03-26 — Phase 2 planning complete (AI-5407)*
+
+## Milestone History
+
+| Milestone | Status | Notes |
+|-----------|--------|-------|
+| Phase 1: Proposal Site | **Complete** | Interactive proposal with 6 calculators, route map, knowledge base, wireframes |
+| Phase 2: Planning | **Complete** | Architecture, pipeline, AI agents, GTM, financial model docs |
+| v1.0 M1 Foundation | **In Progress** | Auth, DB, org model, calculator persistence |
+
+---
+*Last updated: 2026-03-26 — Milestone v1.0 M1 Foundation started*
