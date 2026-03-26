@@ -7,11 +7,10 @@ import { Ship, Menu, X, LayoutDashboard } from "lucide-react";
 const navLinks = [
   { label: "Platform", href: "/#platform" },
   { label: "Calculators", href: "/#calculators" },
-  { label: "Routes", href: "/#routes" },
   { label: "FTZ Strategy", href: "/#ftz" },
-  { label: "Architecture", href: "/#architecture" },
+  { label: "Wireframes", href: "/#wireframes" },
+  { label: "Pricing", href: "/#pricing" },
   { label: "Roadmap", href: "/#roadmap" },
-  { label: "Knowledge Base", href: "/knowledge-base" },
 ];
 
 export default function Header() {

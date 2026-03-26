@@ -7,11 +7,14 @@ import ShippingRouteMap from "@/components/ShippingRouteMap";
 import RateComparisonChart from "@/components/RateComparisonChart";
 import TariffBreakdownChart from "@/components/TariffBreakdownChart";
 import PortComparisonTool from "@/components/PortComparisonTool";
+import PricingTiers from "@/components/PricingTiers";
+import PlatformWireframes from "@/components/PlatformWireframes";
+import CTASection from "@/components/CTASection";
 import {
   Ship, Globe, Calculator, Shield, BarChart3, FileText,
   Anchor, Container, Route, Database, Map, Truck,
   ArrowRight, Check, Zap, TrendingUp, Clock, DollarSign,
-  LayoutDashboard,
+  LayoutDashboard, Monitor,
 } from "lucide-react";
 
 const platformFeatures = [
@@ -583,6 +586,62 @@ export default function Home() {
               </ScrollReveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Platform Wireframes */}
+      <section id="wireframes" className="py-24 px-6 bg-navy-950/50">
+        <div className="max-w-7xl mx-auto">
+          <ScrollReveal>
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-4 border-ocean-500/30">
+                <Monitor className="w-4 h-4 text-ocean-400" />
+                <span className="text-sm text-ocean-300">Platform Preview</span>
+              </div>
+              <h2 className="text-4xl font-bold text-white mb-4">
+                Every Screen, <span className="gradient-text">Designed</span>
+              </h2>
+              <p className="text-lg text-navy-300 max-w-2xl mx-auto">
+                Six core platform screens — from operations dashboard to PDF
+                report generation. Click through to see what gets built.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal>
+            <PlatformWireframes />
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Pricing Tiers */}
+      <section id="pricing" className="py-24 px-6">
+        <div className="max-w-6xl mx-auto">
+          <ScrollReveal>
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-white mb-4">
+                Simple, Transparent{" "}
+                <span className="gradient-text-gold">Pricing</span>
+              </h2>
+              <p className="text-lg text-navy-300 max-w-2xl mx-auto">
+                Start with the tools you need. Scale as your operation grows.
+                All plans include a 14-day free trial — no credit card required.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal>
+            <PricingTiers />
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section id="cta" className="py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <ScrollReveal>
+            <CTASection />
+          </ScrollReveal>
         </div>
       </section>
 
