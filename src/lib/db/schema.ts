@@ -2,13 +2,11 @@ import {
   pgTable,
   uuid,
   varchar,
-  text,
   timestamp,
   jsonb,
   pgEnum,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
 
 // ── Enums ──────────────────────────────────────────────
 
@@ -28,24 +26,12 @@ export const calculatorTypeEnum = pgEnum('calculator_type', [
   'tariff_scenario',
 ]);
 
-export const auditActionEnum = pgEnum('audit_action', [
-  'login',
-  'register',
-  'logout',
-  'failed_login',
-  'invite_sent',
-  'invite_accepted',
-  'calculation_saved',
-  'calculation_deleted',
-]);
-
 // ── Organizations ──────────────────────────────────────
 
 export const organizations = pgTable('organizations', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 255 }).notNull().unique(),
-  plan: varchar('plan', { length: 50 }).notNull().default('free'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
@@ -57,7 +43,6 @@ export const users = pgTable('users', {
   email: varchar('email', { length: 255 }).notNull().unique(),
   passwordHash: varchar('password_hash', { length: 255 }).notNull(),
   name: varchar('name', { length: 255 }).notNull(),
-  avatarUrl: text('avatar_url'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
@@ -73,8 +58,7 @@ export const orgMembers = pgTable('org_members', {
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   role: orgRoleEnum('role').notNull().default('member'),
-  invitedBy: uuid('invited_by').references(() => users.id, { onDelete: 'set null' }),
-  joinedAt: timestamp('joined_at', { withTimezone: true }).defaultNow().notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 }, (table) => ({
   uniqueMember: uniqueIndex('org_members_org_user_idx').on(table.orgId, table.userId),
 }));
@@ -103,89 +87,11 @@ export const auditLogs = pgTable('audit_logs', {
   id: uuid('id').defaultRandom().primaryKey(),
   orgId: uuid('org_id').references(() => organizations.id, { onDelete: 'set null' }),
   userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
-  action: auditActionEnum('action').notNull(),
+  eventType: varchar('event_type', { length: 100 }).notNull(),
   metadata: jsonb('metadata'),
   ipAddress: varchar('ip_address', { length: 45 }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
-
-// ── Invites ────────────────────────────────────────────
-
-export const invites = pgTable('invites', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  orgId: uuid('org_id')
-    .notNull()
-    .references(() => organizations.id, { onDelete: 'cascade' }),
-  email: varchar('email', { length: 255 }).notNull(),
-  role: orgRoleEnum('role').notNull(),
-  token: varchar('token', { length: 255 }).unique().notNull(),
-  invitedBy: uuid('invited_by')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  acceptedAt: timestamp('accepted_at', { withTimezone: true }),
-  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-});
-
-// ── Relations ──────────────────────────────────────────
-
-export const organizationsRelations = relations(organizations, ({ many }) => ({
-  members: many(orgMembers),
-  calculations: many(calculations),
-  auditLogs: many(auditLogs),
-  invites: many(invites),
-}));
-
-export const usersRelations = relations(users, ({ many }) => ({
-  memberships: many(orgMembers),
-  calculations: many(calculations),
-  auditLogs: many(auditLogs),
-  invitesSent: many(invites),
-}));
-
-export const orgMembersRelations = relations(orgMembers, ({ one }) => ({
-  organization: one(organizations, {
-    fields: [orgMembers.orgId],
-    references: [organizations.id],
-  }),
-  user: one(users, {
-    fields: [orgMembers.userId],
-    references: [users.id],
-  }),
-}));
-
-export const calculationsRelations = relations(calculations, ({ one }) => ({
-  organization: one(organizations, {
-    fields: [calculations.orgId],
-    references: [organizations.id],
-  }),
-  user: one(users, {
-    fields: [calculations.userId],
-    references: [users.id],
-  }),
-}));
-
-export const auditLogsRelations = relations(auditLogs, ({ one }) => ({
-  organization: one(organizations, {
-    fields: [auditLogs.orgId],
-    references: [organizations.id],
-  }),
-  user: one(users, {
-    fields: [auditLogs.userId],
-    references: [users.id],
-  }),
-}));
-
-export const invitesRelations = relations(invites, ({ one }) => ({
-  organization: one(organizations, {
-    fields: [invites.orgId],
-    references: [organizations.id],
-  }),
-  inviter: one(users, {
-    fields: [invites.invitedBy],
-    references: [users.id],
-  }),
-}));
 
 // ── Type Exports ───────────────────────────────────────
 
@@ -203,12 +109,3 @@ export type NewCalculation = typeof calculations.$inferInsert;
 
 export type AuditLog = typeof auditLogs.$inferSelect;
 export type NewAuditLog = typeof auditLogs.$inferInsert;
-
-export type Invite = typeof invites.$inferSelect;
-export type NewInvite = typeof invites.$inferInsert;
-
-// Enum type helpers
-export type OrgRole = (typeof orgRoleEnum.enumValues)[number];
-export type CalculationType = (typeof calculatorTypeEnum.enumValues)[number];
-export type AuditAction = (typeof auditActionEnum.enumValues)[number];
-export type Plan = 'free' | 'pro' | 'enterprise';
