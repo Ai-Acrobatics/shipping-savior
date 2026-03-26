@@ -8,7 +8,7 @@ import { writeAuditLog } from '@/lib/auth/audit';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, name, companyName } = body;
+    const { email, password, name, companyName, inviteToken } = body;
 
     // ── Validation ────────────────────────────────────────
     if (!email || typeof email !== 'string') {
@@ -51,7 +51,39 @@ export async function POST(request: Request) {
     // ── Hash password ─────────────────────────────────────
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // ── Create org + user + org_member atomically ─────────
+    // ── Invite flow: create user only (no org) ────────────
+    if (inviteToken) {
+      const [user] = await db
+        .insert(users)
+        .values({
+          email: normalizedEmail,
+          passwordHash,
+          name: name.trim(),
+        })
+        .returning({
+          id: users.id,
+          email: users.email,
+          name: users.name,
+        });
+
+      writeAuditLog({
+        userId: user.id,
+        action: 'register',
+        metadata: { email: normalizedEmail, inviteToken },
+      });
+
+      return NextResponse.json(
+        {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          inviteToken,
+        },
+        { status: 201 }
+      );
+    }
+
+    // ── Standard flow: create org + user + org_member ──────
     const orgName = companyName?.trim() || `${name.trim()}'s Organization`;
     const orgSlug = orgName
       .toLowerCase()

@@ -1,12 +1,14 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get('invite');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +18,7 @@ export default function RegisterPage() {
     setError('');
     const formData = new FormData(e.currentTarget);
 
-    // 1. Register via API
+    // 1. Register via API (pass invite token if present)
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -24,7 +26,8 @@ export default function RegisterPage() {
         name: formData.get('name'),
         email: formData.get('email'),
         password: formData.get('password'),
-        companyName: formData.get('companyName'),
+        companyName: inviteToken ? undefined : formData.get('companyName'),
+        inviteToken: inviteToken || undefined,
       }),
     });
 
@@ -48,7 +51,12 @@ export default function RegisterPage() {
       return;
     }
 
-    router.push('/platform');
+    // Redirect to invite accept page if registering via invite, otherwise dashboard
+    if (inviteToken) {
+      router.push(`/invite/${inviteToken}`);
+    } else {
+      router.push('/platform');
+    }
   }
 
   return (
@@ -120,23 +128,25 @@ export default function RegisterPage() {
           <p className="mt-1 text-xs text-navy-400">Minimum 8 characters</p>
         </div>
 
-        <div>
-          <label
-            htmlFor="companyName"
-            className="block text-sm font-medium text-navy-700 mb-1"
-          >
-            Company name{' '}
-            <span className="text-navy-400 font-normal">(optional)</span>
-          </label>
-          <input
-            id="companyName"
-            name="companyName"
-            type="text"
-            autoComplete="organization"
-            className="w-full px-4 py-2.5 rounded-lg border border-navy-200 bg-white text-navy-900 placeholder-navy-400 focus:outline-none focus:ring-2 focus:ring-ocean-500 focus:border-transparent transition-colors"
-            placeholder="Acme Logistics"
-          />
-        </div>
+        {!inviteToken && (
+          <div>
+            <label
+              htmlFor="companyName"
+              className="block text-sm font-medium text-navy-700 mb-1"
+            >
+              Company name{' '}
+              <span className="text-navy-400 font-normal">(optional)</span>
+            </label>
+            <input
+              id="companyName"
+              name="companyName"
+              type="text"
+              autoComplete="organization"
+              className="w-full px-4 py-2.5 rounded-lg border border-navy-200 bg-white text-navy-900 placeholder-navy-400 focus:outline-none focus:ring-2 focus:ring-ocean-500 focus:border-transparent transition-colors"
+              placeholder="Acme Logistics"
+            />
+          </div>
+        )}
 
         <button
           type="submit"

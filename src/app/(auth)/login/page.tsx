@@ -1,12 +1,14 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get('invite');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +28,12 @@ export default function LoginPage() {
       setError('Invalid email or password');
       setLoading(false);
     } else {
-      router.push('/platform');
+      // Redirect to invite page if logging in via invite link
+      if (inviteToken) {
+        router.push(`/invite/${inviteToken}`);
+      } else {
+        router.push('/platform');
+      }
     }
   }
 
