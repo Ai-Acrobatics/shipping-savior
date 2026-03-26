@@ -9,12 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.3.2",
     "@types/recharts": "^1.8.29",
+    "currency.js": "^2.0.4",
+    "decimal.js": "^10.6.0",
+    "flexsearch": "^0.8.212",
+    "fuse.js": "^7.1.0",
     "lucide-react": "^1.7.0",
+    "minisearch": "^7.2.0",
     "next": "14.2.35",
+    "pdf-lib": "^1.17.1",
     "react": "^18",
     "react-dom": "^18",
-    "recharts": "^3.8.1"
+    "recharts": "^3.8.1",
+    "searoute-js": "^0.1.0",
+    "ws": "^8.20.0"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -1,0 +1,121 @@
+{
+  "benchmark": "searoute-js",
+  "timestamp": "2026-03-26T20:50:19.580Z",
+  "summary": {
+    "totalRoutes": 12,
+    "passCount": 0,
+    "failCount": 12,
+    "avgErrorPct": 158.5,
+    "verdict": "NOT_RECOMMENDED"
+  },
+  "results": [
+    {
+      "route": "Ho Chi Minh City (Cat Lai) → Los Angeles",
+      "calculatedNM": 19866,
+      "referenceNM": 7280,
+      "errorPct": "172.9",
+      "timeMs": "28.4",
+      "waypoints": 81,
+      "status": "WARN"
+    },
+    {
+      "route": "Ho Chi Minh City (Cat Lai) → Long Beach",
+      "calculatedNM": 19858,
+      "referenceNM": 7290,
+      "errorPct": "172.4",
+      "timeMs": "18.2",
+      "waypoints": 80,
+      "status": "WARN"
+    },
+    {
+      "route": "Bangkok (Laem Chabang) → Los Angeles",
+      "calculatedNM": 20063,
+      "referenceNM": 7560,
+      "errorPct": "165.4",
+      "timeMs": "13.2",
+      "waypoints": 81,
+      "status": "WARN"
+    },
+    {
+      "route": "Singapore → Los Angeles",
+      "calculatedNM": 19004,
+      "referenceNM": 7850,
+      "errorPct": "142.1",
+      "timeMs": "8.8",
+      "waypoints": 78,
+      "status": "WARN"
+    },
+    {
+      "route": "Singapore → New York/New Jersey",
+      "calculatedNM": 13469,
+      "referenceNM": 9530,
+      "errorPct": "41.3",
+      "timeMs": "9.1",
+      "waypoints": 53,
+      "status": "WARN"
+    },
+    {
+      "route": "Shanghai → Los Angeles",
+      "calculatedNM": 21895,
+      "referenceNM": 5780,
+      "errorPct": "278.8",
+      "timeMs": "9.2",
+      "waypoints": 88,
+      "status": "WARN"
+    },
+    {
+      "route": "Busan → Los Angeles",
+      "calculatedNM": 22407,
+      "referenceNM": 5530,
+      "errorPct": "305.2",
+      "timeMs": "8.6",
+      "waypoints": 90,
+      "status": "WARN"
+    },
+    {
+      "route": "Jakarta (Tanjung Priok) → Los Angeles",
+      "calculatedNM": 19329,
+      "referenceNM": 8250,
+      "errorPct": "134.3",
+      "timeMs": "8.4",
+      "waypoints": 78,
+      "status": "WARN"
+    },
+    {
+      "route": "Manila → Los Angeles",
+      "calculatedNM": 20730,
+      "referenceNM": 6540,
+      "errorPct": "217.0",
+      "timeMs": "8.8",
+      "waypoints": 83,
+      "status": "WARN"
+    },
+    {
+      "route": "Hai Phong → Long Beach",
+      "calculatedNM": 20760,
+      "referenceNM": 7450,
+      "errorPct": "178.7",
+      "timeMs": "8.8",
+      "waypoints": 83,
+      "status": "WARN"
+    },
+    {
+      "route": "Ho Chi Minh City → Panama Canal → Miami",
+      "calculatedNM": 15238,
+      "referenceNM": 10200,
+      "errorPct": "49.4",
+      "timeMs": "8.3",
+      "waypoints": 55,
+      "status": "WARN"
+    },
+    {
+      "route": "Singapore → Savannah",
+      "calculatedNM": 14147,
+      "referenceNM": 9800,
+      "errorPct": "44.4",
+      "timeMs": "7.9",
+      "waypoints": 60,
+      "status": "WARN"
+    }
+  ]
+}

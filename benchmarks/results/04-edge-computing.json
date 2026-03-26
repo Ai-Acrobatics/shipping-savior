@@ -1,0 +1,76 @@
+{
+  "benchmark": "edge-computing",
+  "timestamp": "2026-03-26T20:49:28.426Z",
+  "calculationBenchmark": {
+    "scenarios": [
+      {
+        "scenario": "Vietnam cotton t-shirts (500K units)",
+        "avgMicroseconds": 32.5,
+        "iterationsPerSecond": 30727,
+        "sampleResult": 0.1273
+      },
+      {
+        "scenario": "Thailand frozen shrimp (10K kg reefer)",
+        "avgMicroseconds": 21,
+        "iterationsPerSecond": 47702,
+        "sampleResult": 5.5325
+      },
+      {
+        "scenario": "Indonesia furniture (200 units 40HC)",
+        "avgMicroseconds": 14.8,
+        "iterationsPerSecond": 67497,
+        "sampleResult": 57.7
+      },
+      {
+        "scenario": "Cambodia silk scarves (100K pcs)",
+        "avgMicroseconds": 18.6,
+        "iterationsPerSecond": 53903,
+        "sampleResult": 0.5872
+      },
+      {
+        "scenario": "Vietnam electronics (5K units)",
+        "avgMicroseconds": 15.9,
+        "iterationsPerSecond": 62742,
+        "sampleResult": 16.655
+      }
+    ],
+    "jsonSerializationMicroseconds": 1.6,
+    "responseBytes": 376
+  },
+  "platformComparison": {
+    "cloudflareWorkers": {
+      "coldStart": "<1ms",
+      "maxExecution": "30s-30min",
+      "maxBundle": "10-20MB",
+      "runtime": "V8 only",
+      "pdfSupport": false,
+      "websocket": true,
+      "pricing": "Free: 100K req/day"
+    },
+    "vercelEdge": {
+      "coldStart": "<5ms",
+      "maxExecution": "30s",
+      "maxBundle": "4MB",
+      "runtime": "V8 partial Node.js",
+      "pdfSupport": false,
+      "websocket": false,
+      "pricing": "Free: 500K invocations"
+    },
+    "vercelServerless": {
+      "coldStart": "250-500ms",
+      "maxExecution": "60-300s",
+      "maxBundle": "250MB",
+      "runtime": "Full Node.js",
+      "pdfSupport": true,
+      "websocket": false,
+      "pricing": "Free: 100GB-hrs"
+    }
+  },
+  "recommendation": {
+    "calculators": "Vercel Edge Functions",
+    "pdfGeneration": "Vercel Serverless Functions",
+    "htsSearch": "Vercel Edge + Typesense Cloud (Phase 2)",
+    "realtime": "Vercel + Pusher/Ably (Phase 2-3)",
+    "rationale": "Keep everything in Vercel ecosystem for Phase 1. Calculator bundles are tiny (<150KB). Edge cold start <5ms is excellent for interactive calculators."
+  }
+}

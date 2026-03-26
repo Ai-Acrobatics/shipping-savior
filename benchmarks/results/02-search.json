@@ -1,0 +1,391 @@
+{
+  "benchmark": "hts-search-engines",
+  "timestamp": "2026-03-26T20:49:26.819Z",
+  "datasetSize": 10000,
+  "engines": {
+    "fuseJs": {
+      "indexTimeMs": 32.2,
+      "avgSearchMs": 178.99,
+      "typoTolerance": "excellent",
+      "results": [
+        {
+          "query": "cotton apparel knitted",
+          "desc": "exact multi-word",
+          "resultCount": 221,
+          "timeMs": "296.54",
+          "topScore": "0.5994",
+          "topResult": "Cotton - knitted cotton goods"
+        },
+        {
+          "query": "cottn apparl",
+          "desc": "typos in common terms",
+          "resultCount": 3,
+          "timeMs": "137.13",
+          "topScore": "0.6120",
+          "topResult": "Cotton - parts leather goods"
+        },
+        {
+          "query": "polyester fabric woven",
+          "desc": "specific material search",
+          "resultCount": 0,
+          "timeMs": "286.36",
+          "topScore": "N/A",
+          "topResult": "N/A"
+        },
+        {
+          "query": "polester fabrc",
+          "desc": "typos in material",
+          "resultCount": 0,
+          "timeMs": "151.84",
+          "topScore": "N/A",
+          "topResult": "N/A"
+        },
+        {
+          "query": "6109.10",
+          "desc": "HTS code prefix search",
+          "resultCount": 52,
+          "timeMs": "65.85",
+          "topScore": "0.1529",
+          "topResult": "Aluminum and articles thereof - unprocessed cotton articles"
+        },
+        {
+          "query": "silk articles",
+          "desc": "broad category",
+          "resultCount": 1980,
+          "timeMs": "143.97",
+          "topScore": "0.5050",
+          "topResult": "Silk - blended silk articles"
+        },
+        {
+          "query": "frozen fish crustaceans",
+          "desc": "seafood search",
+          "resultCount": 213,
+          "timeMs": "212.44",
+          "topScore": "0.7014",
+          "topResult": "Fish and crustaceans - accessories wood materials"
+        },
+        {
+          "query": "froze fsh",
+          "desc": "heavy typos",
+          "resultCount": 0,
+          "timeMs": "53.28",
+          "topScore": "N/A",
+          "topResult": "N/A"
+        },
+        {
+          "query": "leather travel goods",
+          "desc": "compound description",
+          "resultCount": 213,
+          "timeMs": "148.30",
+          "topScore": "0.6303",
+          "topResult": "Articles of leather; travel goods - semi-finished glass good"
+        },
+        {
+          "query": "pharmaceutical products organic",
+          "desc": "multi-keyword",
+          "resultCount": 219,
+          "timeMs": "285.55",
+          "topScore": "0.3268",
+          "topResult": "Pharmaceutical products - organic steel items"
+        },
+        {
+          "query": "rubber industrial grade",
+          "desc": "material + grade",
+          "resultCount": 61,
+          "timeMs": "203.63",
+          "topScore": "0.5780",
+          "topResult": "Silk - industrial grade wool products"
+        },
+        {
+          "query": "aluminum articles processed",
+          "desc": "metal search",
+          "resultCount": 0,
+          "timeMs": "235.02",
+          "topScore": "N/A",
+          "topResult": "N/A"
+        },
+        {
+          "query": "toys children sports",
+          "desc": "category combination",
+          "resultCount": 1,
+          "timeMs": "156.91",
+          "topScore": "0.6489",
+          "topResult": "Cotton - children cotton products"
+        },
+        {
+          "query": "furniture bedding mattress",
+          "desc": "household items",
+          "resultCount": 212,
+          "timeMs": "205.49",
+          "topScore": "0.3793",
+          "topResult": "Furniture; bedding, mattresses - laminated rubber materials"
+        },
+        {
+          "query": "furnitre beding",
+          "desc": "typos in household",
+          "resultCount": 212,
+          "timeMs": "102.59",
+          "topScore": "0.5442",
+          "topResult": "Furniture; bedding, mattresses - laminated rubber materials"
+        }
+      ]
+    },
+    "flexSearch": {
+      "indexTimeMs": 168.8,
+      "avgSearchMs": 0.3,
+      "typoTolerance": "limited",
+      "results": [
+        {
+          "query": "cotton apparel knitted",
+          "desc": "exact multi-word",
+          "resultCount": 20,
+          "timeMs": "0.94",
+          "topResult": "Articles of apparel, knitted - tempered cotton goods"
+        },
+        {
+          "query": "cottn apparl",
+          "desc": "typos in common terms",
+          "resultCount": 0,
+          "timeMs": "0.02",
+          "topResult": "N/A"
+        },
+        {
+          "query": "polyester fabric woven",
+          "desc": "specific material search",
+          "resultCount": 0,
+          "timeMs": "0.01",
+          "topResult": "N/A"
+        },
+        {
+          "query": "polester fabrc",
+          "desc": "typos in material",
+          "resultCount": 0,
+          "timeMs": "0.01",
+          "topResult": "N/A"
+        },
+        {
+          "query": "6109.10",
+          "desc": "HTS code prefix search",
+          "resultCount": 0,
+          "timeMs": "0.65",
+          "topResult": "N/A"
+        },
+        {
+          "query": "silk articles",
+          "desc": "broad category",
+          "resultCount": 20,
+          "timeMs": "0.53",
+          "topResult": "Aluminum and articles thereof - printed silk materials"
+        },
+        {
+          "query": "frozen fish crustaceans",
+          "desc": "seafood search",
+          "resultCount": 6,
+          "timeMs": "0.42",
+          "topResult": "Fish and crustaceans - frozen carbon fiber materials"
+        },
+        {
+          "query": "froze fsh",
+          "desc": "heavy typos",
+          "resultCount": 0,
+          "timeMs": "0.01",
+          "topResult": "N/A"
+        },
+        {
+          "query": "leather travel goods",
+          "desc": "compound description",
+          "resultCount": 20,
+          "timeMs": "0.08",
+          "topResult": "Articles of leather; travel goods - raw materials carbon fib"
+        },
+        {
+          "query": "pharmaceutical products organic",
+          "desc": "multi-keyword",
+          "resultCount": 7,
+          "timeMs": "0.51",
+          "topResult": "Pharmaceutical products - organic steel items"
+        },
+        {
+          "query": "rubber industrial grade",
+          "desc": "material + grade",
+          "resultCount": 20,
+          "timeMs": "0.37",
+          "topResult": "Inorganic chemicals - industrial grade rubber materials"
+        },
+        {
+          "query": "aluminum articles processed",
+          "desc": "metal search",
+          "resultCount": 5,
+          "timeMs": "0.46",
+          "topResult": "Aluminum and articles thereof - processed rubber articles"
+        },
+        {
+          "query": "toys children sports",
+          "desc": "category combination",
+          "resultCount": 7,
+          "timeMs": "0.44",
+          "topResult": "Toys, games and sports equipment - children carbon fiber ite"
+        },
+        {
+          "query": "furniture bedding mattress",
+          "desc": "household items",
+          "resultCount": 20,
+          "timeMs": "0.09",
+          "topResult": "Furniture; bedding, mattresses - laminated rubber materials"
+        },
+        {
+          "query": "furnitre beding",
+          "desc": "typos in household",
+          "resultCount": 0,
+          "timeMs": "0.00",
+          "topResult": "N/A"
+        }
+      ]
+    },
+    "miniSearch": {
+      "indexTimeMs": 71.6,
+      "avgSearchMs": 2.24,
+      "typoTolerance": "good",
+      "results": [
+        {
+          "query": "cotton apparel knitted",
+          "desc": "exact multi-word",
+          "resultCount": 1462,
+          "timeMs": "4.34",
+          "topScore": "37.3973",
+          "topResult": "Articles of apparel, knitted - tempered cotton goods"
+        },
+        {
+          "query": "cottn apparl",
+          "desc": "typos in common terms",
+          "resultCount": 1195,
+          "timeMs": "1.46",
+          "topScore": "6.6458",
+          "topResult": "Articles of apparel, knitted - tempered cotton goods"
+        },
+        {
+          "query": "polyester fabric woven",
+          "desc": "specific material search",
+          "resultCount": 832,
+          "timeMs": "7.02",
+          "topScore": "21.8656",
+          "topResult": "Silk - woven polyester articles"
+        },
+        {
+          "query": "polester fabrc",
+          "desc": "typos in material",
+          "resultCount": 568,
+          "timeMs": "0.68",
+          "topScore": "1.9667",
+          "topResult": "Silk - pure polyester goods"
+        },
+        {
+          "query": "6109.10",
+          "desc": "HTS code prefix search",
+          "resultCount": 301,
+          "timeMs": "0.91",
+          "topScore": "43.0311",
+          "topResult": "Wool, fine or coarse animal hair - knitted leather items"
+        },
+        {
+          "query": "silk articles",
+          "desc": "broad category",
+          "resultCount": 4207,
+          "timeMs": "3.87",
+          "topScore": "13.9650",
+          "topResult": "Silk - blended silk articles"
+        },
+        {
+          "query": "frozen fish crustaceans",
+          "desc": "seafood search",
+          "resultCount": 704,
+          "timeMs": "0.95",
+          "topScore": "49.2094",
+          "topResult": "Fish and crustaceans - frozen wood goods"
+        },
+        {
+          "query": "froze fsh",
+          "desc": "heavy typos",
+          "resultCount": 704,
+          "timeMs": "0.59",
+          "topScore": "7.4714",
+          "topResult": "Fish and crustaceans - frozen wood goods"
+        },
+        {
+          "query": "leather travel goods",
+          "desc": "compound description",
+          "resultCount": 2805,
+          "timeMs": "2.44",
+          "topScore": "41.1961",
+          "topResult": "Articles of leather; travel goods - laminated leather goods"
+        },
+        {
+          "query": "pharmaceutical products organic",
+          "desc": "multi-keyword",
+          "resultCount": 3060,
+          "timeMs": "3.93",
+          "topScore": "43.3416",
+          "topResult": "Pharmaceutical products - organic glass products"
+        },
+        {
+          "query": "rubber industrial grade",
+          "desc": "material + grade",
+          "resultCount": 1486,
+          "timeMs": "1.61",
+          "topScore": "40.8322",
+          "topResult": "Inorganic chemicals - industrial grade rubber materials"
+        },
+        {
+          "query": "aluminum articles processed",
+          "desc": "metal search",
+          "resultCount": 4348,
+          "timeMs": "4.41",
+          "topScore": "34.6687",
+          "topResult": "Aluminum and articles thereof - processed rubber articles"
+        },
+        {
+          "query": "toys children sports",
+          "desc": "category combination",
+          "resultCount": 777,
+          "timeMs": "0.74",
+          "topScore": "45.1029",
+          "topResult": "Toys, games and sports equipment - children steel articles"
+        },
+        {
+          "query": "furniture bedding mattress",
+          "desc": "household items",
+          "resultCount": 212,
+          "timeMs": "0.43",
+          "topScore": "42.2959",
+          "topResult": "Furniture; bedding, mattresses - laminated rubber materials"
+        },
+        {
+          "query": "furnitre beding",
+          "desc": "typos in household",
+          "resultCount": 212,
+          "timeMs": "0.23",
+          "topScore": "9.5687",
+          "topResult": "Furniture; bedding, mattresses - laminated rubber materials"
+        }
+      ]
+    }
+  },
+  "serverSideResearch": {
+    "typesense": {
+      "latencyP99": "<5ms",
+      "ramAt10K": "~50MB",
+      "cloud": "$0.104/hr",
+      "license": "GPL-3.0"
+    },
+    "meilisearch": {
+      "latencyP99": "<10ms",
+      "ramAt10K": "~80MB",
+      "cloud": "free tier available",
+      "license": "MIT"
+    }
+  },
+  "recommendation": {
+    "phase1": "MiniSearch (client-side, best balance of speed + fuzzy matching)",
+    "phase2": "Typesense (fastest server-side search, excellent relevancy tuning)"
+  }
+}

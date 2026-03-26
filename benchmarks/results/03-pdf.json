@@ -1,0 +1,94 @@
+{
+  "benchmark": "pdf-generation",
+  "timestamp": "2026-03-26T20:52:04.928Z",
+  "testedLibrary": "pdf-lib (pure JS, no transpilation needed)",
+  "results": [
+    {
+      "document": "Bill of Lading",
+      "lineItems": 25,
+      "avgTimeMs": 20,
+      "sizeKB": 5.2,
+      "pages": 2,
+      "iterations": [
+        54.6,
+        18.6,
+        8.4,
+        10.2,
+        7.9
+      ],
+      "status": "PASS"
+    },
+    {
+      "document": "Commercial Invoice",
+      "lineItems": 20,
+      "avgTimeMs": 7.2,
+      "sizeKB": 4.7,
+      "pages": 1,
+      "iterations": [
+        8.6,
+        8.8,
+        5.6,
+        5.8,
+        7.2
+      ],
+      "status": "PASS"
+    },
+    {
+      "document": "Packing List",
+      "lineItems": 25,
+      "avgTimeMs": 6.2,
+      "sizeKB": 4.7,
+      "pages": 1,
+      "iterations": [
+        6,
+        6.9,
+        5,
+        5.2,
+        7.8
+      ],
+      "status": "PASS"
+    }
+  ],
+  "comparison": {
+    "reactPdf": {
+      "approach": "React components",
+      "bundleKB": 800,
+      "serverless": true,
+      "tables": "declarative",
+      "recommended": "Phase 1 primary"
+    },
+    "pdfLib": {
+      "approach": "Imperative",
+      "bundleKB": 200,
+      "serverless": true,
+      "tables": "manual",
+      "recommended": "Phase 2 for form-filling"
+    },
+    "pdfmake": {
+      "approach": "JSON layout",
+      "bundleKB": 400,
+      "serverless": true,
+      "tables": "built-in",
+      "recommended": "Alternative if React not needed"
+    },
+    "jsPDF": {
+      "approach": "Imperative",
+      "bundleKB": 300,
+      "serverless": true,
+      "tables": "plugin",
+      "recommended": "Not recommended"
+    },
+    "puppeteer": {
+      "approach": "HTML render",
+      "bundleKB": 300000,
+      "serverless": "barely",
+      "tables": "CSS",
+      "recommended": "Only for pixel-perfect replicas"
+    }
+  },
+  "recommendation": {
+    "primary": "@react-pdf/renderer — React component model, CSS-like styling, Vercel serverless compatible",
+    "secondary": "pdf-lib — for form-filling, merging, and low-level PDF manipulation",
+    "performanceNote": "pdf-lib generates 25-item customs docs in <50ms. @react-pdf/renderer expected ~100-200ms (acceptable)."
+  }
+}
