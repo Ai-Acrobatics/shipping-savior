@@ -17,14 +17,15 @@
 6. [Agent 4: Document Agent](#agent-4-document-agent)
 7. [Agent 5: Forecast Agent](#agent-5-forecast-agent)
 8. [Agent 6: Anomaly Agent](#agent-6-anomaly-agent)
-9. [Agent Orchestration Architecture](#agent-orchestration-architecture)
-10. [Training Data Strategy](#training-data-strategy)
-11. [Continuous Learning & Model Improvement](#continuous-learning--model-improvement)
-12. [Cost Estimation Summary](#cost-estimation-summary)
-13. [Development Timeline](#development-timeline)
-14. [A/B Testing & Rollout Strategy](#ab-testing--rollout-strategy)
-15. [Human-in-the-Loop Workflows](#human-in-the-loop-workflows)
-16. [Evaluation Framework](#evaluation-framework)
+9. [Agent 7: FTZ Strategy Agent](#agent-7-ftz-strategy-agent)
+10. [Agent Orchestration Architecture](#agent-orchestration-architecture)
+11. [Training Data Strategy](#training-data-strategy)
+12. [Continuous Learning & Model Improvement](#continuous-learning--model-improvement)
+13. [Cost Estimation Summary](#cost-estimation-summary)
+14. [Development Timeline](#development-timeline)
+15. [A/B Testing & Rollout Strategy](#ab-testing--rollout-strategy)
+16. [Human-in-the-Loop Workflows](#human-in-the-loop-workflows)
+17. [Evaluation Framework](#evaluation-framework)
 
 ---
 
@@ -64,6 +65,7 @@ The agents use a tiered model approach based on the cognitive complexity of each
 | Document | OCR + extraction from shipping documents | Claude claude-sonnet-4-6 Vision + extraction schema | Q3 2026 | Q4 2026 | Q1 2027 |
 | Forecast | Rate and demand forecasting | XGBoost + time series + Claude narrative | Q1 2027 | Q2 2027 | Q3 2027 |
 | Anomaly | Shipment anomaly detection and alerting | Isolation Forest + LLM explainer | Q2 2027 | Q3 2027 | Q4 2027 |
+| FTZ Strategy | PF/NPF status election, duty locking, and withdrawal scheduling | Claude claude-sonnet-4-6 with financial modeling + HTS data | Q4 2026 | Q1 2027 | Q2 2027 |
 
 ---
 
@@ -962,6 +964,251 @@ Incoming entity data
 
 ---
 
+## Agent 7: FTZ Strategy Agent
+
+### Purpose
+
+Analyze a product's HTS classification, anticipated import volume, duty rates, and storage economics to recommend an optimal Foreign Trade Zone (FTZ) strategy. Specifically: whether to elect Privileged Foreign (PF) or Non-Privileged Foreign (NPF) zone status, when to lock duty rates, and how to schedule withdrawals to minimize total landed cost.
+
+FTZ strategy decisions are currently made manually by experienced customs brokers using spreadsheets. A single wrong election — choosing NPF when tariffs subsequently rise, or delaying rate locking ahead of a Section 301 escalation — can cost importers six figures on a mid-size shipment. This agent converts institutional broker knowledge into a repeatable, data-driven recommendation engine.
+
+### Input / Output Specification
+
+**Input:**
+```typescript
+interface FTZStrategyRequest {
+  product: {
+    htsCode: string;                   // 10-digit HTS code (from Classification Agent)
+    description: string;
+    countryOfOrigin: string;           // ISO 3166-1 alpha-2
+    unitValueFOB: number;              // USD per unit at origin
+    totalUnits: number;                // Total units entering FTZ in analysis period
+    unitOfMeasure: string;             // "each", "kg", "dozen", etc.
+  };
+  duties: {
+    currentDutyRate: number;           // Current applicable rate as decimal (e.g., 0.065)
+    section301Rate?: number;           // Additional Section 301 tariff if applicable
+    gspEligible?: boolean;             // Eligible for Generalized System of Preferences
+    freeTradeAgreement?: string;       // "USMCA", "KORUS", etc. if applicable
+  };
+  ftzScenario: {
+    ftzZoneNumber?: string;            // e.g., "202" (LA/LB area), leave null for recommendation
+    storageRatePerUnitPerMonth: number; // USD
+    withdrawalFrequency: "weekly" | "biweekly" | "monthly" | "quarterly";
+    unitsPerWithdrawal: number;
+    analysisDurationMonths: number;    // 1-60
+    anticipatedTariffChange?: {
+      newRate: number;                 // Rate expected after change
+      effectiveDate: string;           // ISO date of anticipated change
+      confidence: "low" | "medium" | "high";
+    };
+  };
+  importerProfile?: {
+    annualImportVolumeUSD?: number;    // For recommending zone activation threshold
+    existingFTZRelationship?: boolean; // Already operating under an FTZ agreement
+    warehouseLocation?: string;        // City/state — for zone proximity matching
+  };
+}
+```
+
+**Output:**
+```typescript
+interface FTZStrategyResult {
+  recommendation: {
+    action: "use-ftz-pf" | "use-ftz-npf" | "standard-entry" | "defer-decision";
+    primaryReason: string;             // Plain-English headline reason
+    confidenceLabel: "high" | "medium" | "low";
+    confidence: number;                // 0-1
+  };
+  statusElection: {
+    recommended: "PF" | "NPF" | "not-applicable";
+    rationale: string;                 // Why PF vs NPF for this product/scenario
+    pfImplication: string;             // What PF locks in and when
+    npfImplication: string;            // How NPF duty is calculated on withdrawal
+    riskIfWrong: string;               // What happens if the election turns out suboptimal
+  };
+  financialProjection: {
+    standardEntryTotalDuty: number;    // USD — baseline without FTZ
+    ftzTotalDuty: number;              // USD — with recommended FTZ strategy
+    totalStorageCost: number;          // USD — FTZ warehousing cost over analysis period
+    netSavings: number;                // USD — after storage costs
+    netSavingsPercent: number;         // As percentage of standard entry duty
+    breakEvenMonths: number;           // Months until FTZ savings exceed storage costs
+    withdrawalSchedule: WithdrawalPeriod[]; // Per-period breakdown
+  };
+  tariffLockingStrategy?: {
+    recommendLockNow: boolean;
+    lockingDeadline?: string;          // ISO date — "lock before this date"
+    urgencyLevel: "none" | "low" | "medium" | "high" | "critical";
+    reasoning: string;
+    estimatedSavingsFromLocking: number; // USD if rate change materializes as anticipated
+  };
+  ftzZoneOptions?: {
+    zoneNumber: string;
+    zoneName: string;
+    proximityToPort: string;
+    operatorName: string;
+    estimatedActivationCost: string;
+    notes: string;
+  }[];
+  activationThreshold: {
+    minimumAnnualDutySavingsForFTZ: number; // USD — generally $50K-$100K to justify setup costs
+    currentProjectionMeetsThreshold: boolean;
+    yearsToJustifyActivation?: number;
+  };
+  caveats: string[];                   // Regulatory limitations, assumptions, "consult a licensed broker" reminders
+  dataAsOf: string;
+  reviewRequired: boolean;             // True for PF elections, high-tariff items, or large volumes
+}
+```
+
+### Data Sources
+
+| Source | Type | Update Frequency | Notes |
+|--------|------|-----------------|-------|
+| USITC HTS schedule (shared with Agent 1) | Shared vector DB | Annual + interim | Duty rates by HTS code and country of origin |
+| CBP FTZ Board regulations (19 CFR Part 146) | Static + periodic review | Regulatory updates | PF/NPF election rules, zone activation requirements |
+| USTR Section 301 tariff lists + exclusions | CSV from ustr.gov | As-needed | Section 301 rates and granted exclusion status |
+| US FTZ Board zone index | Public directory | Annual | Active FTZ zones by state/port — zone numbers, operators, addresses |
+| Historical FTZ financial model data | Internal | Platform-generated | User-submitted scenarios build a benchmark library of actual savings achieved |
+| Platform HTS classification output (Agent 1) | Real-time | Per classification | FTZ Agent reads HTS result directly from Shipment Context Store |
+| Freight rate benchmarks (shared with Agent 2) | Shared cache | Weekly | For computing landed cost comparison |
+
+### Model Approach
+
+**Core: Deterministic Financial Modeling + Claude for Strategic Interpretation**
+
+FTZ strategy involves precise financial calculations (duty arithmetic is deterministic) combined with strategic judgment that benefits from language model reasoning. The approach splits accordingly:
+
+```
+FTZStrategyRequest
+  -> Deterministic financial modeling layer:
+     - Calculate total duties: standard entry vs. FTZ (PF path vs. NPF path)
+     - Apply Section 301 surcharges and GSP/FTA exclusions
+     - Model withdrawal schedule: per-period duty, storage cost, net savings
+     - Compute break-even analysis
+     - Flag if anticipated tariff change alters recommendation
+  -> Lookup layer:
+     - HTS code → current duty rate (from Agent 1 shared index)
+     - ZIP/city → nearest FTZ zones (from FTZ Board directory)
+     - HTS code → PF/NPF implication lookup (curated rule table)
+  -> Claude claude-sonnet-4-6 strategic reasoning:
+     "Given this product (HTS: X, origin: VN, duty rate: 12%), this import volume ($Y/year),
+      and this anticipated tariff change on [date], should the importer elect PF or NPF status?
+
+      Financial projections: [calculated data]
+      Current market context: [tariff news, Section 301 status]
+      FTZ zone options near [location]: [zone list]
+
+      Provide:
+      1. Clear PF vs NPF recommendation with rationale
+      2. Rate locking urgency assessment
+      3. Whether FTZ activation cost is justified given projected savings
+      4. Key risks and caveats the importer must understand"
+  -> Structured output via Zod schema validation
+  -> Flag for human review if: large volume (>$500K duty), PF election, uncertain tariff timing
+```
+
+**Why Claude for strategic interpretation (not pure rule engine):**
+- PF vs NPF election is genuinely context-dependent: same HTS code may warrant different elections depending on tariff trajectory, storage economics, and importer's cash flow
+- "Anticipated tariff change" scenarios require weighing probability, timing, and magnitude — LLM reasoning over retrieved context outperforms deterministic rules
+- The rationale and caveats require plain-English explanation that brokers can communicate to clients
+- Edge cases (FTA eligibility interacting with Section 301, multi-country components) require reasoning over retrieved regulatory text
+
+**Why NOT end-to-end LLM:**
+- Duty arithmetic must be precise and auditable — LLMs can make arithmetic errors on financial projections
+- Break-even calculations and per-period withdrawal tables are deterministic financial models, not reasoning tasks
+- Audit trail requires traceable calculation steps
+
+### Prompt Strategy
+
+**System prompt skeleton for FTZ strategic reasoning:**
+
+```
+You are an expert customs broker specializing in Foreign Trade Zone strategy for US importers sourcing from Southeast Asia.
+
+You are helping a freight broker advise their client on whether and how to use an FTZ for a specific product import program.
+
+CRITICAL RULES:
+1. Always recommend the importer consult a licensed customs broker (19 USC 1641) before making binding FTZ elections
+2. Never state a specific savings figure as guaranteed — always frame as projections based on stated assumptions
+3. For Section 301 products, emphasize the locking deadline risk explicitly
+4. PF elections are irrevocable per 19 CFR 146.41 — always flag this
+
+CONTEXT PROVIDED TO YOU:
+- Product: {hts_code}, {description}, origin: {origin_country}
+- Duty rate: {duty_rate}% (+ {section_301_rate}% Section 301 if applicable)
+- Import volume: {total_units} units at ${unit_value_fob}/unit = ${total_value} FOB
+- Storage cost: ${storage_rate}/unit/month
+- Analysis period: {months} months
+- Withdrawal plan: {units_per_withdrawal} units {withdrawal_frequency}
+- Financial projections: [INJECTED FROM CALCULATION LAYER]
+- Nearest FTZ zones: [INJECTED FROM ZONE LOOKUP]
+- Current tariff environment: [INJECTED FROM COMPLIANCE CONTEXT]
+
+TASK: Analyze and recommend PF vs NPF election and rate locking strategy.
+```
+
+### Integration Points
+
+- **HTS Classification Agent (Agent 1)**: HTS code and duty rate are primary inputs — FTZ Agent subscribes to HTS classification completion events
+- **Compliance Agent (Agent 3)**: Reads Section 301 status, GSP eligibility, and any pending exclusion decisions for the product
+- **Cost Optimization Agent (Agent 2)**: FTZ routing recommendations (bonded warehouse destination) are coordinated with route optimization
+- **Forecast Agent (Agent 5)**: Rate forecasts inform "anticipated tariff change" scenarios — rising tariff environment increases FTZ urgency
+- **FTZ Savings Analyzer Tool (PRD-03)**: The UI tool is powered by this agent's financial modeling layer — Agent 7 provides the "should I use FTZ?" intelligence on top of the calculator
+- **User Dashboard**: FTZ recommendation surfaced on product/shipment cards where duty savings opportunity exists
+- **GHL CRM**: FTZ opportunity flagged on customer records where product lines qualify
+
+### Development Phases
+
+**MVP (Q4 2026) — 6 weeks**
+- [ ] Deterministic financial modeling engine (PF path vs. NPF path vs. standard entry)
+- [ ] HTS code → duty rate lookup integration with Agent 1 shared index
+- [ ] Section 301 surcharge and GSP/FTA flag integration
+- [ ] Claude strategic reasoning with system prompt above
+- [ ] FTZ zone directory lookup by importer location (5 major US ports)
+- [ ] API endpoint: POST /api/agents/ftz-strategy
+- [ ] Integration with FTZ Savings Analyzer tool UI (PRD-03)
+- [ ] Structured output with caveats and "consult licensed broker" disclaimer
+
+**v1 (Q1 2027) — 8 weeks**
+- [ ] Tariff change scenario modeling (anticipated Section 301 escalations)
+- [ ] Locking deadline calculator with urgency scoring
+- [ ] Multi-product portfolio analysis (optimize across an importer's full product line)
+- [ ] Activation cost threshold analysis (justify FTZ setup cost vs. projected savings)
+- [ ] Historical scenario library — "importers similar to you saved $X"
+- [ ] FTZ zone operator contact integration
+- [ ] PDF strategy report generation (exportable for client presentations)
+
+**Production (Q2 2027) — 8 weeks**
+- [ ] Real-time tariff change monitoring integration with Compliance Agent
+- [ ] Proactive alerts: "Your product line qualifies for FTZ — projected savings $X"
+- [ ] Multi-origin blending analysis (goods from multiple countries → zone entry → US market)
+- [ ] FTZ manipulation/manufacturing analysis (can product be transformed in zone to qualify for lower rate?)
+- [ ] Benchmark comparison: actual savings vs. projected for past FTZ users
+
+### Success Metrics
+
+| Metric | MVP Target | v1 Target | Production Target |
+|--------|-----------|-----------|------------------|
+| Recommendation accuracy (vs. licensed customs broker) | Qualitative positive review | 80% agreement | 90% agreement |
+| Financial model accuracy (vs. actual duty paid) | Within 5% of actual | Within 2% | Within 1% |
+| User acceptance rate of PF/NPF recommendation | — | 55% | 70% |
+| Average savings identified per qualifying shipment | — | $15,000+ | $25,000+ |
+| False positive rate (recommending FTZ when not beneficial) | < 25% | < 15% | < 8% |
+| Response latency (p50) | < 10s | < 5s | < 3s |
+
+### Human-in-the-Loop Design
+
+FTZ strategy decisions have significant financial and legal consequences. The agent applies conservative human review routing:
+
+- **Always review:** PF status elections (irrevocable), any product with projected duty savings > $50,000
+- **Review if:** Confidence < 0.75, product subject to Section 301 with pending exclusion, importer has no prior FTZ experience
+- **Auto-approve:** Standard entry recommendation (do not use FTZ) when savings clearly do not justify activation costs
+- **Mandatory disclaimer:** Every output includes "This analysis is for informational purposes only. FTZ elections are binding regulatory decisions and must be executed by or in consultation with a licensed customs broker (19 USC 1641)."
+
+---
+
 ## Agent Orchestration Architecture
 
 ### Overview
@@ -1008,13 +1255,14 @@ Agents communicate through a central **Shipment Context Store** — a shared dat
 | Trigger Event | Agents Invoked |
 |--------------|----------------|
 | New product description entered | Agent 1 (HTS Classification) |
-| HTS code assigned or confirmed | Agent 3 (Compliance), Agent 2 (Cost — duty rate input) |
+| HTS code assigned or confirmed | Agent 3 (Compliance), Agent 2 (Cost — duty rate input), Agent 7 (FTZ Strategy — evaluate duty savings opportunity) |
 | New carrier quote received | Agent 2 (Cost Optimization), Agent 6 (Anomaly — is quote normal?) |
 | Document uploaded | Agent 4 (Document Processing) |
 | Document data extracted | Agent 3 (Compliance validation), Agent 6 (Anomaly — cross-doc check) |
 | Shipment created | Agent 5 (Forecast — optimal ship window), Agent 6 (baseline scan) |
-| Compliance check completed | Agent 6 (incorporates compliance issues into anomaly score) |
-| Weekly schedule (background) | Agent 5 (model retraining), Agent 6 (model refresh) |
+| Compliance check completed | Agent 6 (incorporates compliance issues into anomaly score), Agent 7 (FTZ — Section 301 status may change recommendation) |
+| Tariff change detected (via Compliance Agent monitoring) | Agent 7 (FTZ — re-evaluate locking urgency for active product lines) |
+| Weekly schedule (background) | Agent 5 (model retraining), Agent 6 (model refresh), Agent 7 (check tariff change signals) |
 
 ### Inter-Agent Communication
 
@@ -1068,6 +1316,16 @@ interface ShipmentContext {
     alerts: AnomalyAlert[];
     completedAt: string;
   };
+
+  // Agent 7 output
+  ftzStrategy?: {
+    recommendation: "use-ftz-pf" | "use-ftz-npf" | "standard-entry" | "defer-decision";
+    netSavings: number;
+    statusElection: "PF" | "NPF" | "not-applicable";
+    lockingUrgency: "none" | "low" | "medium" | "high" | "critical";
+    reviewRequired: boolean;
+    completedAt: string;
+  };
 }
 ```
 
@@ -1096,6 +1354,7 @@ API Route receives trigger event
 | Document Processing | 120s per document | 2 retries (per document, not batch) |
 | Forecast | 300s | 1 retry (model inference is slow) |
 | Anomaly Detection | 15s | 3 retries |
+| FTZ Strategy | 30s | 2 retries (financial model is fast; Claude call is the variable) |
 
 ---
 
@@ -1113,6 +1372,7 @@ Before the platform has its own operational data, seed each agent's training and
 | Document Processing | Sample BOL/invoice templates from major carriers | ~200 document templates | Templates only — real documents needed for production quality |
 | Forecast | USITC trade statistics + FBX + Drewry (2015-2026) | 10+ years weekly rates | Sufficient for trend modeling; limited for rare events |
 | Anomaly Detection | Platform generates its own normal data over time; public CBP enforcement stats as priors | CBP inspection rates by HTS chapter | Rule-based bootstrap; ML model starts learning at ~1K shipments |
+| FTZ Strategy | CBP FTZ Board regulations (19 CFR Part 146), USITC HTS duty rates, FTZ zone directory | Regulatory corpus + curated PF/NPF rule table | Deterministic financial model needs no ML training; Claude RAG over regulatory text |
 
 ### Phase 2: Platform Data Flywheel
 
