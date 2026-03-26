@@ -7,14 +7,12 @@ import { Ship, Menu, X, LayoutDashboard, FileText } from "lucide-react";
 const navLinks = [
   { label: "Platform", href: "/#platform" },
   { label: "Calculators", href: "/#calculators" },
-  { label: "Routes", href: "/#routes" },
   { label: "FTZ Strategy", href: "/#ftz" },
+  { label: "Wireframes", href: "/#wireframes" },
+  { label: "Pricing", href: "/#pricing" },
   { label: "Knowledge Base", href: "/knowledge-base" },
   { label: "Data Intelligence", href: "/data-intelligence" },
-  { label: "Monetization", href: "/monetization" },
-  { label: "Six Sigma", href: "/six-sigma" },
   { label: "Phases", href: "/phases" },
-  { label: "Tech Spec", href: "/tech-spec" },
   { label: "Proposal", href: "/agreement" },
 ];
 
