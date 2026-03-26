@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   Ship, LayoutDashboard, MapPin, BarChart3, PiggyBank,
   Bell, Activity, ChevronLeft, ChevronRight, RefreshCw,
-  Menu, X, Settings,
+  Menu, X, Settings, Monitor,
 } from "lucide-react";
 import { notifications as notifData } from "@/lib/data/dashboard";
 
@@ -14,6 +14,7 @@ const sidebarLinks = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Tracking", href: "/dashboard/tracking", icon: MapPin },
   { label: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
+  { label: "Monitoring", href: "/dashboard/monitoring", icon: Monitor },
   { label: "Savings", href: "/dashboard/savings", icon: PiggyBank },
   { label: "Notifications", href: "/dashboard/notifications", icon: Bell },
 ];

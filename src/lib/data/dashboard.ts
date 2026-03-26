@@ -1,56 +1,4 @@
-// Dashboard mock data — notifications, shipment stats, activity feed
-
-export interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  type: "info" | "warning" | "success" | "error";
-  timestamp: string;
-  read: boolean;
-}
-
-export const notifications: Notification[] = [
-  {
-    id: "n1",
-    title: "Container MSCU-4821937 arrived at Long Beach",
-    message: "Your 40ft refrigerated container has cleared customs and is ready for pickup at Pier J.",
-    type: "success",
-    timestamp: "2026-03-26T08:30:00Z",
-    read: false,
-  },
-  {
-    id: "n2",
-    title: "Section 301 tariff update — List 4A",
-    message: "USTR announced rate adjustments effective April 15. Review impacted HTS codes in the tariff scenario builder.",
-    type: "warning",
-    timestamp: "2026-03-25T14:15:00Z",
-    read: false,
-  },
-  {
-    id: "n3",
-    title: "FTZ #50 storage invoice ready",
-    message: "Monthly storage invoice for Long Beach FTZ available. $2,340 for March 2026.",
-    type: "info",
-    timestamp: "2026-03-24T09:00:00Z",
-    read: true,
-  },
-  {
-    id: "n4",
-    title: "Vessel MSC ANNA ETA updated",
-    message: "New ETA for Ho Chi Minh City → Long Beach route: April 2 (was April 5). 3-day improvement.",
-    type: "info",
-    timestamp: "2026-03-23T16:45:00Z",
-    read: true,
-  },
-  {
-    id: "n5",
-    title: "Withdrawal batch processed",
-    message: "50,000 units released from FTZ #50 at locked rate 6.5%. Duty payment of $1,625 queued.",
-    type: "success",
-    timestamp: "2026-03-22T11:30:00Z",
-    read: true,
-  },
-];
+// Dashboard mock data — shipment stats, activity feed, notifications
 
 export interface ShipmentSummary {
   inTransit: number;
@@ -114,6 +62,7 @@ export interface ShipmentCosts {
   customs: number;
   storage: number;
   total: number;
+  budgeted: number;
   perUnit: string;
   variance: number;
 }
@@ -130,6 +79,7 @@ export interface DashboardShipment {
   voyageNumber?: string;
   status: ShipmentStatus;
   progress: number;
+  currentLocation: string;
   containers: number;
   containerType: string;
   cargoType: "general" | "cold-chain";
@@ -157,6 +107,7 @@ export const dashboardShipments: DashboardShipment[] = [
     voyageNumber: "FA609R",
     status: "delivered",
     progress: 100,
+    currentLocation: "FTZ #50 — Long Beach",
     containers: 2,
     containerType: "40ft Reefer",
     cargoType: "cold-chain",
@@ -201,6 +152,7 @@ export const dashboardShipments: DashboardShipment[] = [
       customs: 385,
       storage: 780,
       total: 16285,
+      budgeted: 16630,
       perUnit: "0.033",
       variance: -2.1,
     },
@@ -217,6 +169,7 @@ export const dashboardShipments: DashboardShipment[] = [
     voyageNumber: "033E",
     status: "in-transit",
     progress: 62,
+    currentLocation: "Pacific Ocean — en route",
     containers: 1,
     containerType: "40ft HC",
     cargoType: "general",
@@ -243,6 +196,7 @@ export const dashboardShipments: DashboardShipment[] = [
       customs: 340,
       storage: 0,
       total: 9900,
+      budgeted: 9753,
       perUnit: "0.045",
       variance: 1.5,
     },
@@ -259,6 +213,7 @@ export const dashboardShipments: DashboardShipment[] = [
     voyageNumber: "0PM4XE",
     status: "delayed",
     progress: 38,
+    currentLocation: "South China Sea — rerouted",
     containers: 3,
     containerType: "40ft HC",
     cargoType: "general",
@@ -292,6 +247,7 @@ export const dashboardShipments: DashboardShipment[] = [
       customs: 720,
       storage: 0,
       total: 26740,
+      budgeted: 25419,
       perUnit: "0.041",
       variance: 5.2,
     },
@@ -308,6 +264,7 @@ export const dashboardShipments: DashboardShipment[] = [
     voyageNumber: "046W",
     status: "customs",
     progress: 88,
+    currentLocation: "Newark CBP — inspection",
     containers: 1,
     containerType: "40ft HC",
     cargoType: "general",
@@ -342,6 +299,7 @@ export const dashboardShipments: DashboardShipment[] = [
       customs: 650,
       storage: 0,
       total: 9290,
+      budgeted: 8948,
       perUnit: "0.052",
       variance: 3.8,
     },
@@ -358,6 +316,7 @@ export const dashboardShipments: DashboardShipment[] = [
     voyageNumber: "1288-009E",
     status: "at-port",
     progress: 92,
+    currentLocation: "Long Beach — awaiting customs",
     containers: 2,
     containerType: "40ft HC",
     cargoType: "general",
@@ -383,6 +342,7 @@ export const dashboardShipments: DashboardShipment[] = [
       customs: 520,
       storage: 0,
       total: 23350,
+      budgeted: 23537,
       perUnit: "0.074",
       variance: -0.8,
     },
@@ -397,6 +357,7 @@ export const dashboardShipments: DashboardShipment[] = [
     carrier: "Maersk",
     status: "booked",
     progress: 0,
+    currentLocation: "Ho Chi Minh City — awaiting pickup",
     containers: 2,
     containerType: "40ft Reefer",
     cargoType: "cold-chain",
@@ -421,6 +382,7 @@ export const dashboardShipments: DashboardShipment[] = [
       customs: 480,
       storage: 0,
       total: 20070,
+      budgeted: 20070,
       perUnit: "0.040",
       variance: 0,
     },
@@ -476,10 +438,10 @@ export const monthlyCosts = [
 ];
 
 export const costCategories = [
-  { name: "Ocean Freight", category: "Ocean Freight", amount: 46000, pct: 55, color: "#00bcd4" },
-  { name: "Duty/Tariff", category: "Duty/Tariff", amount: 20200, pct: 24, color: "#ffc81a" },
-  { name: "Fulfillment", category: "Fulfillment", amount: 13800, pct: 17, color: "#68d391" },
-  { name: "FTZ Storage", category: "FTZ Storage", amount: 3500, pct: 4, color: "#b794f4" },
+  { name: "Ocean Freight", category: "Ocean Freight", amount: 46000, pct: 55, percentage: 55, trend: 2.3, color: "#00bcd4" },
+  { name: "Duty/Tariff", category: "Duty/Tariff", amount: 20200, pct: 24, percentage: 24, trend: -1.5, color: "#ffc81a" },
+  { name: "Fulfillment", category: "Fulfillment", amount: 13800, pct: 17, percentage: 17, trend: 0.8, color: "#68d391" },
+  { name: "FTZ Storage", category: "FTZ Storage", amount: 3500, pct: 4, percentage: 4, trend: 0, color: "#b794f4" },
 ];
 
 export const routePerformance = [
@@ -505,8 +467,183 @@ export function formatCurrency(value: number): string {
   }).format(value);
 }
 
+// ─── Executive Summary ────────────────────────────────────────
+
+export interface ExecutiveSummary {
+  period: string;
+  revenue: { current: number; previous: number; target: number };
+  volume: { containers: number; teus: string; weight: string };
+  savings: { total: number; ftz: number; rateOpt: number };
+  onTime: { rate: number; target: number };
+  topRisks: string[];
+  topWins: string[];
+}
+
+// ─── Notification Types ───────────────────────────────────────
+
+export type NotificationType = "shipment" | "customs" | "cost" | "partner" | "system";
+export type AlertSeverity = "critical" | "warning" | "info";
+
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type: NotificationType;
+  severity: AlertSeverity;
+  timestamp: string;
+  read: boolean;
+  shipmentId?: string;
+  actionLabel?: string;
+}
+
+export const notifications: Notification[] = [
+  {
+    id: "n1",
+    title: "Container MSCU-4821937 arrived at Long Beach",
+    message: "Your 40ft refrigerated container has cleared customs and is ready for pickup at Pier J.",
+    type: "shipment",
+    severity: "info",
+    timestamp: "2026-03-26T08:30:00Z",
+    read: false,
+    shipmentId: "MSCU-4821937",
+    actionLabel: "View Shipment",
+  },
+  {
+    id: "n2",
+    title: "Section 301 tariff update — List 4A",
+    message: "USTR announced rate adjustments effective April 15. Review impacted HTS codes in the tariff scenario builder.",
+    type: "customs",
+    severity: "warning",
+    timestamp: "2026-03-25T14:15:00Z",
+    read: false,
+    actionLabel: "Review HTS Codes",
+  },
+  {
+    id: "n3",
+    title: "FTZ #50 storage invoice ready",
+    message: "Monthly storage invoice for Long Beach FTZ available. $2,340 for March 2026.",
+    type: "cost",
+    severity: "info",
+    timestamp: "2026-03-24T09:00:00Z",
+    read: true,
+    actionLabel: "View Invoice",
+  },
+  {
+    id: "n4",
+    title: "Vessel MSC ANNA ETA updated",
+    message: "New ETA for Ho Chi Minh City → Long Beach route: April 2 (was April 5). 3-day improvement.",
+    type: "shipment",
+    severity: "info",
+    timestamp: "2026-03-23T16:45:00Z",
+    read: true,
+    shipmentId: "MSCU-4821937",
+  },
+  {
+    id: "n5",
+    title: "Withdrawal batch processed",
+    message: "50,000 units released from FTZ #50 at locked rate 6.5%. Duty payment of $1,625 queued.",
+    type: "customs",
+    severity: "info",
+    timestamp: "2026-03-22T11:30:00Z",
+    read: true,
+  },
+  {
+    id: "n6",
+    title: "Weather delay — CMA CGM MARCO POLO",
+    message: "Typhoon avoidance reroute adding ~6 days to Jakarta → LA shipment. New ETA Apr 18.",
+    type: "shipment",
+    severity: "critical",
+    timestamp: "2026-03-23T14:30:00Z",
+    read: false,
+    shipmentId: "CMAU-5529817",
+    actionLabel: "Track Vessel",
+  },
+  {
+    id: "n7",
+    title: "CBP random inspection — HLCU-2194830",
+    message: "Container selected for random CBP exam at Newark. May add 1–2 business days.",
+    type: "customs",
+    severity: "warning",
+    timestamp: "2026-03-26T09:00:00Z",
+    read: false,
+    shipmentId: "HLCU-2194830",
+    actionLabel: "View Details",
+  },
+  {
+    id: "n8",
+    title: "Rate negotiation success — Maersk",
+    message: "New contract rate locked: $4,200/40ft HC HCMC→Savannah, 8% below market.",
+    type: "partner",
+    severity: "info",
+    timestamp: "2026-03-21T10:00:00Z",
+    read: true,
+    actionLabel: "View Contract",
+  },
+  {
+    id: "n9",
+    title: "Platform maintenance scheduled",
+    message: "Scheduled maintenance window: Mar 30, 2–4 AM UTC. Brief disruption expected.",
+    type: "system",
+    severity: "info",
+    timestamp: "2026-03-20T08:00:00Z",
+    read: true,
+  },
+];
+
+// ─── Activity Feed ────────────────────────────────────────────
+
+export type ActivityEventType =
+  | "shipment_created"
+  | "status_change"
+  | "document_uploaded"
+  | "cost_alert"
+  | "customs_cleared"
+  | "delivery_confirmed"
+  | "rate_quote"
+  | "partner_update";
+
+export interface ActivityEvent {
+  id: string;
+  type: ActivityEventType;
+  title: string;
+  description: string;
+  timestamp: string;
+  shipmentId?: string;
+}
+
+export const activityFeed: ActivityEvent[] = [
+  { id: "af1", type: "delivery_confirmed", title: "MSCU-4821937 delivered to FTZ #50", description: "Container cleared CBP and moved to Free Trade Zone warehouse", timestamp: "Mar 26, 08:30", shipmentId: "MSCU-4821937" },
+  { id: "af2", type: "customs_cleared", title: "Customs clearance complete", description: "CBP inspection passed — no holds", timestamp: "Mar 24, 16:00", shipmentId: "MSCU-4821937" },
+  { id: "af3", type: "cost_alert", title: "CMA CGM delay surcharge possible", description: "Weather reroute may trigger $800/container surcharge", timestamp: "Mar 23, 15:00", shipmentId: "CMAU-5529817" },
+  { id: "af4", type: "status_change", title: "OOLU-7391024 passed Singapore", description: "Container transshipped at Singapore, now on OOCL TOKYO", timestamp: "Mar 18, 12:00", shipmentId: "OOLU-7391024" },
+  { id: "af5", type: "document_uploaded", title: "ISF filed for EISU-6017293", description: "Importer Security Filing submitted to CBP", timestamp: "Mar 15, 09:15", shipmentId: "EISU-6017293" },
+  { id: "af6", type: "shipment_created", title: "New booking: Maersk HCMC → Savannah", description: "2x 40ft Reefer containers, cold chain. ETD Apr 10.", timestamp: "Mar 24, 14:30", shipmentId: "MAEU-9304712" },
+  { id: "af7", type: "rate_quote", title: "Rate locked: Maersk HCMC → Savannah", description: "$4,200/40ft HC — 8% below market rate", timestamp: "Mar 21, 10:00" },
+  { id: "af8", type: "partner_update", title: "FTZ #50 capacity update", description: "Long Beach FTZ at 72% capacity — 280 pallet positions available", timestamp: "Mar 20, 08:00" },
+];
+
+// ─── Savings Entries ──────────────────────────────────────────
+
+export interface SavingsEntry {
+  type: string;
+  source: string;
+  description: string;
+  amount: number;
+}
+
+export const savingsEntries: SavingsEntry[] = [
+  { type: "ftz", source: "FTZ Zone 202 (LA)", description: "Inverted tariff benefit on Vietnam electronics — HTS 8542.31", amount: 87400 },
+  { type: "ftz", source: "FTZ Zone 50 (Long Beach)", description: "Weekly entry savings on Thai apparel — reduced filing fees", amount: 42300 },
+  { type: "ftz", source: "FTZ Zone 5 (Seattle)", description: "Cold chain duty deferral for Alaska seafood cargo", amount: 12800 },
+  { type: "rate-negotiation", source: "Maersk Contract", description: "Annual contract rate 8% below spot market average", amount: 34200 },
+  { type: "rate-negotiation", source: "MSC Volume Discount", description: "Q1 volume tier discount on HCMC→Long Beach lane", amount: 18600 },
+  { type: "route-optimization", source: "Singapore Transshipment", description: "Switched from direct routing to hub transshipment — 12% cost reduction", amount: 22100 },
+  { type: "route-optimization", source: "Consolidated Drayage", description: "Batched pickup for 3 containers — single truck dispatch", amount: 4800 },
+  { type: "consolidation", source: "LCL Consolidation", description: "Combined 4 LCL shipments into 1 FCL — Bangkok origin", amount: 8900 },
+  { type: "duty-drawback", source: "Re-export Drawback", description: "Duty drawback claim on re-exported components (99% recovery)", amount: 15200 },
+  { type: "duty-drawback", source: "Manufacturing Drawback", description: "Section 1313(b) drawback on imported raw materials", amount: 6400 },
+];
+
 // Aliases for component compatibility
-export type ActivityEvent = ActivityItem;
 export type CostCategory = typeof costCategories[number];
-export interface ExecutiveSummary { activeShipments: number; monthlyRevenue: number; avgLandedCost: number; onTimeRate: number; revenueChange: number; landedCostChange: number; }
-export type CargoType = DashboardShipment['cargoType'];
+export type CargoType = DashboardShipment["cargoType"];
