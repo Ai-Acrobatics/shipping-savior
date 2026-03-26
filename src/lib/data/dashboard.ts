@@ -464,3 +464,49 @@ export const recentActivity: ActivityItem[] = [
     category: "shipment",
   },
 ];
+
+// Analytics data
+export const monthlyCosts = [
+  { month: "Oct", freight: 42000, duty: 18500, ftz: 3200, fulfillment: 12000, insurance: 2100, drayage: 4800, storage: 1600, total: 84200, avgPerUnit: 5.12, shipments: 4 },
+  { month: "Nov", freight: 45000, duty: 19200, ftz: 3400, fulfillment: 13500, insurance: 2250, drayage: 5100, storage: 1700, total: 90150, avgPerUnit: 4.98, shipments: 5 },
+  { month: "Dec", freight: 38000, duty: 16800, ftz: 2900, fulfillment: 11000, insurance: 1900, drayage: 4300, storage: 1450, total: 76350, avgPerUnit: 5.25, shipments: 3 },
+  { month: "Jan", freight: 48000, duty: 21000, ftz: 3600, fulfillment: 14200, insurance: 2400, drayage: 5400, storage: 1800, total: 96400, avgPerUnit: 4.85, shipments: 6 },
+  { month: "Feb", freight: 44000, duty: 19800, ftz: 3300, fulfillment: 13000, insurance: 2200, drayage: 5000, storage: 1650, total: 88950, avgPerUnit: 4.92, shipments: 5 },
+  { month: "Mar", freight: 46000, duty: 20200, ftz: 3500, fulfillment: 13800, insurance: 2300, drayage: 5200, storage: 1750, total: 92750, avgPerUnit: 4.82, shipments: 4 },
+];
+
+export const costCategories = [
+  { name: "Ocean Freight", category: "Ocean Freight", amount: 46000, pct: 55, color: "#00bcd4" },
+  { name: "Duty/Tariff", category: "Duty/Tariff", amount: 20200, pct: 24, color: "#ffc81a" },
+  { name: "Fulfillment", category: "Fulfillment", amount: 13800, pct: 17, color: "#68d391" },
+  { name: "FTZ Storage", category: "FTZ Storage", amount: 3500, pct: 4, color: "#b794f4" },
+];
+
+export const routePerformance = [
+  { route: "HCMC → Long Beach", transitDays: 18, onTime: 92, onTimeRate: 92, cost: 4200, volume: 12, avgRate: 4200 },
+  { route: "Bangkok → Seattle", transitDays: 22, onTime: 88, onTimeRate: 88, cost: 3800, volume: 8, avgRate: 3800 },
+  { route: "Jakarta → Savannah", transitDays: 28, onTime: 85, onTimeRate: 85, cost: 3500, volume: 5, avgRate: 3500 },
+  { route: "Phnom Penh → Oakland", transitDays: 24, onTime: 90, onTimeRate: 90, cost: 4000, volume: 6, avgRate: 4000 },
+];
+
+export const carrierMetrics = [
+  { carrier: "Maersk", reliability: 94, cost: 78, speed: 88, coverage: 95, support: 85, onTimeRate: 94, rating: 4.5, avgRate: 4200, totalShipments: 12 },
+  { carrier: "MSC", reliability: 89, cost: 85, speed: 82, coverage: 92, support: 80, onTimeRate: 89, rating: 4.2, avgRate: 3800, totalShipments: 8 },
+  { carrier: "CMA CGM", reliability: 91, cost: 80, speed: 85, coverage: 88, support: 82, onTimeRate: 91, rating: 4.3, avgRate: 4000, totalShipments: 6 },
+  { carrier: "COSCO", reliability: 86, cost: 92, speed: 78, coverage: 85, support: 75, onTimeRate: 86, rating: 3.8, avgRate: 3500, totalShipments: 5 },
+];
+
+export function formatCurrency(value: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+// Aliases for component compatibility
+export type ActivityEvent = ActivityItem;
+export type CostCategory = typeof costCategories[number];
+export interface ExecutiveSummary { activeShipments: number; monthlyRevenue: number; avgLandedCost: number; onTimeRate: number; revenueChange: number; landedCostChange: number; }
+export type CargoType = DashboardShipment['cargoType'];

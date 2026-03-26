@@ -581,7 +581,7 @@ export default function KnowledgeBase() {
   const [activeTab, setActiveTab] = useState<Tab>("glossary");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const tabs: { id: Tab; label: string; icon: React.ElementType; count: number }[] = [
+  const tabs: { id: Tab; label: string; icon: any; count: number }[] = [
     { id: "glossary", label: "Glossary", icon: BookOpen, count: glossaryTerms.length },
     { id: "incoterms", label: "Incoterms", icon: Globe, count: incoterms.length },
     { id: "compliance", label: "Compliance Guides", icon: Scale, count: complianceGuides.length },
