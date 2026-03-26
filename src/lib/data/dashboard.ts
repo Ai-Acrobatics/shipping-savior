@@ -653,17 +653,17 @@ export const costCategories = [
 ];
 
 export const routePerformance = [
-  { route: "HCMC to Long Beach", transitDays: 18, onTime: 92, onTimeRate: 92, cost: 4200, volume: 12, avgRate: 4200 },
-  { route: "Bangkok to Seattle", transitDays: 22, onTime: 88, onTimeRate: 88, cost: 3800, volume: 8, avgRate: 3800 },
-  { route: "Jakarta to Savannah", transitDays: 28, onTime: 85, onTimeRate: 85, cost: 3500, volume: 5, avgRate: 3500 },
-  { route: "Phnom Penh to Oakland", transitDays: 24, onTime: 90, onTimeRate: 90, cost: 4000, volume: 6, avgRate: 4000 },
+  { route: "HCMC to Long Beach", origin: "Ho Chi Minh City", destination: "Long Beach, CA", transitDays: 18, avgTransitDays: 18, onTime: 92, onTimeRate: 92, cost: 4200, avgCost: 4200, volume: 12, shipments: 12, avgRate: 4200, trend: 3.2 },
+  { route: "Bangkok to Seattle", origin: "Bangkok", destination: "Seattle, WA", transitDays: 22, avgTransitDays: 22, onTime: 88, onTimeRate: 88, cost: 3800, avgCost: 3800, volume: 8, shipments: 8, avgRate: 3800, trend: -1.5 },
+  { route: "Jakarta to Savannah", origin: "Jakarta", destination: "Savannah, GA", transitDays: 28, avgTransitDays: 28, onTime: 85, onTimeRate: 85, cost: 3500, avgCost: 3500, volume: 5, shipments: 5, avgRate: 3500, trend: 0 },
+  { route: "Phnom Penh to Oakland", origin: "Phnom Penh", destination: "Oakland, CA", transitDays: 24, avgTransitDays: 24, onTime: 90, onTimeRate: 90, cost: 4000, avgCost: 4000, volume: 6, shipments: 6, avgRate: 4000, trend: 2.1 },
 ];
 
 export const carrierMetrics = [
-  { carrier: "Maersk", reliability: 94, cost: 78, speed: 88, coverage: 95, support: 85, onTimeRate: 94, rating: 4.5, avgRate: 4200, totalShipments: 12 },
-  { carrier: "MSC", reliability: 89, cost: 85, speed: 82, coverage: 92, support: 80, onTimeRate: 89, rating: 4.2, avgRate: 3800, totalShipments: 8 },
-  { carrier: "CMA CGM", reliability: 91, cost: 80, speed: 85, coverage: 88, support: 82, onTimeRate: 91, rating: 4.3, avgRate: 4000, totalShipments: 6 },
-  { carrier: "COSCO", reliability: 86, cost: 92, speed: 78, coverage: 85, support: 75, onTimeRate: 86, rating: 3.8, avgRate: 3500, totalShipments: 5 },
+  { carrier: "Maersk", reliability: 94, cost: 78, speed: 88, coverage: 95, support: 85, onTimeRate: 94, rating: 4.5, avgRate: 4200, totalShipments: 12, shipments: 12 },
+  { carrier: "MSC", reliability: 89, cost: 85, speed: 82, coverage: 92, support: 80, onTimeRate: 89, rating: 4.2, avgRate: 3800, totalShipments: 8, shipments: 8 },
+  { carrier: "CMA CGM", reliability: 91, cost: 80, speed: 85, coverage: 88, support: 82, onTimeRate: 91, rating: 4.3, avgRate: 4000, totalShipments: 6, shipments: 6 },
+  { carrier: "COSCO", reliability: 86, cost: 92, speed: 78, coverage: 85, support: 75, onTimeRate: 86, rating: 3.8, avgRate: 3500, totalShipments: 5, shipments: 5 },
 ];
 
 // ─── Savings Data ───────────────────────────────────────────
