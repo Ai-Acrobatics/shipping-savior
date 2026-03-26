@@ -13,7 +13,7 @@ import {
   Ship, Globe, Calculator, Shield, BarChart3, FileText,
   Anchor, Container, Route, Database, Map, Truck,
   ArrowRight, Check, Zap, TrendingUp, Clock, DollarSign,
-  LayoutDashboard,
+  LayoutDashboard, Brain, Bot, Radar, FileCheck,
 } from "lucide-react";
 
 const platformFeatures = [
@@ -147,26 +147,37 @@ const roadmapPhases = [
   },
 ];
 
+const aiAgentsMini = [
+  { name: "Tariff Intelligence", icon: Radar, gradient: "from-ocean-600 to-indigo-600", desc: "Monitors HTS changes & alerts on duty rate shifts" },
+  { name: "Route Optimization", icon: Route, gradient: "from-cargo-500 to-orange-600", desc: "Finds best backhaul deals & carrier schedules" },
+  { name: "FTZ Strategy", icon: Shield, gradient: "from-emerald-500 to-teal-600", desc: "Models withdrawal schedules & optimizes duty timing" },
+  { name: "Compliance Monitor", icon: FileCheck, gradient: "from-purple-500 to-violet-600", desc: "Tracks ISF deadlines & flags documentation gaps" },
+  { name: "Cost Analysis", icon: TrendingUp, gradient: "from-blue-500 to-cyan-600", desc: "Tracks landed costs & identifies margin optimization" },
+];
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       <Header />
 
       {/* ===== HERO ===== */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden hero-gradient">
-        {/* Decorative blobs */}
-        <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-ocean-200/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-32 w-[500px] h-[500px] bg-cargo-200/20 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-ocean-100/40 rounded-full blur-3xl" />
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden hero-gradient grain-overlay">
+        {/* Dot grid pattern */}
+        <div className="absolute inset-0 pattern-dots-hero" />
+
+        {/* Animated gradient orbs */}
+        <div className="orb top-1/4 -left-32 w-[500px] h-[500px] bg-ocean-300/30 animate-orb-float-1" />
+        <div className="orb bottom-1/4 -right-32 w-[400px] h-[400px] bg-indigo-300/25 animate-orb-float-2" />
+        <div className="orb top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-ocean-200/20 animate-orb-float-3" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-navy-200/60 rounded-full px-5 py-2.5 mb-8 shadow-soft">
-            <Zap className="w-4 h-4 text-ocean-500" />
-            <span className="text-sm font-medium text-navy-600">International Logistics Platform</span>
+          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-ocean-200/60 rounded-full px-5 py-2.5 mb-8 shadow-soft">
+            <Zap className="w-4 h-4 text-ocean-600" />
+            <span className="text-sm font-medium text-navy-600">AI-Powered International Logistics Platform</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-navy-900">
-            <span className="gradient-text-premium">Shipping</span>{" "}
+          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-6 text-navy-900">
+            <span className="gradient-text-hero">Shipping</span>{" "}
             <span>Savior</span>
           </h1>
 
@@ -174,7 +185,7 @@ export default function Home() {
             Turn manual freight brokerage into{" "}
             <span className="text-ocean-600 font-semibold">data-driven operations</span>.
             Calculators, route comparison, FTZ strategy, and tariff optimization
-            — all in one platform.
+            — all powered by autonomous AI agents.
           </p>
 
           <p className="text-lg text-navy-400 max-w-2xl mx-auto mb-10">
@@ -187,9 +198,10 @@ export default function Home() {
               Try Live Calculators
               <ArrowRight className="w-5 h-5" />
             </a>
-            <a href="#platform" className="btn-secondary px-8 py-4 text-base">
-              Explore Platform
-            </a>
+            <Link href="/agreement" className="btn-secondary px-8 py-4 text-base">
+              <FileText className="w-5 h-5" />
+              View Full Proposal
+            </Link>
           </div>
 
           {/* Stats bar */}
@@ -200,20 +212,97 @@ export default function Home() {
               { label: "FTZ Zones", value: "260+", icon: Shield },
               { label: "API Cost", value: "$0", icon: DollarSign },
             ].map((stat) => (
-              <div key={stat.label} className="bg-white/70 backdrop-blur-sm border border-navy-200/50 rounded-xl p-5 shadow-soft hover:shadow-card transition-shadow">
+              <div key={stat.label} className="group bg-white/70 backdrop-blur-sm border border-navy-200/50 rounded-xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all duration-300">
                 <stat.icon className="w-5 h-5 text-ocean-500 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-navy-900">
                   <AnimatedCounter value={stat.value} />
                 </div>
                 <div className="text-xs font-medium text-navy-400 mt-1">{stat.label}</div>
+                {/* Accent line */}
+                <div className="mt-3 h-0.5 w-8 mx-auto rounded-full bg-gradient-to-r from-ocean-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Wave divider at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 z-10">
+          <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+            <path d="M0,32L80,26.7C160,21,320,11,480,10.7C640,11,800,21,960,26.7C1120,32,1280,32,1360,32L1440,32L1440,60L0,60Z" fill="white" />
+          </svg>
+        </div>
+      </section>
+
+      {/* ===== TRUSTED BY / SOCIAL PROOF ===== */}
+      <section className="py-14 px-6 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <p className="text-sm font-medium text-navy-400 tracking-wider uppercase">Built For Industry Leaders</p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14 opacity-50">
+            {["Cold Chain Exports", "SE Asia Imports", "FTZ Operations", "Freight Brokerage", "3PL Management"].map((name) => (
+              <div key={name} className="flex items-center gap-2 text-navy-400">
+                <Ship className="w-4 h-4" />
+                <span className="text-sm font-semibold tracking-wide">{name}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* ===== AI-POWERED AGENTS MINI SECTION ===== */}
+      <section className="py-20 px-6 section-alt">
+        <div className="max-w-6xl mx-auto">
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-200 rounded-full px-5 py-2.5 mb-5 shadow-soft">
+                <Bot className="w-4 h-4 text-indigo-600" />
+                <span className="text-sm font-medium text-indigo-700">Autonomous AI Agents</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-5">
+                Powered by <span className="gradient-text-hero">5 AI Agents</span>
+              </h2>
+              <p className="text-lg text-navy-500 max-w-2xl mx-auto">
+                Autonomous intelligence that monitors, analyzes, and optimizes
+                your logistics operations 24/7.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+            {aiAgentsMini.map((agent, i) => (
+              <ScrollReveal key={agent.name} delay={i * 80}>
+                <div className="gradient-border bg-white rounded-2xl p-5 text-center h-full hover:shadow-premium transition-all duration-300 group">
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${agent.gradient} flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
+                    <agent.icon className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-sm font-bold text-navy-900 mb-1.5">{agent.name}</h3>
+                  <p className="text-xs text-navy-500 leading-relaxed">{agent.desc}</p>
+                  <div className="flex items-center justify-center gap-1.5 mt-3">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <span className="text-[10px] text-emerald-600 font-medium">Active</span>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          <ScrollReveal delay={400}>
+            <div className="text-center">
+              <Link
+                href="/agreement"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-ocean-600 hover:text-indigo-600 transition-colors"
+              >
+                See full AI agent architecture
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* ===== PLATFORM FEATURES ===== */}
-      <section id="platform" className="py-28 px-6 bg-white">
+      <section id="platform" className="py-28 px-6 bg-white relative wave-divider">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-20">
@@ -231,7 +320,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {platformFeatures.map((feature, i) => (
               <ScrollReveal key={feature.title} delay={i * 100}>
-                <div className="group bg-white border border-navy-100 rounded-2xl p-7 h-full hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 card-shine">
+                <div className="group gradient-border bg-white rounded-2xl p-7 h-full hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 card-shine">
                   <div className={`w-14 h-14 rounded-2xl ${feature.bgLight} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
                     <feature.icon className={`w-7 h-7 ${feature.iconColor}`} />
                   </div>
@@ -245,7 +334,7 @@ export default function Home() {
       </section>
 
       {/* ===== CALCULATOR ===== */}
-      <section id="calculators" className="py-28 px-6 bg-navy-50">
+      <section id="calculators" className="py-28 px-6 bg-navy-50 relative wave-divider-white">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-14">
@@ -272,7 +361,7 @@ export default function Home() {
       </section>
 
       {/* ===== IMPORT PIPELINE ===== */}
-      <section id="routes" className="py-28 px-6 bg-white">
+      <section id="routes" className="py-28 px-6 bg-white relative wave-divider">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-20">
@@ -289,17 +378,17 @@ export default function Home() {
 
           {/* Alternating timeline layout */}
           <div className="relative">
-            {/* Center line */}
-            <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-navy-200" />
+            {/* Center line with gradient */}
+            <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-ocean-500 via-indigo-500 to-cargo-500" />
 
             <div className="space-y-8 lg:space-y-12">
               {importSteps.map((step, i) => (
                 <ScrollReveal key={step.step} delay={i * 100} direction={i % 2 === 0 ? "left" : "right"}>
                   <div className={`lg:flex items-center gap-8 ${i % 2 === 0 ? "" : "lg:flex-row-reverse"}`}>
                     <div className={`flex-1 ${i % 2 === 0 ? "lg:text-right" : "lg:text-left"}`}>
-                      <div className="bg-white border border-navy-100 rounded-2xl p-6 shadow-card hover:shadow-card-hover transition-all duration-300 inline-block text-left">
+                      <div className="gradient-border bg-white rounded-2xl p-6 shadow-card hover:shadow-card-hover transition-all duration-300 inline-block text-left">
                         <div className="flex items-center gap-3 mb-3">
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-ocean-500 to-ocean-600 flex items-center justify-center shadow-sm">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-ocean-500 to-indigo-600 flex items-center justify-center shadow-sm">
                             <step.icon className="w-5 h-5 text-white" />
                           </div>
                           <div>
@@ -312,7 +401,7 @@ export default function Home() {
                     </div>
 
                     {/* Center dot */}
-                    <div className="hidden lg:flex items-center justify-center w-12 h-12 rounded-full bg-white border-2 border-ocean-500 shadow-md flex-shrink-0 z-10">
+                    <div className="hidden lg:flex items-center justify-center w-12 h-12 rounded-full bg-white border-2 border-ocean-500 shadow-md flex-shrink-0 z-10 hover:scale-110 transition-transform">
                       <span className="text-sm font-bold text-ocean-600">{step.step}</span>
                     </div>
 
@@ -349,7 +438,7 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {hiddenCosts.map((cost, i) => (
               <ScrollReveal key={cost.name} delay={i * 60}>
-                <div className="bg-white border border-red-100 rounded-xl p-5 hover:shadow-card hover:border-red-200 transition-all duration-300">
+                <div className="bg-white border border-red-100 rounded-xl p-5 hover:shadow-card hover:border-red-200 hover:-translate-y-0.5 transition-all duration-300">
                   <div className="text-sm font-semibold text-navy-800">{cost.name}</div>
                   <div className="text-xl font-bold text-red-500 mt-1">{cost.range}</div>
                   <div className="text-xs text-navy-400 mt-2">{cost.description}</div>
@@ -432,7 +521,7 @@ export default function Home() {
       </ParallaxSection>
 
       {/* ===== VISUALIZATION LAYER ===== */}
-      <section id="visualization" className="py-28 px-6 bg-navy-50">
+      <section id="visualization" className="py-28 px-6 bg-navy-50 relative wave-divider-white">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-14">
@@ -442,7 +531,7 @@ export default function Home() {
               </div>
               <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-5">
                 Route Maps, Charts &amp;{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-purple-600 to-indigo-500 bg-clip-text text-transparent">
                   Port Analysis
                 </span>
               </h2>
@@ -484,7 +573,7 @@ export default function Home() {
       </section>
 
       {/* ===== ARCHITECTURE / TECH STACK ===== */}
-      <section id="architecture" className="py-28 px-6 bg-white">
+      <section id="architecture" className="py-28 px-6 bg-white relative wave-divider">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-14">
@@ -502,7 +591,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-14">
             {techStack.map((tech, i) => (
               <ScrollReveal key={tech.name} delay={i * 80}>
-                <div className="bg-white border border-navy-100 rounded-xl p-5 hover:shadow-card hover:border-navy-200 transition-all duration-300">
+                <div className="gradient-border bg-white rounded-xl p-5 hover:shadow-card hover:-translate-y-0.5 transition-all duration-300">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
                       <Check className="w-3.5 h-3.5 text-emerald-600" />
@@ -517,8 +606,8 @@ export default function Home() {
 
           {/* Architecture diagram */}
           <ScrollReveal>
-            <div className="bg-navy-50 border border-navy-200 rounded-2xl p-8 font-mono text-xs text-navy-600 overflow-x-auto">
-              <div className="text-sm font-semibold text-ocean-600 mb-4 font-sans">System Architecture</div>
+            <div className="bg-gradient-to-br from-navy-900 to-navy-800 border border-navy-700 rounded-2xl p-8 font-mono text-xs text-navy-300 overflow-x-auto shadow-premium">
+              <div className="text-sm font-semibold text-ocean-400 mb-4 font-sans">System Architecture</div>
               <pre className="whitespace-pre leading-relaxed">{`
 ┌─────────────────────────────────────────────────────────────┐
 │  BROWSER                                                     │
@@ -554,7 +643,7 @@ export default function Home() {
       </section>
 
       {/* ===== ROADMAP ===== */}
-      <section id="roadmap" className="py-28 px-6 bg-navy-50">
+      <section id="roadmap" className="py-28 px-6 bg-navy-50 relative">
         <div className="max-w-5xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-20">
@@ -571,17 +660,17 @@ export default function Home() {
 
           {/* Timeline layout */}
           <div className="relative">
-            {/* Vertical line */}
-            <div className="absolute left-6 md:left-8 top-0 bottom-0 w-0.5 bg-navy-200" />
+            {/* Vertical line with gradient */}
+            <div className="absolute left-6 md:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-ocean-500 via-purple-500 to-teal-500" />
 
             <div className="space-y-8">
               {roadmapPhases.map((phase, i) => (
                 <ScrollReveal key={phase.phase} delay={i * 100}>
                   <div className="relative pl-16 md:pl-20">
                     {/* Timeline dot */}
-                    <div className={`absolute left-4 md:left-6 top-6 w-4 h-4 rounded-full ${phase.dotColor} ring-4 ring-white shadow-sm`} />
+                    <div className={`absolute left-4 md:left-6 top-6 w-5 h-5 rounded-full ${phase.dotColor} ring-4 ring-white shadow-md ${phase.status === "In Progress" ? "animate-pulse" : ""}`} />
 
-                    <div className={`bg-white border border-navy-100 rounded-2xl p-6 shadow-soft hover:shadow-card transition-all duration-300 border-l-4 ${phase.color}`}>
+                    <div className={`bg-white border border-navy-100 rounded-2xl p-6 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all duration-300 border-l-4 ${phase.color}`}>
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
                           <span className="text-2xl font-bold text-navy-200">
@@ -668,7 +757,7 @@ export default function Home() {
                 title: "Backhaul Intelligence",
                 description:
                   "Backhaul pricing is invisible in every existing platform. Surfacing return-leg pricing advantages as a selection criterion is unique and valuable.",
-                gradient: "from-ocean-500 to-blue-600",
+                gradient: "from-ocean-500 to-indigo-600",
                 bgLight: "bg-ocean-50",
               },
               {
@@ -681,7 +770,7 @@ export default function Home() {
               },
             ].map((item, i) => (
               <ScrollReveal key={item.title} delay={i * 150}>
-                <div className="gradient-border bg-white rounded-2xl p-8 text-center h-full hover:shadow-premium transition-all duration-300">
+                <div className="gradient-border bg-white rounded-2xl p-8 text-center h-full hover:shadow-premium hover:-translate-y-1 transition-all duration-300">
                   <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mx-auto mb-6 shadow-lg`}>
                     <item.icon className="w-8 h-8 text-white" />
                   </div>
@@ -694,11 +783,34 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== VIEW FULL PROPOSAL CTA ===== */}
+      <section className="py-20 px-6 bg-gradient-to-r from-ocean-600 via-indigo-600 to-ocean-700">
+        <div className="max-w-3xl mx-auto text-center">
+          <ScrollReveal>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to See the Full Platform?
+            </h2>
+            <p className="text-lg text-ocean-100 mb-8 max-w-xl mx-auto">
+              View the complete service agreement with AI agent architecture,
+              app mockups, pricing, and delivery timeline.
+            </p>
+            <Link
+              href="/agreement"
+              className="inline-flex items-center gap-2 bg-white text-ocean-700 font-bold px-8 py-4 rounded-xl text-base hover:bg-ocean-50 transition-all hover:scale-[1.02] shadow-premium"
+            >
+              <FileText className="w-5 h-5" />
+              View Full Proposal
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* ===== FOOTER ===== */}
       <footer className="py-14 px-6 border-t border-navy-100 bg-white">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-ocean-500 to-ocean-700 flex items-center justify-center shadow-sm">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-ocean-500 to-indigo-600 flex items-center justify-center shadow-sm">
               <Ship className="w-4 h-4 text-white" />
             </div>
             <span className="font-bold text-navy-900">
@@ -706,7 +818,7 @@ export default function Home() {
             </span>
           </div>
           <div className="text-sm text-navy-400">
-            International Logistics Platform — Built with AI Acrobatics
+            AI-Powered International Logistics Platform — Built with AI Acrobatics
           </div>
           <div className="text-xs text-navy-400">
             Tariff data for informational purposes only. Verify at hts.usitc.gov

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Ship, Menu, X, LayoutDashboard } from "lucide-react";
+import { Ship, Menu, X, LayoutDashboard, FileText } from "lucide-react";
 
 const navLinks = [
   { label: "Platform", href: "/#platform" },
@@ -12,6 +12,7 @@ const navLinks = [
   { label: "Architecture", href: "/#architecture" },
   { label: "Roadmap", href: "/#roadmap" },
   { label: "Knowledge Base", href: "/knowledge-base" },
+  { label: "Proposal", href: "/agreement" },
 ];
 
 export default function Header() {
@@ -33,8 +34,8 @@ export default function Header() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-ocean-500 to-ocean-700 flex items-center justify-center group-hover:scale-105 transition-transform shadow-md">
+        <a href="/" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-ocean-500 to-indigo-600 flex items-center justify-center group-hover:scale-105 transition-transform shadow-md">
             <Ship className="w-5 h-5 text-white" />
           </div>
           <span className="text-xl font-bold tracking-tight text-navy-900">
@@ -42,28 +43,37 @@ export default function Header() {
           </span>
         </a>
 
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-7">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm text-navy-500 hover:text-ocean-600 transition-colors font-medium"
+              className={`relative text-sm font-medium transition-colors group ${
+                link.label === "Proposal"
+                  ? "text-ocean-600 hover:text-indigo-600"
+                  : "text-navy-500 hover:text-ocean-600"
+              }`}
             >
               {link.label}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-ocean-500 to-indigo-500 rounded-full transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
         </nav>
 
         <Link
           href="/dashboard"
-          className="hidden md:inline-flex items-center gap-2 text-sm btn-primary px-4 py-2 rounded-xl"
+          className="hidden lg:inline-flex items-center gap-2 text-sm font-semibold text-white px-5 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg"
+          style={{
+            background: "linear-gradient(135deg, #1a56db, #6366f1)",
+            boxShadow: "0 4px 15px rgba(37, 99, 235, 0.3)",
+          }}
         >
           <LayoutDashboard className="w-4 h-4" />
           Live Demo
         </Link>
 
         <button
-          className="md:hidden text-navy-600"
+          className="lg:hidden text-navy-600"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X /> : <Menu />}
@@ -71,14 +81,19 @@ export default function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden bg-white border border-navy-100 shadow-card mt-2 mx-4 rounded-xl p-4">
+        <div className="lg:hidden bg-white border border-navy-100 shadow-card mt-2 mx-4 rounded-xl p-4">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="block py-2.5 text-sm text-navy-600 hover:text-ocean-600 font-medium"
+              className={`block py-2.5 text-sm font-medium ${
+                link.label === "Proposal"
+                  ? "text-ocean-600"
+                  : "text-navy-600 hover:text-ocean-600"
+              }`}
               onClick={() => setMobileOpen(false)}
             >
+              {link.label === "Proposal" && <FileText className="w-4 h-4 inline mr-2" />}
               {link.label}
             </a>
           ))}

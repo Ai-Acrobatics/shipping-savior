@@ -41,7 +41,10 @@ body {
     @apply bg-gradient-to-r from-cargo-600 to-cargo-400 bg-clip-text text-transparent;
   }
   .gradient-text-premium {
-    @apply bg-gradient-to-r from-navy-800 via-ocean-600 to-ocean-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-ocean-700 via-ocean-500 to-indigo-500 bg-clip-text text-transparent;
+  }
+  .gradient-text-hero {
+    @apply bg-gradient-to-r from-ocean-600 via-indigo-500 to-ocean-500 bg-clip-text text-transparent;
   }
 
   /* Section backgrounds */
@@ -54,12 +57,16 @@ body {
   .section-blue {
     @apply bg-gradient-to-br from-navy-50 via-ocean-50 to-white;
   }
+  .section-alt {
+    background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 50%, #eef6ff 100%);
+  }
 
   /* Premium input styling */
   .input-light {
     @apply w-full bg-white border border-navy-200 rounded-lg px-3 py-2.5 text-sm text-navy-900
            placeholder:text-navy-400
-           focus:outline-none focus:ring-2 focus:ring-ocean-500/30 focus:border-ocean-500
+           focus:outline-none focus:ring-2 focus:ring-ocean-500/40 focus:border-ocean-500
+           focus:shadow-glow-blue
            transition-all duration-200;
   }
 }
@@ -104,17 +111,34 @@ html {
   transform: translateZ(-1px) scale(1.5);
 }
 
-/* Hero gradient animation */
+/* Hero gradient animation — richer, more vibrant */
 .hero-gradient {
-  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 25%, #e0f2fe 50%, #f0f9ff 75%, #ffffff 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #eef6ff 20%, #e0e7ff 40%, #d9ecff 60%, #eef6ff 80%, #ffffff 100%);
   background-size: 200% 200%;
   animation: gradientShift 8s ease-in-out infinite;
 }
 
+/* Dot grid pattern for hero */
+.pattern-dots-hero {
+  background-image: radial-gradient(circle, rgba(37, 99, 235, 0.07) 1.2px, transparent 1.2px);
+  background-size: 32px 32px;
+}
+
 /* Subtle pattern for sections */
 .pattern-dots {
-  background-image: radial-gradient(circle, #e2e8f0 1px, transparent 1px);
+  background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px);
   background-size: 24px 24px;
+}
+
+/* Grain texture overlay */
+.grain-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Card shine effect on hover */
@@ -149,23 +173,28 @@ html {
 
 /* Frosted header */
 .header-frosted {
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(200%);
+  -webkit-backdrop-filter: blur(16px) saturate(200%);
 }
 
-/* Premium button styles */
+/* Premium button styles — gradient with glow */
 .btn-primary {
-  @apply inline-flex items-center gap-2 bg-gradient-to-r from-ocean-600 to-ocean-500
+  @apply inline-flex items-center gap-2
          text-white font-semibold px-6 py-3 rounded-xl
-         hover:from-ocean-500 hover:to-ocean-400
-         transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
-         shadow-ocean-500/20;
+         transition-all duration-300 hover:scale-[1.02]
+         shadow-lg;
+  background: linear-gradient(135deg, #1a56db, #6366f1);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #2563eb, #818cf8);
+  box-shadow: 0 6px 25px rgba(37, 99, 235, 0.4);
 }
 
 .btn-secondary {
   @apply inline-flex items-center gap-2 bg-white border border-navy-200
          text-navy-700 font-semibold px-6 py-3 rounded-xl
-         hover:bg-navy-50 hover:border-navy-300
+         hover:bg-navy-50 hover:border-ocean-300
          transition-all duration-300 hover:shadow-card;
 }
 
@@ -181,7 +210,8 @@ html {
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, #0ea5e9, #f59e0b, #10b981);
+  background: linear-gradient(135deg, #2563eb, #6366f1, #818cf8, #2563eb);
+  background-size: 300% 300%;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -190,6 +220,74 @@ html {
 }
 .gradient-border:hover::before {
   opacity: 1;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+/* Section wave divider */
+.wave-divider {
+  position: relative;
+}
+.wave-divider::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60'%3E%3Cpath fill='%23f8fafc' d='M0,32L80,26.7C160,21,320,11,480,10.7C640,11,800,21,960,26.7C1120,32,1280,32,1360,32L1440,32L1440,60L1360,60C1280,60,1120,60,960,60C800,60,640,60,480,60C320,60,160,60,80,60L0,60Z'/%3E%3C/svg%3E") no-repeat bottom center;
+  background-size: cover;
+  z-index: 1;
+}
+
+.wave-divider-white::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60'%3E%3Cpath fill='%23ffffff' d='M0,32L80,26.7C160,21,320,11,480,10.7C640,11,800,21,960,26.7C1120,32,1280,32,1360,32L1440,32L1440,60L1360,60C1280,60,1120,60,960,60C800,60,640,60,480,60C320,60,160,60,80,60L0,60Z'/%3E%3C/svg%3E") no-repeat bottom center;
+  background-size: cover;
+  z-index: 1;
+}
+
+/* Section heading accent underline */
+.heading-accent {
+  position: relative;
+  display: inline-block;
+}
+.heading-accent::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #2563eb, #6366f1);
+}
+
+/* Animated gradient orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+/* Status pulse indicator */
+.status-pulse {
+  position: relative;
+}
+.status-pulse::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: inherit;
+  animation: glowPulse 2s ease-in-out infinite;
+  opacity: 0.5;
 }
 
 /* Ensure all text readable in light theme */
@@ -201,4 +299,35 @@ html {
 }
 .text-readable-muted {
   color: #64748b;
+}
+
+/* Mockup UI elements */
+.mockup-frame {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.15);
+}
+
+.mockup-titlebar {
+  background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+  border-bottom: 1px solid #e2e8f0;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mockup-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.mockup-skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+  border-radius: 6px;
 }
