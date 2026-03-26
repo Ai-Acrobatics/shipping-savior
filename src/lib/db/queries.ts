@@ -6,6 +6,9 @@ import {
   orgMembers,
   calculations,
   auditLogs,
+  type OrgRole,
+  type CalculationType,
+  type AuditAction,
 } from './schema';
 
 // ─── Organizations ───────────────────────────────────────────────────────────
@@ -61,11 +64,12 @@ export async function getUserById(id: string) {
 export async function addOrgMember(
   orgId: string,
   userId: string,
-  role: 'owner' | 'admin' | 'member' | 'viewer'
+  role: OrgRole,
+  invitedBy?: string
 ) {
   const [member] = await db
     .insert(orgMembers)
-    .values({ orgId, userId, role })
+    .values({ orgId, userId, role, invitedBy: invitedBy ?? null })
     .returning();
   return member;
 }
@@ -89,7 +93,7 @@ export async function getUserOrgs(userId: string) {
 export async function saveCalculation(
   orgId: string,
   userId: string,
-  calculatorType: 'landed_cost' | 'unit_economics' | 'ftz_savings' | 'pf_npf_comparison' | 'container_utilization' | 'tariff_scenario',
+  calculatorType: CalculationType,
   name: string,
   inputs: Record<string, unknown>,
   outputs: Record<string, unknown>
@@ -125,7 +129,7 @@ export async function deleteCalculation(id: string) {
 export async function writeAuditLog(
   orgId: string | null,
   userId: string | null,
-  eventType: string,
+  action: AuditAction,
   metadata?: Record<string, unknown> | null,
   ipAddress?: string | null
 ) {
@@ -134,7 +138,7 @@ export async function writeAuditLog(
     .values({
       orgId,
       userId,
-      eventType,
+      action,
       metadata: metadata ?? null,
       ipAddress: ipAddress ?? null,
     })
