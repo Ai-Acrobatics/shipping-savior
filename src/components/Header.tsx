@@ -13,6 +13,8 @@ const navLinks = [
   { label: "Data Intelligence", href: "/data-intelligence" },
   { label: "Monetization", href: "/monetization" },
   { label: "Six Sigma", href: "/six-sigma" },
+  { label: "Phases", href: "/phases" },
+  { label: "Tech Spec", href: "/tech-spec" },
   { label: "Proposal", href: "/agreement" },
 ];
 

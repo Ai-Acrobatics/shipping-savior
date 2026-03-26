@@ -793,12 +793,12 @@ export default function Home() {
                 Beyond the <span className="gradient-text">Platform</span>
               </h2>
               <p className="text-lg text-navy-500 max-w-2xl mx-auto">
-                Deep strategic analysis: SaaS monetization model and Six Sigma process optimization for the logistics business.
+                Deep strategic analysis: SaaS monetization, Six Sigma process optimization, and a comprehensive four-phase project plan.
               </p>
             </div>
           </ScrollReveal>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             <ScrollReveal>
               <Link href="/monetization" className="block group">
                 <div className="bg-white rounded-2xl p-8 border border-navy-200/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 h-full">
@@ -840,6 +840,29 @@ export default function Home() {
                   </div>
                   <span className="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 group-hover:gap-3 transition-all">
                     View Six Sigma Analysis <ArrowRight className="w-4 h-4" />
+                  </span>
+                </div>
+              </Link>
+            </ScrollReveal>
+
+            <ScrollReveal delay={300}>
+              <Link href="/phases" className="block group">
+                <div className="bg-white rounded-2xl p-8 border border-navy-200/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 h-full">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center mb-6 shadow-lg">
+                    <LayoutDashboard className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-navy-900 mb-3">Project Phases</h3>
+                  <p className="text-sm text-navy-500 leading-relaxed mb-6">
+                    Four comprehensive phases: Research (data source validation, competitor mapping), Planning (architecture,
+                    AI agents, financial model), Monitoring (KPIs, pipeline health), and full Platform Outline.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {["4 Phases", "6 AI Agents", "26 Data Sources"].map((tag) => (
+                      <span key={tag} className="text-xs bg-amber-50 text-amber-700 px-3 py-1 rounded-full font-medium border border-amber-100">{tag}</span>
+                    ))}
+                  </div>
+                  <span className="inline-flex items-center gap-2 text-sm font-semibold text-amber-600 group-hover:gap-3 transition-all">
+                    View Project Phases <ArrowRight className="w-4 h-4" />
                   </span>
                 </div>
               </Link>
