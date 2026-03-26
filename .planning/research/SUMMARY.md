@@ -1,92 +1,150 @@
-# Research Summary: Shipping Logistics Platform
+# Project Research Summary
 
-**Domain:** International Shipping/Freight/Cold Chain Logistics Analysis Platform
+**Project:** Shipping Logistics Platform
+**Domain:** International freight/cold chain logistics analysis + proposal platform
 **Researched:** 2026-03-26
-**Overall Confidence:** MEDIUM-HIGH
-
----
+**Confidence:** MEDIUM-HIGH
 
 ## Executive Summary
 
-The international shipping/logistics technology space is well-served by enterprise platforms (Freightos, Flexport, project44, FourKites) but lacks accessible, interactive analysis tools for mid-market importers and freight professionals who need to quickly model landed costs, compare routes, and evaluate FTZ savings. The proposed platform fills this gap as a web-based analysis and proposal tool, not as a competing TMS or visibility platform.
+This is a logistics analysis and proposal platform for an international freight operator who dominates cold chain exports (96-97% of a major Lineage terminal) and is expanding into SE Asia consumer goods imports. The platform combines interactive calculators (landed cost, unit economics, tariff/duty, FTZ savings, container utilization), carrier route comparison with map visualization, and a comprehensive knowledge base — all wrapped in a premium proposal website.
 
-The technology stack for Phase 1 is straightforward and low-cost. The core insight from research is that **all critical data sources are freely available from US government sources** -- the USITC provides HTS tariff data via REST API and downloadable JSON, the ITA maintains the FTZ database through OFIS, and port data is available from UN/LOCODE and the World Port Index. This means Phase 1 can be built entirely on free, authoritative datasets with zero API costs.
+The recommended approach is a **Next.js 14 monolith with static JSON data** for Phase 1. All critical data sources (USITC HTS tariff schedule, OFIS FTZ database, UN/LOCODE ports, World Port Index) are **free from US government sources**. Calculators run client-side as pure TypeScript functions using `decimal.js` for financial precision. Maps use the free MapLibre GL + deck.gl stack for WebGL-accelerated route visualization. No database, no auth, no paid APIs needed for Phase 1.
 
-For visualization, the **MapLibre GL + deck.gl + react-map-gl** stack is the clear winner. It provides WebGL-accelerated route rendering (ArcLayer for shipping lanes, ScatterplotLayer for ports) with zero licensing costs, unlike Mapbox or Google Maps. The open-source `searoute-js` library can generate realistic maritime route polylines offline using Eurostat's marnet dataset, avoiding paid routing API costs in Phase 1.
-
-The primary technical risks are: (1) floating-point arithmetic errors in financial calculations (mitigated by decimal.js), (2) the searoute-js library has low npm adoption and needs thorough testing before commitment, and (3) PDF generation on Vercel serverless may hit timeout limits for complex reports. All three are manageable with the documented prevention strategies.
-
----
+The key differentiator is the **FTZ Savings Analyzer with incremental withdrawal modeling** — zero competitors offer this. No existing platform combines FTZ strategy + freight brokerage + cold chain hybrid. The biggest risks are tariff data staleness (HTS rates change with policy), FTZ status election permanence (irrevocable once chosen), and hidden import costs that add 15-25% beyond freight + duty (demurrage, detention, exam fees, MPF, HMF, bond costs).
 
 ## Key Findings
 
-**Stack:** Next.js 14 + MapLibre GL + deck.gl + Recharts + @react-pdf/renderer. All free/open-source. Zero API costs in Phase 1.
-**Architecture:** Static JSON data files + pure TypeScript calculators + layered map visualization. No database needed for Phase 1.
-**Critical pitfall:** Floating-point math in duty/tariff calculations -- must use decimal.js from day one or every number will be subtly wrong.
+### Recommended Stack
 
----
+Core: Next.js 14 (App Router) + TypeScript + Tailwind CSS on Vercel.
+
+**Key libraries:**
+- **MapLibre GL + deck.gl + react-map-gl** — Free WebGL map rendering with ArcLayer for shipping routes. Zero licensing cost.
+- **Recharts + @tremor/react** — Dashboard charts and KPI cards, built on Tailwind.
+- **decimal.js + currency.js** — Financial calculation precision (critical).
+- **@react-pdf/renderer** — PDF documents from React components.
+- **@tanstack/react-table** — HTS lookup, carrier comparison tables.
+- **searoute-js** — Offline maritime route polylines (LOW-MEDIUM confidence, needs testing).
+- **Fuse.js or FlexSearch** — Client-side fuzzy search for 100K+ HTS entries.
+
+**Free data sources (verified):**
+- USITC HTS REST API + downloadable JSON — tariff/duty rates
+- USITC DataWeb — historical trade statistics by country
+- OFIS (trade.gov) — 260+ FTZ locations
+- UN/LOCODE — 100K+ port codes
+- World Port Index (NGA) — 3,700+ ports with coordinates
+- Maersk Developer Portal — free carrier schedule API
+- CMA CGM API Portal — free schedule API
+
+### Expected Features
+
+**Must have (table stakes):**
+- Landed cost calculator, HTS code lookup, unit economics breakdown
+- Container utilization calculator, route/carrier comparison
+- Interactive shipping route map, PDF export, data tables
+
+**Differentiators (competitive advantage):**
+- FTZ savings analyzer with incremental withdrawal modeling (#1 differentiator — zero competitors)
+- Backhaul pricing intelligence (invisible in all competitor platforms)
+- Tariff scenario modeling, cold chain cost overlay
+- Multi-scenario comparison (side-by-side A vs B vs C)
+
+**Defer (v2+):**
+- Live carrier APIs, vessel schedule aggregator, BOL generator, live AIS tracking, auth/multi-tenancy
+
+### Architecture Approach
+
+Monolith-first with 6 logical service components. Pure TypeScript calculators client-side. Static JSON datasets. Server components for data pages, client components for interactive tools. API routes only for PDF generation.
+
+### Critical Pitfalls
+
+1. **Floating-point arithmetic** — MUST use `decimal.js` from day one
+2. **Stale tariff data** — Always display dataset date, add disclaimers
+3. **FTZ status elections permanent** — April 2025 executive order mandates PF status for reciprocal-tariff-scope goods
+4. **Hidden import costs (15-25%)** — 15+ components most platforms miss (demurrage, detention, exam fees, MPF, HMF, bond)
+5. **Container weight vs. volume** — Must compute BOTH, use the lower one
+6. **ISF penalties** — $5,000 per late filing (24h before vessel DEPARTURE, not arrival)
+7. **HTS classification complexity** — 17,000+ codes, CBP collected $600M+ in misclassification penalties
 
 ## Implications for Roadmap
 
-Based on research, suggested phase structure:
+### Phase 1: Proposal Site + Wireframes
+**Rationale:** Communicate vision first. Zero external dependencies.
+**Delivers:** Interactive proposal website, platform wireframes, architecture diagrams, revenue model
+**Addresses:** Proposal & Presentation requirements
 
-1. **Phase 1: Data Foundation + Core Calculators** -- Build the data layer first (HTS, ports, routes, FTZ as JSON datasets), then the calculation engine (landed cost, unit economics, container utilization, duty/tariff). These are pure TypeScript functions that can be fully unit-tested.
-   - Addresses: HTS lookup, landed cost calculator, unit economics, container calculator
-   - Avoids: API costs, database complexity, authentication overhead
+### Phase 2: Data Foundation + Core Calculators
+**Rationale:** Tariff Engine is the foundation — every calculator depends on it.
+**Delivers:** Static JSON datasets, landed cost calculator, unit economics, container utilization, HTS lookup
+**Uses:** USITC HTS data, decimal.js, @tanstack/react-table, Fuse.js
 
-2. **Phase 2: Visualization Layer** -- Add the interactive map (shipping routes, port locations) and dashboard charts (cost breakdowns, comparison visualizations). This phase depends on the data and calculator foundations from Phase 1.
-   - Addresses: Route map, carrier comparison, dashboard UI
-   - Avoids: Monolithic map component anti-pattern (build layers independently)
+### Phase 3: Visualization Layer
+**Rationale:** Maps and charts need data from Phase 2.
+**Delivers:** Interactive route map, port visualization, route comparison, dashboard charts
+**Implements:** MapLibre + deck.gl + react-map-gl, Recharts dashboards
 
-3. **Phase 3: FTZ Analyzer + Advanced Tools** -- The FTZ savings analyzer requires the most domain knowledge and depends on duty rate calculations from Phase 1. Tariff scenario modeling and multi-scenario comparison also build on the calculator engine.
-   - Addresses: FTZ analyzer, tariff scenarios, scenario comparison
-   - Avoids: Scope creep into operational TMS features
+### Phase 4: FTZ Analyzer + Tariff Scenarios
+**Rationale:** Most specialized feature, depends on tariff engine. #1 differentiator.
+**Delivers:** FTZ savings analyzer, tariff scenario modeling, multi-scenario comparison
 
-4. **Phase 4: Document Generation + Polish** -- PDF reports, Bill of Lading templates, export functionality. These are presentation-layer features that consume data from all earlier phases.
-   - Addresses: PDF export, BOL generator, report templates
-   - Avoids: Vercel timeout issues (start simple, add complexity incrementally)
+### Phase 5: Knowledge Base + Documents
+**Rationale:** SOPs and compliance checklists need earlier phases' context.
+**Delivers:** Import process knowledge base, compliance checklists, PDF export
 
-5. **Phase 5 (Future): Live Integrations** -- Connect to carrier APIs (Maersk, CMA CGM), container tracking (Terminal49 free tier), and AIS vessel data. Only pursue when static data is no longer sufficient.
-   - Addresses: Live vessel tracking, real-time schedules
-   - Avoids: Premature API costs and fragile external dependencies
+### Phase 6: Dashboard + Tracking
+**Rationale:** Aggregates all tools — needs everything else first.
+**Delivers:** Shipment tracking, cost/margin dashboard, cold chain views
 
-**Phase ordering rationale:**
-- Data and calculators must come first because every other feature depends on them
-- Maps and charts require data to visualize, so they follow the data layer
-- FTZ analyzer is the most complex calculator and benefits from patterns established in Phase 1
-- PDF generation consumes outputs from all calculators, so it comes last
-- Live API integrations are deferred because Phase 1 uses free static data that is sufficient for analysis/proposal use cases
+### Phase Ordering Rationale
+- Data before tools: every calculator needs HTS/port/route data
+- Calculators before visualization: maps need validated route data
+- FTZ after tariff engine: savings comparison requires duty rate calculations
+- Knowledge base after calculators: SOPs reference the same data
+- Dashboard last: aggregates everything
 
-**Research flags for phases:**
-- Phase 1: Needs deeper research on exact HTS JSON format from USITC download (verify field names, nesting structure)
-- Phase 2: searoute-js needs hands-on testing with real port pairs before committing. Have Searoutes API as paid fallback.
-- Phase 3: FTZ regulations are complex -- scope to federal benefits only, defer state-specific rules
-- Phase 4: @react-pdf/renderer on Vercel serverless may need timeout investigation
+### Research Flags
+- **Phase 2:** HTS dataset structure needs inspection after download
+- **Phase 3:** searoute-js needs testing with SE Asia port pairs
+- **Phase 4:** FTZ regulations complex — scope to federal only initially
 
----
+Standard patterns (skip research):
+- **Phase 1:** Standard Next.js proposal site
+- **Phase 5:** PDF generation and content — straightforward
+- **Phase 6:** Dashboard with Recharts/Tremor — established patterns
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Core Stack (Next.js, TypeScript, Tailwind) | HIGH | Project constraint, well-understood |
-| Mapping Stack (MapLibre + deck.gl + react-map-gl) | HIGH | All verified current versions, active maintenance, proven at scale |
-| Chart Stack (Recharts + Tremor) | HIGH | Verified versions, massive adoption, Tailwind-native |
-| Tariff Data Sources (USITC HTS) | HIGH | Verified REST API endpoint and download formats |
-| FTZ Data Sources (OFIS) | HIGH | Verified official ITA database |
-| Port Data (UN/LOCODE, World Port Index) | HIGH | Standard international datasets |
-| Carrier Schedule APIs | MEDIUM | Verified portals exist (Maersk, CMA CGM), but registration/access terms need validation |
-| Container Tracking APIs | MEDIUM | Terminal49 free tier verified, but 100-container limit may be restrictive |
-| Maritime Route Calculation (searoute-js) | LOW-MEDIUM | Functional but low adoption (306 downloads/week). Test before committing. |
-| Landed Cost API Services (Zonos) | MEDIUM | Verified pricing and API docs, but expensive for Phase 1 use case |
+| Stack | HIGH | All libraries verified current, active maintenance |
+| Data Sources | HIGH | USITC, OFIS, UN/LOCODE verified free and official |
+| Features | MEDIUM-HIGH | Competitor analysis cross-referenced; FTZ gap confirmed |
+| Architecture | HIGH | Standard Next.js patterns |
+| Pitfalls | HIGH | Verified against CBP.gov, 19 CFR, official sources |
+| Mapping | MEDIUM | deck.gl/MapLibre verified; searoute-js needs testing |
+
+**Overall confidence:** MEDIUM-HIGH
+
+### Gaps to Address
+- SE Asia country-specific duty rates need manual compilation from USITC DataWeb
+- searoute-js needs testing with real SE Asia → US port pairs
+- HTS JSON field structure needs inspection after download
+- Cold chain reefer container cost premiums need industry research
+- UFLPA compliance depth for SE Asia sourcing needs legal guidance
+
+## Sources
+
+### Primary (HIGH confidence)
+- USITC HTS API (hts.usitc.gov), OFIS FTZ Database (ofis.trade.gov), CBP.gov
+- deck.gl v9.2.11, react-map-gl v8.1.0, Terminal49 container tracking
+
+### Secondary (MEDIUM confidence)
+- Flexport/Freightos product analysis, Searoutes API docs, MarineTraffic/Kpler
+
+### Tertiary (LOW confidence)
+- searoute-js (306/week npm), Descartes CustomsInfo (pricing unknown)
 
 ---
-
-## Gaps to Address
-
-- **HTS JSON structure**: Need to download and inspect the actual USITC JSON export to understand field names, nesting, and completeness before building the search index
-- **searoute-js reliability**: Test with 10+ real SE Asia -> US port pairs to verify route quality before committing
-- **SE Asia duty rates**: Need to compile country-specific duty rates from USITC DataWeb for Vietnam, Thailand, Indonesia, Cambodia -- this is manual research work
-- **Carrier route data**: Major SE Asia -> US routes need to be compiled from carrier schedule pages -- no free aggregated dataset exists
-- **FTZ location GeoJSON**: OFIS provides locations but not GeoJSON boundaries. May need to manually geocode FTZ zones for map display.
-- **Cold chain specifics**: Reefer container premiums and cold chain cost factors need industry research beyond what web search provides
+*Research completed: 2026-03-26*
+*Ready for roadmap: yes*
