@@ -35,6 +35,8 @@
     ".next-agent4/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/components/dashboard-old",
+    "src/lib/data-old"
   ]
 }
