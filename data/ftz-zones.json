@@ -1,0 +1,888 @@
+[
+  {
+    "zone_number": 1,
+    "name": "New York (Staten Island)",
+    "city": "Staten Island",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "NYC Economic Development Corp.",
+    "grantee": "City of New York",
+    "lat": 40.5795,
+    "lng": -74.1502,
+    "status": "active",
+    "activated_year": 1936,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 8,
+    "key_industries": [
+      "general warehousing",
+      "distribution"
+    ],
+    "notes": "First FTZ activated in the US"
+  },
+  {
+    "zone_number": 2,
+    "name": "New Orleans Foreign-Trade Zone",
+    "city": "New Orleans",
+    "state": "Louisiana",
+    "state_code": "LA",
+    "operator": "Port of New Orleans",
+    "grantee": "Board of Commissioners of Port of New Orleans",
+    "lat": 29.9392,
+    "lng": -90.0561,
+    "status": "active",
+    "activated_year": 1946,
+    "nearest_port": "USNOL",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "coffee",
+      "steel",
+      "chemicals",
+      "rubber"
+    ]
+  },
+  {
+    "zone_number": 3,
+    "name": "San Francisco Foreign-Trade Zone",
+    "city": "San Francisco",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "Port of San Francisco",
+    "grantee": "Port Commission, City and County of San Francisco",
+    "lat": 37.8044,
+    "lng": -122.2711,
+    "status": "active",
+    "activated_year": 1948,
+    "nearest_port": "USOAK",
+    "port_distance_miles": 10,
+    "key_industries": [
+      "electronics",
+      "wine",
+      "biotech",
+      "consumer goods"
+    ]
+  },
+  {
+    "zone_number": 7,
+    "name": "New York Foreign-Trade Zone",
+    "city": "New York",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "NYC Economic Development Corp.",
+    "grantee": "City of New York",
+    "lat": 40.6892,
+    "lng": -74.0445,
+    "status": "active",
+    "activated_year": 1937,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "consumer goods",
+      "electronics",
+      "pharmaceuticals",
+      "textiles"
+    ],
+    "annual_merchandise_value_usd": 12000000000,
+    "subzones": [
+      {
+        "subzone_id": "7A",
+        "name": "JFK Airport Area",
+        "operator": "JFK International Air Terminal LLC",
+        "type": "distribution"
+      },
+      {
+        "subzone_id": "7B",
+        "name": "Red Hook Container Terminal",
+        "operator": "NYC EDC",
+        "type": "warehouse"
+      }
+    ]
+  },
+  {
+    "zone_number": 9,
+    "name": "Honolulu Foreign-Trade Zone",
+    "city": "Honolulu",
+    "state": "Hawaii",
+    "state_code": "HI",
+    "operator": "State of Hawaii DBEDT",
+    "grantee": "State of Hawaii",
+    "lat": 21.3069,
+    "lng": -157.8583,
+    "status": "active",
+    "activated_year": 1966,
+    "key_industries": [
+      "petroleum",
+      "electronics",
+      "food products"
+    ]
+  },
+  {
+    "zone_number": 15,
+    "name": "Kansas City Foreign-Trade Zone",
+    "city": "Kansas City",
+    "state": "Missouri",
+    "state_code": "MO",
+    "operator": "Greater Kansas City FTZ Inc.",
+    "grantee": "Greater Kansas City Foreign-Trade Zone Inc.",
+    "lat": 39.0997,
+    "lng": -94.5786,
+    "status": "active",
+    "activated_year": 1973,
+    "key_industries": [
+      "automotive",
+      "agriculture",
+      "machinery"
+    ]
+  },
+  {
+    "zone_number": 18,
+    "name": "San Jose Foreign-Trade Zone",
+    "city": "San Jose",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "City of San Jose",
+    "grantee": "City of San Jose",
+    "lat": 37.3382,
+    "lng": -121.8863,
+    "status": "active",
+    "activated_year": 1974,
+    "key_industries": [
+      "semiconductors",
+      "electronics",
+      "tech hardware"
+    ]
+  },
+  {
+    "zone_number": 21,
+    "name": "Charleston Foreign-Trade Zone",
+    "city": "Charleston",
+    "state": "South Carolina",
+    "state_code": "SC",
+    "operator": "SC Ports Authority",
+    "grantee": "South Carolina State Ports Authority",
+    "lat": 32.7876,
+    "lng": -79.9403,
+    "status": "active",
+    "activated_year": 1976,
+    "nearest_port": "USCHS",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "automotive",
+      "tires",
+      "machinery",
+      "apparel"
+    ],
+    "annual_merchandise_value_usd": 5500000000,
+    "subzones": [
+      {
+        "subzone_id": "21A",
+        "name": "BMW Manufacturing",
+        "operator": "BMW Manufacturing Co. LLC",
+        "type": "manufacturing"
+      },
+      {
+        "subzone_id": "21B",
+        "name": "Volvo Cars US",
+        "operator": "Volvo Car US Operations",
+        "type": "manufacturing"
+      }
+    ]
+  },
+  {
+    "zone_number": 22,
+    "name": "Chicago Foreign-Trade Zone",
+    "city": "Chicago",
+    "state": "Illinois",
+    "state_code": "IL",
+    "operator": "Illinois International Port District",
+    "grantee": "Illinois International Port District",
+    "lat": 41.7367,
+    "lng": -87.5558,
+    "status": "active",
+    "activated_year": 1976,
+    "key_industries": [
+      "electronics",
+      "automotive",
+      "machinery",
+      "food products"
+    ],
+    "annual_merchandise_value_usd": 6000000000
+  },
+  {
+    "zone_number": 26,
+    "name": "Atlanta Foreign-Trade Zone",
+    "city": "Atlanta",
+    "state": "Georgia",
+    "state_code": "GA",
+    "operator": "Georgia Foreign-Trade Zone Inc.",
+    "grantee": "Georgia Foreign-Trade Zone Inc.",
+    "lat": 33.6407,
+    "lng": -84.4277,
+    "status": "active",
+    "activated_year": 1976,
+    "key_industries": [
+      "automotive",
+      "electronics",
+      "consumer goods"
+    ]
+  },
+  {
+    "zone_number": 29,
+    "name": "Louisville Foreign-Trade Zone",
+    "city": "Louisville",
+    "state": "Kentucky",
+    "state_code": "KY",
+    "operator": "Louisville & Jefferson County Riverport Authority",
+    "grantee": "Louisville & Jefferson County Riverport Authority",
+    "lat": 38.1863,
+    "lng": -85.6669,
+    "status": "active",
+    "activated_year": 1977,
+    "key_industries": [
+      "UPS Worldport",
+      "logistics",
+      "bourbon",
+      "automotive"
+    ],
+    "notes": "Adjacent to UPS Worldport global air hub"
+  },
+  {
+    "zone_number": 33,
+    "name": "Pittsburgh Foreign-Trade Zone",
+    "city": "Pittsburgh",
+    "state": "Pennsylvania",
+    "state_code": "PA",
+    "operator": "Regional Industrial Development Corp.",
+    "grantee": "RIDC of Southwestern PA",
+    "lat": 40.4406,
+    "lng": -79.9959,
+    "status": "active",
+    "activated_year": 1978,
+    "key_industries": [
+      "steel",
+      "machinery",
+      "energy equipment"
+    ]
+  },
+  {
+    "zone_number": 37,
+    "name": "Orange County Foreign-Trade Zone",
+    "city": "Orange County",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "Orange County Board of Supervisors",
+    "grantee": "Board of Supervisors, County of Orange",
+    "lat": 33.7175,
+    "lng": -117.8311,
+    "status": "active",
+    "activated_year": 1978,
+    "nearest_port": "USLGB",
+    "port_distance_miles": 25,
+    "key_industries": [
+      "electronics",
+      "medical devices",
+      "consumer goods"
+    ]
+  },
+  {
+    "zone_number": 39,
+    "name": "Dallas/Fort Worth Foreign-Trade Zone",
+    "city": "Dallas",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "DFW Airport Board",
+    "grantee": "Dallas/Fort Worth International Airport Board",
+    "lat": 32.8998,
+    "lng": -97.0403,
+    "status": "active",
+    "activated_year": 1979,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 250,
+    "key_industries": [
+      "electronics",
+      "telecom equipment",
+      "aerospace",
+      "automotive parts"
+    ],
+    "annual_merchandise_value_usd": 8000000000,
+    "subzones": [
+      {
+        "subzone_id": "39A",
+        "name": "Texas Instruments",
+        "operator": "Texas Instruments Inc.",
+        "type": "manufacturing"
+      },
+      {
+        "subzone_id": "39B",
+        "name": "Bell Helicopter",
+        "operator": "Bell Helicopter Textron",
+        "type": "manufacturing"
+      },
+      {
+        "subzone_id": "39C",
+        "name": "Alliance Global Logistics Hub",
+        "operator": "Hillwood Development",
+        "type": "distribution"
+      }
+    ]
+  },
+  {
+    "zone_number": 40,
+    "name": "Cleveland Foreign-Trade Zone",
+    "city": "Cleveland",
+    "state": "Ohio",
+    "state_code": "OH",
+    "operator": "Cleveland-Cuyahoga County Port Authority",
+    "grantee": "Cleveland-Cuyahoga County Port Authority",
+    "lat": 41.4993,
+    "lng": -81.6944,
+    "status": "active",
+    "activated_year": 1979,
+    "key_industries": [
+      "automotive parts",
+      "steel",
+      "plastics",
+      "machinery"
+    ]
+  },
+  {
+    "zone_number": 44,
+    "name": "Detroit Foreign-Trade Zone",
+    "city": "Detroit",
+    "state": "Michigan",
+    "state_code": "MI",
+    "operator": "Greater Detroit FTZ Inc.",
+    "grantee": "Greater Detroit Foreign-Trade Zone Inc.",
+    "lat": 42.3314,
+    "lng": -83.0458,
+    "status": "active",
+    "activated_year": 1979,
+    "key_industries": [
+      "automotive",
+      "auto parts",
+      "electronics"
+    ],
+    "annual_merchandise_value_usd": 10000000000,
+    "notes": "Largest auto-related FTZ activity in the US"
+  },
+  {
+    "zone_number": 49,
+    "name": "Newark/Elizabeth Foreign-Trade Zone",
+    "city": "Newark",
+    "state": "New Jersey",
+    "state_code": "NJ",
+    "operator": "Port Authority of NY & NJ",
+    "grantee": "City of Newark",
+    "lat": 40.6769,
+    "lng": -74.1744,
+    "status": "active",
+    "activated_year": 1979,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "consumer goods",
+      "chemicals",
+      "machinery",
+      "auto parts"
+    ],
+    "annual_merchandise_value_usd": 15000000000,
+    "subzones": [
+      {
+        "subzone_id": "49A",
+        "name": "Elizabeth Marine Terminal",
+        "operator": "Port Authority of NY & NJ",
+        "type": "distribution"
+      },
+      {
+        "subzone_id": "49B",
+        "name": "BASF Corporation",
+        "operator": "BASF Corporation",
+        "type": "manufacturing"
+      }
+    ]
+  },
+  {
+    "zone_number": 50,
+    "name": "Long Beach Foreign-Trade Zone",
+    "city": "Long Beach",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "Port of Long Beach",
+    "grantee": "Board of Harbor Commissioners, City of Long Beach",
+    "lat": 33.7542,
+    "lng": -118.215,
+    "status": "active",
+    "activated_year": 1980,
+    "nearest_port": "USLGB",
+    "port_distance_miles": 1,
+    "key_industries": [
+      "consumer electronics",
+      "apparel",
+      "automotive",
+      "furniture",
+      "toys"
+    ],
+    "annual_merchandise_value_usd": 20000000000,
+    "subzones": [
+      {
+        "subzone_id": "50A",
+        "name": "Boeing Long Beach",
+        "operator": "Boeing Company",
+        "type": "manufacturing"
+      },
+      {
+        "subzone_id": "50B",
+        "name": "Pier T Distribution",
+        "operator": "Port of Long Beach",
+        "type": "distribution"
+      }
+    ]
+  },
+  {
+    "zone_number": 56,
+    "name": "Oakland Foreign-Trade Zone",
+    "city": "Oakland",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "City of Oakland",
+    "grantee": "City of Oakland",
+    "lat": 37.7954,
+    "lng": -122.2786,
+    "status": "active",
+    "activated_year": 1980,
+    "nearest_port": "USOAK",
+    "port_distance_miles": 1,
+    "key_industries": [
+      "consumer goods",
+      "food products",
+      "machinery"
+    ]
+  },
+  {
+    "zone_number": 62,
+    "name": "Brownsville Foreign-Trade Zone",
+    "city": "Brownsville",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Brownsville Navigation District",
+    "grantee": "Brownsville Navigation District",
+    "lat": 25.9017,
+    "lng": -97.4975,
+    "status": "active",
+    "activated_year": 1981,
+    "key_industries": [
+      "cross-border manufacturing",
+      "electronics assembly",
+      "auto parts"
+    ],
+    "notes": "Key US-Mexico cross-border FTZ"
+  },
+  {
+    "zone_number": 64,
+    "name": "Jacksonville Foreign-Trade Zone",
+    "city": "Jacksonville",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Jacksonville Port Authority",
+    "grantee": "Jacksonville Port Authority",
+    "lat": 30.3978,
+    "lng": -81.6183,
+    "status": "active",
+    "activated_year": 1981,
+    "nearest_port": "USJAX",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "automotive",
+      "consumer goods",
+      "forest products"
+    ]
+  },
+  {
+    "zone_number": 79,
+    "name": "Tampa Foreign-Trade Zone",
+    "city": "Tampa",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "City of Tampa",
+    "grantee": "City of Tampa",
+    "lat": 27.9506,
+    "lng": -82.4572,
+    "status": "active",
+    "activated_year": 1982,
+    "key_industries": [
+      "citrus",
+      "phosphate",
+      "steel",
+      "electronics"
+    ]
+  },
+  {
+    "zone_number": 84,
+    "name": "Miami Foreign-Trade Zone",
+    "city": "Miami",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Greater Miami FTZ Inc.",
+    "grantee": "Greater Miami Foreign-Trade Zone Inc.",
+    "lat": 25.7742,
+    "lng": -80.1697,
+    "status": "active",
+    "activated_year": 1983,
+    "nearest_port": "USMIA",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "Latin American trade",
+      "apparel",
+      "electronics",
+      "flowers"
+    ],
+    "annual_merchandise_value_usd": 4000000000
+  },
+  {
+    "zone_number": 87,
+    "name": "Lake Charles Foreign-Trade Zone",
+    "city": "Lake Charles",
+    "state": "Louisiana",
+    "state_code": "LA",
+    "operator": "Lake Charles Harbor & Terminal District",
+    "grantee": "Lake Charles Harbor & Terminal District",
+    "lat": 30.2266,
+    "lng": -93.2174,
+    "status": "active",
+    "activated_year": 1983,
+    "key_industries": [
+      "LNG",
+      "petrochemicals",
+      "chemicals"
+    ]
+  },
+  {
+    "zone_number": 104,
+    "name": "Savannah Foreign-Trade Zone",
+    "city": "Savannah",
+    "state": "Georgia",
+    "state_code": "GA",
+    "operator": "Georgia Ports Authority",
+    "grantee": "Savannah Airport Commission",
+    "lat": 32.0835,
+    "lng": -81.0998,
+    "status": "active",
+    "activated_year": 1984,
+    "nearest_port": "USSAV",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "automotive",
+      "forest products",
+      "food processing",
+      "consumer goods"
+    ],
+    "annual_merchandise_value_usd": 7500000000,
+    "subzones": [
+      {
+        "subzone_id": "104A",
+        "name": "Hyundai Motor Mfg Alabama",
+        "operator": "Hyundai Motor Manufacturing",
+        "type": "manufacturing"
+      },
+      {
+        "subzone_id": "104B",
+        "name": "Gulfstream Aerospace",
+        "operator": "Gulfstream Aerospace Corp.",
+        "type": "manufacturing"
+      },
+      {
+        "subzone_id": "104C",
+        "name": "Garden City Terminal Dist.",
+        "operator": "Georgia Ports Authority",
+        "type": "distribution"
+      }
+    ]
+  },
+  {
+    "zone_number": 106,
+    "name": "Oklahoma City Foreign-Trade Zone",
+    "city": "Oklahoma City",
+    "state": "Oklahoma",
+    "state_code": "OK",
+    "operator": "Oklahoma City FTZ",
+    "grantee": "Oklahoma City",
+    "lat": 35.4676,
+    "lng": -97.5164,
+    "status": "active",
+    "activated_year": 1984,
+    "key_industries": [
+      "aerospace",
+      "oil & gas",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 114,
+    "name": "Peoria Foreign-Trade Zone",
+    "city": "Peoria",
+    "state": "Illinois",
+    "state_code": "IL",
+    "operator": "Economic Development Council for the Peoria Area",
+    "grantee": "Economic Development Council for the Peoria Area",
+    "lat": 40.6936,
+    "lng": -89.589,
+    "status": "active",
+    "activated_year": 1985,
+    "key_industries": [
+      "Caterpillar manufacturing",
+      "heavy equipment"
+    ],
+    "subzones": [
+      {
+        "subzone_id": "114A",
+        "name": "Caterpillar Inc.",
+        "operator": "Caterpillar Inc.",
+        "type": "manufacturing"
+      }
+    ]
+  },
+  {
+    "zone_number": 122,
+    "name": "Houston Foreign-Trade Zone",
+    "city": "Houston",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Port of Houston Authority",
+    "grantee": "Port of Houston Authority",
+    "lat": 29.7344,
+    "lng": -95.271,
+    "status": "active",
+    "activated_year": 1985,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "petrochemicals",
+      "oil & gas equipment",
+      "machinery",
+      "steel"
+    ],
+    "annual_merchandise_value_usd": 18000000000,
+    "subzones": [
+      {
+        "subzone_id": "122A",
+        "name": "Shell Oil Company",
+        "operator": "Shell Oil Company",
+        "type": "manufacturing"
+      },
+      {
+        "subzone_id": "122B",
+        "name": "ExxonMobil Baytown",
+        "operator": "ExxonMobil Corporation",
+        "type": "manufacturing"
+      },
+      {
+        "subzone_id": "122C",
+        "name": "Barbours Cut Terminal",
+        "operator": "Port of Houston Authority",
+        "type": "distribution"
+      }
+    ]
+  },
+  {
+    "zone_number": 136,
+    "name": "Brevard County Foreign-Trade Zone",
+    "city": "Melbourne",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Canaveral Port Authority",
+    "grantee": "Canaveral Port Authority",
+    "lat": 28.4167,
+    "lng": -80.6083,
+    "status": "active",
+    "activated_year": 1986,
+    "key_industries": [
+      "aerospace",
+      "defense",
+      "electronics"
+    ]
+  },
+  {
+    "zone_number": 163,
+    "name": "Winston-Salem Foreign-Trade Zone",
+    "city": "Winston-Salem",
+    "state": "North Carolina",
+    "state_code": "NC",
+    "operator": "Piedmont Triad Partnership",
+    "grantee": "Piedmont Triad Partnership",
+    "lat": 36.0999,
+    "lng": -80.2442,
+    "status": "active",
+    "activated_year": 1987,
+    "key_industries": [
+      "tobacco",
+      "textiles",
+      "furniture",
+      "transportation equipment"
+    ]
+  },
+  {
+    "zone_number": 174,
+    "name": "Norfolk Foreign-Trade Zone",
+    "city": "Norfolk",
+    "state": "Virginia",
+    "state_code": "VA",
+    "operator": "Virginia Port Authority",
+    "grantee": "Virginia Port Authority",
+    "lat": 36.9092,
+    "lng": -76.3312,
+    "status": "active",
+    "activated_year": 1987,
+    "nearest_port": "USNOR",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "automotive",
+      "coal",
+      "consumer goods",
+      "military equipment"
+    ]
+  },
+  {
+    "zone_number": 196,
+    "name": "Seattle Foreign-Trade Zone",
+    "city": "Seattle",
+    "state": "Washington",
+    "state_code": "WA",
+    "operator": "Port of Seattle",
+    "grantee": "Port of Seattle",
+    "lat": 47.581,
+    "lng": -122.3482,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USSEA",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "aircraft",
+      "electronics",
+      "forest products",
+      "seafood"
+    ],
+    "annual_merchandise_value_usd": 9000000000,
+    "subzones": [
+      {
+        "subzone_id": "196A",
+        "name": "Boeing Everett",
+        "operator": "The Boeing Company",
+        "type": "manufacturing"
+      }
+    ]
+  },
+  {
+    "zone_number": 202,
+    "name": "Los Angeles Foreign-Trade Zone",
+    "city": "Los Angeles",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "Port of Los Angeles",
+    "grantee": "Board of Harbor Commissioners, City of Los Angeles",
+    "lat": 33.74,
+    "lng": -118.27,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 1,
+    "key_industries": [
+      "consumer electronics",
+      "apparel",
+      "furniture",
+      "automotive",
+      "food products"
+    ],
+    "annual_merchandise_value_usd": 22000000000,
+    "subzones": [
+      {
+        "subzone_id": "202A",
+        "name": "World Cruise Center",
+        "operator": "Port of Los Angeles",
+        "type": "distribution"
+      },
+      {
+        "subzone_id": "202B",
+        "name": "TraPac Container Terminal",
+        "operator": "TraPac LLC",
+        "type": "distribution"
+      }
+    ]
+  },
+  {
+    "zone_number": 204,
+    "name": "Memphis Foreign-Trade Zone",
+    "city": "Memphis",
+    "state": "Tennessee",
+    "state_code": "TN",
+    "operator": "City of Memphis",
+    "grantee": "City of Memphis",
+    "lat": 35.1495,
+    "lng": -90.049,
+    "status": "active",
+    "activated_year": 1989,
+    "key_industries": [
+      "FedEx hub",
+      "logistics",
+      "pharmaceuticals",
+      "medical devices"
+    ],
+    "notes": "Adjacent to FedEx World Hub"
+  },
+  {
+    "zone_number": 230,
+    "name": "Piedmont Triad Foreign-Trade Zone",
+    "city": "Greensboro",
+    "state": "North Carolina",
+    "state_code": "NC",
+    "operator": "Piedmont Triad Partnership",
+    "grantee": "Piedmont Triad Partnership",
+    "lat": 36.0726,
+    "lng": -79.792,
+    "status": "active",
+    "activated_year": 1991,
+    "key_industries": [
+      "aviation",
+      "furniture",
+      "textiles"
+    ]
+  },
+  {
+    "zone_number": 257,
+    "name": "Tacoma Foreign-Trade Zone",
+    "city": "Tacoma",
+    "state": "Washington",
+    "state_code": "WA",
+    "operator": "Port of Tacoma",
+    "grantee": "Port of Tacoma",
+    "lat": 47.2668,
+    "lng": -122.4233,
+    "status": "active",
+    "activated_year": 1999,
+    "nearest_port": "USTAC",
+    "port_distance_miles": 1,
+    "key_industries": [
+      "forest products",
+      "automobiles",
+      "consumer goods"
+    ]
+  },
+  {
+    "zone_number": 281,
+    "name": "Miami Airport Foreign-Trade Zone",
+    "city": "Miami",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Miami-Dade County Aviation Dept.",
+    "grantee": "Miami-Dade County",
+    "lat": 25.7959,
+    "lng": -80.287,
+    "status": "active",
+    "activated_year": 2009,
+    "key_industries": [
+      "perishables",
+      "flowers",
+      "pharmaceuticals",
+      "air cargo"
+    ],
+    "notes": "Focused on MIA airport cargo operations"
+  }
+]
