@@ -9,9 +9,9 @@ const navLinks = [
   { label: "Calculators", href: "/#calculators" },
   { label: "Routes", href: "/#routes" },
   { label: "FTZ Strategy", href: "/#ftz" },
-  { label: "Architecture", href: "/#architecture" },
-  { label: "Roadmap", href: "/#roadmap" },
   { label: "Knowledge Base", href: "/knowledge-base" },
+  { label: "Monetization", href: "/monetization" },
+  { label: "Six Sigma", href: "/six-sigma" },
   { label: "Proposal", href: "/agreement" },
 ];
 

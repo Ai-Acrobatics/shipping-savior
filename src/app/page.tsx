@@ -783,6 +783,71 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== BUSINESS STRATEGY ===== */}
+      <section className="py-24 px-6 section-alt">
+        <div className="max-w-6xl mx-auto">
+          <ScrollReveal>
+            <div className="text-center mb-16">
+              <p className="text-sm font-semibold text-ocean-600 tracking-wider uppercase mb-3">Business Strategy</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-5">
+                Beyond the <span className="gradient-text">Platform</span>
+              </h2>
+              <p className="text-lg text-navy-500 max-w-2xl mx-auto">
+                Deep strategic analysis: SaaS monetization model and Six Sigma process optimization for the logistics business.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <ScrollReveal>
+              <Link href="/monetization" className="block group">
+                <div className="bg-white rounded-2xl p-8 border border-navy-200/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 h-full">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-ocean-500 to-indigo-600 flex items-center justify-center mb-6 shadow-lg">
+                    <DollarSign className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-navy-900 mb-3">SaaS Monetization Strategy</h3>
+                  <p className="text-sm text-navy-500 leading-relaxed mb-6">
+                    Six revenue streams, three pricing tiers ($299-$2,499/mo), interactive revenue calculator,
+                    go-to-market strategy, competitive moat analysis, and unit economics showing 19:1 LTV:CAC.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {["6 Revenue Streams", "85%+ Margin", "GTM Roadmap"].map((tag) => (
+                      <span key={tag} className="text-xs bg-ocean-50 text-ocean-700 px-3 py-1 rounded-full font-medium border border-ocean-100">{tag}</span>
+                    ))}
+                  </div>
+                  <span className="inline-flex items-center gap-2 text-sm font-semibold text-ocean-600 group-hover:gap-3 transition-all">
+                    View Monetization Strategy <ArrowRight className="w-4 h-4" />
+                  </span>
+                </div>
+              </Link>
+            </ScrollReveal>
+
+            <ScrollReveal delay={150}>
+              <Link href="/six-sigma" className="block group">
+                <div className="bg-white rounded-2xl p-8 border border-navy-200/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 h-full">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-6 shadow-lg">
+                    <BarChart3 className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-navy-900 mb-3">Six Sigma DMAIC Analysis</h3>
+                  <p className="text-sm text-navy-500 leading-relaxed mb-6">
+                    Full DMAIC analysis: Define problem (40-60% time waste), Measure baseline (3.5 sigma),
+                    Analyze root causes (Ishikawa + Pareto), Improve with platform features, Control with SPC.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {["3.5 to 5.0 Sigma", "400%+ ROI", "$150K-500K Savings"].map((tag) => (
+                      <span key={tag} className="text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full font-medium border border-purple-100">{tag}</span>
+                    ))}
+                  </div>
+                  <span className="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 group-hover:gap-3 transition-all">
+                    View Six Sigma Analysis <ArrowRight className="w-4 h-4" />
+                  </span>
+                </div>
+              </Link>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
       {/* ===== VIEW FULL PROPOSAL CTA ===== */}
       <section className="py-20 px-6 bg-gradient-to-r from-ocean-600 via-indigo-600 to-ocean-700">
         <div className="max-w-3xl mx-auto text-center">
