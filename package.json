@@ -14,12 +14,18 @@
     "load:routes": "tsx scripts/data-pipeline/load-carrier-routes.ts",
     "load:duties": "tsx scripts/data-pipeline/load-duty-rates-sea.ts",
     "load:containers": "tsx scripts/data-pipeline/load-container-specs.ts",
-    "load:all": "tsx scripts/data-pipeline/load-hts-codes.ts && tsx scripts/data-pipeline/load-ports.ts && tsx scripts/data-pipeline/load-ftz-zones.ts && tsx scripts/data-pipeline/load-carrier-routes.ts && tsx scripts/data-pipeline/load-duty-rates-sea.ts && tsx scripts/data-pipeline/load-container-specs.ts"
+    "load:all": "tsx scripts/data-pipeline/load-hts-codes.ts && tsx scripts/data-pipeline/load-ports.ts && tsx scripts/data-pipeline/load-ftz-zones.ts && tsx scripts/data-pipeline/load-carrier-routes.ts && tsx scripts/data-pipeline/load-duty-rates-sea.ts && tsx scripts/data-pipeline/load-container-specs.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "@types/recharts": "^1.8.29",
     "cheerio": "^1.2.0",
     "csv-parse": "^6.2.1",
+    "drizzle-orm": "^0.45.1",
     "fuse.js": "^7.1.0",
     "lucide-react": "^1.7.0",
     "next": "14.2.35",
@@ -33,6 +39,8 @@
     "@types/node-fetch": "^2.6.13",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
+    "dotenv": "^17.3.1",
+    "drizzle-kit": "^0.31.10",
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
     "postcss": "^8",
