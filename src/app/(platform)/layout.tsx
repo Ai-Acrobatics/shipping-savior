@@ -17,8 +17,14 @@ export default async function PlatformLayout({
     redirect("/login");
   }
 
+  const user = {
+    name: session.user.name ?? 'User',
+    email: session.user.email ?? '',
+    image: session.user.image ?? null,
+  };
+
   return (
-    <PlatformShell user={session.user}>
+    <PlatformShell user={user}>
       {children}
     </PlatformShell>
   );

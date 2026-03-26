@@ -8,8 +8,8 @@ import { Bell } from "lucide-react";
 
 interface PlatformShellProps {
   user: {
-    name: string;
-    email: string;
+    name?: string | null;
+    email?: string | null;
     image?: string | null;
   };
   children: React.ReactNode;

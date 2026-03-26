@@ -23,13 +23,14 @@ const navLinks = [
 
 interface MobileNavProps {
   user: {
-    name: string;
-    email: string;
+    name?: string | null;
+    email?: string | null;
     image?: string | null;
   };
 }
 
-function getInitials(name: string): string {
+function getInitials(name?: string | null): string {
+  if (!name) return "U";
   const parts = name.trim().split(/\s+/);
   if (parts.length >= 2) {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
@@ -124,7 +125,7 @@ export default function MobileNav({ user }: MobileNavProps) {
                 {user.image ? (
                   <img
                     src={user.image}
-                    alt={user.name}
+                    alt={user.name ?? 'User'}
                     className="w-8 h-8 rounded-full"
                   />
                 ) : (

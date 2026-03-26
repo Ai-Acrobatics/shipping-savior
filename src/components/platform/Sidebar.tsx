@@ -24,8 +24,8 @@ interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
   user?: {
-    name: string;
-    email: string;
+    name?: string | null;
+    email?: string | null;
     image?: string | null;
   };
 }
