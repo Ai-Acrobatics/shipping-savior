@@ -302,10 +302,9 @@ export default function DashboardPage() {
             <nav className="hidden md:flex items-center gap-1">
               {[
                 { label: "Dashboard", href: "/dashboard", active: true },
-                { label: "Shipments", href: "#" },
-                { label: "Routes", href: "#" },
-                { label: "FTZ Zones", href: "#" },
-                { label: "Reports", href: "#" },
+                { label: "Routes", href: "/routes" },
+                { label: "FTZ Zones", href: "/ftz-analyzer" },
+                { label: "Proposal", href: "/" },
               ].map((item) => (
                 <a
                   key={item.label}
