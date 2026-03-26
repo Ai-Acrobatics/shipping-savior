@@ -52,6 +52,19 @@ The platform targets the founder's immediate operational needs while building to
 
 ### Supporting Planning Documents
 
+#### Phase 2 Architecture & Strategy Documents
+
+| Document | Linear | Purpose |
+|----------|--------|---------|
+| [TECHNICAL-ARCHITECTURE.md](./TECHNICAL-ARCHITECTURE.md) | AI-5409 | Full-stack architecture: Next.js 14, Neon/Drizzle, auth, maps, deployment |
+| [DATA-PIPELINE.md](./DATA-PIPELINE.md) | AI-5410 | HTS tariff ingestion, FTZ data, carrier schedules, port statistics pipeline |
+| [AI-AGENT-PLANS.md](./AI-AGENT-PLANS.md) | AI-5411 | 4 AI agents: HTS classification, route optimization, tariff alerts, compliance |
+| [GTM-STRATEGY.md](./GTM-STRATEGY.md) | AI-5412 | Target segments, GTM phases, positioning, pricing model, CAC/LTV targets |
+| [FINANCIAL-MODEL.md](./FINANCIAL-MODEL.md) | AI-5413 | Dev cost estimates, infra costs, 18-month revenue projections, break-even |
+| [PRODUCT-ROADMAP.md](./PRODUCT-ROADMAP.md) | AI-5408 | Sprint structure, feature prioritization, Phase 3 implementation roadmap |
+
+#### Project Context & Research
+
 | Document | Purpose |
 |----------|---------|
 | `.planning/PROJECT.md` | Core project context, founder operations, constraints, key decisions |
@@ -451,11 +464,12 @@ The following decisions must be made and documented in PROJECT.md before develop
 - [x] PRD-APP-07: Container Utilization Calculator — Draft complete
 - [x] PRD-APP-08: Executive Dashboard — Draft complete
 - [x] PRD-APP-09: Shipment List & Tracking — Draft complete
-- [x] Technical Architecture — Documented in this summary
-- [x] Data Pipeline Design — Documented in this summary
-- [x] AI Agent Plans — Documented in this summary
-- [x] GTM Strategy — Documented in this summary
-- [x] Financial Model — Documented in this summary
+- [x] Technical Architecture — [TECHNICAL-ARCHITECTURE.md](./TECHNICAL-ARCHITECTURE.md) (AI-5409) — 1500+ lines
+- [x] Data Pipeline Design — [DATA-PIPELINE.md](./DATA-PIPELINE.md) (AI-5410) — 1700+ lines
+- [x] AI Agent Plans — [AI-AGENT-PLANS.md](./AI-AGENT-PLANS.md) (AI-5411) — 1450+ lines
+- [x] GTM Strategy — [GTM-STRATEGY.md](./GTM-STRATEGY.md) (AI-5412) — 1330+ lines
+- [x] Financial Model — [FINANCIAL-MODEL.md](./FINANCIAL-MODEL.md) (AI-5413) — 1180+ lines
+- [x] Product Roadmap — [PRODUCT-ROADMAP.md](./PRODUCT-ROADMAP.md) (AI-5408) — 1150+ lines
 - [x] Cross-document dependency map — Documented in this summary
 - [x] Critical decisions identified — 6 decisions documented above
 - [x] Open questions logged — 7 questions documented above
