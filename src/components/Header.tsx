@@ -12,6 +12,7 @@ const navLinks = [
   { label: "Pricing", href: "/#pricing" },
   { label: "Knowledge Base", href: "/knowledge-base" },
   { label: "Data Intelligence", href: "/data-intelligence" },
+  { label: "Architecture", href: "/platform-architecture" },
   { label: "Phases", href: "/phases" },
   { label: "Proposal", href: "/agreement" },
 ];
