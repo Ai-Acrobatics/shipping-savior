@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -357,7 +358,9 @@ export default function Home() {
 
           <ScrollReveal>
             <div className="bg-white border border-navy-100 rounded-2xl p-8 md:p-10 shadow-card">
-              <UnitEconomicsCalculator />
+              <Suspense fallback={<div className="animate-pulse h-64 bg-navy-50 rounded-xl" />}>
+                <UnitEconomicsCalculator />
+              </Suspense>
             </div>
           </ScrollReveal>
         </div>
@@ -477,7 +480,9 @@ export default function Home() {
 
           <ScrollReveal>
             <div className="bg-white border border-emerald-100 rounded-2xl p-8 md:p-10 shadow-card">
-              <FTZSavingsCalculator />
+              <Suspense fallback={<div className="animate-pulse h-64 bg-emerald-50 rounded-xl" />}>
+                <FTZSavingsCalculator />
+              </Suspense>
             </div>
           </ScrollReveal>
 

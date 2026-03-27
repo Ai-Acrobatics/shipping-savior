@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import FTZAnalyzerPage from "./FTZAnalyzerPage";
 
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <FTZAnalyzerPage />;
+  return (
+    <Suspense fallback={<div className="animate-pulse h-screen bg-navy-50" />}>
+      <FTZAnalyzerPage />
+    </Suspense>
+  );
 }
