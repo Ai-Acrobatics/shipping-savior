@@ -31,3 +31,6 @@ next-env.d.ts
 .next-*/
 tmp/
 *.bak
+
+# Stale -old directories from agent permission conflicts
+*-old/
