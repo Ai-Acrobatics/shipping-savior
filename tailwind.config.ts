@@ -82,6 +82,7 @@ const config: Config = {
         "orb-float-3": "orbFloat3 18s ease-in-out infinite",
         "shimmer": "shimmer 2s linear infinite",
         "glow-pulse": "glowPulse 3s ease-in-out infinite",
+        "slide-in-left": "slideInLeft 0.3s ease-out forwards",
       },
       keyframes: {
         fadeIn: {
@@ -149,6 +150,10 @@ const config: Config = {
         glowPulse: {
           "0%, 100%": { boxShadow: "0 0 20px rgba(37, 99, 235, 0.3)" },
           "50%": { boxShadow: "0 0 40px rgba(37, 99, 235, 0.6)" },
+        },
+        slideInLeft: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(0)" },
         },
       },
       boxShadow: {

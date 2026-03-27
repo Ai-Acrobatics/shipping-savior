@@ -38,6 +38,7 @@
     "node_modules",
     "scripts",
     "src/components/dashboard-old",
-    "src/lib/data-old"
+    "src/lib/data-old",
+    "src/app/api-old"
   ]
 }
