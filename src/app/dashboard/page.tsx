@@ -408,6 +408,7 @@ export default function DashboardPage() {
             <nav className="hidden md:flex items-center gap-1">
               {[
                 { label: "Dashboard", href: "/dashboard", active: true },
+                { label: "Executive", href: "/dashboard/executive" },
                 { label: "Routes", href: "/routes" },
                 { label: "FTZ Zones", href: "/ftz-analyzer" },
                 { label: "Proposal", href: "/" },
