@@ -1,0 +1,13 @@
+{
+  "project": "shipping-savior",
+  "projectPath": "/opt/agency-workspace/shipping-savior",
+  "autopilot": {
+    "defaultWorkerCount": 3,
+    "maxWorkerCount": 5,
+    "progressUpdateInterval": 30,
+    "stuckWorkerTimeout": 600,
+    "maxTaskRetries": 3
+  },
+  "source": "roadmap",
+  "startedAt": "2026-03-26T15:00:00Z"
+}
