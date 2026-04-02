@@ -7,6 +7,7 @@ import {
   jsonb,
   pgEnum,
   uniqueIndex,
+  integer,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -134,6 +135,7 @@ export const organizationsRelations = relations(organizations, ({ many }) => ({
   calculations: many(calculations),
   auditLogs: many(auditLogs),
   invites: many(invites),
+  contracts: many(contracts),
 }));
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -141,6 +143,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   calculations: many(calculations),
   auditLogs: many(auditLogs),
   invitesSent: many(invites),
+  contracts: many(contracts),
 }));
 
 export const orgMembersRelations = relations(orgMembers, ({ one }) => ({
@@ -187,6 +190,78 @@ export const invitesRelations = relations(invites, ({ one }) => ({
   }),
 }));
 
+// ── Contract Enums ────────────────────────────────────
+
+export const contractTypeEnum = pgEnum('contract_type', [
+  'spot',
+  '90_day',
+  '180_day',
+  '365_day',
+]);
+
+// ── Contracts ─────────────────────────────────────────
+
+export const contracts = pgTable('contracts', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  orgId: uuid('org_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id),
+  carrier: varchar('carrier', { length: 100 }).notNull(),
+  carrierCode: varchar('carrier_code', { length: 10 }).notNull(),
+  contractNumber: varchar('contract_number', { length: 100 }),
+  contractType: contractTypeEnum('contract_type').notNull(),
+  startDate: timestamp('start_date', { withTimezone: true }).notNull(),
+  endDate: timestamp('end_date', { withTimezone: true }).notNull(),
+  contactName: varchar('contact_name', { length: 200 }),
+  contactEmail: varchar('contact_email', { length: 200 }),
+  notes: text('notes'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+// ── Contract Lanes ────────────────────────────────────
+
+export const contractLanes = pgTable('contract_lanes', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  contractId: uuid('contract_id')
+    .notNull()
+    .references(() => contracts.id, { onDelete: 'cascade' }),
+  originPort: varchar('origin_port', { length: 10 }).notNull(),
+  originPortName: varchar('origin_port_name', { length: 200 }).notNull(),
+  destPort: varchar('dest_port', { length: 10 }).notNull(),
+  destPortName: varchar('dest_port_name', { length: 200 }).notNull(),
+  rate20ft: integer('rate_20ft'),
+  rate40ft: integer('rate_40ft'),
+  rate40hc: integer('rate_40hc'),
+  currency: varchar('currency', { length: 3 }).default('USD'),
+  commodity: varchar('commodity', { length: 200 }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+// ── Contract Relations ────────────────────────────────
+
+export const contractsRelations = relations(contracts, ({ one, many }) => ({
+  organization: one(organizations, {
+    fields: [contracts.orgId],
+    references: [organizations.id],
+  }),
+  user: one(users, {
+    fields: [contracts.userId],
+    references: [users.id],
+  }),
+  lanes: many(contractLanes),
+}));
+
+export const contractLanesRelations = relations(contractLanes, ({ one }) => ({
+  contract: one(contracts, {
+    fields: [contractLanes.contractId],
+    references: [contracts.id],
+  }),
+}));
+
 // ── Type Exports ───────────────────────────────────────
 
 export type Organization = typeof organizations.$inferSelect;
@@ -207,8 +282,15 @@ export type NewAuditLog = typeof auditLogs.$inferInsert;
 export type Invite = typeof invites.$inferSelect;
 export type NewInvite = typeof invites.$inferInsert;
 
+export type Contract = typeof contracts.$inferSelect;
+export type NewContract = typeof contracts.$inferInsert;
+
+export type ContractLane = typeof contractLanes.$inferSelect;
+export type NewContractLane = typeof contractLanes.$inferInsert;
+
 // Enum type helpers
 export type OrgRole = (typeof orgRoleEnum.enumValues)[number];
 export type CalculationType = (typeof calculatorTypeEnum.enumValues)[number];
 export type AuditAction = (typeof auditActionEnum.enumValues)[number];
+export type ContractType = (typeof contractTypeEnum.enumValues)[number];
 export type Plan = 'free' | 'pro' | 'enterprise';

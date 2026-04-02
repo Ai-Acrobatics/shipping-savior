@@ -64,6 +64,7 @@ const navSections: NavSection[] = [
     title: "Data",
     items: [
       { label: "History", href: "/platform/history", icon: Clock },
+      { label: "Contracts", href: "/platform/contracts", icon: FileText },
     ],
   },
   {
