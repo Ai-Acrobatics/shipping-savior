@@ -7,8 +7,9 @@ import { Ship, Menu, X, LayoutDashboard } from "lucide-react";
 const navLinks = [
   { label: "Platform", href: "/#platform" },
   { label: "How It Works", href: "/#how-it-works" },
+  { label: "Carrier Comparison", href: "/carrier-comparison" },
+  { label: "Port Finder", href: "/port-finder" },
   { label: "FTZ Analyzer", href: "/ftz-analyzer" },
-  { label: "Knowledge Base", href: "/knowledge-base" },
   { label: "Dashboard", href: "/dashboard" },
 ];
 
