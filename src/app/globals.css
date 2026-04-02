@@ -331,3 +331,120 @@ html {
   animation: shimmer 2s linear infinite;
   border-radius: 6px;
 }
+
+/* ============================================
+   PREMIUM DEI-STYLE UTILITIES
+   ============================================ */
+
+/* Premium shadows with brand-color tinting */
+.shadow-premium-blue {
+  box-shadow:
+    0 4px 6px -1px rgba(37, 99, 235, 0.08),
+    0 10px 25px -5px rgba(37, 99, 235, 0.12),
+    0 20px 50px -12px rgba(37, 99, 235, 0.18);
+}
+.shadow-premium-hover {
+  box-shadow:
+    0 8px 15px -3px rgba(37, 99, 235, 0.1),
+    0 20px 40px -8px rgba(37, 99, 235, 0.16),
+    0 30px 60px -15px rgba(37, 99, 235, 0.22);
+}
+
+/* Glassmorphism utilities */
+.glass-premium {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.glass-subtle {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.glass-dark {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Text glow effects */
+.text-glow-blue {
+  text-shadow: 0 0 40px rgba(37, 99, 235, 0.3), 0 0 80px rgba(37, 99, 235, 0.15);
+}
+.text-glow-sky {
+  text-shadow: 0 0 40px rgba(56, 189, 248, 0.3), 0 0 80px rgba(56, 189, 248, 0.15);
+}
+
+/* Blob animation */
+@keyframes blob {
+  0%, 100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    transform: translate(30px, -20px) scale(1.05);
+  }
+  66% {
+    border-radius: 40% 60% 30% 70% / 40% 30% 60% 50%;
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+}
+.animate-blob {
+  animation: blob 8s ease-in-out infinite;
+}
+.animate-blob-delay-2 {
+  animation: blob 8s ease-in-out 2s infinite;
+}
+.animate-blob-delay-4 {
+  animation: blob 8s ease-in-out 4s infinite;
+}
+
+/* Shimmer effect */
+.shimmer-effect {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-effect::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Gradient border animation */
+.animated-gradient-border {
+  position: relative;
+}
+.animated-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, #2563eb, #6366f1, #38bdf8, #2563eb);
+  background-size: 300% 300%;
+  animation: gradientShift 4s ease-in-out infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

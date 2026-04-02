@@ -2,19 +2,14 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Ship, Menu, X, LayoutDashboard, FileText } from "lucide-react";
+import { Ship, Menu, X, LayoutDashboard } from "lucide-react";
 
 const navLinks = [
   { label: "Platform", href: "/#platform" },
-  { label: "Calculators", href: "/#calculators" },
-  { label: "FTZ Strategy", href: "/#ftz" },
-  { label: "Wireframes", href: "/#wireframes" },
-  { label: "Pricing", href: "/#pricing" },
+  { label: "How It Works", href: "/#how-it-works" },
+  { label: "FTZ Analyzer", href: "/ftz-analyzer" },
   { label: "Knowledge Base", href: "/knowledge-base" },
-  { label: "Data Intelligence", href: "/data-intelligence" },
-  { label: "Architecture", href: "/platform-architecture" },
-  { label: "Phases", href: "/phases" },
-  { label: "Proposal", href: "/agreement" },
+  { label: "Dashboard", href: "/dashboard" },
 ];
 
 export default function Header() {
@@ -50,11 +45,7 @@ export default function Header() {
             <a
               key={link.href}
               href={link.href}
-              className={`relative text-sm font-medium transition-colors group ${
-                link.label === "Proposal"
-                  ? "text-ocean-600 hover:text-indigo-600"
-                  : "text-navy-500 hover:text-ocean-600"
-              }`}
+              className="relative text-sm font-medium text-navy-500 hover:text-ocean-600 transition-colors group"
             >
               {link.label}
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-ocean-500 to-indigo-500 rounded-full transition-all duration-300 group-hover:w-full" />
@@ -88,14 +79,9 @@ export default function Header() {
             <a
               key={link.href}
               href={link.href}
-              className={`block py-2.5 text-sm font-medium ${
-                link.label === "Proposal"
-                  ? "text-ocean-600"
-                  : "text-navy-600 hover:text-ocean-600"
-              }`}
+              className="block py-2.5 text-sm font-medium text-navy-600 hover:text-ocean-600"
               onClick={() => setMobileOpen(false)}
             >
-              {link.label === "Proposal" && <FileText className="w-4 h-4 inline mr-2" />}
               {link.label}
             </a>
           ))}
