@@ -24,8 +24,8 @@ import {
 
 const heroStats = [
   { label: "Carrier Lines", value: "8+", icon: Ship },
-  { label: "Ports Mapped", value: "3,700+", icon: Anchor },
-  { label: "FTZ Zones", value: "260+", icon: Shield },
+  { label: "Ports Mapped", value: "700+", icon: Anchor },
+  { label: "FTZ Zones", value: "268", icon: Shield },
   { label: "Real-Time Schedules", value: "Live", icon: Clock },
 ];
 
