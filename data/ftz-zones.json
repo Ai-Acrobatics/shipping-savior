@@ -48,53 +48,76 @@
     "state_code": "CA",
     "operator": "Port of San Francisco",
     "grantee": "Port Commission, City and County of San Francisco",
-    "lat": 37.8044,
-    "lng": -122.2711,
+    "lat": 37.7955,
+    "lng": -122.3895,
     "status": "active",
     "activated_year": 1948,
-    "nearest_port": "USOAK",
-    "port_distance_miles": 10,
+    "nearest_port": "USSFO",
+    "port_distance_miles": 2,
     "key_industries": [
       "electronics",
       "wine",
-      "biotech",
-      "consumer goods"
+      "apparel"
+    ]
+  },
+  {
+    "zone_number": 5,
+    "name": "Seattle Foreign-Trade Zone",
+    "city": "Seattle",
+    "state": "Washington",
+    "state_code": "WA",
+    "operator": "Port of Seattle",
+    "grantee": "Port of Seattle Commission",
+    "lat": 47.5802,
+    "lng": -122.3359,
+    "status": "active",
+    "activated_year": 1949,
+    "nearest_port": "USSEA",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "aerospace",
+      "electronics",
+      "agricultural products"
     ]
   },
   {
     "zone_number": 7,
-    "name": "New York Foreign-Trade Zone",
-    "city": "New York",
-    "state": "New York",
-    "state_code": "NY",
-    "operator": "NYC Economic Development Corp.",
-    "grantee": "City of New York",
-    "lat": 40.6892,
-    "lng": -74.0445,
+    "name": "Mayaguez Foreign-Trade Zone",
+    "city": "Mayaguez",
+    "state": "Puerto Rico",
+    "state_code": "PR",
+    "operator": "Puerto Rico Industrial Development Co.",
+    "grantee": "Government of Puerto Rico",
+    "lat": 18.2013,
+    "lng": -67.1397,
     "status": "active",
-    "activated_year": 1937,
-    "nearest_port": "USNYC",
+    "activated_year": 1962,
+    "nearest_port": "PRMAZ",
     "port_distance_miles": 5,
     "key_industries": [
-      "consumer goods",
-      "electronics",
       "pharmaceuticals",
-      "textiles"
-    ],
-    "annual_merchandise_value_usd": 12000000000,
-    "subzones": [
-      {
-        "subzone_id": "7A",
-        "name": "JFK Airport Area",
-        "operator": "JFK International Air Terminal LLC",
-        "type": "distribution"
-      },
-      {
-        "subzone_id": "7B",
-        "name": "Red Hook Container Terminal",
-        "operator": "NYC EDC",
-        "type": "warehouse"
-      }
+      "electronics",
+      "apparel"
+    ]
+  },
+  {
+    "zone_number": 8,
+    "name": "Toledo Foreign-Trade Zone",
+    "city": "Toledo",
+    "state": "Ohio",
+    "state_code": "OH",
+    "operator": "Toledo-Lucas County Port Authority",
+    "grantee": "Toledo-Lucas County Port Authority",
+    "lat": 41.6528,
+    "lng": -83.5379,
+    "status": "active",
+    "activated_year": 1960,
+    "nearest_port": "USTOL",
+    "port_distance_miles": 4,
+    "key_industries": [
+      "automotive",
+      "glass",
+      "solar panels"
     ]
   },
   {
@@ -103,16 +126,58 @@
     "city": "Honolulu",
     "state": "Hawaii",
     "state_code": "HI",
-    "operator": "State of Hawaii DBEDT",
-    "grantee": "State of Hawaii",
+    "operator": "Hawaii Foreign-Trade Zone",
+    "grantee": "State of Hawaii Dept. of Business, Economic Development & Tourism",
     "lat": 21.3069,
     "lng": -157.8583,
     "status": "active",
     "activated_year": 1966,
+    "nearest_port": "USHNL",
+    "port_distance_miles": 3,
     "key_industries": [
-      "petroleum",
-      "electronics",
-      "food products"
+      "petroleum refining",
+      "ship repair",
+      "food processing"
+    ]
+  },
+  {
+    "zone_number": 12,
+    "name": "McAllen Foreign-Trade Zone",
+    "city": "McAllen",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "McAllen Economic Development Corp.",
+    "grantee": "City of McAllen",
+    "lat": 26.2034,
+    "lng": -98.23,
+    "status": "active",
+    "activated_year": 1973,
+    "nearest_port": "USBRW",
+    "port_distance_miles": 60,
+    "key_industries": [
+      "food processing",
+      "electronics assembly",
+      "automotive parts"
+    ]
+  },
+  {
+    "zone_number": 14,
+    "name": "Little Rock Foreign-Trade Zone",
+    "city": "Little Rock",
+    "state": "Arkansas",
+    "state_code": "AR",
+    "operator": "Little Rock Port Authority",
+    "grantee": "Little Rock Port Authority",
+    "lat": 34.7465,
+    "lng": -92.2896,
+    "status": "active",
+    "activated_year": 1976,
+    "nearest_port": "USLKR",
+    "port_distance_miles": 0,
+    "key_industries": [
+      "steel",
+      "automotive parts",
+      "distribution"
     ]
   },
   {
@@ -121,16 +186,59 @@
     "city": "Kansas City",
     "state": "Missouri",
     "state_code": "MO",
-    "operator": "Greater Kansas City FTZ Inc.",
-    "grantee": "Greater Kansas City Foreign-Trade Zone Inc.",
+    "operator": "Greater Kansas City Foreign-Trade Zone, Inc.",
+    "grantee": "Greater Kansas City Foreign-Trade Zone, Inc.",
     "lat": 39.0997,
     "lng": -94.5786,
     "status": "active",
-    "activated_year": 1973,
+    "activated_year": 1977,
+    "nearest_port": "USMKC",
+    "port_distance_miles": 0,
     "key_industries": [
       "automotive",
       "agriculture",
-      "machinery"
+      "pharmaceuticals"
+    ]
+  },
+  {
+    "zone_number": 16,
+    "name": "Philadelphia Foreign-Trade Zone",
+    "city": "Philadelphia",
+    "state": "Pennsylvania",
+    "state_code": "PA",
+    "operator": "Philadelphia Regional Port Authority",
+    "grantee": "Philadelphia Regional Port Authority",
+    "lat": 39.8937,
+    "lng": -75.1747,
+    "status": "active",
+    "activated_year": 1979,
+    "nearest_port": "USPHL",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "petroleum",
+      "chemicals",
+      "steel",
+      "cocoa"
+    ]
+  },
+  {
+    "zone_number": 17,
+    "name": "Kansas City (Kansas) Foreign-Trade Zone",
+    "city": "Kansas City",
+    "state": "Kansas",
+    "state_code": "KS",
+    "operator": "Greater Kansas City Foreign-Trade Zone, Inc.",
+    "grantee": "Greater Kansas City Foreign-Trade Zone, Inc.",
+    "lat": 39.1155,
+    "lng": -94.6268,
+    "status": "active",
+    "activated_year": 1977,
+    "nearest_port": "USMKC",
+    "port_distance_miles": 0,
+    "key_industries": [
+      "grain",
+      "livestock",
+      "automotive"
     ]
   },
   {
@@ -144,47 +252,74 @@
     "lat": 37.3382,
     "lng": -121.8863,
     "status": "active",
-    "activated_year": 1974,
+    "activated_year": 1978,
+    "nearest_port": "USOAK",
+    "port_distance_miles": 35,
     "key_industries": [
       "semiconductors",
       "electronics",
-      "tech hardware"
+      "medical devices"
+    ]
+  },
+  {
+    "zone_number": 19,
+    "name": "Omaha Foreign-Trade Zone",
+    "city": "Omaha",
+    "state": "Nebraska",
+    "state_code": "NE",
+    "operator": "Dock 365 FTZ",
+    "grantee": "Dock 365 FTZ, Inc.",
+    "lat": 41.2565,
+    "lng": -95.9345,
+    "status": "active",
+    "activated_year": 1979,
+    "nearest_port": "USMKC",
+    "port_distance_miles": 180,
+    "key_industries": [
+      "food processing",
+      "telecommunications",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 20,
+    "name": "Suffolk (Hampton Roads) Foreign-Trade Zone",
+    "city": "Suffolk",
+    "state": "Virginia",
+    "state_code": "VA",
+    "operator": "Virginia Port Authority",
+    "grantee": "Virginia Port Authority",
+    "lat": 36.7282,
+    "lng": -76.5836,
+    "status": "active",
+    "activated_year": 1979,
+    "nearest_port": "USNFK",
+    "port_distance_miles": 15,
+    "key_industries": [
+      "tobacco",
+      "peanuts",
+      "automotive parts",
+      "distribution"
     ]
   },
   {
     "zone_number": 21,
-    "name": "Charleston Foreign-Trade Zone",
-    "city": "Charleston",
+    "name": "Dorchester County Foreign-Trade Zone",
+    "city": "Summerville",
     "state": "South Carolina",
     "state_code": "SC",
     "operator": "SC Ports Authority",
-    "grantee": "South Carolina State Ports Authority",
-    "lat": 32.7876,
-    "lng": -79.9403,
+    "grantee": "SC State Ports Authority",
+    "lat": 33.0185,
+    "lng": -80.1756,
     "status": "active",
-    "activated_year": 1976,
+    "activated_year": 1980,
     "nearest_port": "USCHS",
-    "port_distance_miles": 2,
+    "port_distance_miles": 25,
     "key_industries": [
       "automotive",
-      "tires",
-      "machinery",
-      "apparel"
-    ],
-    "annual_merchandise_value_usd": 5500000000,
-    "subzones": [
-      {
-        "subzone_id": "21A",
-        "name": "BMW Manufacturing",
-        "operator": "BMW Manufacturing Co. LLC",
-        "type": "manufacturing"
-      },
-      {
-        "subzone_id": "21B",
-        "name": "Volvo Cars US",
-        "operator": "Volvo Car US Operations",
-        "type": "manufacturing"
-      }
+      "distribution",
+      "tire manufacturing"
     ]
   },
   {
@@ -195,34 +330,137 @@
     "state_code": "IL",
     "operator": "Illinois International Port District",
     "grantee": "Illinois International Port District",
-    "lat": 41.7367,
-    "lng": -87.5558,
+    "lat": 41.7377,
+    "lng": -87.5566,
     "status": "active",
-    "activated_year": 1976,
+    "activated_year": 1979,
+    "nearest_port": "USCHI",
+    "port_distance_miles": 5,
     "key_industries": [
-      "electronics",
-      "automotive",
+      "steel",
       "machinery",
-      "food products"
-    ],
-    "annual_merchandise_value_usd": 6000000000
+      "electronics",
+      "chemicals"
+    ]
+  },
+  {
+    "zone_number": 23,
+    "name": "Buffalo Foreign-Trade Zone",
+    "city": "Buffalo",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "Erie County IDA",
+    "grantee": "Erie County Industrial Development Agency",
+    "lat": 42.8864,
+    "lng": -78.8784,
+    "status": "active",
+    "activated_year": 1980,
+    "nearest_port": "USBUF",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "steel",
+      "automotive",
+      "chemicals"
+    ]
+  },
+  {
+    "zone_number": 24,
+    "name": "Pittston Foreign-Trade Zone",
+    "city": "Pittston",
+    "state": "Pennsylvania",
+    "state_code": "PA",
+    "operator": "CAN DO Inc.",
+    "grantee": "Eastern Distribution Center Inc.",
+    "lat": 41.3259,
+    "lng": -75.7893,
+    "status": "active",
+    "activated_year": 1980,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 120,
+    "key_industries": [
+      "distribution",
+      "apparel",
+      "electronics"
+    ]
+  },
+  {
+    "zone_number": 25,
+    "name": "Port Everglades Foreign-Trade Zone",
+    "city": "Fort Lauderdale",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Broward County",
+    "grantee": "Broward County Board of County Commissioners",
+    "lat": 26.0873,
+    "lng": -80.1164,
+    "status": "active",
+    "activated_year": 1980,
+    "nearest_port": "USPEF",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "petroleum",
+      "cruise supplies",
+      "cement",
+      "electronics"
+    ]
   },
   {
     "zone_number": 26,
-    "name": "Atlanta Foreign-Trade Zone",
-    "city": "Atlanta",
-    "state": "Georgia",
-    "state_code": "GA",
-    "operator": "Georgia Foreign-Trade Zone Inc.",
-    "grantee": "Georgia Foreign-Trade Zone Inc.",
-    "lat": 33.6407,
-    "lng": -84.4277,
+    "name": "Shenandoah Valley Foreign-Trade Zone",
+    "city": "Front Royal",
+    "state": "Virginia",
+    "state_code": "VA",
+    "operator": "Virginia Inland Port",
+    "grantee": "Virginia Port Authority",
+    "lat": 38.9182,
+    "lng": -78.1944,
     "status": "active",
-    "activated_year": 1976,
+    "activated_year": 1980,
+    "nearest_port": "USNFK",
+    "port_distance_miles": 200,
     "key_industries": [
-      "automotive",
+      "distribution",
+      "manufacturing"
+    ]
+  },
+  {
+    "zone_number": 27,
+    "name": "Boston Foreign-Trade Zone",
+    "city": "Boston",
+    "state": "Massachusetts",
+    "state_code": "MA",
+    "operator": "Massport",
+    "grantee": "Massachusetts Port Authority",
+    "lat": 42.3541,
+    "lng": -71.0475,
+    "status": "active",
+    "activated_year": 1980,
+    "nearest_port": "USBOS",
+    "port_distance_miles": 2,
+    "key_industries": [
       "electronics",
-      "consumer goods"
+      "biotech",
+      "seafood",
+      "leather goods"
+    ]
+  },
+  {
+    "zone_number": 28,
+    "name": "New Bedford Foreign-Trade Zone",
+    "city": "New Bedford",
+    "state": "Massachusetts",
+    "state_code": "MA",
+    "operator": "New Bedford Port Authority",
+    "grantee": "City of New Bedford",
+    "lat": 41.6362,
+    "lng": -70.9342,
+    "status": "active",
+    "activated_year": 1981,
+    "nearest_port": "USBOS",
+    "port_distance_miles": 60,
+    "key_industries": [
+      "seafood processing",
+      "textiles"
     ]
   },
   {
@@ -232,18 +470,79 @@
     "state": "Kentucky",
     "state_code": "KY",
     "operator": "Louisville & Jefferson County Riverport Authority",
-    "grantee": "Louisville & Jefferson County Riverport Authority",
-    "lat": 38.1863,
-    "lng": -85.6669,
+    "grantee": "Louisville and Jefferson County Riverport Authority",
+    "lat": 38.2527,
+    "lng": -85.7585,
     "status": "active",
-    "activated_year": 1977,
+    "activated_year": 1981,
+    "nearest_port": "USLOU",
+    "port_distance_miles": 3,
     "key_industries": [
-      "UPS Worldport",
-      "logistics",
       "bourbon",
-      "automotive"
-    ],
-    "notes": "Adjacent to UPS Worldport global air hub"
+      "automotive",
+      "healthcare products"
+    ]
+  },
+  {
+    "zone_number": 30,
+    "name": "Salt Lake City Foreign-Trade Zone",
+    "city": "Salt Lake City",
+    "state": "Utah",
+    "state_code": "UT",
+    "operator": "World Trade Center Utah",
+    "grantee": "Salt Lake City Corp.",
+    "lat": 40.7608,
+    "lng": -111.891,
+    "status": "active",
+    "activated_year": 1981,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 700,
+    "key_industries": [
+      "mining",
+      "electronics",
+      "sporting goods"
+    ]
+  },
+  {
+    "zone_number": 31,
+    "name": "Granite City Foreign-Trade Zone",
+    "city": "Granite City",
+    "state": "Illinois",
+    "state_code": "IL",
+    "operator": "Tri-City Regional Port District",
+    "grantee": "Tri-City Regional Port District",
+    "lat": 38.7014,
+    "lng": -90.1487,
+    "status": "active",
+    "activated_year": 1981,
+    "nearest_port": "USSTL",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "steel",
+      "chemicals",
+      "grain"
+    ]
+  },
+  {
+    "zone_number": 32,
+    "name": "Miami Foreign-Trade Zone",
+    "city": "Miami",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Miami-Dade County",
+    "grantee": "Greater Miami Foreign-Trade Zone Inc.",
+    "lat": 25.7959,
+    "lng": -80.287,
+    "status": "active",
+    "activated_year": 1981,
+    "nearest_port": "USMIA",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "apparel",
+      "electronics",
+      "pharmaceuticals",
+      "cut flowers"
+    ]
   },
   {
     "zone_number": 33,
@@ -252,35 +551,118 @@
     "state": "Pennsylvania",
     "state_code": "PA",
     "operator": "Regional Industrial Development Corp.",
-    "grantee": "RIDC of Southwestern PA",
+    "grantee": "Regional Industrial Development Corp. of SW PA",
     "lat": 40.4406,
     "lng": -79.9959,
     "status": "active",
-    "activated_year": 1978,
+    "activated_year": 1982,
+    "nearest_port": "USPIT",
+    "port_distance_miles": 2,
     "key_industries": [
       "steel",
-      "machinery",
-      "energy equipment"
+      "glass",
+      "specialty metals"
+    ]
+  },
+  {
+    "zone_number": 34,
+    "name": "Niagara Falls Foreign-Trade Zone",
+    "city": "Niagara Falls",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "Niagara County IDA",
+    "grantee": "Niagara County Industrial Development Agency",
+    "lat": 43.0962,
+    "lng": -79.0377,
+    "status": "active",
+    "activated_year": 1982,
+    "nearest_port": "USBUF",
+    "port_distance_miles": 20,
+    "key_industries": [
+      "chemicals",
+      "distribution",
+      "aerospace"
+    ]
+  },
+  {
+    "zone_number": 35,
+    "name": "Philadelphia (Bucks County) Foreign-Trade Zone",
+    "city": "Fairless Hills",
+    "state": "Pennsylvania",
+    "state_code": "PA",
+    "operator": "Bucks County Industrial Development Authority",
+    "grantee": "Bucks County IDA",
+    "lat": 40.1793,
+    "lng": -74.8582,
+    "status": "active",
+    "activated_year": 1982,
+    "nearest_port": "USPHL",
+    "port_distance_miles": 30,
+    "key_industries": [
+      "steel",
+      "pharmaceuticals",
+      "chemicals"
+    ]
+  },
+  {
+    "zone_number": 36,
+    "name": "Galveston Foreign-Trade Zone",
+    "city": "Galveston",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Port of Galveston",
+    "grantee": "Board of Trustees of Galveston Wharves",
+    "lat": 29.3013,
+    "lng": -94.7977,
+    "status": "active",
+    "activated_year": 1982,
+    "nearest_port": "USGLS",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "grain",
+      "petroleum",
+      "chemicals",
+      "copper"
     ]
   },
   {
     "zone_number": 37,
-    "name": "Orange County Foreign-Trade Zone",
-    "city": "Orange County",
-    "state": "California",
-    "state_code": "CA",
-    "operator": "Orange County Board of Supervisors",
-    "grantee": "Board of Supervisors, County of Orange",
-    "lat": 33.7175,
-    "lng": -117.8311,
+    "name": "Orange County (NY) Foreign-Trade Zone",
+    "city": "Newburgh",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "Orange County IDA",
+    "grantee": "County of Orange",
+    "lat": 41.5034,
+    "lng": -74.0104,
     "status": "active",
-    "activated_year": 1978,
-    "nearest_port": "USLGB",
-    "port_distance_miles": 25,
+    "activated_year": 1982,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 60,
     "key_industries": [
       "electronics",
-      "medical devices",
-      "consumer goods"
+      "distribution",
+      "food processing"
+    ]
+  },
+  {
+    "zone_number": 38,
+    "name": "Spartanburg County Foreign-Trade Zone",
+    "city": "Spartanburg",
+    "state": "South Carolina",
+    "state_code": "SC",
+    "operator": "Spartanburg County",
+    "grantee": "Spartanburg County",
+    "lat": 34.9496,
+    "lng": -81.932,
+    "status": "active",
+    "activated_year": 1982,
+    "nearest_port": "USCHS",
+    "port_distance_miles": 200,
+    "key_industries": [
+      "automotive",
+      "tires",
+      "plastics"
     ]
   },
   {
@@ -289,40 +671,19 @@
     "city": "Dallas",
     "state": "Texas",
     "state_code": "TX",
-    "operator": "DFW Airport Board",
+    "operator": "DFW International Commerce Center",
     "grantee": "Dallas/Fort Worth International Airport Board",
     "lat": 32.8998,
     "lng": -97.0403,
     "status": "active",
-    "activated_year": 1979,
+    "activated_year": 1982,
     "nearest_port": "USHOU",
     "port_distance_miles": 250,
     "key_industries": [
       "electronics",
-      "telecom equipment",
       "aerospace",
-      "automotive parts"
-    ],
-    "annual_merchandise_value_usd": 8000000000,
-    "subzones": [
-      {
-        "subzone_id": "39A",
-        "name": "Texas Instruments",
-        "operator": "Texas Instruments Inc.",
-        "type": "manufacturing"
-      },
-      {
-        "subzone_id": "39B",
-        "name": "Bell Helicopter",
-        "operator": "Bell Helicopter Textron",
-        "type": "manufacturing"
-      },
-      {
-        "subzone_id": "39C",
-        "name": "Alliance Global Logistics Hub",
-        "operator": "Hillwood Development",
-        "type": "distribution"
-      }
+      "telecom",
+      "automotive"
     ]
   },
   {
@@ -336,33 +697,177 @@
     "lat": 41.4993,
     "lng": -81.6944,
     "status": "active",
-    "activated_year": 1979,
+    "activated_year": 1982,
+    "nearest_port": "USCLE",
+    "port_distance_miles": 3,
     "key_industries": [
-      "automotive parts",
       "steel",
-      "plastics",
-      "machinery"
+      "automotive",
+      "polymers",
+      "chemicals"
+    ]
+  },
+  {
+    "zone_number": 41,
+    "name": "Milwaukee Foreign-Trade Zone",
+    "city": "Milwaukee",
+    "state": "Wisconsin",
+    "state_code": "WI",
+    "operator": "Port Milwaukee",
+    "grantee": "Board of Harbor Commissioners, City of Milwaukee",
+    "lat": 43.0389,
+    "lng": -87.9065,
+    "status": "active",
+    "activated_year": 1982,
+    "nearest_port": "USMKE",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "machinery",
+      "engines",
+      "electronics"
+    ]
+  },
+  {
+    "zone_number": 42,
+    "name": "Orlando Foreign-Trade Zone",
+    "city": "Orlando",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Greater Orlando Aviation Authority",
+    "grantee": "Greater Orlando Aviation Authority",
+    "lat": 28.4312,
+    "lng": -81.3081,
+    "status": "active",
+    "activated_year": 1983,
+    "nearest_port": "USTPA",
+    "port_distance_miles": 85,
+    "key_industries": [
+      "aerospace",
+      "simulation",
+      "electronics",
+      "pharmaceuticals"
+    ]
+  },
+  {
+    "zone_number": 43,
+    "name": "Battle Creek Foreign-Trade Zone",
+    "city": "Battle Creek",
+    "state": "Michigan",
+    "state_code": "MI",
+    "operator": "City of Battle Creek",
+    "grantee": "City of Battle Creek",
+    "lat": 42.3212,
+    "lng": -85.1797,
+    "status": "active",
+    "activated_year": 1983,
+    "nearest_port": "USDET",
+    "port_distance_miles": 120,
+    "key_industries": [
+      "food processing",
+      "automotive",
+      "cereal manufacturing"
     ]
   },
   {
     "zone_number": 44,
-    "name": "Detroit Foreign-Trade Zone",
-    "city": "Detroit",
-    "state": "Michigan",
-    "state_code": "MI",
-    "operator": "Greater Detroit FTZ Inc.",
-    "grantee": "Greater Detroit Foreign-Trade Zone Inc.",
-    "lat": 42.3314,
-    "lng": -83.0458,
+    "name": "Morris County Foreign-Trade Zone",
+    "city": "Morris Plains",
+    "state": "New Jersey",
+    "state_code": "NJ",
+    "operator": "Morris County Board of Chosen Freeholders",
+    "grantee": "Morris County Board of Chosen Freeholders",
+    "lat": 40.8226,
+    "lng": -74.4804,
     "status": "active",
-    "activated_year": 1979,
+    "activated_year": 1983,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 30,
+    "key_industries": [
+      "pharmaceuticals",
+      "chemicals",
+      "electronics"
+    ]
+  },
+  {
+    "zone_number": 45,
+    "name": "Portland (OR) Foreign-Trade Zone",
+    "city": "Portland",
+    "state": "Oregon",
+    "state_code": "OR",
+    "operator": "Port of Portland",
+    "grantee": "Port of Portland",
+    "lat": 45.5945,
+    "lng": -122.7576,
+    "status": "active",
+    "activated_year": 1983,
+    "nearest_port": "USPDX",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "electronics",
+      "athletic footwear",
+      "grain"
+    ]
+  },
+  {
+    "zone_number": 46,
+    "name": "Cincinnati Foreign-Trade Zone",
+    "city": "Cincinnati",
+    "state": "Ohio",
+    "state_code": "OH",
+    "operator": "Greater Cincinnati FTZ Inc.",
+    "grantee": "Greater Cincinnati FTZ Inc.",
+    "lat": 39.1031,
+    "lng": -84.512,
+    "status": "active",
+    "activated_year": 1983,
+    "nearest_port": "USCVG",
+    "port_distance_miles": 15,
+    "key_industries": [
+      "consumer products",
+      "jet engines",
+      "chemicals"
+    ]
+  },
+  {
+    "zone_number": 47,
+    "name": "Campbell County (KY) Foreign-Trade Zone",
+    "city": "Highland Heights",
+    "state": "Kentucky",
+    "state_code": "KY",
+    "operator": "Northern KY Tri-County Economic Development Corp.",
+    "grantee": "Northern KY Tri-County Economic Development Corp.",
+    "lat": 39.0353,
+    "lng": -84.4519,
+    "status": "active",
+    "activated_year": 1983,
+    "nearest_port": "USCVG",
+    "port_distance_miles": 8,
     "key_industries": [
       "automotive",
-      "auto parts",
+      "electronics",
+      "pharmaceuticals"
+    ]
+  },
+  {
+    "zone_number": 48,
+    "name": "Tucson Foreign-Trade Zone",
+    "city": "Tucson",
+    "state": "Arizona",
+    "state_code": "AZ",
+    "operator": "Port Authority of Pima County",
+    "grantee": "City of Tucson/Pima County",
+    "lat": 32.1162,
+    "lng": -110.9303,
+    "status": "active",
+    "activated_year": 1984,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 480,
+    "key_industries": [
+      "aerospace",
+      "optics",
+      "mining",
       "electronics"
-    ],
-    "annual_merchandise_value_usd": 10000000000,
-    "notes": "Largest auto-related FTZ activity in the US"
+    ]
   },
   {
     "zone_number": 49,
@@ -370,34 +875,19 @@
     "city": "Newark",
     "state": "New Jersey",
     "state_code": "NJ",
-    "operator": "Port Authority of NY & NJ",
-    "grantee": "City of Newark",
-    "lat": 40.6769,
-    "lng": -74.1744,
+    "operator": "Port Authority of NY/NJ",
+    "grantee": "Port Authority of New York and New Jersey",
+    "lat": 40.6824,
+    "lng": -74.1502,
     "status": "active",
-    "activated_year": 1979,
+    "activated_year": 1983,
     "nearest_port": "USNYC",
-    "port_distance_miles": 3,
+    "port_distance_miles": 2,
     "key_industries": [
-      "consumer goods",
-      "chemicals",
-      "machinery",
-      "auto parts"
-    ],
-    "annual_merchandise_value_usd": 15000000000,
-    "subzones": [
-      {
-        "subzone_id": "49A",
-        "name": "Elizabeth Marine Terminal",
-        "operator": "Port Authority of NY & NJ",
-        "type": "distribution"
-      },
-      {
-        "subzone_id": "49B",
-        "name": "BASF Corporation",
-        "operator": "BASF Corporation",
-        "type": "manufacturing"
-      }
+      "apparel",
+      "electronics",
+      "automobiles",
+      "distribution"
     ]
   },
   {
@@ -407,34 +897,118 @@
     "state": "California",
     "state_code": "CA",
     "operator": "Port of Long Beach",
-    "grantee": "Board of Harbor Commissioners, City of Long Beach",
-    "lat": 33.7542,
-    "lng": -118.215,
+    "grantee": "Board of Harbor Commissioners, Port of Long Beach",
+    "lat": 33.7523,
+    "lng": -118.2136,
     "status": "active",
-    "activated_year": 1980,
+    "activated_year": 1984,
     "nearest_port": "USLGB",
     "port_distance_miles": 1,
     "key_industries": [
-      "consumer electronics",
-      "apparel",
-      "automotive",
-      "furniture",
-      "toys"
-    ],
-    "annual_merchandise_value_usd": 20000000000,
-    "subzones": [
-      {
-        "subzone_id": "50A",
-        "name": "Boeing Long Beach",
-        "operator": "Boeing Company",
-        "type": "manufacturing"
-      },
-      {
-        "subzone_id": "50B",
-        "name": "Pier T Distribution",
-        "operator": "Port of Long Beach",
-        "type": "distribution"
-      }
+      "petroleum",
+      "steel",
+      "electronics",
+      "automotive"
+    ]
+  },
+  {
+    "zone_number": 51,
+    "name": "Duluth Foreign-Trade Zone",
+    "city": "Duluth",
+    "state": "Minnesota",
+    "state_code": "MN",
+    "operator": "Seaway Port Authority of Duluth",
+    "grantee": "Seaway Port Authority of Duluth",
+    "lat": 46.7867,
+    "lng": -92.1005,
+    "status": "active",
+    "activated_year": 1984,
+    "nearest_port": "USDLH",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "iron ore",
+      "coal",
+      "grain"
+    ]
+  },
+  {
+    "zone_number": 52,
+    "name": "Suffolk County (NY) Foreign-Trade Zone",
+    "city": "Hauppauge",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "Suffolk County Economic Development",
+    "grantee": "County of Suffolk",
+    "lat": 40.8254,
+    "lng": -73.2026,
+    "status": "active",
+    "activated_year": 1984,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 50,
+    "key_industries": [
+      "electronics",
+      "defense",
+      "pharmaceuticals"
+    ]
+  },
+  {
+    "zone_number": 53,
+    "name": "Rogers County (OK) Foreign-Trade Zone",
+    "city": "Catoosa",
+    "state": "Oklahoma",
+    "state_code": "OK",
+    "operator": "Tulsa Port of Catoosa",
+    "grantee": "City-County Port Authority of Tulsa",
+    "lat": 36.1868,
+    "lng": -95.7614,
+    "status": "active",
+    "activated_year": 1984,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 500,
+    "key_industries": [
+      "steel",
+      "industrial machinery",
+      "grain"
+    ]
+  },
+  {
+    "zone_number": 54,
+    "name": "Clinton County (NY) Foreign-Trade Zone",
+    "city": "Plattsburgh",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "Clinton County IDA",
+    "grantee": "Clinton County Area Development Corp.",
+    "lat": 44.6995,
+    "lng": -73.4529,
+    "status": "active",
+    "activated_year": 1985,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 300,
+    "key_industries": [
+      "paper",
+      "plastics",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 55,
+    "name": "Burlington (VT) Foreign-Trade Zone",
+    "city": "Burlington",
+    "state": "Vermont",
+    "state_code": "VT",
+    "operator": "Burlington International Airport",
+    "grantee": "State of Vermont",
+    "lat": 44.4759,
+    "lng": -73.2121,
+    "status": "active",
+    "activated_year": 1985,
+    "nearest_port": "USBOS",
+    "port_distance_miles": 220,
+    "key_industries": [
+      "electronics",
+      "machinery",
+      "food processing"
     ]
   },
   {
@@ -443,18 +1017,120 @@
     "city": "Oakland",
     "state": "California",
     "state_code": "CA",
-    "operator": "City of Oakland",
+    "operator": "Port of Oakland",
     "grantee": "City of Oakland",
-    "lat": 37.7954,
-    "lng": -122.2786,
+    "lat": 37.7953,
+    "lng": -122.2789,
     "status": "active",
-    "activated_year": 1980,
+    "activated_year": 1985,
     "nearest_port": "USOAK",
     "port_distance_miles": 1,
     "key_industries": [
-      "consumer goods",
-      "food products",
-      "machinery"
+      "automotive",
+      "wine",
+      "rice",
+      "electronics"
+    ]
+  },
+  {
+    "zone_number": 57,
+    "name": "Mecklenburg County (NC) Foreign-Trade Zone",
+    "city": "Charlotte",
+    "state": "North Carolina",
+    "state_code": "NC",
+    "operator": "Charlotte Regional Partnership",
+    "grantee": "North Carolina Dept. of Commerce",
+    "lat": 35.2271,
+    "lng": -80.8431,
+    "status": "active",
+    "activated_year": 1985,
+    "nearest_port": "USCHS",
+    "port_distance_miles": 190,
+    "key_industries": [
+      "distribution",
+      "textiles",
+      "electronics"
+    ]
+  },
+  {
+    "zone_number": 58,
+    "name": "Bangor (ME) Foreign-Trade Zone",
+    "city": "Bangor",
+    "state": "Maine",
+    "state_code": "ME",
+    "operator": "City of Bangor",
+    "grantee": "City of Bangor",
+    "lat": 44.8012,
+    "lng": -68.7778,
+    "status": "active",
+    "activated_year": 1986,
+    "nearest_port": "USBOS",
+    "port_distance_miles": 250,
+    "key_industries": [
+      "paper",
+      "wood products",
+      "food processing"
+    ]
+  },
+  {
+    "zone_number": 59,
+    "name": "Lincoln (NE) Foreign-Trade Zone",
+    "city": "Lincoln",
+    "state": "Nebraska",
+    "state_code": "NE",
+    "operator": "Lincoln Chamber of Commerce",
+    "grantee": "Lincoln Chamber of Commerce",
+    "lat": 40.8136,
+    "lng": -96.7026,
+    "status": "active",
+    "activated_year": 1986,
+    "nearest_port": "USMKC",
+    "port_distance_miles": 200,
+    "key_industries": [
+      "food processing",
+      "agricultural products",
+      "electronics"
+    ]
+  },
+  {
+    "zone_number": 60,
+    "name": "Nogales (AZ) Foreign-Trade Zone",
+    "city": "Nogales",
+    "state": "Arizona",
+    "state_code": "AZ",
+    "operator": "Nogales Community Development",
+    "grantee": "City of Nogales Border Commerce Association",
+    "lat": 31.3404,
+    "lng": -110.9343,
+    "status": "active",
+    "activated_year": 1986,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 520,
+    "key_industries": [
+      "fresh produce",
+      "electronics",
+      "automotive parts"
+    ]
+  },
+  {
+    "zone_number": 61,
+    "name": "San Juan (PR) Foreign-Trade Zone",
+    "city": "San Juan",
+    "state": "Puerto Rico",
+    "state_code": "PR",
+    "operator": "Puerto Rico Ports Authority",
+    "grantee": "Puerto Rico Ports Authority",
+    "lat": 18.4655,
+    "lng": -66.1057,
+    "status": "active",
+    "activated_year": 1986,
+    "nearest_port": "PRSJU",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "pharmaceuticals",
+      "medical devices",
+      "electronics",
+      "rum"
     ]
   },
   {
@@ -465,35 +1141,342 @@
     "state_code": "TX",
     "operator": "Brownsville Navigation District",
     "grantee": "Brownsville Navigation District",
-    "lat": 25.9017,
-    "lng": -97.4975,
+    "lat": 25.9975,
+    "lng": -97.4572,
     "status": "active",
-    "activated_year": 1981,
+    "activated_year": 1986,
+    "nearest_port": "USBRW",
+    "port_distance_miles": 3,
     "key_industries": [
-      "cross-border manufacturing",
+      "steel",
+      "automotive",
       "electronics assembly",
-      "auto parts"
-    ],
-    "notes": "Key US-Mexico cross-border FTZ"
+      "shrimp"
+    ]
+  },
+  {
+    "zone_number": 63,
+    "name": "Prince George's County (MD) Foreign-Trade Zone",
+    "city": "Landover",
+    "state": "Maryland",
+    "state_code": "MD",
+    "operator": "Prince George's County EDC",
+    "grantee": "Prince George's County",
+    "lat": 38.934,
+    "lng": -76.8909,
+    "status": "active",
+    "activated_year": 1986,
+    "nearest_port": "USBAL",
+    "port_distance_miles": 30,
+    "key_industries": [
+      "distribution",
+      "electronics",
+      "tobacco"
+    ]
   },
   {
     "zone_number": 64,
-    "name": "Jacksonville Foreign-Trade Zone",
+    "name": "Jacksonville (FL) Foreign-Trade Zone",
     "city": "Jacksonville",
     "state": "Florida",
     "state_code": "FL",
     "operator": "Jacksonville Port Authority",
     "grantee": "Jacksonville Port Authority",
-    "lat": 30.3978,
-    "lng": -81.6183,
+    "lat": 30.3975,
+    "lng": -81.5389,
     "status": "active",
-    "activated_year": 1981,
+    "activated_year": 1987,
     "nearest_port": "USJAX",
     "port_distance_miles": 3,
     "key_industries": [
       "automotive",
-      "consumer goods",
-      "forest products"
+      "paper",
+      "food products"
+    ]
+  },
+  {
+    "zone_number": 65,
+    "name": "Panama City (FL) Foreign-Trade Zone",
+    "city": "Panama City",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Panama City Port Authority",
+    "grantee": "Panama City Port Authority",
+    "lat": 30.1588,
+    "lng": -85.6602,
+    "status": "active",
+    "activated_year": 1987,
+    "nearest_port": "USMOB",
+    "port_distance_miles": 200,
+    "key_industries": [
+      "paper",
+      "wood products",
+      "chemicals"
+    ]
+  },
+  {
+    "zone_number": 66,
+    "name": "Wilmington (NC) Foreign-Trade Zone",
+    "city": "Wilmington",
+    "state": "North Carolina",
+    "state_code": "NC",
+    "operator": "NC State Ports Authority",
+    "grantee": "North Carolina State Ports Authority",
+    "lat": 34.2257,
+    "lng": -77.9447,
+    "status": "active",
+    "activated_year": 1987,
+    "nearest_port": "USILM",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "chemicals",
+      "wood products",
+      "electronics"
+    ]
+  },
+  {
+    "zone_number": 67,
+    "name": "Morehead City (NC) Foreign-Trade Zone",
+    "city": "Morehead City",
+    "state": "North Carolina",
+    "state_code": "NC",
+    "operator": "NC State Ports Authority",
+    "grantee": "North Carolina State Ports Authority",
+    "lat": 34.723,
+    "lng": -76.726,
+    "status": "active",
+    "activated_year": 1987,
+    "nearest_port": "USMHC",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "phosphate",
+      "fish",
+      "military cargo"
+    ]
+  },
+  {
+    "zone_number": 68,
+    "name": "El Paso Foreign-Trade Zone",
+    "city": "El Paso",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "El Paso FTZ Corp.",
+    "grantee": "City of El Paso",
+    "lat": 31.7619,
+    "lng": -106.485,
+    "status": "active",
+    "activated_year": 1987,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 750,
+    "key_industries": [
+      "apparel",
+      "electronics",
+      "automotive parts",
+      "copper"
+    ]
+  },
+  {
+    "zone_number": 69,
+    "name": "O'Hare Airport Foreign-Trade Zone",
+    "city": "Chicago",
+    "state": "Illinois",
+    "state_code": "IL",
+    "operator": "Chicago Dept. of Aviation",
+    "grantee": "City of Chicago",
+    "lat": 41.9742,
+    "lng": -87.9073,
+    "status": "active",
+    "activated_year": 1987,
+    "nearest_port": "USCHI",
+    "port_distance_miles": 20,
+    "key_industries": [
+      "electronics",
+      "pharmaceuticals",
+      "machinery",
+      "air cargo"
+    ]
+  },
+  {
+    "zone_number": 70,
+    "name": "Detroit Foreign-Trade Zone",
+    "city": "Detroit",
+    "state": "Michigan",
+    "state_code": "MI",
+    "operator": "Greater Detroit FTZ Inc.",
+    "grantee": "Greater Detroit Foreign-Trade Zone Inc.",
+    "lat": 42.3314,
+    "lng": -83.0458,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USDET",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "automotive",
+      "steel",
+      "plastics",
+      "chemicals"
+    ]
+  },
+  {
+    "zone_number": 71,
+    "name": "Windsor Locks (CT) Foreign-Trade Zone",
+    "city": "Windsor Locks",
+    "state": "Connecticut",
+    "state_code": "CT",
+    "operator": "First New England Capital",
+    "grantee": "Windsor Locks Community Association",
+    "lat": 41.934,
+    "lng": -72.6582,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 100,
+    "key_industries": [
+      "aerospace",
+      "precision manufacturing"
+    ]
+  },
+  {
+    "zone_number": 72,
+    "name": "Indianapolis Foreign-Trade Zone",
+    "city": "Indianapolis",
+    "state": "Indiana",
+    "state_code": "IN",
+    "operator": "Indianapolis Airport Authority",
+    "grantee": "Indianapolis Airport Authority",
+    "lat": 39.7241,
+    "lng": -86.2941,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USCHI",
+    "port_distance_miles": 190,
+    "key_industries": [
+      "pharmaceuticals",
+      "automotive",
+      "electronics",
+      "logistics"
+    ]
+  },
+  {
+    "zone_number": 73,
+    "name": "Baltimore Foreign-Trade Zone",
+    "city": "Baltimore",
+    "state": "Maryland",
+    "state_code": "MD",
+    "operator": "Maryland Port Administration",
+    "grantee": "Maryland Department of Transportation",
+    "lat": 39.2654,
+    "lng": -76.5709,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USBAL",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "automotive",
+      "steel",
+      "sugar",
+      "spices"
+    ]
+  },
+  {
+    "zone_number": 74,
+    "name": "Baltimore/Washington International Foreign-Trade Zone",
+    "city": "Linthicum",
+    "state": "Maryland",
+    "state_code": "MD",
+    "operator": "Maryland Dept. of Transportation",
+    "grantee": "Maryland Department of Transportation",
+    "lat": 39.1754,
+    "lng": -76.6684,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USBAL",
+    "port_distance_miles": 10,
+    "key_industries": [
+      "electronics",
+      "air cargo",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 75,
+    "name": "Phoenix Foreign-Trade Zone",
+    "city": "Phoenix",
+    "state": "Arizona",
+    "state_code": "AZ",
+    "operator": "City of Phoenix Aviation",
+    "grantee": "City of Phoenix",
+    "lat": 33.4347,
+    "lng": -112.0088,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 370,
+    "key_industries": [
+      "semiconductors",
+      "aerospace",
+      "electronics"
+    ]
+  },
+  {
+    "zone_number": 76,
+    "name": "Bridgeport (CT) Foreign-Trade Zone",
+    "city": "Bridgeport",
+    "state": "Connecticut",
+    "state_code": "CT",
+    "operator": "City of Bridgeport",
+    "grantee": "City of Bridgeport",
+    "lat": 41.1865,
+    "lng": -73.1952,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 60,
+    "key_industries": [
+      "helicopters",
+      "electronics",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 77,
+    "name": "Memphis Foreign-Trade Zone",
+    "city": "Memphis",
+    "state": "Tennessee",
+    "state_code": "TN",
+    "operator": "City of Memphis",
+    "grantee": "City of Memphis",
+    "lat": 35.0421,
+    "lng": -89.9792,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USMEM",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "distribution",
+      "cotton",
+      "logistics",
+      "medical devices"
+    ]
+  },
+  {
+    "zone_number": 78,
+    "name": "Nashville Foreign-Trade Zone",
+    "city": "Nashville",
+    "state": "Tennessee",
+    "state_code": "TN",
+    "operator": "Metropolitan Nashville Airport Authority",
+    "grantee": "Metropolitan Nashville Airport Authority",
+    "lat": 36.1244,
+    "lng": -86.6782,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USMEM",
+    "port_distance_miles": 210,
+    "key_industries": [
+      "automotive",
+      "music industry",
+      "healthcare"
     ]
   },
   {
@@ -502,57 +1485,508 @@
     "city": "Tampa",
     "state": "Florida",
     "state_code": "FL",
-    "operator": "City of Tampa",
-    "grantee": "City of Tampa",
-    "lat": 27.9506,
-    "lng": -82.4572,
+    "operator": "Port Tampa Bay",
+    "grantee": "Tampa Port Authority",
+    "lat": 27.9116,
+    "lng": -82.456,
     "status": "active",
-    "activated_year": 1982,
+    "activated_year": 1988,
+    "nearest_port": "USTPA",
+    "port_distance_miles": 3,
     "key_industries": [
-      "citrus",
       "phosphate",
       "steel",
+      "citrus",
       "electronics"
     ]
   },
   {
-    "zone_number": 84,
-    "name": "Miami Foreign-Trade Zone",
-    "city": "Miami",
-    "state": "Florida",
-    "state_code": "FL",
-    "operator": "Greater Miami FTZ Inc.",
-    "grantee": "Greater Miami Foreign-Trade Zone Inc.",
-    "lat": 25.7742,
-    "lng": -80.1697,
+    "zone_number": 80,
+    "name": "San Antonio Foreign-Trade Zone",
+    "city": "San Antonio",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "City of San Antonio",
+    "grantee": "City of San Antonio",
+    "lat": 29.5328,
+    "lng": -98.469,
     "status": "active",
-    "activated_year": 1983,
-    "nearest_port": "USMIA",
-    "port_distance_miles": 5,
+    "activated_year": 1988,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 200,
     "key_industries": [
-      "Latin American trade",
+      "automotive",
+      "cybersecurity",
+      "aerospace",
+      "bioscience"
+    ]
+  },
+  {
+    "zone_number": 81,
+    "name": "Los Angeles Foreign-Trade Zone",
+    "city": "Los Angeles",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "Port of Los Angeles",
+    "grantee": "Board of Harbor Commissioners, City of Los Angeles",
+    "lat": 33.7395,
+    "lng": -118.2751,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 1,
+    "key_industries": [
       "apparel",
       "electronics",
-      "flowers"
-    ],
-    "annual_merchandise_value_usd": 4000000000
+      "automotive",
+      "furniture",
+      "petroleum"
+    ]
+  },
+  {
+    "zone_number": 82,
+    "name": "Mobile Foreign-Trade Zone",
+    "city": "Mobile",
+    "state": "Alabama",
+    "state_code": "AL",
+    "operator": "Alabama State Port Authority",
+    "grantee": "Alabama State Port Authority",
+    "lat": 30.6954,
+    "lng": -88.0399,
+    "status": "active",
+    "activated_year": 1988,
+    "nearest_port": "USMOB",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "steel",
+      "aerospace",
+      "shipbuilding",
+      "forest products"
+    ]
+  },
+  {
+    "zone_number": 83,
+    "name": "Huntsville (AL) Foreign-Trade Zone",
+    "city": "Huntsville",
+    "state": "Alabama",
+    "state_code": "AL",
+    "operator": "Huntsville-Madison County Airport Authority",
+    "grantee": "Huntsville-Madison County Airport Authority",
+    "lat": 34.6429,
+    "lng": -86.7781,
+    "status": "active",
+    "activated_year": 1989,
+    "nearest_port": "USMOB",
+    "port_distance_miles": 350,
+    "key_industries": [
+      "aerospace",
+      "defense",
+      "electronics",
+      "automotive"
+    ]
+  },
+  {
+    "zone_number": 84,
+    "name": "Harris County (TX) Foreign-Trade Zone",
+    "city": "Houston",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Port of Houston Authority",
+    "grantee": "Port of Houston Authority",
+    "lat": 29.7267,
+    "lng": -95.2677,
+    "status": "active",
+    "activated_year": 1989,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "petroleum",
+      "chemicals",
+      "steel",
+      "plastic resins"
+    ]
+  },
+  {
+    "zone_number": 85,
+    "name": "Everett (WA) Foreign-Trade Zone",
+    "city": "Everett",
+    "state": "Washington",
+    "state_code": "WA",
+    "operator": "Port of Everett",
+    "grantee": "Port of Everett",
+    "lat": 47.979,
+    "lng": -122.2021,
+    "status": "active",
+    "activated_year": 1989,
+    "nearest_port": "USSEA",
+    "port_distance_miles": 30,
+    "key_industries": [
+      "aerospace",
+      "wood products",
+      "naval"
+    ]
+  },
+  {
+    "zone_number": 86,
+    "name": "Tacoma Foreign-Trade Zone",
+    "city": "Tacoma",
+    "state": "Washington",
+    "state_code": "WA",
+    "operator": "Port of Tacoma",
+    "grantee": "Port of Tacoma",
+    "lat": 47.2636,
+    "lng": -122.4244,
+    "status": "active",
+    "activated_year": 1989,
+    "nearest_port": "USTCM",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "containers",
+      "automobiles",
+      "grain",
+      "logs"
+    ]
   },
   {
     "zone_number": 87,
-    "name": "Lake Charles Foreign-Trade Zone",
+    "name": "Lake Charles (LA) Foreign-Trade Zone",
     "city": "Lake Charles",
     "state": "Louisiana",
     "state_code": "LA",
-    "operator": "Lake Charles Harbor & Terminal District",
+    "operator": "Port of Lake Charles",
     "grantee": "Lake Charles Harbor & Terminal District",
     "lat": 30.2266,
     "lng": -93.2174,
     "status": "active",
-    "activated_year": 1983,
+    "activated_year": 1989,
+    "nearest_port": "USLCH",
+    "port_distance_miles": 3,
     "key_industries": [
-      "LNG",
-      "petrochemicals",
-      "chemicals"
+      "petroleum",
+      "chemicals",
+      "LNG"
+    ]
+  },
+  {
+    "zone_number": 88,
+    "name": "Great Falls (MT) Foreign-Trade Zone",
+    "city": "Great Falls",
+    "state": "Montana",
+    "state_code": "MT",
+    "operator": "Great Falls International Airport",
+    "grantee": "Bear Paw Development Corp. of Northern Montana",
+    "lat": 47.5053,
+    "lng": -111.2958,
+    "status": "active",
+    "activated_year": 1989,
+    "nearest_port": "USSEA",
+    "port_distance_miles": 600,
+    "key_industries": [
+      "grain",
+      "mining",
+      "wind energy"
+    ]
+  },
+  {
+    "zone_number": 89,
+    "name": "Clark County (NV) Foreign-Trade Zone",
+    "city": "Las Vegas",
+    "state": "Nevada",
+    "state_code": "NV",
+    "operator": "Nevada Development Authority",
+    "grantee": "Nevada Development Authority",
+    "lat": 36.083,
+    "lng": -115.1522,
+    "status": "active",
+    "activated_year": 1989,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 270,
+    "key_industries": [
+      "electronics",
+      "distribution",
+      "gaming equipment"
+    ]
+  },
+  {
+    "zone_number": 90,
+    "name": "Onondaga County (NY) Foreign-Trade Zone",
+    "city": "Syracuse",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "Onondaga County IDA",
+    "grantee": "County of Onondaga",
+    "lat": 43.0481,
+    "lng": -76.1474,
+    "status": "active",
+    "activated_year": 1989,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 250,
+    "key_industries": [
+      "electronics",
+      "pharmaceuticals",
+      "air conditioning"
+    ]
+  },
+  {
+    "zone_number": 91,
+    "name": "Newport (RI) Foreign-Trade Zone",
+    "city": "Newport",
+    "state": "Rhode Island",
+    "state_code": "RI",
+    "operator": "Rhode Island EDC",
+    "grantee": "Rhode Island Economic Development Corp.",
+    "lat": 41.4901,
+    "lng": -71.3128,
+    "status": "active",
+    "activated_year": 1989,
+    "nearest_port": "USBOS",
+    "port_distance_miles": 70,
+    "key_industries": [
+      "naval",
+      "electronics",
+      "jewelry"
+    ]
+  },
+  {
+    "zone_number": 92,
+    "name": "Harrison County (MS) Foreign-Trade Zone",
+    "city": "Gulfport",
+    "state": "Mississippi",
+    "state_code": "MS",
+    "operator": "Mississippi State Port Authority",
+    "grantee": "Mississippi State Port Authority at Gulfport",
+    "lat": 30.3674,
+    "lng": -89.0928,
+    "status": "active",
+    "activated_year": 1989,
+    "nearest_port": "USGPT",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "poultry",
+      "frozen seafood",
+      "forest products"
+    ]
+  },
+  {
+    "zone_number": 93,
+    "name": "Raleigh-Durham Foreign-Trade Zone",
+    "city": "Raleigh",
+    "state": "North Carolina",
+    "state_code": "NC",
+    "operator": "Triangle J Council of Governments",
+    "grantee": "Triangle J Council of Governments",
+    "lat": 35.8801,
+    "lng": -78.788,
+    "status": "active",
+    "activated_year": 1990,
+    "nearest_port": "USILM",
+    "port_distance_miles": 150,
+    "key_industries": [
+      "pharmaceuticals",
+      "electronics",
+      "biotech"
+    ]
+  },
+  {
+    "zone_number": 94,
+    "name": "Laredo Foreign-Trade Zone",
+    "city": "Laredo",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "City of Laredo",
+    "grantee": "City of Laredo",
+    "lat": 27.5035,
+    "lng": -99.5075,
+    "status": "active",
+    "activated_year": 1990,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 320,
+    "key_industries": [
+      "automotive",
+      "electronics",
+      "apparel",
+      "petroleum"
+    ]
+  },
+  {
+    "zone_number": 95,
+    "name": "Starr County (TX) Foreign-Trade Zone",
+    "city": "Rio Grande City",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Starr County Industrial Foundation",
+    "grantee": "Starr County Industrial Foundation",
+    "lat": 26.3798,
+    "lng": -98.8205,
+    "status": "active",
+    "activated_year": 1990,
+    "nearest_port": "USBRW",
+    "port_distance_miles": 80,
+    "key_industries": [
+      "agriculture",
+      "livestock",
+      "oil and gas"
+    ]
+  },
+  {
+    "zone_number": 96,
+    "name": "Eagle Pass (TX) Foreign-Trade Zone",
+    "city": "Eagle Pass",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Maverick County Development Corp.",
+    "grantee": "Maverick County Development Corp.",
+    "lat": 28.7091,
+    "lng": -100.4995,
+    "status": "active",
+    "activated_year": 1990,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 400,
+    "key_industries": [
+      "coal",
+      "agriculture",
+      "manufacturing"
+    ]
+  },
+  {
+    "zone_number": 97,
+    "name": "Del Rio (TX) Foreign-Trade Zone",
+    "city": "Del Rio",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "City of Del Rio",
+    "grantee": "City of Del Rio",
+    "lat": 29.3627,
+    "lng": -100.896,
+    "status": "active",
+    "activated_year": 1990,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 420,
+    "key_industries": [
+      "wool",
+      "mohair",
+      "agriculture"
+    ]
+  },
+  {
+    "zone_number": 98,
+    "name": "Birmingham (AL) Foreign-Trade Zone",
+    "city": "Birmingham",
+    "state": "Alabama",
+    "state_code": "AL",
+    "operator": "City of Birmingham",
+    "grantee": "City of Birmingham",
+    "lat": 33.5207,
+    "lng": -86.8025,
+    "status": "active",
+    "activated_year": 1990,
+    "nearest_port": "USMOB",
+    "port_distance_miles": 250,
+    "key_industries": [
+      "steel",
+      "automotive",
+      "healthcare"
+    ]
+  },
+  {
+    "zone_number": 99,
+    "name": "Wilmington (DE) Foreign-Trade Zone",
+    "city": "Wilmington",
+    "state": "Delaware",
+    "state_code": "DE",
+    "operator": "State of Delaware",
+    "grantee": "State of Delaware",
+    "lat": 39.7459,
+    "lng": -75.5466,
+    "status": "active",
+    "activated_year": 1990,
+    "nearest_port": "USPHL",
+    "port_distance_miles": 30,
+    "key_industries": [
+      "chemicals",
+      "pharmaceuticals",
+      "financial services"
+    ]
+  },
+  {
+    "zone_number": 100,
+    "name": "Dayton (OH) Foreign-Trade Zone",
+    "city": "Dayton",
+    "state": "Ohio",
+    "state_code": "OH",
+    "operator": "Dayton Development Coalition",
+    "grantee": "Dayton-Montgomery County Port Authority",
+    "lat": 39.7589,
+    "lng": -84.1916,
+    "status": "active",
+    "activated_year": 1990,
+    "nearest_port": "USCLE",
+    "port_distance_miles": 250,
+    "key_industries": [
+      "aerospace",
+      "automotive",
+      "packaging"
+    ]
+  },
+  {
+    "zone_number": 101,
+    "name": "Clinton County (OH) Foreign-Trade Zone",
+    "city": "Wilmington",
+    "state": "Ohio",
+    "state_code": "OH",
+    "operator": "Airborne/DHL",
+    "grantee": "Clinton County Port Authority",
+    "lat": 39.4495,
+    "lng": -83.8277,
+    "status": "active",
+    "activated_year": 1990,
+    "nearest_port": "USCLE",
+    "port_distance_miles": 280,
+    "key_industries": [
+      "air cargo",
+      "distribution",
+      "logistics"
+    ]
+  },
+  {
+    "zone_number": 102,
+    "name": "St. Louis Foreign-Trade Zone",
+    "city": "St. Louis",
+    "state": "Missouri",
+    "state_code": "MO",
+    "operator": "St. Louis County Port Authority",
+    "grantee": "St. Louis County Port Authority",
+    "lat": 38.627,
+    "lng": -90.1994,
+    "status": "active",
+    "activated_year": 1990,
+    "nearest_port": "USSTL",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "beer",
+      "chemicals",
+      "automotive",
+      "aerospace"
+    ]
+  },
+  {
+    "zone_number": 103,
+    "name": "Portland (ME) Foreign-Trade Zone",
+    "city": "Portland",
+    "state": "Maine",
+    "state_code": "ME",
+    "operator": "Portland International Jetport",
+    "grantee": "Portland International Jetport",
+    "lat": 43.6591,
+    "lng": -70.2568,
+    "status": "active",
+    "activated_year": 1991,
+    "nearest_port": "USPTM",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "seafood",
+      "petroleum",
+      "forest products"
     ]
   },
   {
@@ -563,38 +1997,36 @@
     "state_code": "GA",
     "operator": "Georgia Ports Authority",
     "grantee": "Savannah Airport Commission",
-    "lat": 32.0835,
-    "lng": -81.0998,
+    "lat": 32.126,
+    "lng": -81.2021,
     "status": "active",
-    "activated_year": 1984,
+    "activated_year": 1991,
     "nearest_port": "USSAV",
+    "port_distance_miles": 10,
+    "key_industries": [
+      "containerized cargo",
+      "automotive",
+      "food products"
+    ]
+  },
+  {
+    "zone_number": 105,
+    "name": "Providence (RI) Foreign-Trade Zone",
+    "city": "Providence",
+    "state": "Rhode Island",
+    "state_code": "RI",
+    "operator": "Quonset Development Corp.",
+    "grantee": "Rhode Island Economic Development Corp.",
+    "lat": 41.824,
+    "lng": -71.4128,
+    "status": "active",
+    "activated_year": 1991,
+    "nearest_port": "USPVD",
     "port_distance_miles": 5,
     "key_industries": [
-      "automotive",
-      "forest products",
-      "food processing",
-      "consumer goods"
-    ],
-    "annual_merchandise_value_usd": 7500000000,
-    "subzones": [
-      {
-        "subzone_id": "104A",
-        "name": "Hyundai Motor Mfg Alabama",
-        "operator": "Hyundai Motor Manufacturing",
-        "type": "manufacturing"
-      },
-      {
-        "subzone_id": "104B",
-        "name": "Gulfstream Aerospace",
-        "operator": "Gulfstream Aerospace Corp.",
-        "type": "manufacturing"
-      },
-      {
-        "subzone_id": "104C",
-        "name": "Garden City Terminal Dist.",
-        "operator": "Georgia Ports Authority",
-        "type": "distribution"
-      }
+      "jewelry",
+      "metals",
+      "naval"
     ]
   },
   {
@@ -603,286 +2035,3366 @@
     "city": "Oklahoma City",
     "state": "Oklahoma",
     "state_code": "OK",
-    "operator": "Oklahoma City FTZ",
-    "grantee": "Oklahoma City",
-    "lat": 35.4676,
-    "lng": -97.5164,
+    "operator": "Oklahoma City Airport Trust",
+    "grantee": "City of Oklahoma City",
+    "lat": 35.3932,
+    "lng": -97.6007,
     "status": "active",
-    "activated_year": 1984,
+    "activated_year": 1991,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 450,
     "key_industries": [
       "aerospace",
-      "oil & gas",
+      "oil and gas",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 107,
+    "name": "Des Moines Foreign-Trade Zone",
+    "city": "Des Moines",
+    "state": "Iowa",
+    "state_code": "IA",
+    "operator": "Iowa Foreign-Trade Zone Corp.",
+    "grantee": "Iowa Foreign-Trade Zone Corp.",
+    "lat": 41.5868,
+    "lng": -93.625,
+    "status": "active",
+    "activated_year": 1991,
+    "nearest_port": "USMKC",
+    "port_distance_miles": 200,
+    "key_industries": [
+      "food processing",
+      "insurance",
+      "publishing"
+    ]
+  },
+  {
+    "zone_number": 108,
+    "name": "Valdosta (GA) Foreign-Trade Zone",
+    "city": "Valdosta",
+    "state": "Georgia",
+    "state_code": "GA",
+    "operator": "Valdosta-Lowndes County IDA",
+    "grantee": "Valdosta-Lowndes County IDA",
+    "lat": 30.8327,
+    "lng": -83.2785,
+    "status": "active",
+    "activated_year": 1991,
+    "nearest_port": "USSAV",
+    "port_distance_miles": 170,
+    "key_industries": [
+      "agriculture",
+      "food processing",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 109,
+    "name": "Watertown (SD) Foreign-Trade Zone",
+    "city": "Watertown",
+    "state": "South Dakota",
+    "state_code": "SD",
+    "operator": "Lake Area Improvement Corp.",
+    "grantee": "Lake Area Improvement Corp.",
+    "lat": 44.8994,
+    "lng": -97.115,
+    "status": "active",
+    "activated_year": 1992,
+    "nearest_port": "USDLH",
+    "port_distance_miles": 350,
+    "key_industries": [
+      "agriculture",
+      "electronics",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 110,
+    "name": "Albuquerque Foreign-Trade Zone",
+    "city": "Albuquerque",
+    "state": "New Mexico",
+    "state_code": "NM",
+    "operator": "City of Albuquerque",
+    "grantee": "City of Albuquerque",
+    "lat": 35.0844,
+    "lng": -106.6504,
+    "status": "active",
+    "activated_year": 1992,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 800,
+    "key_industries": [
+      "semiconductors",
+      "solar",
+      "aerospace"
+    ]
+  },
+  {
+    "zone_number": 111,
+    "name": "JFK Airport Foreign-Trade Zone",
+    "city": "Jamaica",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "Port Authority of NY/NJ",
+    "grantee": "Port Authority of New York and New Jersey",
+    "lat": 40.6413,
+    "lng": -73.7781,
+    "status": "active",
+    "activated_year": 1992,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 10,
+    "key_industries": [
+      "air cargo",
+      "pharmaceuticals",
+      "electronics",
+      "perishables"
+    ]
+  },
+  {
+    "zone_number": 112,
+    "name": "Colorado Springs Foreign-Trade Zone",
+    "city": "Colorado Springs",
+    "state": "Colorado",
+    "state_code": "CO",
+    "operator": "Colorado Springs Airport",
+    "grantee": "City of Colorado Springs",
+    "lat": 38.8339,
+    "lng": -104.8214,
+    "status": "active",
+    "activated_year": 1992,
+    "nearest_port": "USDEN",
+    "port_distance_miles": 70,
+    "key_industries": [
+      "defense",
+      "electronics",
+      "aerospace"
+    ]
+  },
+  {
+    "zone_number": 113,
+    "name": "Ellis County (TX) Foreign-Trade Zone",
+    "city": "Midlothian",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Midlothian Economic Development",
+    "grantee": "Ellis County Trade Zone Corp.",
+    "lat": 32.4823,
+    "lng": -96.9944,
+    "status": "active",
+    "activated_year": 1992,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 260,
+    "key_industries": [
+      "cement",
+      "steel",
       "distribution"
     ]
   },
   {
     "zone_number": 114,
-    "name": "Peoria Foreign-Trade Zone",
+    "name": "Peoria (IL) Foreign-Trade Zone",
     "city": "Peoria",
     "state": "Illinois",
     "state_code": "IL",
-    "operator": "Economic Development Council for the Peoria Area",
-    "grantee": "Economic Development Council for the Peoria Area",
+    "operator": "Greater Peoria Airport Authority",
+    "grantee": "Greater Peoria Airport Authority",
     "lat": 40.6936,
     "lng": -89.589,
     "status": "active",
-    "activated_year": 1985,
+    "activated_year": 1992,
+    "nearest_port": "USCHI",
+    "port_distance_miles": 165,
     "key_industries": [
-      "Caterpillar manufacturing",
-      "heavy equipment"
-    ],
-    "subzones": [
-      {
-        "subzone_id": "114A",
-        "name": "Caterpillar Inc.",
-        "operator": "Caterpillar Inc.",
-        "type": "manufacturing"
-      }
+      "construction equipment",
+      "agricultural machinery",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 115,
+    "name": "Beaumont Foreign-Trade Zone",
+    "city": "Beaumont",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Port of Beaumont",
+    "grantee": "Foreign-Trade Zone of SE Texas Inc.",
+    "lat": 30.0802,
+    "lng": -94.1266,
+    "status": "active",
+    "activated_year": 1992,
+    "nearest_port": "USBPT",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "petroleum",
+      "rice",
+      "chemicals",
+      "military cargo"
+    ]
+  },
+  {
+    "zone_number": 116,
+    "name": "Port Arthur Foreign-Trade Zone",
+    "city": "Port Arthur",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Port of Port Arthur",
+    "grantee": "Foreign-Trade Zone of SE Texas Inc.",
+    "lat": 29.885,
+    "lng": -93.9399,
+    "status": "active",
+    "activated_year": 1992,
+    "nearest_port": "USPTA",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "petroleum refining",
+      "chemicals",
+      "LNG"
+    ]
+  },
+  {
+    "zone_number": 117,
+    "name": "Orange County (TX) Foreign-Trade Zone",
+    "city": "Orange",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "City of Orange",
+    "grantee": "Foreign-Trade Zone of SE Texas Inc.",
+    "lat": 30.093,
+    "lng": -93.7366,
+    "status": "active",
+    "activated_year": 1992,
+    "nearest_port": "USBPT",
+    "port_distance_miles": 25,
+    "key_industries": [
+      "chemicals",
+      "petrochemicals",
+      "shipbuilding"
+    ]
+  },
+  {
+    "zone_number": 118,
+    "name": "Ogdensburg (NY) Foreign-Trade Zone",
+    "city": "Ogdensburg",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "Ogdensburg Bridge & Port Authority",
+    "grantee": "Ogdensburg Bridge & Port Authority",
+    "lat": 44.6942,
+    "lng": -75.4863,
+    "status": "active",
+    "activated_year": 1992,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 350,
+    "key_industries": [
+      "distribution",
+      "aluminum",
+      "paper"
+    ]
+  },
+  {
+    "zone_number": 119,
+    "name": "Minneapolis-St. Paul Foreign-Trade Zone",
+    "city": "Minneapolis",
+    "state": "Minnesota",
+    "state_code": "MN",
+    "operator": "Metropolitan Airports Commission",
+    "grantee": "Metropolitan Airports Commission",
+    "lat": 44.8848,
+    "lng": -93.2218,
+    "status": "active",
+    "activated_year": 1992,
+    "nearest_port": "USDLH",
+    "port_distance_miles": 155,
+    "key_industries": [
+      "medical devices",
+      "electronics",
+      "food products"
+    ]
+  },
+  {
+    "zone_number": 120,
+    "name": "Cowlitz County (WA) Foreign-Trade Zone",
+    "city": "Longview",
+    "state": "Washington",
+    "state_code": "WA",
+    "operator": "Port of Longview",
+    "grantee": "Port of Longview",
+    "lat": 46.1382,
+    "lng": -122.9382,
+    "status": "active",
+    "activated_year": 1992,
+    "nearest_port": "USPDX",
+    "port_distance_miles": 50,
+    "key_industries": [
+      "timber",
+      "alumina",
+      "grain"
+    ]
+  },
+  {
+    "zone_number": 121,
+    "name": "Albany (NY) Foreign-Trade Zone",
+    "city": "Albany",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "Albany County Airport Authority",
+    "grantee": "Capital District Regional Planning Commission",
+    "lat": 42.7484,
+    "lng": -73.802,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 150,
+    "key_industries": [
+      "nanotechnology",
+      "pharmaceuticals",
+      "distribution"
     ]
   },
   {
     "zone_number": 122,
-    "name": "Houston Foreign-Trade Zone",
-    "city": "Houston",
+    "name": "Corpus Christi Foreign-Trade Zone",
+    "city": "Corpus Christi",
     "state": "Texas",
     "state_code": "TX",
-    "operator": "Port of Houston Authority",
-    "grantee": "Port of Houston Authority",
-    "lat": 29.7344,
-    "lng": -95.271,
+    "operator": "Port of Corpus Christi Authority",
+    "grantee": "Port of Corpus Christi Authority",
+    "lat": 27.8006,
+    "lng": -97.3964,
     "status": "active",
-    "activated_year": 1985,
-    "nearest_port": "USHOU",
+    "activated_year": 1993,
+    "nearest_port": "USCRP",
     "port_distance_miles": 2,
     "key_industries": [
+      "petroleum",
       "petrochemicals",
-      "oil & gas equipment",
-      "machinery",
-      "steel"
-    ],
-    "annual_merchandise_value_usd": 18000000000,
-    "subzones": [
-      {
-        "subzone_id": "122A",
-        "name": "Shell Oil Company",
-        "operator": "Shell Oil Company",
-        "type": "manufacturing"
-      },
-      {
-        "subzone_id": "122B",
-        "name": "ExxonMobil Baytown",
-        "operator": "ExxonMobil Corporation",
-        "type": "manufacturing"
-      },
-      {
-        "subzone_id": "122C",
-        "name": "Barbours Cut Terminal",
-        "operator": "Port of Houston Authority",
-        "type": "distribution"
-      }
+      "agriculture",
+      "wind energy"
+    ]
+  },
+  {
+    "zone_number": 123,
+    "name": "Denver Foreign-Trade Zone",
+    "city": "Denver",
+    "state": "Colorado",
+    "state_code": "CO",
+    "operator": "Adams County",
+    "grantee": "City & County of Denver",
+    "lat": 39.8561,
+    "lng": -104.6737,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USDEN",
+    "port_distance_miles": 0,
+    "key_industries": [
+      "electronics",
+      "aerospace",
+      "medical devices"
+    ]
+  },
+  {
+    "zone_number": 124,
+    "name": "Gramercy (LA) Foreign-Trade Zone",
+    "city": "Gramercy",
+    "state": "Louisiana",
+    "state_code": "LA",
+    "operator": "South Louisiana Port Commission",
+    "grantee": "South Louisiana Port Commission",
+    "lat": 30.0571,
+    "lng": -90.6891,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USNOL",
+    "port_distance_miles": 50,
+    "key_industries": [
+      "grain",
+      "steel",
+      "alumina"
+    ]
+  },
+  {
+    "zone_number": 125,
+    "name": "South Bend (IN) Foreign-Trade Zone",
+    "city": "South Bend",
+    "state": "Indiana",
+    "state_code": "IN",
+    "operator": "City of South Bend",
+    "grantee": "City of South Bend",
+    "lat": 41.6764,
+    "lng": -86.252,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USCHI",
+    "port_distance_miles": 90,
+    "key_industries": [
+      "automotive",
+      "distribution",
+      "plastics"
+    ]
+  },
+  {
+    "zone_number": 126,
+    "name": "Sparks (NV) Foreign-Trade Zone",
+    "city": "Sparks",
+    "state": "Nevada",
+    "state_code": "NV",
+    "operator": "Economic Development Authority of Western Nevada",
+    "grantee": "Economic Development Authority of Western Nevada",
+    "lat": 39.5349,
+    "lng": -119.7527,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USOAK",
+    "port_distance_miles": 230,
+    "key_industries": [
+      "distribution",
+      "electronics",
+      "data centers"
+    ]
+  },
+  {
+    "zone_number": 127,
+    "name": "West Columbia (SC) Foreign-Trade Zone",
+    "city": "West Columbia",
+    "state": "South Carolina",
+    "state_code": "SC",
+    "operator": "SC State Ports Authority",
+    "grantee": "City of West Columbia",
+    "lat": 33.9935,
+    "lng": -81.0738,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USCHS",
+    "port_distance_miles": 115,
+    "key_industries": [
+      "textiles",
+      "distribution",
+      "automotive"
+    ]
+  },
+  {
+    "zone_number": 128,
+    "name": "Boise (ID) Foreign-Trade Zone",
+    "city": "Boise",
+    "state": "Idaho",
+    "state_code": "ID",
+    "operator": "City of Boise",
+    "grantee": "City of Boise",
+    "lat": 43.615,
+    "lng": -116.2023,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USPDX",
+    "port_distance_miles": 430,
+    "key_industries": [
+      "semiconductors",
+      "food processing",
+      "lumber"
+    ]
+  },
+  {
+    "zone_number": 129,
+    "name": "Bellingham (WA) Foreign-Trade Zone",
+    "city": "Bellingham",
+    "state": "Washington",
+    "state_code": "WA",
+    "operator": "Port of Bellingham",
+    "grantee": "Port of Bellingham",
+    "lat": 48.7596,
+    "lng": -122.4879,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USSEA",
+    "port_distance_miles": 90,
+    "key_industries": [
+      "aluminum",
+      "seafood",
+      "wood products"
+    ]
+  },
+  {
+    "zone_number": 130,
+    "name": "Baton Rouge Foreign-Trade Zone",
+    "city": "Baton Rouge",
+    "state": "Louisiana",
+    "state_code": "LA",
+    "operator": "Port of Greater Baton Rouge",
+    "grantee": "Greater Baton Rouge Port Commission",
+    "lat": 30.4221,
+    "lng": -91.0977,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USBTR",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "petroleum",
+      "chemicals",
+      "grain"
+    ]
+  },
+  {
+    "zone_number": 131,
+    "name": "Saginaw (MI) Foreign-Trade Zone",
+    "city": "Saginaw",
+    "state": "Michigan",
+    "state_code": "MI",
+    "operator": "City of Saginaw",
+    "grantee": "City of Saginaw",
+    "lat": 43.4195,
+    "lng": -83.9508,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USDET",
+    "port_distance_miles": 100,
+    "key_industries": [
+      "automotive",
+      "sugar beets",
+      "chemicals"
+    ]
+  },
+  {
+    "zone_number": 132,
+    "name": "Austin (TX) Foreign-Trade Zone",
+    "city": "Austin",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "City of Austin",
+    "grantee": "City of Austin",
+    "lat": 30.1975,
+    "lng": -97.6664,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 165,
+    "key_industries": [
+      "semiconductors",
+      "computers",
+      "biotechnology"
+    ]
+  },
+  {
+    "zone_number": 133,
+    "name": "Quad Cities Foreign-Trade Zone",
+    "city": "Rock Island",
+    "state": "Illinois",
+    "state_code": "IL",
+    "operator": "Quad Cities Development Group",
+    "grantee": "Quad Cities Development Group",
+    "lat": 41.5095,
+    "lng": -90.5789,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USCHI",
+    "port_distance_miles": 175,
+    "key_industries": [
+      "agricultural equipment",
+      "aluminum",
+      "food processing"
+    ]
+  },
+  {
+    "zone_number": 134,
+    "name": "Chattanooga (TN) Foreign-Trade Zone",
+    "city": "Chattanooga",
+    "state": "Tennessee",
+    "state_code": "TN",
+    "operator": "Chattanooga Chamber",
+    "grantee": "Chattanooga Area Chamber of Commerce",
+    "lat": 35.0456,
+    "lng": -85.3097,
+    "status": "active",
+    "activated_year": 1993,
+    "nearest_port": "USSAV",
+    "port_distance_miles": 280,
+    "key_industries": [
+      "automotive",
+      "food processing",
+      "plastics"
+    ]
+  },
+  {
+    "zone_number": 135,
+    "name": "Palm Beach (FL) Foreign-Trade Zone",
+    "city": "Riviera Beach",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Port of Palm Beach District",
+    "grantee": "Port of Palm Beach District",
+    "lat": 26.7768,
+    "lng": -80.0556,
+    "status": "active",
+    "activated_year": 1994,
+    "nearest_port": "USPBI",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "sugar",
+      "molasses",
+      "cement",
+      "building materials"
     ]
   },
   {
     "zone_number": 136,
-    "name": "Brevard County Foreign-Trade Zone",
+    "name": "Brevard County (FL) Foreign-Trade Zone",
     "city": "Melbourne",
     "state": "Florida",
     "state_code": "FL",
     "operator": "Canaveral Port Authority",
     "grantee": "Canaveral Port Authority",
-    "lat": 28.4167,
-    "lng": -80.6083,
+    "lat": 28.4189,
+    "lng": -80.623,
     "status": "active",
-    "activated_year": 1986,
+    "activated_year": 1994,
+    "nearest_port": "USCNV",
+    "port_distance_miles": 30,
     "key_industries": [
       "aerospace",
       "defense",
+      "telecommunications"
+    ]
+  },
+  {
+    "zone_number": 137,
+    "name": "Washington Dulles Foreign-Trade Zone",
+    "city": "Sterling",
+    "state": "Virginia",
+    "state_code": "VA",
+    "operator": "Metropolitan Washington Airports Authority",
+    "grantee": "Loudoun County Economic Development",
+    "lat": 38.9531,
+    "lng": -77.4565,
+    "status": "active",
+    "activated_year": 1994,
+    "nearest_port": "USBAL",
+    "port_distance_miles": 60,
+    "key_industries": [
+      "technology",
+      "data centers",
+      "air cargo"
+    ]
+  },
+  {
+    "zone_number": 138,
+    "name": "Franklin County (OH) Foreign-Trade Zone",
+    "city": "Columbus",
+    "state": "Ohio",
+    "state_code": "OH",
+    "operator": "Rickenbacker Port Authority",
+    "grantee": "Columbus Regional Airport Authority",
+    "lat": 39.8128,
+    "lng": -82.928,
+    "status": "active",
+    "activated_year": 1994,
+    "nearest_port": "USCLE",
+    "port_distance_miles": 150,
+    "key_industries": [
+      "logistics",
+      "distribution",
+      "automotive"
+    ]
+  },
+  {
+    "zone_number": 139,
+    "name": "Sierra Vista (AZ) Foreign-Trade Zone",
+    "city": "Sierra Vista",
+    "state": "Arizona",
+    "state_code": "AZ",
+    "operator": "Cochise County",
+    "grantee": "Cochise County",
+    "lat": 31.5455,
+    "lng": -110.2837,
+    "status": "active",
+    "activated_year": 1994,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 500,
+    "key_industries": [
+      "defense",
+      "electronics",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 140,
+    "name": "Flint (MI) Foreign-Trade Zone",
+    "city": "Flint",
+    "state": "Michigan",
+    "state_code": "MI",
+    "operator": "Bishop International Airport Authority",
+    "grantee": "City of Flint",
+    "lat": 42.9653,
+    "lng": -83.744,
+    "status": "active",
+    "activated_year": 1994,
+    "nearest_port": "USDET",
+    "port_distance_miles": 70,
+    "key_industries": [
+      "automotive",
+      "plastics",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 141,
+    "name": "Monroe County (NY) Foreign-Trade Zone",
+    "city": "Rochester",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "Rochester Technology & Manufacturing Assoc.",
+    "grantee": "County of Monroe",
+    "lat": 43.1566,
+    "lng": -77.6088,
+    "status": "active",
+    "activated_year": 1994,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 275,
+    "key_industries": [
+      "optics",
+      "imaging",
       "electronics"
     ]
   },
   {
-    "zone_number": 163,
-    "name": "Winston-Salem Foreign-Trade Zone",
-    "city": "Winston-Salem",
-    "state": "North Carolina",
-    "state_code": "NC",
-    "operator": "Piedmont Triad Partnership",
-    "grantee": "Piedmont Triad Partnership",
-    "lat": 36.0999,
-    "lng": -80.2442,
+    "zone_number": 142,
+    "name": "Salem (NJ) Foreign-Trade Zone",
+    "city": "Carneys Point",
+    "state": "New Jersey",
+    "state_code": "NJ",
+    "operator": "Salem County",
+    "grantee": "Salem County Improvement Authority",
+    "lat": 39.7101,
+    "lng": -75.4707,
     "status": "active",
-    "activated_year": 1987,
+    "activated_year": 1994,
+    "nearest_port": "USPHL",
+    "port_distance_miles": 35,
     "key_industries": [
-      "tobacco",
-      "textiles",
-      "furniture",
-      "transportation equipment"
+      "glass",
+      "food processing",
+      "chemicals"
     ]
   },
   {
-    "zone_number": 174,
-    "name": "Norfolk Foreign-Trade Zone",
-    "city": "Norfolk",
-    "state": "Virginia",
-    "state_code": "VA",
-    "operator": "Virginia Port Authority",
-    "grantee": "Virginia Port Authority",
-    "lat": 36.9092,
-    "lng": -76.3312,
-    "status": "active",
-    "activated_year": 1987,
-    "nearest_port": "USNOR",
-    "port_distance_miles": 3,
-    "key_industries": [
-      "automotive",
-      "coal",
-      "consumer goods",
-      "military equipment"
-    ]
-  },
-  {
-    "zone_number": 196,
-    "name": "Seattle Foreign-Trade Zone",
-    "city": "Seattle",
-    "state": "Washington",
-    "state_code": "WA",
-    "operator": "Port of Seattle",
-    "grantee": "Port of Seattle",
-    "lat": 47.581,
-    "lng": -122.3482,
-    "status": "active",
-    "activated_year": 1988,
-    "nearest_port": "USSEA",
-    "port_distance_miles": 2,
-    "key_industries": [
-      "aircraft",
-      "electronics",
-      "forest products",
-      "seafood"
-    ],
-    "annual_merchandise_value_usd": 9000000000,
-    "subzones": [
-      {
-        "subzone_id": "196A",
-        "name": "Boeing Everett",
-        "operator": "The Boeing Company",
-        "type": "manufacturing"
-      }
-    ]
-  },
-  {
-    "zone_number": 202,
-    "name": "Los Angeles Foreign-Trade Zone",
-    "city": "Los Angeles",
+    "zone_number": 143,
+    "name": "West Sacramento (CA) Foreign-Trade Zone",
+    "city": "West Sacramento",
     "state": "California",
     "state_code": "CA",
-    "operator": "Port of Los Angeles",
-    "grantee": "Board of Harbor Commissioners, City of Los Angeles",
-    "lat": 33.74,
-    "lng": -118.27,
+    "operator": "Port of Sacramento",
+    "grantee": "Port of Sacramento",
+    "lat": 38.5805,
+    "lng": -121.5302,
     "status": "active",
-    "activated_year": 1988,
-    "nearest_port": "USLAX",
-    "port_distance_miles": 1,
+    "activated_year": 1994,
+    "nearest_port": "USOAK",
+    "port_distance_miles": 80,
     "key_industries": [
-      "consumer electronics",
-      "apparel",
-      "furniture",
-      "automotive",
-      "food products"
-    ],
-    "annual_merchandise_value_usd": 22000000000,
-    "subzones": [
-      {
-        "subzone_id": "202A",
-        "name": "World Cruise Center",
-        "operator": "Port of Los Angeles",
-        "type": "distribution"
-      },
-      {
-        "subzone_id": "202B",
-        "name": "TraPac Container Terminal",
-        "operator": "TraPac LLC",
-        "type": "distribution"
-      }
+      "rice",
+      "agricultural products",
+      "distribution"
     ]
   },
   {
-    "zone_number": 204,
-    "name": "Memphis Foreign-Trade Zone",
-    "city": "Memphis",
-    "state": "Tennessee",
-    "state_code": "TN",
-    "operator": "City of Memphis",
-    "grantee": "City of Memphis",
-    "lat": 35.1495,
-    "lng": -90.049,
+    "zone_number": 144,
+    "name": "Brunswick (GA) Foreign-Trade Zone",
+    "city": "Brunswick",
+    "state": "Georgia",
+    "state_code": "GA",
+    "operator": "Georgia Ports Authority",
+    "grantee": "Brunswick and Glynn County Development Authority",
+    "lat": 31.1499,
+    "lng": -81.4915,
     "status": "active",
-    "activated_year": 1989,
+    "activated_year": 1994,
+    "nearest_port": "USBQK",
+    "port_distance_miles": 5,
     "key_industries": [
-      "FedEx hub",
-      "logistics",
-      "pharmaceuticals",
-      "medical devices"
-    ],
-    "notes": "Adjacent to FedEx World Hub"
+      "ro-ro vehicles",
+      "forest products",
+      "food products"
+    ]
   },
   {
-    "zone_number": 230,
-    "name": "Piedmont Triad Foreign-Trade Zone",
-    "city": "Greensboro",
-    "state": "North Carolina",
-    "state_code": "NC",
-    "operator": "Piedmont Triad Partnership",
-    "grantee": "Piedmont Triad Partnership",
-    "lat": 36.0726,
-    "lng": -79.792,
+    "zone_number": 145,
+    "name": "Shreveport (LA) Foreign-Trade Zone",
+    "city": "Shreveport",
+    "state": "Louisiana",
+    "state_code": "LA",
+    "operator": "Shreveport-Bossier City FTZ",
+    "grantee": "Greater Shreveport Chamber of Commerce",
+    "lat": 32.5252,
+    "lng": -93.7502,
     "status": "active",
-    "activated_year": 1991,
+    "activated_year": 1995,
+    "nearest_port": "USNOL",
+    "port_distance_miles": 330,
     "key_industries": [
-      "aviation",
-      "furniture",
+      "telecommunications",
+      "natural gas",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 146,
+    "name": "Lawrence County (PA) Foreign-Trade Zone",
+    "city": "New Castle",
+    "state": "Pennsylvania",
+    "state_code": "PA",
+    "operator": "Lawrence County Regional Chamber",
+    "grantee": "Lawrence County Regional Chamber of Commerce",
+    "lat": 41.0034,
+    "lng": -80.347,
+    "status": "active",
+    "activated_year": 1995,
+    "nearest_port": "USPIT",
+    "port_distance_miles": 65,
+    "key_industries": [
+      "steel",
+      "tin plate",
+      "fireworks"
+    ]
+  },
+  {
+    "zone_number": 147,
+    "name": "Reading (PA) Foreign-Trade Zone",
+    "city": "Reading",
+    "state": "Pennsylvania",
+    "state_code": "PA",
+    "operator": "Berks County IDA",
+    "grantee": "Berks County Industrial Development Authority",
+    "lat": 40.3357,
+    "lng": -75.9269,
+    "status": "active",
+    "activated_year": 1995,
+    "nearest_port": "USPHL",
+    "port_distance_miles": 60,
+    "key_industries": [
+      "distribution",
+      "food processing",
+      "manufacturing"
+    ]
+  },
+  {
+    "zone_number": 148,
+    "name": "Knoxville (TN) Foreign-Trade Zone",
+    "city": "Knoxville",
+    "state": "Tennessee",
+    "state_code": "TN",
+    "operator": "City of Knoxville",
+    "grantee": "City of Knoxville",
+    "lat": 35.9606,
+    "lng": -83.9207,
+    "status": "active",
+    "activated_year": 1995,
+    "nearest_port": "USCHS",
+    "port_distance_miles": 360,
+    "key_industries": [
+      "energy",
+      "automotive",
+      "technology"
+    ]
+  },
+  {
+    "zone_number": 149,
+    "name": "Freeport (TX) Foreign-Trade Zone",
+    "city": "Freeport",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Port Freeport",
+    "grantee": "Brazoria County",
+    "lat": 28.9541,
+    "lng": -95.3597,
+    "status": "active",
+    "activated_year": 1995,
+    "nearest_port": "USFPT",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "chemicals",
+      "LNG",
+      "crude oil",
+      "sulfur"
+    ]
+  },
+  {
+    "zone_number": 150,
+    "name": "El Paso (West) Foreign-Trade Zone",
+    "city": "El Paso",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "West El Paso Industrial Park",
+    "grantee": "City of El Paso",
+    "lat": 31.8014,
+    "lng": -106.5362,
+    "status": "active",
+    "activated_year": 1995,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 750,
+    "key_industries": [
+      "apparel",
+      "electronics assembly",
+      "automotive parts"
+    ]
+  },
+  {
+    "zone_number": 151,
+    "name": "Findlay (OH) Foreign-Trade Zone",
+    "city": "Findlay",
+    "state": "Ohio",
+    "state_code": "OH",
+    "operator": "Findlay-Hancock County Development Authority",
+    "grantee": "Findlay-Hancock County Chamber of Commerce",
+    "lat": 41.0442,
+    "lng": -83.6499,
+    "status": "active",
+    "activated_year": 1995,
+    "nearest_port": "USTOL",
+    "port_distance_miles": 60,
+    "key_industries": [
+      "petroleum",
+      "rubber",
+      "automotive"
+    ]
+  },
+  {
+    "zone_number": 152,
+    "name": "Burns Harbor (IN) Foreign-Trade Zone",
+    "city": "Burns Harbor",
+    "state": "Indiana",
+    "state_code": "IN",
+    "operator": "Ports of Indiana",
+    "grantee": "Indiana Port Commission",
+    "lat": 41.6262,
+    "lng": -87.1331,
+    "status": "active",
+    "activated_year": 1995,
+    "nearest_port": "USCHI",
+    "port_distance_miles": 30,
+    "key_industries": [
+      "steel",
+      "grain",
+      "fertilizer"
+    ]
+  },
+  {
+    "zone_number": 153,
+    "name": "San Diego Foreign-Trade Zone",
+    "city": "San Diego",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "San Diego Regional EDC",
+    "grantee": "City of San Diego",
+    "lat": 32.7336,
+    "lng": -117.192,
+    "status": "active",
+    "activated_year": 1996,
+    "nearest_port": "USSAN",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "defense",
+      "biotechnology",
+      "electronics",
+      "telecommunications"
+    ]
+  },
+  {
+    "zone_number": 154,
+    "name": "Binghamton (NY) Foreign-Trade Zone",
+    "city": "Binghamton",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "Broome County IDA",
+    "grantee": "Broome County",
+    "lat": 42.0987,
+    "lng": -75.918,
+    "status": "active",
+    "activated_year": 1996,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 175,
+    "key_industries": [
+      "electronics",
+      "flight simulation",
+      "defense"
+    ]
+  },
+  {
+    "zone_number": 155,
+    "name": "Calhoun/Victoria (TX) Foreign-Trade Zone",
+    "city": "Point Comfort",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Calhoun-Victoria FTZ Inc.",
+    "grantee": "Calhoun-Victoria FTZ Inc.",
+    "lat": 28.6737,
+    "lng": -96.5547,
+    "status": "active",
+    "activated_year": 1996,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 130,
+    "key_industries": [
+      "chemicals",
+      "aluminum",
+      "plastics"
+    ]
+  },
+  {
+    "zone_number": 156,
+    "name": "Wichita (KS) Foreign-Trade Zone",
+    "city": "Wichita",
+    "state": "Kansas",
+    "state_code": "KS",
+    "operator": "City of Wichita",
+    "grantee": "City of Wichita",
+    "lat": 37.6872,
+    "lng": -97.3301,
+    "status": "active",
+    "activated_year": 1996,
+    "nearest_port": "USMKC",
+    "port_distance_miles": 200,
+    "key_industries": [
+      "aerospace",
+      "aircraft manufacturing",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 157,
+    "name": "Casper (WY) Foreign-Trade Zone",
+    "city": "Casper",
+    "state": "Wyoming",
+    "state_code": "WY",
+    "operator": "City of Casper",
+    "grantee": "City of Casper",
+    "lat": 42.8666,
+    "lng": -106.3131,
+    "status": "active",
+    "activated_year": 1996,
+    "nearest_port": "USDEN",
+    "port_distance_miles": 270,
+    "key_industries": [
+      "oil and gas",
+      "mining",
+      "wind energy"
+    ]
+  },
+  {
+    "zone_number": 158,
+    "name": "Vicksburg/Jackson (MS) Foreign-Trade Zone",
+    "city": "Vicksburg",
+    "state": "Mississippi",
+    "state_code": "MS",
+    "operator": "Warren County Port Commission",
+    "grantee": "Warren County Port Commission",
+    "lat": 32.3526,
+    "lng": -90.8779,
+    "status": "active",
+    "activated_year": 1996,
+    "nearest_port": "USGPT",
+    "port_distance_miles": 200,
+    "key_industries": [
+      "chemicals",
+      "steel",
+      "paper"
+    ]
+  },
+  {
+    "zone_number": 159,
+    "name": "Anderson County (SC) Foreign-Trade Zone",
+    "city": "Anderson",
+    "state": "South Carolina",
+    "state_code": "SC",
+    "operator": "Anderson County",
+    "grantee": "Anderson County",
+    "lat": 34.5034,
+    "lng": -82.6501,
+    "status": "active",
+    "activated_year": 1996,
+    "nearest_port": "USCHS",
+    "port_distance_miles": 230,
+    "key_industries": [
+      "automotive",
+      "plastics",
       "textiles"
     ]
   },
   {
-    "zone_number": 257,
-    "name": "Tacoma Foreign-Trade Zone",
-    "city": "Tacoma",
-    "state": "Washington",
-    "state_code": "WA",
-    "operator": "Port of Tacoma",
-    "grantee": "Port of Tacoma",
-    "lat": 47.2668,
-    "lng": -122.4233,
+    "zone_number": 160,
+    "name": "Sebastian County (AR) Foreign-Trade Zone",
+    "city": "Fort Smith",
+    "state": "Arkansas",
+    "state_code": "AR",
+    "operator": "Fort Smith Port Authority",
+    "grantee": "Fort Smith Chamber of Commerce",
+    "lat": 35.3859,
+    "lng": -94.3985,
     "status": "active",
-    "activated_year": 1999,
-    "nearest_port": "USTAC",
-    "port_distance_miles": 1,
+    "activated_year": 1996,
+    "nearest_port": "USLKR",
+    "port_distance_miles": 160,
     "key_industries": [
-      "forest products",
-      "automobiles",
-      "consumer goods"
+      "food processing",
+      "automotive parts",
+      "steel"
     ]
   },
   {
-    "zone_number": 281,
-    "name": "Miami Airport Foreign-Trade Zone",
-    "city": "Miami",
+    "zone_number": 161,
+    "name": "Sedgwick County (KS) Foreign-Trade Zone",
+    "city": "Wichita",
+    "state": "Kansas",
+    "state_code": "KS",
+    "operator": "Sedgwick County Port Authority",
+    "grantee": "Sedgwick County",
+    "lat": 37.65,
+    "lng": -97.4,
+    "status": "active",
+    "activated_year": 1997,
+    "nearest_port": "USMKC",
+    "port_distance_miles": 200,
+    "key_industries": [
+      "aircraft",
+      "general aviation",
+      "machinery"
+    ]
+  },
+  {
+    "zone_number": 162,
+    "name": "Muskogee (OK) Foreign-Trade Zone",
+    "city": "Muskogee",
+    "state": "Oklahoma",
+    "state_code": "OK",
+    "operator": "Muskogee City-County Port Authority",
+    "grantee": "Muskogee City-County Port Authority",
+    "lat": 35.7479,
+    "lng": -95.3697,
+    "status": "active",
+    "activated_year": 1997,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 480,
+    "key_industries": [
+      "glass",
+      "paper",
+      "food processing"
+    ]
+  },
+  {
+    "zone_number": 163,
+    "name": "Ponce (PR) Foreign-Trade Zone",
+    "city": "Ponce",
+    "state": "Puerto Rico",
+    "state_code": "PR",
+    "operator": "Puerto Rico Ports Authority",
+    "grantee": "Puerto Rico Ports Authority",
+    "lat": 17.9743,
+    "lng": -66.6142,
+    "status": "active",
+    "activated_year": 1997,
+    "nearest_port": "PRPSE",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "pharmaceuticals",
+      "electronics",
+      "petrochemicals"
+    ]
+  },
+  {
+    "zone_number": 164,
+    "name": "Muskegon (MI) Foreign-Trade Zone",
+    "city": "Muskegon",
+    "state": "Michigan",
+    "state_code": "MI",
+    "operator": "Muskegon County",
+    "grantee": "County of Muskegon",
+    "lat": 43.2342,
+    "lng": -86.2484,
+    "status": "active",
+    "activated_year": 1997,
+    "nearest_port": "USDET",
+    "port_distance_miles": 190,
+    "key_industries": [
+      "automotive parts",
+      "castings",
+      "chemicals"
+    ]
+  },
+  {
+    "zone_number": 165,
+    "name": "Midland (TX) Foreign-Trade Zone",
+    "city": "Midland",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Midland International Air & Space Port",
+    "grantee": "City of Midland",
+    "lat": 31.9973,
+    "lng": -102.0779,
+    "status": "active",
+    "activated_year": 1997,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 500,
+    "key_industries": [
+      "petroleum",
+      "petrochemicals",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 166,
+    "name": "Homestead (FL) Foreign-Trade Zone",
+    "city": "Homestead",
     "state": "Florida",
     "state_code": "FL",
-    "operator": "Miami-Dade County Aviation Dept.",
+    "operator": "Miami-Dade County",
     "grantee": "Miami-Dade County",
-    "lat": 25.7959,
-    "lng": -80.287,
+    "lat": 25.4687,
+    "lng": -80.4776,
+    "status": "active",
+    "activated_year": 1997,
+    "nearest_port": "USMIA",
+    "port_distance_miles": 30,
+    "key_industries": [
+      "agriculture",
+      "distribution",
+      "aviation"
+    ]
+  },
+  {
+    "zone_number": 167,
+    "name": "Brown County (WI) Foreign-Trade Zone",
+    "city": "Green Bay",
+    "state": "Wisconsin",
+    "state_code": "WI",
+    "operator": "Brown County",
+    "grantee": "Brown County Port & Resource Recovery",
+    "lat": 44.5133,
+    "lng": -88.0133,
+    "status": "active",
+    "activated_year": 1997,
+    "nearest_port": "USMKE",
+    "port_distance_miles": 120,
+    "key_industries": [
+      "paper",
+      "food processing",
+      "machinery"
+    ]
+  },
+  {
+    "zone_number": 168,
+    "name": "Dallas/Fort Worth (expansion)",
+    "city": "Dallas",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "DFW Airport Board",
+    "grantee": "DFW International Airport Board",
+    "lat": 32.8968,
+    "lng": -97.038,
+    "status": "active",
+    "activated_year": 1997,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 250,
+    "key_industries": [
+      "electronics",
+      "telecom",
+      "air cargo"
+    ]
+  },
+  {
+    "zone_number": 169,
+    "name": "Manatee County (FL) Foreign-Trade Zone",
+    "city": "Palmetto",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Manatee County Port Authority",
+    "grantee": "Manatee County Port Authority",
+    "lat": 27.5242,
+    "lng": -82.5723,
+    "status": "active",
+    "activated_year": 1997,
+    "nearest_port": "USTPA",
+    "port_distance_miles": 25,
+    "key_industries": [
+      "citrus",
+      "phosphate",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 170,
+    "name": "Clark County (IN) Foreign-Trade Zone",
+    "city": "Jeffersonville",
+    "state": "Indiana",
+    "state_code": "IN",
+    "operator": "Ports of Indiana",
+    "grantee": "Ports of Indiana",
+    "lat": 38.2776,
+    "lng": -85.7372,
+    "status": "active",
+    "activated_year": 1998,
+    "nearest_port": "USLOU",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "automotive",
+      "steel",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 171,
+    "name": "Liberty County (TX) Foreign-Trade Zone",
+    "city": "Liberty",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Liberty County",
+    "grantee": "Liberty-Dayton Area Chamber of Commerce",
+    "lat": 30.058,
+    "lng": -94.7955,
+    "status": "active",
+    "activated_year": 1998,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 50,
+    "key_industries": [
+      "petroleum",
+      "lumber",
+      "rice"
+    ]
+  },
+  {
+    "zone_number": 172,
+    "name": "Oneida County (NY) Foreign-Trade Zone",
+    "city": "Rome",
+    "state": "New York",
+    "state_code": "NY",
+    "operator": "Mohawk Valley EDGE",
+    "grantee": "County of Oneida",
+    "lat": 43.2128,
+    "lng": -75.4557,
+    "status": "active",
+    "activated_year": 1998,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 250,
+    "key_industries": [
+      "defense",
+      "semiconductors",
+      "technology"
+    ]
+  },
+  {
+    "zone_number": 173,
+    "name": "Grays Harbor (WA) Foreign-Trade Zone",
+    "city": "Aberdeen",
+    "state": "Washington",
+    "state_code": "WA",
+    "operator": "Port of Grays Harbor",
+    "grantee": "Port of Grays Harbor",
+    "lat": 46.9754,
+    "lng": -123.8157,
+    "status": "active",
+    "activated_year": 1998,
+    "nearest_port": "USSEA",
+    "port_distance_miles": 110,
+    "key_industries": [
+      "timber",
+      "soy",
+      "grain exports"
+    ]
+  },
+  {
+    "zone_number": 174,
+    "name": "Yuma (AZ) Foreign-Trade Zone",
+    "city": "Yuma",
+    "state": "Arizona",
+    "state_code": "AZ",
+    "operator": "Greater Yuma EDC",
+    "grantee": "Greater Yuma Economic Development Corp.",
+    "lat": 32.6927,
+    "lng": -114.6277,
+    "status": "active",
+    "activated_year": 1998,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 280,
+    "key_industries": [
+      "agriculture",
+      "produce",
+      "solar"
+    ]
+  },
+  {
+    "zone_number": 175,
+    "name": "Cedar Rapids (IA) Foreign-Trade Zone",
+    "city": "Cedar Rapids",
+    "state": "Iowa",
+    "state_code": "IA",
+    "operator": "City of Cedar Rapids",
+    "grantee": "City of Cedar Rapids",
+    "lat": 41.9779,
+    "lng": -91.6656,
+    "status": "active",
+    "activated_year": 1998,
+    "nearest_port": "USCHI",
+    "port_distance_miles": 270,
+    "key_industries": [
+      "food processing",
+      "avionics",
+      "corn products"
+    ]
+  },
+  {
+    "zone_number": 176,
+    "name": "Rockford (IL) Foreign-Trade Zone",
+    "city": "Rockford",
+    "state": "Illinois",
+    "state_code": "IL",
+    "operator": "Greater Rockford Airport Authority",
+    "grantee": "Greater Rockford Airport Authority",
+    "lat": 42.1944,
+    "lng": -89.0971,
+    "status": "active",
+    "activated_year": 1998,
+    "nearest_port": "USCHI",
+    "port_distance_miles": 90,
+    "key_industries": [
+      "fasteners",
+      "machine tools",
+      "air cargo"
+    ]
+  },
+  {
+    "zone_number": 177,
+    "name": "Evansville (IN) Foreign-Trade Zone",
+    "city": "Evansville",
+    "state": "Indiana",
+    "state_code": "IN",
+    "operator": "Southwest Indiana Commerce Park",
+    "grantee": "Evansville Regional Airport Authority",
+    "lat": 37.9716,
+    "lng": -87.5711,
+    "status": "active",
+    "activated_year": 1998,
+    "nearest_port": "USLOU",
+    "port_distance_miles": 120,
+    "key_industries": [
+      "automotive",
+      "plastics",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 178,
+    "name": "Huron (SD) Foreign-Trade Zone",
+    "city": "Huron",
+    "state": "South Dakota",
+    "state_code": "SD",
+    "operator": "Greater Huron Development Corp.",
+    "grantee": "Greater Huron Development Corp.",
+    "lat": 44.3633,
+    "lng": -98.2148,
+    "status": "active",
+    "activated_year": 1998,
+    "nearest_port": "USDLH",
+    "port_distance_miles": 400,
+    "key_industries": [
+      "agriculture",
+      "food processing"
+    ]
+  },
+  {
+    "zone_number": 179,
+    "name": "Madawaska (ME) Foreign-Trade Zone",
+    "city": "Madawaska",
+    "state": "Maine",
+    "state_code": "ME",
+    "operator": "Madawaska FTZ",
+    "grantee": "Town of Madawaska",
+    "lat": 47.3589,
+    "lng": -68.3283,
+    "status": "active",
+    "activated_year": 1998,
+    "nearest_port": "USPTM",
+    "port_distance_miles": 300,
+    "key_industries": [
+      "paper",
+      "forest products",
+      "energy"
+    ]
+  },
+  {
+    "zone_number": 180,
+    "name": "Atlanta Foreign-Trade Zone",
+    "city": "Atlanta",
+    "state": "Georgia",
+    "state_code": "GA",
+    "operator": "Fulton County Development Authority",
+    "grantee": "Board of Commissioners of Fulton County",
+    "lat": 33.6407,
+    "lng": -84.4277,
+    "status": "active",
+    "activated_year": 1999,
+    "nearest_port": "USSAV",
+    "port_distance_miles": 250,
+    "key_industries": [
+      "distribution",
+      "automotive",
+      "electronics",
+      "air cargo"
+    ]
+  },
+  {
+    "zone_number": 181,
+    "name": "Akron-Canton (OH) Foreign-Trade Zone",
+    "city": "Akron",
+    "state": "Ohio",
+    "state_code": "OH",
+    "operator": "Akron-Canton Regional Airport Authority",
+    "grantee": "Akron-Canton Regional Airport Authority",
+    "lat": 40.9161,
+    "lng": -81.4428,
+    "status": "active",
+    "activated_year": 1999,
+    "nearest_port": "USCLE",
+    "port_distance_miles": 50,
+    "key_industries": [
+      "polymers",
+      "rubber",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 182,
+    "name": "Fort Wayne (IN) Foreign-Trade Zone",
+    "city": "Fort Wayne",
+    "state": "Indiana",
+    "state_code": "IN",
+    "operator": "City of Fort Wayne",
+    "grantee": "City of Fort Wayne",
+    "lat": 41.0793,
+    "lng": -85.1394,
+    "status": "active",
+    "activated_year": 1999,
+    "nearest_port": "USCHI",
+    "port_distance_miles": 150,
+    "key_industries": [
+      "automotive",
+      "defense",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 183,
+    "name": "Austin (TX - expanded)",
+    "city": "Austin",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Foreign-Trade Zone of Central Texas",
+    "grantee": "Foreign-Trade Zone of Central Texas Inc.",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "status": "active",
+    "activated_year": 1999,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 165,
+    "key_industries": [
+      "semiconductor fabrication",
+      "clean energy",
+      "biotech"
+    ]
+  },
+  {
+    "zone_number": 184,
+    "name": "Tuscaloosa (AL) Foreign-Trade Zone",
+    "city": "Tuscaloosa",
+    "state": "Alabama",
+    "state_code": "AL",
+    "operator": "West Alabama Chamber",
+    "grantee": "West Alabama Chamber of Commerce",
+    "lat": 33.2098,
+    "lng": -87.5692,
+    "status": "active",
+    "activated_year": 1999,
+    "nearest_port": "USMOB",
+    "port_distance_miles": 200,
+    "key_industries": [
+      "automotive",
+      "paper",
+      "chemicals"
+    ]
+  },
+  {
+    "zone_number": 185,
+    "name": "Tulsa (OK - expanded) Foreign-Trade Zone",
+    "city": "Tulsa",
+    "state": "Oklahoma",
+    "state_code": "OK",
+    "operator": "Tulsa FTZ Authority",
+    "grantee": "Tulsa International Airport Authority",
+    "lat": 36.154,
+    "lng": -95.9928,
+    "status": "active",
+    "activated_year": 1999,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 480,
+    "key_industries": [
+      "aerospace",
+      "energy equipment",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 186,
+    "name": "Waterville (ME) Foreign-Trade Zone",
+    "city": "Waterville",
+    "state": "Maine",
+    "state_code": "ME",
+    "operator": "City of Waterville",
+    "grantee": "City of Waterville",
+    "lat": 44.552,
+    "lng": -69.6317,
+    "status": "active",
+    "activated_year": 1999,
+    "nearest_port": "USPTM",
+    "port_distance_miles": 80,
+    "key_industries": [
+      "paper",
+      "food products",
+      "composites"
+    ]
+  },
+  {
+    "zone_number": 187,
+    "name": "Bay County (FL) Foreign-Trade Zone",
+    "city": "Panama City Beach",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Bay County IDA",
+    "grantee": "Bay County Board of County Commissioners",
+    "lat": 30.1766,
+    "lng": -85.8054,
+    "status": "active",
+    "activated_year": 2000,
+    "nearest_port": "USMOB",
+    "port_distance_miles": 220,
+    "key_industries": [
+      "aerospace",
+      "defense",
+      "logistics"
+    ]
+  },
+  {
+    "zone_number": 188,
+    "name": "Brunswick (ME) Foreign-Trade Zone",
+    "city": "Brunswick",
+    "state": "Maine",
+    "state_code": "ME",
+    "operator": "Midcoast Regional Redevelopment Authority",
+    "grantee": "Midcoast Regional Redevelopment Authority",
+    "lat": 43.9145,
+    "lng": -69.9653,
+    "status": "active",
+    "activated_year": 2000,
+    "nearest_port": "USPTM",
+    "port_distance_miles": 30,
+    "key_industries": [
+      "composites",
+      "aerospace",
+      "marine"
+    ]
+  },
+  {
+    "zone_number": 189,
+    "name": "Fargo (ND) Foreign-Trade Zone",
+    "city": "Fargo",
+    "state": "North Dakota",
+    "state_code": "ND",
+    "operator": "City of Fargo",
+    "grantee": "City of Fargo",
+    "lat": 46.8772,
+    "lng": -96.7898,
+    "status": "active",
+    "activated_year": 2000,
+    "nearest_port": "USDLH",
+    "port_distance_miles": 250,
+    "key_industries": [
+      "food processing",
+      "agricultural equipment",
+      "technology"
+    ]
+  },
+  {
+    "zone_number": 190,
+    "name": "Charleston (WV) Foreign-Trade Zone",
+    "city": "Charleston",
+    "state": "West Virginia",
+    "state_code": "WV",
+    "operator": "West Virginia Development Office",
+    "grantee": "State of West Virginia",
+    "lat": 38.3498,
+    "lng": -81.6326,
+    "status": "active",
+    "activated_year": 2000,
+    "nearest_port": "USNFK",
+    "port_distance_miles": 350,
+    "key_industries": [
+      "chemicals",
+      "polymers",
+      "coal"
+    ]
+  },
+  {
+    "zone_number": 191,
+    "name": "Palmdale/Lancaster (CA) Foreign-Trade Zone",
+    "city": "Palmdale",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "City of Palmdale",
+    "grantee": "City of Palmdale",
+    "lat": 34.5794,
+    "lng": -118.1165,
+    "status": "active",
+    "activated_year": 2000,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 70,
+    "key_industries": [
+      "aerospace",
+      "defense",
+      "solar"
+    ]
+  },
+  {
+    "zone_number": 192,
+    "name": "Presque Isle (ME) Foreign-Trade Zone",
+    "city": "Presque Isle",
+    "state": "Maine",
+    "state_code": "ME",
+    "operator": "Northern Maine Development Commission",
+    "grantee": "Northern Maine Development Commission",
+    "lat": 46.6812,
+    "lng": -68.0159,
+    "status": "active",
+    "activated_year": 2000,
+    "nearest_port": "USPTM",
+    "port_distance_miles": 280,
+    "key_industries": [
+      "potatoes",
+      "wood products",
+      "wind energy"
+    ]
+  },
+  {
+    "zone_number": 193,
+    "name": "North Platte (NE) Foreign-Trade Zone",
+    "city": "North Platte",
+    "state": "Nebraska",
+    "state_code": "NE",
+    "operator": "City of North Platte",
+    "grantee": "North Platte Area Industrial Foundation",
+    "lat": 41.1239,
+    "lng": -100.7654,
+    "status": "active",
+    "activated_year": 2000,
+    "nearest_port": "USMKC",
+    "port_distance_miles": 400,
+    "key_industries": [
+      "rail interchange",
+      "agriculture",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 194,
+    "name": "Apalachicola (FL) Foreign-Trade Zone",
+    "city": "Apalachicola",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Franklin County",
+    "grantee": "Board of County Commissioners of Franklin County",
+    "lat": 29.7263,
+    "lng": -84.9827,
+    "status": "inactive",
+    "activated_year": 2000,
+    "nearest_port": "USTPA",
+    "port_distance_miles": 200,
+    "key_industries": [
+      "seafood",
+      "timber"
+    ]
+  },
+  {
+    "zone_number": 195,
+    "name": "Sparks (NV - expanded) Foreign-Trade Zone",
+    "city": "Sparks",
+    "state": "Nevada",
+    "state_code": "NV",
+    "operator": "EDAWN",
+    "grantee": "Economic Development Authority of Western Nevada",
+    "lat": 39.5494,
+    "lng": -119.7377,
+    "status": "active",
+    "activated_year": 2001,
+    "nearest_port": "USOAK",
+    "port_distance_miles": 230,
+    "key_industries": [
+      "lithium batteries",
+      "data centers",
+      "EV manufacturing"
+    ]
+  },
+  {
+    "zone_number": 196,
+    "name": "Fort Pierce (FL) Foreign-Trade Zone",
+    "city": "Fort Pierce",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Economic Development Council of St. Lucie County",
+    "grantee": "St. Lucie County",
+    "lat": 27.4467,
+    "lng": -80.3256,
+    "status": "active",
+    "activated_year": 2001,
+    "nearest_port": "USPEF",
+    "port_distance_miles": 80,
+    "key_industries": [
+      "citrus",
+      "distribution",
+      "aerospace"
+    ]
+  },
+  {
+    "zone_number": 197,
+    "name": "Davis County (UT) Foreign-Trade Zone",
+    "city": "Clearfield",
+    "state": "Utah",
+    "state_code": "UT",
+    "operator": "Davis County",
+    "grantee": "Davis County",
+    "lat": 41.1107,
+    "lng": -112.0261,
+    "status": "active",
+    "activated_year": 2001,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 700,
+    "key_industries": [
+      "defense",
+      "aerospace",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 198,
+    "name": "Corpus Christi (expanded) Foreign-Trade Zone",
+    "city": "Corpus Christi",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Port of Corpus Christi",
+    "grantee": "Port of Corpus Christi Authority",
+    "lat": 27.765,
+    "lng": -97.41,
+    "status": "active",
+    "activated_year": 2001,
+    "nearest_port": "USCRP",
+    "port_distance_miles": 2,
+    "key_industries": [
+      "desalination",
+      "wind energy",
+      "steel pipe"
+    ]
+  },
+  {
+    "zone_number": 199,
+    "name": "Waco (TX) Foreign-Trade Zone",
+    "city": "Waco",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Greater Waco Chamber",
+    "grantee": "Greater Waco Chamber of Commerce",
+    "lat": 31.5493,
+    "lng": -97.1467,
+    "status": "active",
+    "activated_year": 2001,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 190,
+    "key_industries": [
+      "glass",
+      "food products",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 200,
+    "name": "San Joaquin County (CA) Foreign-Trade Zone",
+    "city": "Stockton",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "Port of Stockton",
+    "grantee": "Port of Stockton",
+    "lat": 37.9505,
+    "lng": -121.2908,
+    "status": "active",
+    "activated_year": 2001,
+    "nearest_port": "USOAK",
+    "port_distance_miles": 80,
+    "key_industries": [
+      "agriculture",
+      "distribution",
+      "food processing"
+    ]
+  },
+  {
+    "zone_number": 201,
+    "name": "Alachua County (FL) Foreign-Trade Zone",
+    "city": "Gainesville",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Gainesville-Alachua County Regional Airport",
+    "grantee": "Gainesville-Alachua County Regional Airport Authority",
+    "lat": 29.6516,
+    "lng": -82.3248,
+    "status": "active",
+    "activated_year": 2002,
+    "nearest_port": "USJAX",
+    "port_distance_miles": 70,
+    "key_industries": [
+      "biotech",
+      "medical devices",
+      "technology"
+    ]
+  },
+  {
+    "zone_number": 202,
+    "name": "Los Angeles (expansion) Foreign-Trade Zone",
+    "city": "Los Angeles",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "World Trade Center Los Angeles",
+    "grantee": "Los Angeles World Airports",
+    "lat": 33.9425,
+    "lng": -118.4081,
+    "status": "active",
+    "activated_year": 2002,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "air cargo",
+      "entertainment",
+      "fashion",
+      "electronics"
+    ]
+  },
+  {
+    "zone_number": 203,
+    "name": "Orange County (CA) Foreign-Trade Zone",
+    "city": "Irvine",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "John Wayne Airport",
+    "grantee": "County of Orange",
+    "lat": 33.6846,
+    "lng": -117.8265,
+    "status": "active",
+    "activated_year": 2002,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 25,
+    "key_industries": [
+      "medical devices",
+      "electronics",
+      "apparel"
+    ]
+  },
+  {
+    "zone_number": 204,
+    "name": "Lehigh Valley (PA) Foreign-Trade Zone",
+    "city": "Bethlehem",
+    "state": "Pennsylvania",
+    "state_code": "PA",
+    "operator": "Lehigh Valley IDA",
+    "grantee": "Lehigh-Northampton Airport Authority",
+    "lat": 40.626,
+    "lng": -75.3706,
+    "status": "active",
+    "activated_year": 2002,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 80,
+    "key_industries": [
+      "logistics",
+      "e-commerce",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 205,
+    "name": "Richland County (SC) Foreign-Trade Zone",
+    "city": "Columbia",
+    "state": "South Carolina",
+    "state_code": "SC",
+    "operator": "SC Ports Authority",
+    "grantee": "Richland-Lexington Airport District",
+    "lat": 33.9389,
+    "lng": -80.9951,
+    "status": "active",
+    "activated_year": 2002,
+    "nearest_port": "USCHS",
+    "port_distance_miles": 115,
+    "key_industries": [
+      "distribution",
+      "military",
+      "pharmaceutical"
+    ]
+  },
+  {
+    "zone_number": 206,
+    "name": "Inland Empire (CA) Foreign-Trade Zone",
+    "city": "Ontario",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "City of Ontario",
+    "grantee": "City of Ontario",
+    "lat": 34.0633,
+    "lng": -117.6509,
+    "status": "active",
+    "activated_year": 2003,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 40,
+    "key_industries": [
+      "logistics",
+      "e-commerce",
+      "distribution",
+      "cold storage"
+    ]
+  },
+  {
+    "zone_number": 207,
+    "name": "Mobile (AL - expanded) Foreign-Trade Zone",
+    "city": "Mobile",
+    "state": "Alabama",
+    "state_code": "AL",
+    "operator": "Mobile Airport Authority",
+    "grantee": "Mobile Airport Authority",
+    "lat": 30.6776,
+    "lng": -88.2461,
+    "status": "active",
+    "activated_year": 2003,
+    "nearest_port": "USMOB",
+    "port_distance_miles": 10,
+    "key_industries": [
+      "aircraft assembly",
+      "aerospace",
+      "shipbuilding"
+    ]
+  },
+  {
+    "zone_number": 208,
+    "name": "New Haven (CT) Foreign-Trade Zone",
+    "city": "New Haven",
+    "state": "Connecticut",
+    "state_code": "CT",
+    "operator": "CT Economic Resource Center",
+    "grantee": "City of New Haven",
+    "lat": 41.3083,
+    "lng": -72.9279,
+    "status": "active",
+    "activated_year": 2003,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 80,
+    "key_industries": [
+      "biotech",
+      "medical devices",
+      "firearms"
+    ]
+  },
+  {
+    "zone_number": 209,
+    "name": "Dona Ana County (NM) Foreign-Trade Zone",
+    "city": "Santa Teresa",
+    "state": "New Mexico",
+    "state_code": "NM",
+    "operator": "Border Industrial Association",
+    "grantee": "Dona Ana County",
+    "lat": 31.8617,
+    "lng": -106.6407,
+    "status": "active",
+    "activated_year": 2003,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 740,
+    "key_industries": [
+      "automotive parts",
+      "electronics",
+      "food processing"
+    ]
+  },
+  {
+    "zone_number": 210,
+    "name": "Guam Foreign-Trade Zone",
+    "city": "Tamuning",
+    "state": "Guam",
+    "state_code": "GU",
+    "operator": "Guam Economic Development Authority",
+    "grantee": "Government of Guam",
+    "lat": 13.4891,
+    "lng": 144.8073,
+    "status": "active",
+    "activated_year": 2003,
+    "nearest_port": "GUAPR",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "transshipment",
+      "military",
+      "tourism goods"
+    ]
+  },
+  {
+    "zone_number": 211,
+    "name": "Contra Costa County (CA) Foreign-Trade Zone",
+    "city": "Antioch",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "Contra Costa County",
+    "grantee": "County of Contra Costa",
+    "lat": 38.0049,
+    "lng": -121.8058,
+    "status": "active",
+    "activated_year": 2003,
+    "nearest_port": "USOAK",
+    "port_distance_miles": 45,
+    "key_industries": [
+      "chemicals",
+      "biotechnology",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 212,
+    "name": "Tooele County (UT) Foreign-Trade Zone",
+    "city": "Tooele",
+    "state": "Utah",
+    "state_code": "UT",
+    "operator": "Tooele County EDC",
+    "grantee": "Tooele County",
+    "lat": 40.5308,
+    "lng": -112.2983,
+    "status": "active",
+    "activated_year": 2004,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 650,
+    "key_industries": [
+      "hazardous waste treatment",
+      "mining",
+      "military"
+    ]
+  },
+  {
+    "zone_number": 213,
+    "name": "Guaynabo (PR) Foreign-Trade Zone",
+    "city": "Guaynabo",
+    "state": "Puerto Rico",
+    "state_code": "PR",
+    "operator": "Puerto Rico Industrial Development Co.",
+    "grantee": "Puerto Rico Industrial Development Co.",
+    "lat": 18.3579,
+    "lng": -66.1103,
+    "status": "active",
+    "activated_year": 2004,
+    "nearest_port": "PRSJU",
+    "port_distance_miles": 8,
+    "key_industries": [
+      "pharmaceuticals",
+      "biotechnology",
+      "medical devices"
+    ]
+  },
+  {
+    "zone_number": 214,
+    "name": "Lenoir County (NC) Foreign-Trade Zone",
+    "city": "Kinston",
+    "state": "North Carolina",
+    "state_code": "NC",
+    "operator": "NC Global TransPark Authority",
+    "grantee": "NC Global TransPark Authority",
+    "lat": 35.2627,
+    "lng": -77.5816,
+    "status": "active",
+    "activated_year": 2004,
+    "nearest_port": "USILM",
+    "port_distance_miles": 120,
+    "key_industries": [
+      "aviation",
+      "aerospace",
+      "pharmaceuticals"
+    ]
+  },
+  {
+    "zone_number": 215,
+    "name": "Kalamazoo (MI) Foreign-Trade Zone",
+    "city": "Kalamazoo",
+    "state": "Michigan",
+    "state_code": "MI",
+    "operator": "Southwest Michigan First",
+    "grantee": "City of Kalamazoo",
+    "lat": 42.2917,
+    "lng": -85.5872,
+    "status": "active",
+    "activated_year": 2004,
+    "nearest_port": "USDET",
+    "port_distance_miles": 150,
+    "key_industries": [
+      "pharmaceuticals",
+      "automotive",
+      "paper"
+    ]
+  },
+  {
+    "zone_number": 216,
+    "name": "Lehigh Valley (PA - expanded) Foreign-Trade Zone",
+    "city": "Allentown",
+    "state": "Pennsylvania",
+    "state_code": "PA",
+    "operator": "Lehigh Valley Economic Development Corp.",
+    "grantee": "Lehigh-Northampton Airport Authority",
+    "lat": 40.6023,
+    "lng": -75.4714,
+    "status": "active",
+    "activated_year": 2005,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 85,
+    "key_industries": [
+      "e-commerce fulfillment",
+      "distribution",
+      "food"
+    ]
+  },
+  {
+    "zone_number": 217,
+    "name": "Lee County (FL) Foreign-Trade Zone",
+    "city": "Fort Myers",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Lee County Port Authority",
+    "grantee": "Lee County Port Authority",
+    "lat": 26.5362,
+    "lng": -81.7559,
+    "status": "active",
+    "activated_year": 2005,
+    "nearest_port": "USTPA",
+    "port_distance_miles": 140,
+    "key_industries": [
+      "agriculture",
+      "distribution",
+      "construction"
+    ]
+  },
+  {
+    "zone_number": 218,
+    "name": "Kootenai County (ID) Foreign-Trade Zone",
+    "city": "Coeur d'Alene",
+    "state": "Idaho",
+    "state_code": "ID",
+    "operator": "Jobs Plus Inc.",
+    "grantee": "Kootenai County",
+    "lat": 47.6777,
+    "lng": -116.7805,
+    "status": "active",
+    "activated_year": 2005,
+    "nearest_port": "USSEA",
+    "port_distance_miles": 310,
+    "key_industries": [
+      "electronics",
+      "timber",
+      "recreational equipment"
+    ]
+  },
+  {
+    "zone_number": 219,
+    "name": "Mankato (MN) Foreign-Trade Zone",
+    "city": "Mankato",
+    "state": "Minnesota",
+    "state_code": "MN",
+    "operator": "Greater Mankato Growth",
+    "grantee": "Greater Mankato Growth Inc.",
+    "lat": 44.1636,
+    "lng": -93.9994,
+    "status": "active",
+    "activated_year": 2005,
+    "nearest_port": "USDLH",
+    "port_distance_miles": 260,
+    "key_industries": [
+      "food processing",
+      "manufacturing",
+      "medical"
+    ]
+  },
+  {
+    "zone_number": 220,
+    "name": "St. Croix (USVI) Foreign-Trade Zone",
+    "city": "Christiansted",
+    "state": "US Virgin Islands",
+    "state_code": "VI",
+    "operator": "USVI Economic Development Authority",
+    "grantee": "US Virgin Islands Government",
+    "lat": 17.7468,
+    "lng": -64.702,
+    "status": "active",
+    "activated_year": 2005,
+    "nearest_port": "VISTX",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "rum",
+      "petroleum",
+      "electronics assembly"
+    ]
+  },
+  {
+    "zone_number": 221,
+    "name": "Mesa/Scottsdale (AZ) Foreign-Trade Zone",
+    "city": "Mesa",
+    "state": "Arizona",
+    "state_code": "AZ",
+    "operator": "Phoenix-Mesa Gateway Airport Authority",
+    "grantee": "City of Mesa",
+    "lat": 33.3078,
+    "lng": -111.6553,
+    "status": "active",
+    "activated_year": 2005,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 380,
+    "key_industries": [
+      "aerospace",
+      "technology",
+      "medical devices"
+    ]
+  },
+  {
+    "zone_number": 222,
+    "name": "Lake County (IL) Foreign-Trade Zone",
+    "city": "Waukegan",
+    "state": "Illinois",
+    "state_code": "IL",
+    "operator": "Lake County Partners",
+    "grantee": "Lake County Partners",
+    "lat": 42.3636,
+    "lng": -87.8448,
+    "status": "active",
+    "activated_year": 2006,
+    "nearest_port": "USCHI",
+    "port_distance_miles": 40,
+    "key_industries": [
+      "pharmaceuticals",
+      "chemicals",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 223,
+    "name": "Lamar County (TX) Foreign-Trade Zone",
+    "city": "Paris",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Lamar County Economic Development",
+    "grantee": "City of Paris",
+    "lat": 33.6609,
+    "lng": -95.5555,
+    "status": "active",
+    "activated_year": 2006,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 350,
+    "key_industries": [
+      "manufacturing",
+      "food processing",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 224,
+    "name": "Chesterfield County (VA) Foreign-Trade Zone",
+    "city": "Chesterfield",
+    "state": "Virginia",
+    "state_code": "VA",
+    "operator": "Chesterfield County Economic Development",
+    "grantee": "Chesterfield County",
+    "lat": 37.3774,
+    "lng": -77.5057,
+    "status": "active",
+    "activated_year": 2006,
+    "nearest_port": "USNFK",
+    "port_distance_miles": 90,
+    "key_industries": [
+      "distribution",
+      "pharmaceuticals",
+      "technology"
+    ]
+  },
+  {
+    "zone_number": 225,
+    "name": "Polk County (IA) Foreign-Trade Zone",
+    "city": "Des Moines",
+    "state": "Iowa",
+    "state_code": "IA",
+    "operator": "Greater Des Moines Partnership",
+    "grantee": "Iowa FTZ Corp.",
+    "lat": 41.6005,
+    "lng": -93.6091,
+    "status": "active",
+    "activated_year": 2006,
+    "nearest_port": "USMKC",
+    "port_distance_miles": 200,
+    "key_industries": [
+      "financial services",
+      "insurance",
+      "food"
+    ]
+  },
+  {
+    "zone_number": 226,
+    "name": "Flagler County (FL) Foreign-Trade Zone",
+    "city": "Palm Coast",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Flagler County EDC",
+    "grantee": "Flagler County Development Authority",
+    "lat": 29.5844,
+    "lng": -81.2079,
+    "status": "active",
+    "activated_year": 2007,
+    "nearest_port": "USJAX",
+    "port_distance_miles": 70,
+    "key_industries": [
+      "distribution",
+      "food processing",
+      "manufacturing"
+    ]
+  },
+  {
+    "zone_number": 227,
+    "name": "Rock Hill (SC) Foreign-Trade Zone",
+    "city": "Rock Hill",
+    "state": "South Carolina",
+    "state_code": "SC",
+    "operator": "York County Economic Development",
+    "grantee": "City of Rock Hill",
+    "lat": 34.9249,
+    "lng": -81.0251,
+    "status": "active",
+    "activated_year": 2007,
+    "nearest_port": "USCHS",
+    "port_distance_miles": 200,
+    "key_industries": [
+      "printing",
+      "textiles",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 228,
+    "name": "North Las Vegas Foreign-Trade Zone",
+    "city": "North Las Vegas",
+    "state": "Nevada",
+    "state_code": "NV",
+    "operator": "City of North Las Vegas",
+    "grantee": "City of North Las Vegas",
+    "lat": 36.2988,
+    "lng": -115.0951,
+    "status": "active",
+    "activated_year": 2007,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 270,
+    "key_industries": [
+      "solar",
+      "distribution",
+      "EV components"
+    ]
+  },
+  {
+    "zone_number": 229,
+    "name": "Fresno County (CA) Foreign-Trade Zone",
+    "city": "Fresno",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "Fresno County EDC",
+    "grantee": "County of Fresno",
+    "lat": 36.7468,
+    "lng": -119.7726,
+    "status": "active",
+    "activated_year": 2008,
+    "nearest_port": "USOAK",
+    "port_distance_miles": 190,
+    "key_industries": [
+      "agriculture",
+      "food processing",
+      "wine"
+    ]
+  },
+  {
+    "zone_number": 230,
+    "name": "Piedmont Triad (NC) Foreign-Trade Zone",
+    "city": "Greensboro",
+    "state": "North Carolina",
+    "state_code": "NC",
+    "operator": "Piedmont Triad Partnership",
+    "grantee": "Piedmont Triad Airport Authority",
+    "lat": 36.1015,
+    "lng": -79.8431,
+    "status": "active",
+    "activated_year": 2008,
+    "nearest_port": "USILM",
+    "port_distance_miles": 180,
+    "key_industries": [
+      "aviation",
+      "logistics",
+      "biotech"
+    ]
+  },
+  {
+    "zone_number": 231,
+    "name": "Whatcom County (WA) Foreign-Trade Zone",
+    "city": "Blaine",
+    "state": "Washington",
+    "state_code": "WA",
+    "operator": "Port of Bellingham",
+    "grantee": "Whatcom County",
+    "lat": 48.9937,
+    "lng": -122.7467,
+    "status": "active",
+    "activated_year": 2008,
+    "nearest_port": "USSEA",
+    "port_distance_miles": 100,
+    "key_industries": [
+      "fish processing",
+      "berries",
+      "aluminum"
+    ]
+  },
+  {
+    "zone_number": 232,
+    "name": "Plano (TX) Foreign-Trade Zone",
+    "city": "Plano",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Plano Economic Development",
+    "grantee": "City of Plano",
+    "lat": 33.0198,
+    "lng": -96.6989,
     "status": "active",
     "activated_year": 2009,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 250,
     "key_industries": [
-      "perishables",
-      "flowers",
+      "telecom",
+      "technology headquarters",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 233,
+    "name": "Lehigh County (PA) Foreign-Trade Zone",
+    "city": "Macungie",
+    "state": "Pennsylvania",
+    "state_code": "PA",
+    "operator": "Lehigh County Authority",
+    "grantee": "Lehigh County Authority",
+    "lat": 40.5151,
+    "lng": -75.5538,
+    "status": "active",
+    "activated_year": 2009,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 90,
+    "key_industries": [
+      "commercial trucks",
+      "distribution",
+      "food"
+    ]
+  },
+  {
+    "zone_number": 234,
+    "name": "Eastern (NM) Foreign-Trade Zone",
+    "city": "Roswell",
+    "state": "New Mexico",
+    "state_code": "NM",
+    "operator": "Chaves County",
+    "grantee": "Chaves County",
+    "lat": 33.3943,
+    "lng": -104.523,
+    "status": "active",
+    "activated_year": 2010,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 700,
+    "key_industries": [
+      "aerospace testing",
+      "dairy",
+      "oil and gas"
+    ]
+  },
+  {
+    "zone_number": 235,
+    "name": "Lake County (IN) Foreign-Trade Zone",
+    "city": "Gary",
+    "state": "Indiana",
+    "state_code": "IN",
+    "operator": "Northwest Indiana Forum",
+    "grantee": "Lake County, Indiana",
+    "lat": 41.5934,
+    "lng": -87.3465,
+    "status": "active",
+    "activated_year": 2010,
+    "nearest_port": "USCHI",
+    "port_distance_miles": 25,
+    "key_industries": [
+      "steel",
+      "petroleum",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 236,
+    "name": "Palm Beach County (FL) Foreign-Trade Zone",
+    "city": "West Palm Beach",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Business Development Board of PBC",
+    "grantee": "Palm Beach County",
+    "lat": 26.7153,
+    "lng": -80.0534,
+    "status": "active",
+    "activated_year": 2010,
+    "nearest_port": "USPBI",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "biotech",
+      "aerospace",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 237,
+    "name": "Allegan County (MI) Foreign-Trade Zone",
+    "city": "Allegan",
+    "state": "Michigan",
+    "state_code": "MI",
+    "operator": "Right Place Inc.",
+    "grantee": "Right Place Inc. / Western Michigan",
+    "lat": 42.5292,
+    "lng": -85.8555,
+    "status": "active",
+    "activated_year": 2010,
+    "nearest_port": "USDET",
+    "port_distance_miles": 170,
+    "key_industries": [
+      "automotive",
+      "food processing",
+      "pharmaceuticals"
+    ]
+  },
+  {
+    "zone_number": 238,
+    "name": "Lancaster County (PA) Foreign-Trade Zone",
+    "city": "Lancaster",
+    "state": "Pennsylvania",
+    "state_code": "PA",
+    "operator": "Lancaster County Economic Development",
+    "grantee": "Lancaster County",
+    "lat": 40.0379,
+    "lng": -76.3055,
+    "status": "active",
+    "activated_year": 2011,
+    "nearest_port": "USPHL",
+    "port_distance_miles": 60,
+    "key_industries": [
+      "food processing",
+      "tobacco products",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 239,
+    "name": "Denton County (TX) Foreign-Trade Zone",
+    "city": "Denton",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Denton County EDC",
+    "grantee": "City of Denton",
+    "lat": 33.2148,
+    "lng": -97.1331,
+    "status": "active",
+    "activated_year": 2011,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 270,
+    "key_industries": [
+      "technology",
+      "distribution",
+      "manufacturing"
+    ]
+  },
+  {
+    "zone_number": 240,
+    "name": "Wenatchee (WA) Foreign-Trade Zone",
+    "city": "Wenatchee",
+    "state": "Washington",
+    "state_code": "WA",
+    "operator": "Port of Chelan County",
+    "grantee": "Chelan/Douglas Regional Port Authority",
+    "lat": 47.4235,
+    "lng": -120.3103,
+    "status": "active",
+    "activated_year": 2011,
+    "nearest_port": "USSEA",
+    "port_distance_miles": 150,
+    "key_industries": [
+      "apples",
+      "fruit processing",
+      "agriculture"
+    ]
+  },
+  {
+    "zone_number": 241,
+    "name": "Fort Bend County (TX) Foreign-Trade Zone",
+    "city": "Missouri City",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Fort Bend County",
+    "grantee": "Fort Bend County",
+    "lat": 29.6186,
+    "lng": -95.5377,
+    "status": "active",
+    "activated_year": 2012,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 25,
+    "key_industries": [
+      "oil and gas",
+      "distribution",
+      "food processing"
+    ]
+  },
+  {
+    "zone_number": 242,
+    "name": "Escambia/Santa Rosa (FL) Foreign-Trade Zone",
+    "city": "Pensacola",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Port of Pensacola",
+    "grantee": "City of Pensacola",
+    "lat": 30.4213,
+    "lng": -87.2169,
+    "status": "active",
+    "activated_year": 2012,
+    "nearest_port": "USPNS",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "paper",
+      "chemicals",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 243,
+    "name": "Kern County (CA) Foreign-Trade Zone",
+    "city": "Bakersfield",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "Kern County",
+    "grantee": "County of Kern",
+    "lat": 35.3733,
+    "lng": -119.0187,
+    "status": "active",
+    "activated_year": 2012,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 120,
+    "key_industries": [
+      "petroleum",
+      "agriculture",
+      "solar"
+    ]
+  },
+  {
+    "zone_number": 244,
+    "name": "Collin County (TX) Foreign-Trade Zone",
+    "city": "McKinney",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "McKinney Economic Development",
+    "grantee": "City of McKinney",
+    "lat": 33.1972,
+    "lng": -96.6398,
+    "status": "active",
+    "activated_year": 2012,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 250,
+    "key_industries": [
+      "semiconductors",
+      "data centers",
+      "food"
+    ]
+  },
+  {
+    "zone_number": 245,
+    "name": "Williamson County (TX) Foreign-Trade Zone",
+    "city": "Round Rock",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Williamson County",
+    "grantee": "Williamson County",
+    "lat": 30.5083,
+    "lng": -97.6789,
+    "status": "active",
+    "activated_year": 2013,
+    "nearest_port": "USHOU",
+    "port_distance_miles": 170,
+    "key_industries": [
+      "computers",
+      "semiconductors",
+      "biotech"
+    ]
+  },
+  {
+    "zone_number": 246,
+    "name": "Ada County (ID) Foreign-Trade Zone",
+    "city": "Boise",
+    "state": "Idaho",
+    "state_code": "ID",
+    "operator": "Boise Valley Economic Partnership",
+    "grantee": "Ada County",
+    "lat": 43.6007,
+    "lng": -116.2317,
+    "status": "active",
+    "activated_year": 2013,
+    "nearest_port": "USPDX",
+    "port_distance_miles": 430,
+    "key_industries": [
+      "semiconductor fabrication",
+      "food processing",
+      "dairy"
+    ]
+  },
+  {
+    "zone_number": 247,
+    "name": "Scott County (KY) Foreign-Trade Zone",
+    "city": "Georgetown",
+    "state": "Kentucky",
+    "state_code": "KY",
+    "operator": "Georgetown-Scott County Chamber",
+    "grantee": "Georgetown-Scott County Chamber of Commerce",
+    "lat": 38.2098,
+    "lng": -84.5588,
+    "status": "active",
+    "activated_year": 2013,
+    "nearest_port": "USLOU",
+    "port_distance_miles": 80,
+    "key_industries": [
+      "automotive assembly",
+      "bourbon",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 248,
+    "name": "Greenville County (SC) Foreign-Trade Zone",
+    "city": "Greenville",
+    "state": "South Carolina",
+    "state_code": "SC",
+    "operator": "SC Ports Authority",
+    "grantee": "Greenville County",
+    "lat": 34.8526,
+    "lng": -82.394,
+    "status": "active",
+    "activated_year": 2014,
+    "nearest_port": "USCHS",
+    "port_distance_miles": 210,
+    "key_industries": [
+      "automotive",
+      "tires",
+      "aerospace",
+      "plastics"
+    ]
+  },
+  {
+    "zone_number": 249,
+    "name": "Mercer County (NJ) Foreign-Trade Zone",
+    "city": "Trenton",
+    "state": "New Jersey",
+    "state_code": "NJ",
+    "operator": "Mercer County EDC",
+    "grantee": "Mercer County Improvement Authority",
+    "lat": 40.2171,
+    "lng": -74.7429,
+    "status": "active",
+    "activated_year": 2014,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 55,
+    "key_industries": [
       "pharmaceuticals",
-      "air cargo"
-    ],
-    "notes": "Focused on MIA airport cargo operations"
+      "distribution",
+      "food"
+    ]
+  },
+  {
+    "zone_number": 250,
+    "name": "Pinal County (AZ) Foreign-Trade Zone",
+    "city": "Casa Grande",
+    "state": "Arizona",
+    "state_code": "AZ",
+    "operator": "Pinal County",
+    "grantee": "County of Pinal",
+    "lat": 32.8795,
+    "lng": -111.7574,
+    "status": "active",
+    "activated_year": 2015,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 400,
+    "key_industries": [
+      "EV battery manufacturing",
+      "semiconductor",
+      "solar"
+    ]
+  },
+  {
+    "zone_number": 251,
+    "name": "Chattahoochee County (GA) Foreign-Trade Zone",
+    "city": "Columbus",
+    "state": "Georgia",
+    "state_code": "GA",
+    "operator": "Columbus GA Development Authority",
+    "grantee": "Columbus Consolidated Government",
+    "lat": 32.461,
+    "lng": -84.9877,
+    "status": "active",
+    "activated_year": 2016,
+    "nearest_port": "USSAV",
+    "port_distance_miles": 270,
+    "key_industries": [
+      "military",
+      "insurance",
+      "textiles"
+    ]
+  },
+  {
+    "zone_number": 252,
+    "name": "Henderson (NV) Foreign-Trade Zone",
+    "city": "Henderson",
+    "state": "Nevada",
+    "state_code": "NV",
+    "operator": "City of Henderson EDC",
+    "grantee": "City of Henderson",
+    "lat": 36.0395,
+    "lng": -114.9817,
+    "status": "active",
+    "activated_year": 2016,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 275,
+    "key_industries": [
+      "data centers",
+      "EV components",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 253,
+    "name": "Onslow County (NC) Foreign-Trade Zone",
+    "city": "Jacksonville",
+    "state": "North Carolina",
+    "state_code": "NC",
+    "operator": "Onslow County EDC",
+    "grantee": "Onslow County",
+    "lat": 34.7541,
+    "lng": -77.4302,
+    "status": "active",
+    "activated_year": 2017,
+    "nearest_port": "USILM",
+    "port_distance_miles": 65,
+    "key_industries": [
+      "military",
+      "distribution",
+      "manufacturing"
+    ]
+  },
+  {
+    "zone_number": 254,
+    "name": "New London County (CT) Foreign-Trade Zone",
+    "city": "New London",
+    "state": "Connecticut",
+    "state_code": "CT",
+    "operator": "seCTer",
+    "grantee": "Southeastern Connecticut Enterprise Region",
+    "lat": 41.3557,
+    "lng": -72.0995,
+    "status": "active",
+    "activated_year": 2017,
+    "nearest_port": "USNYC",
+    "port_distance_miles": 110,
+    "key_industries": [
+      "submarines",
+      "pharmaceuticals",
+      "defense"
+    ]
+  },
+  {
+    "zone_number": 255,
+    "name": "Shelby County (KY) Foreign-Trade Zone",
+    "city": "Shelbyville",
+    "state": "Kentucky",
+    "state_code": "KY",
+    "operator": "Shelby County IDA",
+    "grantee": "Shelby County Industrial Development Authority",
+    "lat": 38.212,
+    "lng": -85.2235,
+    "status": "active",
+    "activated_year": 2018,
+    "nearest_port": "USLOU",
+    "port_distance_miles": 40,
+    "key_industries": [
+      "bourbon aging",
+      "automotive parts",
+      "food processing"
+    ]
+  },
+  {
+    "zone_number": 256,
+    "name": "Sumter County (SC) Foreign-Trade Zone",
+    "city": "Sumter",
+    "state": "South Carolina",
+    "state_code": "SC",
+    "operator": "SC Ports Authority",
+    "grantee": "Sumter County",
+    "lat": 33.9204,
+    "lng": -80.3415,
+    "status": "active",
+    "activated_year": 2018,
+    "nearest_port": "USCHS",
+    "port_distance_miles": 100,
+    "key_industries": [
+      "distribution",
+      "manufacturing",
+      "military"
+    ]
+  },
+  {
+    "zone_number": 257,
+    "name": "Imperial County (CA) Foreign-Trade Zone",
+    "city": "Calexico",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "Imperial County",
+    "grantee": "County of Imperial",
+    "lat": 32.6789,
+    "lng": -115.4989,
+    "status": "active",
+    "activated_year": 2018,
+    "nearest_port": "USLAX",
+    "port_distance_miles": 220,
+    "key_industries": [
+      "fresh produce",
+      "agriculture",
+      "renewable energy"
+    ]
+  },
+  {
+    "zone_number": 258,
+    "name": "Cumberland County (NJ) Foreign-Trade Zone",
+    "city": "Bridgeton",
+    "state": "New Jersey",
+    "state_code": "NJ",
+    "operator": "Cumberland County IDA",
+    "grantee": "Cumberland County Improvement Authority",
+    "lat": 39.4271,
+    "lng": -75.2341,
+    "status": "active",
+    "activated_year": 2019,
+    "nearest_port": "USPHL",
+    "port_distance_miles": 45,
+    "key_industries": [
+      "glass",
+      "food processing",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 259,
+    "name": "Stanislaus County (CA) Foreign-Trade Zone",
+    "city": "Modesto",
+    "state": "California",
+    "state_code": "CA",
+    "operator": "Stanislaus County EDC",
+    "grantee": "County of Stanislaus",
+    "lat": 37.6391,
+    "lng": -120.9969,
+    "status": "active",
+    "activated_year": 2019,
+    "nearest_port": "USOAK",
+    "port_distance_miles": 90,
+    "key_industries": [
+      "food processing",
+      "agriculture",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 260,
+    "name": "Loudoun County (VA) Foreign-Trade Zone",
+    "city": "Leesburg",
+    "state": "Virginia",
+    "state_code": "VA",
+    "operator": "Loudoun County Economic Development",
+    "grantee": "Loudoun County",
+    "lat": 39.1157,
+    "lng": -77.5636,
+    "status": "active",
+    "activated_year": 2019,
+    "nearest_port": "USBAL",
+    "port_distance_miles": 55,
+    "key_industries": [
+      "data centers",
+      "technology",
+      "government contracting"
+    ]
+  },
+  {
+    "zone_number": 261,
+    "name": "Savannah (GA - expanded) Foreign-Trade Zone",
+    "city": "Savannah",
+    "state": "Georgia",
+    "state_code": "GA",
+    "operator": "Georgia Ports Authority",
+    "grantee": "Georgia Ports Authority",
+    "lat": 32.0809,
+    "lng": -81.0912,
+    "status": "active",
+    "activated_year": 2020,
+    "nearest_port": "USSAV",
+    "port_distance_miles": 5,
+    "key_industries": [
+      "containerized cargo",
+      "automotive",
+      "e-commerce fulfillment"
+    ]
+  },
+  {
+    "zone_number": 262,
+    "name": "St. Charles County (MO) Foreign-Trade Zone",
+    "city": "St. Peters",
+    "state": "Missouri",
+    "state_code": "MO",
+    "operator": "St. Charles County EDC",
+    "grantee": "St. Charles County",
+    "lat": 38.7903,
+    "lng": -90.6298,
+    "status": "active",
+    "activated_year": 2020,
+    "nearest_port": "USSTL",
+    "port_distance_miles": 15,
+    "key_industries": [
+      "automotive",
+      "distribution",
+      "chemicals"
+    ]
+  },
+  {
+    "zone_number": 263,
+    "name": "Chatham County (GA) Foreign-Trade Zone",
+    "city": "Garden City",
+    "state": "Georgia",
+    "state_code": "GA",
+    "operator": "Georgia Ports Authority",
+    "grantee": "Chatham County",
+    "lat": 32.0975,
+    "lng": -81.1578,
+    "status": "active",
+    "activated_year": 2020,
+    "nearest_port": "USSAV",
+    "port_distance_miles": 3,
+    "key_industries": [
+      "cold storage",
+      "e-commerce",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 264,
+    "name": "Twin Falls (ID) Foreign-Trade Zone",
+    "city": "Twin Falls",
+    "state": "Idaho",
+    "state_code": "ID",
+    "operator": "Southern Idaho Economic Development",
+    "grantee": "City of Twin Falls",
+    "lat": 42.5558,
+    "lng": -114.4701,
+    "status": "active",
+    "activated_year": 2021,
+    "nearest_port": "USPDX",
+    "port_distance_miles": 500,
+    "key_industries": [
+      "dairy processing",
+      "food manufacturing",
+      "agriculture"
+    ]
+  },
+  {
+    "zone_number": 265,
+    "name": "New Castle County (DE) Foreign-Trade Zone",
+    "city": "New Castle",
+    "state": "Delaware",
+    "state_code": "DE",
+    "operator": "Delaware Prosperity Partnership",
+    "grantee": "Delaware Prosperity Partnership",
+    "lat": 39.6581,
+    "lng": -75.5661,
+    "status": "active",
+    "activated_year": 2021,
+    "nearest_port": "USPHL",
+    "port_distance_miles": 35,
+    "key_industries": [
+      "pharmaceuticals",
+      "chemicals",
+      "logistics"
+    ]
+  },
+  {
+    "zone_number": 266,
+    "name": "Calcasieu Parish (LA) Foreign-Trade Zone",
+    "city": "Sulphur",
+    "state": "Louisiana",
+    "state_code": "LA",
+    "operator": "SWLA Economic Development Alliance",
+    "grantee": "Calcasieu Parish",
+    "lat": 30.2366,
+    "lng": -93.3774,
+    "status": "active",
+    "activated_year": 2021,
+    "nearest_port": "USLCH",
+    "port_distance_miles": 10,
+    "key_industries": [
+      "LNG export",
+      "petrochemicals",
+      "industrial gases"
+    ]
+  },
+  {
+    "zone_number": 267,
+    "name": "Cherokee County (GA) Foreign-Trade Zone",
+    "city": "Canton",
+    "state": "Georgia",
+    "state_code": "GA",
+    "operator": "Cherokee County Development Authority",
+    "grantee": "Cherokee County",
+    "lat": 34.2368,
+    "lng": -84.4908,
+    "status": "active",
+    "activated_year": 2022,
+    "nearest_port": "USSAV",
+    "port_distance_miles": 280,
+    "key_industries": [
+      "distribution",
+      "advanced manufacturing",
+      "healthcare"
+    ]
+  },
+  {
+    "zone_number": 268,
+    "name": "Williamsburg (VA) Foreign-Trade Zone",
+    "city": "Williamsburg",
+    "state": "Virginia",
+    "state_code": "VA",
+    "operator": "James City County EDC",
+    "grantee": "James City County",
+    "lat": 37.2707,
+    "lng": -76.7075,
+    "status": "active",
+    "activated_year": 2022,
+    "nearest_port": "USNFK",
+    "port_distance_miles": 60,
+    "key_industries": [
+      "tourism goods",
+      "food processing",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 269,
+    "name": "Lane County (OR) Foreign-Trade Zone",
+    "city": "Eugene",
+    "state": "Oregon",
+    "state_code": "OR",
+    "operator": "Lane Council of Governments",
+    "grantee": "Lane County",
+    "lat": 44.0521,
+    "lng": -123.0868,
+    "status": "active",
+    "activated_year": 2022,
+    "nearest_port": "USPDX",
+    "port_distance_miles": 110,
+    "key_industries": [
+      "timber",
+      "recreation equipment",
+      "technology"
+    ]
+  },
+  {
+    "zone_number": 270,
+    "name": "Volusia County (FL) Foreign-Trade Zone",
+    "city": "Daytona Beach",
+    "state": "Florida",
+    "state_code": "FL",
+    "operator": "Team Volusia EDC",
+    "grantee": "Volusia County",
+    "lat": 29.2108,
+    "lng": -81.0228,
+    "status": "active",
+    "activated_year": 2023,
+    "nearest_port": "USJAX",
+    "port_distance_miles": 90,
+    "key_industries": [
+      "aviation",
+      "manufacturing",
+      "distribution"
+    ]
+  },
+  {
+    "zone_number": 271,
+    "name": "Weld County (CO) Foreign-Trade Zone",
+    "city": "Greeley",
+    "state": "Colorado",
+    "state_code": "CO",
+    "operator": "Upstate Colorado Economic Development",
+    "grantee": "Weld County",
+    "lat": 40.4233,
+    "lng": -104.7091,
+    "status": "active",
+    "activated_year": 2023,
+    "nearest_port": "USDEN",
+    "port_distance_miles": 50,
+    "key_industries": [
+      "agriculture",
+      "oil and gas",
+      "food processing"
+    ]
+  },
+  {
+    "zone_number": 272,
+    "name": "Hidalgo County (TX) Foreign-Trade Zone",
+    "city": "Pharr",
+    "state": "Texas",
+    "state_code": "TX",
+    "operator": "Pharr International Bridge",
+    "grantee": "City of Pharr",
+    "lat": 26.1948,
+    "lng": -98.1836,
+    "status": "active",
+    "activated_year": 2023,
+    "nearest_port": "USBRW",
+    "port_distance_miles": 50,
+    "key_industries": [
+      "fresh produce",
+      "automotive parts",
+      "electronics"
+    ]
+  },
+  {
+    "zone_number": 273,
+    "name": "Hampshire County (MA) Foreign-Trade Zone",
+    "city": "Northampton",
+    "state": "Massachusetts",
+    "state_code": "MA",
+    "operator": "Pioneer Valley Planning Commission",
+    "grantee": "City of Northampton",
+    "lat": 42.3251,
+    "lng": -72.6412,
+    "status": "active",
+    "activated_year": 2024,
+    "nearest_port": "USBOS",
+    "port_distance_miles": 100,
+    "key_industries": [
+      "precision instruments",
+      "education technology",
+      "cannabis"
+    ]
   }
 ]
