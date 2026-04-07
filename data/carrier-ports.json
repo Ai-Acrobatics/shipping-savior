@@ -1,0 +1,779 @@
+[
+  {
+    "portCode": "CNQIN",
+    "portName": "Qingdao",
+    "country": "China",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE7", "TP6", "TP9"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Jade", "Swan", "Santana"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL1", "PSW2", "NEU3"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "CPNW", "CEX"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP1", "EC1", "FE2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP1", "PS5", "FE2"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "CIX", "AUX"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FP1", "PN3", "MD2"] }
+    ]
+  },
+  {
+    "portCode": "USLAX",
+    "portName": "Los Angeles",
+    "country": "United States",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP6", "TP3", "Elephant"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Jade", "Santana", "Eagle"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW1", "PSW2", "PSW3"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "CPNW", "AWE3"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP1", "FP2", "PS5"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP1", "FP2", "PS5"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "CIX", "HTW"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FP1", "PN3", "PS7"] },
+      { "name": "Matson", "code": "MATS", "services": ["CLX"], "is_jones_act": true },
+      { "name": "Pasha Hawaii", "code": "PASH", "services": ["Hawaii Express"], "is_jones_act": true }
+    ]
+  },
+  {
+    "portCode": "CNSHA",
+    "portName": "Shanghai",
+    "country": "China",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE1", "AE5", "TP6", "TP9"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Jade", "Swan", "Santana", "Lion"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL1", "FAL3", "PSW1", "PSW2", "NEU1"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "CPNW", "CEX", "AEU1", "AEU3"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP1", "FP2", "EC1", "FE1", "FE2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP1", "FP2", "PS5", "FE1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "CIX", "AUX", "CES"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FP1", "PN3", "MD2", "CTP"] }
+    ]
+  },
+  {
+    "portCode": "CNSZX",
+    "portName": "Shenzhen (Yantian/Shekou)",
+    "country": "China",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE1", "TP3", "TP6"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Swan", "Santana", "Dragon"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL1", "PSW1", "PSW3"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "CEX", "CSE"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP2", "EC2", "FE1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP2", "EC1", "PS5"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "AUX", "CES"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["PN3", "CTP", "MD2"] }
+    ]
+  },
+  {
+    "portCode": "CNNBO",
+    "portName": "Ningbo-Zhoushan",
+    "country": "China",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE7", "TP6", "TP9"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Jade", "Santana", "Swan"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL1", "PSW2", "NEU2"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "CPNW", "AEU1"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP1", "EC1", "FE2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP1", "FE2", "PS5"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "CIX", "AUX"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FP1", "PN3", "CTP"] }
+    ]
+  },
+  {
+    "portCode": "SGSIN",
+    "portName": "Singapore",
+    "country": "Singapore",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE1", "AE5", "AE7", "TP6"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Jade", "Swan", "Lion", "Tiger"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL1", "FAL3", "NEU1", "BEX"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AEU1", "AEU3", "SEA"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FE1", "FE2", "FE3", "EC2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FE1", "FE2", "EC2", "PS5"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUX", "CES", "AEU"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["MD2", "CTP", "FE1"] }
+    ]
+  },
+  {
+    "portCode": "HKHKG",
+    "portName": "Hong Kong",
+    "country": "Hong Kong SAR",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE1", "TP3", "TP6"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Swan", "Santana", "Dragon"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL1", "PSW1", "NEU3"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "CEX", "AEU3"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP2", "FE1", "EC2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP2", "FE1", "EC1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "CES", "AUX"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["CTP", "MD2", "PN3"] }
+    ]
+  },
+  {
+    "portCode": "KRPUS",
+    "portName": "Busan",
+    "country": "South Korea",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE7", "TP6", "TP9"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Jade", "Swan", "Eagle"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW1", "PSW2", "NEU2"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "CPNW", "AEU1"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP1", "FP2", "FE2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP1", "FP2", "FE2"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "CIX", "AEU"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FP1", "PN3", "MD2"] }
+    ]
+  },
+  {
+    "portCode": "JPTYO",
+    "portName": "Tokyo",
+    "country": "Japan",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP9", "AE7"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Eagle", "Jade"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW1", "NEU4"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "CPNW"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP2", "EC1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP2", "PS5", "EC1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CIX", "HTW"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FP1", "PN3"] }
+    ]
+  },
+  {
+    "portCode": "USLGB",
+    "portName": "Long Beach",
+    "country": "United States",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP3", "TP6"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Santana", "Eagle"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW1", "PSW3"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CPNW", "AWE3"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP2", "PS5"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP2", "PS5"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "HTW"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["PN3", "PS7"] },
+      { "name": "Pasha Hawaii", "code": "PASH", "services": ["Hawaii Express"], "is_jones_act": true }
+    ]
+  },
+  {
+    "portCode": "USOAK",
+    "portName": "Oakland",
+    "country": "United States",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP6"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Santana"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW2"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CPNW"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["PN1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["PN1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CIX"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["PN3"] },
+      { "name": "Matson", "code": "MATS", "services": ["CCX"], "is_jones_act": true }
+    ]
+  },
+  {
+    "portCode": "USNYC",
+    "portName": "New York / Newark",
+    "country": "United States",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP9", "TA1", "AE1"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Lion", "Tiger", "Eagle"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSE1", "PSE2", "Liberty"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AWE5", "AEU5"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["EC1", "EC2", "EC3"] },
+      { "name": "ONE", "code": "ONEY", "services": ["EC1", "EC2", "EC3"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUE", "NUE"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["EC1", "MD2"] }
+    ]
+  },
+  {
+    "portCode": "NLRTM",
+    "portName": "Rotterdam",
+    "country": "Netherlands",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE1", "AE5", "AE7", "TA1"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Lion", "Swan", "Tiger", "Albatross"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL1", "FAL3", "NEU1", "NEU2"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AEU1", "AEU3", "AEU5"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FE1", "FE2", "FE3"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FE1", "FE2", "FE3"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AEU", "CES", "NUE"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FE1", "MD2"] }
+    ]
+  },
+  {
+    "portCode": "DEHAM",
+    "portName": "Hamburg",
+    "country": "Germany",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE1", "AE7", "TA1"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Lion", "Swan", "Tiger"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL1", "NEU1", "NEU3"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AEU1", "AEU3"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FE1", "FE2", "FE3", "EC2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FE1", "FE2"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AEU", "CES"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FE1"] }
+    ]
+  },
+  {
+    "portCode": "BEANR",
+    "portName": "Antwerp-Bruges",
+    "country": "Belgium",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE1", "AE5", "TA2"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Lion", "Swan", "Albatross"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL1", "FAL3", "NEU2"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AEU1", "AEU5"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FE1", "FE3"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FE1", "FE3"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AEU", "NUE"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FE1"] }
+    ]
+  },
+  {
+    "portCode": "GBFXT",
+    "portName": "Felixstowe",
+    "country": "United Kingdom",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE1", "AE7"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Lion", "Swan"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL1", "NEU1"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AEU1"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FE1", "FE2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FE1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AEU"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FE1"] }
+    ]
+  },
+  {
+    "portCode": "AEJEA",
+    "portName": "Jebel Ali",
+    "country": "United Arab Emirates",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE5", "ME1", "ME2"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Tiger", "Dragon", "Falcon"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["BEX", "MEX", "AWE1"] },
+      { "name": "COSCO", "code": "COSU", "services": ["GME", "AEU3"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FE3", "IPS", "MD1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FE3", "MD1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUX", "UAE"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["MD2"] }
+    ]
+  },
+  {
+    "portCode": "TWKHH",
+    "portName": "Kaohsiung",
+    "country": "Taiwan",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP3", "AE7"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Jade", "Swan"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW1", "NEU3"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "AEU1"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP1", "FE2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP1", "FE2"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "CIX", "CES", "AEU", "HTW", "AUX"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FP1", "PN3", "CTP", "MD2"] }
+    ]
+  },
+  {
+    "portCode": "VNHPH",
+    "portName": "Hai Phong",
+    "country": "Vietnam",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP6", "Intra-Asia"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Dragon", "Feeder"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW3", "Feeder"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CVS", "Feeder"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP2", "Feeder"] },
+      { "name": "ONE", "code": "ONEY", "services": ["PS5", "Feeder"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "Feeder"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["Feeder"] }
+    ]
+  },
+  {
+    "portCode": "THBKK",
+    "portName": "Laem Chabang",
+    "country": "Thailand",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP6", "AE5"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Dragon", "Tiger"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW3", "BEX"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CSE", "SEA"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP2", "FE3"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP2", "EC2"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "AUX"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["CTP", "MD2"] }
+    ]
+  },
+  {
+    "portCode": "MYPKG",
+    "portName": "Port Klang",
+    "country": "Malaysia",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE5", "Intra-Asia"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Tiger", "Dragon"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["BEX", "PSW3"] },
+      { "name": "COSCO", "code": "COSU", "services": ["SEA", "CSE"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FE3", "IPS"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FE3", "EC2"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUX", "CES"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["CTP"] }
+    ]
+  },
+  {
+    "portCode": "IDTPP",
+    "portName": "Tanjung Priok (Jakarta)",
+    "country": "Indonesia",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["Intra-Asia", "AE5"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Dragon", "Feeder"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["BEX", "Feeder"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CSE", "Feeder"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["IPS", "FE3"] },
+      { "name": "ONE", "code": "ONEY", "services": ["EC2", "Feeder"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUX", "Feeder"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["CTP"] }
+    ]
+  },
+  {
+    "portCode": "USHNM",
+    "portName": "Port Hueneme",
+    "country": "United States",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["Reefer/Banana"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Reefer/Project"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["Reefer/Banana"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["Auto/Reefer"] }
+    ]
+  },
+  {
+    "portCode": "CNXMN",
+    "portName": "Xiamen",
+    "country": "China",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP3", "AE5"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Santana", "Dragon"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW1", "NEU3"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "CEX"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP2", "FE1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP2", "EC1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "CES"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["CTP", "PN3"] }
+    ]
+  },
+  {
+    "portCode": "CNTAO",
+    "portName": "Tianjin (Xingang)",
+    "country": "China",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE7", "TP9"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Eagle", "Swan"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["NEU3", "PSW2"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CPNW", "AEU1"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP1", "EC1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP1", "EC1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CIX"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FP1"] }
+    ]
+  },
+  {
+    "portCode": "CNLYG",
+    "portName": "Lianyungang",
+    "country": "China",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["Feeder"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Feeder"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["Feeder"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "Feeder"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["Feeder"] }
+    ]
+  },
+  {
+    "portCode": "CNDLC",
+    "portName": "Dalian",
+    "country": "China",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP9", "Feeder"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Eagle", "Feeder"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW2", "Feeder"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "CPNW"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CIX"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FP1"] }
+    ]
+  },
+  {
+    "portCode": "VNSGN",
+    "portName": "Ho Chi Minh City (Cat Lai)",
+    "country": "Vietnam",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP6", "AE5"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Dragon", "Santana"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW3", "BEX"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CVS", "CSE"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP2", "EC2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["PS5", "EC2"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "AUX"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["CTP"] }
+    ]
+  },
+  {
+    "portCode": "LKCMB",
+    "portName": "Colombo",
+    "country": "Sri Lanka",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE1", "ME1"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Tiger", "Falcon"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["BEX", "AWE1"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AEU3", "GME"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["IPS", "FE3"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FE3"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUX"] }
+    ]
+  },
+  {
+    "portCode": "INMUN",
+    "portName": "Mundra",
+    "country": "India",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["ME1", "ME2"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Falcon", "Tiger"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["MEX", "BEX"] },
+      { "name": "COSCO", "code": "COSU", "services": ["GME"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["IPS", "MD1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["MD1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUX"] }
+    ]
+  },
+  {
+    "portCode": "INNSA",
+    "portName": "Nhava Sheva (JNPT)",
+    "country": "India",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE5", "ME1"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Tiger", "Falcon"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["BEX", "MEX"] },
+      { "name": "COSCO", "code": "COSU", "services": ["GME", "AEU3"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["IPS", "FE3", "MD1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FE3", "MD1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUX", "UAE"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["MD2"] }
+    ]
+  },
+  {
+    "portCode": "EGPSD",
+    "portName": "Port Said",
+    "country": "Egypt",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE1", "AE5", "AE10"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Lion", "Swan"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL1", "FAL3"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AEU1", "AEU3"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["MD1", "MD2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["MD1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AEU"] }
+    ]
+  },
+  {
+    "portCode": "MAPTM",
+    "portName": "Tanger Med",
+    "country": "Morocco",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE10", "TA2"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Albatross", "Lion"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL3", "NEU4"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["MD3"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AEU"] }
+    ]
+  },
+  {
+    "portCode": "ESVLC",
+    "portName": "Valencia",
+    "country": "Spain",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE10", "TA2"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Albatross", "Tiger"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL3", "NEU4"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AEU5"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["MD2", "MD3"] },
+      { "name": "ONE", "code": "ONEY", "services": ["MD2"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AEU"] }
+    ]
+  },
+  {
+    "portCode": "ITGOA",
+    "portName": "Genoa",
+    "country": "Italy",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE10"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Albatross", "Tiger"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL3"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AEU5"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["MD2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["MD2"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AEU"] }
+    ]
+  },
+  {
+    "portCode": "GRPIR",
+    "portName": "Piraeus",
+    "country": "Greece",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE10", "AE5"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Albatross"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["FAL3"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AEU1", "AEU5"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["MD1", "MD2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["MD1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AEU"] }
+    ]
+  },
+  {
+    "portCode": "USSAV",
+    "portName": "Savannah",
+    "country": "United States",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP9", "TA1"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Lion", "Eagle"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSE1", "PSE2"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AWE5"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["EC2", "EC3"] },
+      { "name": "ONE", "code": "ONEY", "services": ["EC2", "EC3"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUE"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["EC1"] }
+    ]
+  },
+  {
+    "portCode": "USHOU",
+    "portName": "Houston",
+    "country": "United States",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP9", "Gulf"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Lion", "Gulf"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSE2", "Gulf"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AWE5"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["EC3"] },
+      { "name": "ONE", "code": "ONEY", "services": ["EC3"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUE"] }
+    ]
+  },
+  {
+    "portCode": "PAMIT",
+    "portName": "Balboa (Panama)",
+    "country": "Panama",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP9"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Lion"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSE1"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AWE5"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["EC1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["EC1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUE"] }
+    ]
+  },
+  {
+    "portCode": "BRSSZ",
+    "portName": "Santos",
+    "country": "Brazil",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["SAFRAN", "ECSA"] },
+      { "name": "MSC", "code": "MSCU", "services": ["ECSA1", "ECSA2"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["SAFRAN", "BEX3"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["ECSA", "SAX"] },
+      { "name": "ONE", "code": "ONEY", "services": ["ECSA"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["ESA"] }
+    ]
+  },
+  {
+    "portCode": "JPUKB",
+    "portName": "Kobe",
+    "country": "Japan",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP9"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Eagle"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW1"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CPNW"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP2", "PS5"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CIX"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FP1"] }
+    ]
+  },
+  {
+    "portCode": "JPYOK",
+    "portName": "Yokohama",
+    "country": "Japan",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["AE7", "TP9"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Eagle", "Jade"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW1", "NEU4"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "CPNW"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["FP2", "EC1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["FP2", "PS5", "EC1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CIX", "HTW"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["FP1", "PN3"] }
+    ]
+  },
+  {
+    "portCode": "PHMNL",
+    "portName": "Manila",
+    "country": "Philippines",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["Intra-Asia"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Dragon", "Feeder"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["BEX", "Feeder"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CSE"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["IPS"] },
+      { "name": "ONE", "code": "ONEY", "services": ["Feeder"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CEM", "Feeder"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["CTP"] }
+    ]
+  },
+  {
+    "portCode": "AUBNE",
+    "portName": "Brisbane",
+    "country": "Australia",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["Oceania"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Kiwi"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["AAX", "Oceania"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AAX2"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["Oceania"] },
+      { "name": "ONE", "code": "ONEY", "services": ["Oceania"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUX"] }
+    ]
+  },
+  {
+    "portCode": "AUMEL",
+    "portName": "Melbourne",
+    "country": "Australia",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["Oceania"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Kiwi"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["AAX", "Oceania"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AAX2"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["Oceania"] },
+      { "name": "ONE", "code": "ONEY", "services": ["Oceania"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUX"] }
+    ]
+  },
+  {
+    "portCode": "ZADUR",
+    "portName": "Durban",
+    "country": "South Africa",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["SAFARI", "SAECS"] },
+      { "name": "MSC", "code": "MSCU", "services": ["SAECS", "Africa"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["MIDAS", "Africa"] },
+      { "name": "COSCO", "code": "COSU", "services": ["WAX"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["SAECS"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["SAECS"] }
+    ]
+  },
+  {
+    "portCode": "USCHS",
+    "portName": "Charleston",
+    "country": "United States",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP9", "TA1"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Lion", "Eagle"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSE1"] },
+      { "name": "COSCO", "code": "COSU", "services": ["AWE5"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["EC2"] },
+      { "name": "ONE", "code": "ONEY", "services": ["EC2"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["AUE"] }
+    ]
+  },
+  {
+    "portCode": "USTIW",
+    "portName": "Tacoma",
+    "country": "United States",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP6"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Santana"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW2"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CPNW"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["PN1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["PN1"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CIX"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["PN3"] }
+    ]
+  },
+  {
+    "portCode": "USSEA",
+    "portName": "Seattle",
+    "country": "United States",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["TP6"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Santana"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["PSW2"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CPNW"] },
+      { "name": "Hapag-Lloyd", "code": "HLCU", "services": ["PN1"] },
+      { "name": "ONE", "code": "ONEY", "services": ["PN1"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["PN3"] },
+      { "name": "Matson", "code": "MATS", "services": ["MCX"], "is_jones_act": true }
+    ]
+  },
+  {
+    "portCode": "CNFOC",
+    "portName": "Fuzhou",
+    "country": "China",
+    "carriers": [
+      { "name": "Maersk", "code": "MAEU", "services": ["Feeder"] },
+      { "name": "MSC", "code": "MSCU", "services": ["Feeder"] },
+      { "name": "CMA CGM", "code": "CMDU", "services": ["Feeder"] },
+      { "name": "COSCO", "code": "COSU", "services": ["CEN", "Feeder"] },
+      { "name": "Evergreen", "code": "EGLV", "services": ["CES", "Feeder"] },
+      { "name": "Yang Ming", "code": "YMLU", "services": ["CTP"] }
+    ]
+  },
+  {
+    "portCode": "USHNL",
+    "portName": "Honolulu",
+    "country": "United States",
+    "carriers": [
+      { "name": "Matson", "code": "MATS", "services": ["CLX", "CCX"], "is_jones_act": true },
+      { "name": "Pasha Hawaii", "code": "PASH", "services": ["Hawaii Express"], "is_jones_act": true }
+    ]
+  },
+  {
+    "portCode": "USANC",
+    "portName": "Anchorage",
+    "country": "United States",
+    "carriers": [
+      { "name": "Matson", "code": "MATS", "services": ["MCX"], "is_jones_act": true }
+    ]
+  },
+  {
+    "portCode": "USGUQ",
+    "portName": "Guam",
+    "country": "United States",
+    "carriers": [
+      { "name": "Matson", "code": "MATS", "services": ["CLX"], "is_jones_act": true }
+    ]
+  },
+  {
+    "portCode": "USPEV",
+    "portName": "Port Everglades",
+    "country": "United States",
+    "carriers": [
+      { "name": "Crowley", "code": "CMCU", "services": ["Puerto Rico Express"], "is_jones_act": true }
+    ]
+  },
+  {
+    "portCode": "PRSJN",
+    "portName": "San Juan",
+    "country": "Puerto Rico",
+    "carriers": [
+      { "name": "Crowley", "code": "CMCU", "services": ["Puerto Rico Express"], "is_jones_act": true },
+      { "name": "TOTE Maritime", "code": "TOTE", "services": ["TOTE PR Service"], "is_jones_act": true }
+    ]
+  },
+  {
+    "portCode": "USJAX",
+    "portName": "Jacksonville",
+    "country": "United States",
+    "carriers": [
+      { "name": "TOTE Maritime", "code": "TOTE", "services": ["TOTE PR Service"], "is_jones_act": true }
+    ]
+  }
+]

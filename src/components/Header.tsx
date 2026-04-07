@@ -1,26 +1,50 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Ship, Menu, X, LayoutDashboard } from "lucide-react";
+import { Ship, Menu, X, LayoutDashboard, ChevronDown } from "lucide-react";
 
 const navLinks = [
   { label: "Platform", href: "/#platform" },
-  { label: "How It Works", href: "/#how-it-works" },
-  { label: "Carrier Comparison", href: "/carrier-comparison" },
-  { label: "Port Finder", href: "/port-finder" },
-  { label: "FTZ Analyzer", href: "/ftz-analyzer" },
+  { label: "Calculators", href: "/#calculators" },
+  { label: "Carriers", href: "/carrier-comparison" },
+  { label: "Demo", href: "/demo" },
+  { label: "Pricing", href: "/pricing" },
   { label: "Dashboard", href: "/dashboard" },
+];
+
+const moreLinks = [
+  { label: "Knowledge Base", href: "/knowledge-base" },
+  { label: "Data Intelligence", href: "/data-intelligence" },
+  { label: "Architecture", href: "/platform-architecture" },
+  { label: "Project Phases", href: "/phases" },
+  { label: "Six Sigma", href: "/six-sigma" },
+  { label: "Monetization", href: "/monetization" },
+  { label: "Tech Spec", href: "/tech-spec" },
+  { label: "FTZ Analyzer", href: "/ftz-analyzer" },
+  { label: "Port Finder", href: "/port-finder" },
 ];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
+        setMoreOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -52,6 +76,32 @@ export default function Header() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-ocean-500 to-indigo-500 rounded-full transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
+
+          {/* More dropdown */}
+          <div ref={moreRef} className="relative">
+            <button
+              onClick={() => setMoreOpen(!moreOpen)}
+              className="relative flex items-center gap-1 text-sm font-medium text-navy-500 hover:text-ocean-600 transition-colors group"
+            >
+              More
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${moreOpen ? "rotate-180" : ""}`} />
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-ocean-500 to-indigo-500 rounded-full transition-all duration-300 group-hover:w-full" />
+            </button>
+            {moreOpen && (
+              <div className="absolute top-full right-0 mt-3 w-52 bg-white border border-navy-100 rounded-xl shadow-card p-2 z-50">
+                {moreLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="block px-3 py-2 text-sm text-navy-600 hover:text-ocean-600 hover:bg-ocean-50 rounded-lg transition-colors"
+                    onClick={() => setMoreOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
         </nav>
 
         <Link
@@ -86,9 +136,27 @@ export default function Header() {
               {link.label}
             </a>
           ))}
+
+          {/* Mobile: More section */}
+          <div className="border-t border-navy-100 mt-2 pt-2">
+            <p className="px-0 py-1.5 text-xs font-semibold text-navy-400 uppercase tracking-wider">
+              More
+            </p>
+            {moreLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="block py-2 text-sm text-navy-500 hover:text-ocean-600"
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+
           <Link
             href="/dashboard"
-            className="mt-2 flex items-center justify-center gap-2 text-sm btn-primary py-2.5 rounded-xl"
+            className="mt-3 flex items-center justify-center gap-2 text-sm btn-primary py-2.5 rounded-xl"
             onClick={() => setMobileOpen(false)}
           >
             <LayoutDashboard className="w-4 h-4" />

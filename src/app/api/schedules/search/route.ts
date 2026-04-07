@@ -5,9 +5,15 @@ import type { ShippingSchedule } from '@/lib/types/schedules';
 
 export const dynamic = 'force-dynamic';
 
-let schedules: ShippingSchedule[] | null = null;
+interface ScheduleWithJonesAct extends ShippingSchedule {
+  is_jones_act?: boolean;
+  customs_required?: boolean;
+  transport_mode?: string;
+}
 
-function loadSchedules(): ShippingSchedule[] {
+let schedules: ScheduleWithJonesAct[] | null = null;
+
+function loadSchedules(): ScheduleWithJonesAct[] {
   if (schedules) return schedules;
 
   const schedulesDir = path.join(process.cwd(), 'data', 'schedules');
@@ -22,9 +28,26 @@ function loadSchedules(): ShippingSchedule[] {
     try {
       const raw = fs.readFileSync(path.join(schedulesDir, file), 'utf-8');
       const parsed = JSON.parse(raw);
+
       if (Array.isArray(parsed)) {
+        // Flat array of schedules
         schedules.push(...parsed);
+      } else if (parsed.schedules && Array.isArray(parsed.schedules)) {
+        // Wrapper format: { carrier, carrierCode, alliance, schedules: [...] }
+        const defaults = {
+          carrier: parsed.carrier,
+          carrierCode: parsed.carrierCode,
+          alliance: parsed.alliance,
+          ...(parsed.is_jones_act != null && { is_jones_act: parsed.is_jones_act }),
+          ...(parsed.customs_required != null && { customs_required: parsed.customs_required }),
+          ...(parsed.transport_mode != null && { transport_mode: parsed.transport_mode }),
+        };
+
+        for (const schedule of parsed.schedules) {
+          schedules.push({ ...defaults, ...schedule });
+        }
       } else {
+        // Single schedule object
         schedules.push(parsed);
       }
     } catch {
@@ -42,6 +65,8 @@ export async function GET(request: NextRequest) {
   const carrier = searchParams.get('carrier');
   const dateFrom = searchParams.get('dateFrom');
   const dateTo = searchParams.get('dateTo');
+  const jonesAct = searchParams.get('jones_act');
+  const mode = searchParams.get('mode');
   const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 200);
 
   if (!origin || !destination) {
@@ -83,6 +108,21 @@ export async function GET(request: NextRequest) {
     results = results.filter(s => s.departureDate <= dateTo);
   }
 
+  // Filter by Jones Act
+  if (jonesAct === 'true') {
+    results = results.filter(s => s.is_jones_act === true);
+  } else if (jonesAct === 'false') {
+    results = results.filter(s => !s.is_jones_act);
+  }
+
+  // Filter by transport mode
+  if (mode) {
+    const modeLower = mode.toLowerCase();
+    results = results.filter(
+      s => s.transport_mode?.toLowerCase() === modeLower
+    );
+  }
+
   // Sort by departure date ascending
   results.sort((a, b) => a.departureDate.localeCompare(b.departureDate));
 
@@ -92,6 +132,8 @@ export async function GET(request: NextRequest) {
     origin,
     destination,
     carrier: carrier || undefined,
+    jones_act: jonesAct === 'true' ? true : jonesAct === 'false' ? false : undefined,
+    mode: mode || undefined,
     dateRange: dateFrom || dateTo ? { from: dateFrom, to: dateTo } : undefined,
     count: sliced.length,
     total: results.length,
