@@ -81,14 +81,14 @@ interface Partner {
 
 const shipments: Shipment[] = [
   {
-    id: "SS-2024-0041",
+    id: "SS-2026-0041",
     reference: "HAN-LAX-0041",
     origin: "Hanoi, Vietnam",
     destination: "Los Angeles, CA",
     carrier: "COSCO",
     status: "in-transit",
     cargoType: "general",
-    eta: "Apr 14, 2024",
+    eta: "Apr 14, 2026",
     containers: 2,
     weight: "42,000 kg",
     value: "$187,400",
@@ -96,14 +96,14 @@ const shipments: Shipment[] = [
     progress: 67,
   },
   {
-    id: "SS-2024-0040",
+    id: "SS-2026-0040",
     reference: "SEA-SEA-0040",
     origin: "Seattle, WA",
     destination: "Anchorage, AK",
     carrier: "TOTE Maritime",
     status: "in-transit",
     cargoType: "cold-chain",
-    eta: "Apr 3, 2024",
+    eta: "Apr 3, 2026",
     containers: 1,
     weight: "18,500 kg",
     value: "$94,200",
@@ -111,14 +111,14 @@ const shipments: Shipment[] = [
     progress: 78,
   },
   {
-    id: "SS-2024-0039",
+    id: "SS-2026-0039",
     reference: "BKK-LGB-0039",
     origin: "Bangkok, Thailand",
     destination: "Long Beach, CA",
     carrier: "Evergreen",
     status: "customs",
     cargoType: "general",
-    eta: "Apr 2, 2024",
+    eta: "Apr 2, 2026",
     containers: 3,
     weight: "61,800 kg",
     value: "$312,600",
@@ -127,14 +127,14 @@ const shipments: Shipment[] = [
     alerts: "Document requested: ISF amendment",
   },
   {
-    id: "SS-2024-0038",
+    id: "SS-2026-0038",
     reference: "SEA-PDX-0038",
     origin: "Seattle, WA",
     destination: "Portland, OR",
     carrier: "Lineage Logistics",
     status: "delivered",
     cargoType: "cold-chain",
-    eta: "Mar 28, 2024",
+    eta: "Mar 28, 2026",
     containers: 1,
     weight: "22,000 kg",
     value: "$78,900",
@@ -142,14 +142,14 @@ const shipments: Shipment[] = [
     progress: 100,
   },
   {
-    id: "SS-2024-0037",
+    id: "SS-2026-0037",
     reference: "CGK-LAX-0037",
     origin: "Jakarta, Indonesia",
     destination: "Los Angeles, CA",
     carrier: "MSC",
     status: "delayed",
     cargoType: "general",
-    eta: "Apr 8, 2024",
+    eta: "Apr 8, 2026",
     containers: 2,
     weight: "38,400 kg",
     value: "$156,300",
@@ -158,14 +158,14 @@ const shipments: Shipment[] = [
     alerts: "3-day delay at transshipment hub",
   },
   {
-    id: "SS-2024-0036",
+    id: "SS-2026-0036",
     reference: "SEA-SFO-0036",
     origin: "Seattle, WA",
     destination: "Oakland, CA",
     carrier: "APL",
     status: "at-port",
     cargoType: "cold-chain",
-    eta: "Apr 5, 2024",
+    eta: "Apr 5, 2026",
     containers: 2,
     weight: "35,200 kg",
     value: "$143,700",
@@ -645,7 +645,7 @@ export default function DashboardPage() {
             <div className="bg-white border border-navy-100 rounded-2xl p-5 shadow-soft">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-semibold text-navy-900">Cost vs. Margin</h3>
-                <span className="text-xs text-navy-400">March 2024</span>
+                <span className="text-xs text-navy-400">March 2026</span>
               </div>
               <div className="space-y-3">
                 {[

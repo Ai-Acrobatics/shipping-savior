@@ -24,6 +24,21 @@ export const metadata: Metadata = {
     description:
       "Turn manual freight brokerage into data-driven operations. Calculators, route comparison, FTZ strategy, and more.",
     type: "website",
+    images: [
+      {
+        url: "/images/og-image.svg",
+        width: 1200,
+        height: 630,
+        alt: "Shipping Savior — AI-Powered Global Trade Intelligence Platform",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shipping Savior | International Logistics Platform",
+    description:
+      "Turn manual freight brokerage into data-driven operations. Calculators, route comparison, FTZ strategy, and more.",
+    images: ["/images/og-image.svg"],
   },
 };
 

@@ -226,8 +226,8 @@ export default function Home() {
             transition={{ delay: 0.7, duration: 0.6 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <GradientButton href="/dashboard">
-              Try Live Demo
+            <GradientButton href="/demo">
+              See Demo
               <ArrowRight className="w-5 h-5" />
             </GradientButton>
             <GradientButton variant="outline" href="#how-it-works">

@@ -1,0 +1,141 @@
+[
+  {
+    "id": "contract-001",
+    "name": "Kingsco-CMA CGM Annual",
+    "carrier_code": "CMA_CGM",
+    "contract_type": "365day",
+    "effective_date": "2026-01-15",
+    "expiry_date": "2027-01-14",
+    "status": "active",
+    "notes": "Annual service contract — cold chain priority",
+    "lanes": [
+      {
+        "origin_port": "NLRTM",
+        "origin_name": "Rotterdam, Netherlands",
+        "destination_port": "GTPRB",
+        "destination_name": "Puerto Barrios, Guatemala",
+        "contracted_rate": 3200,
+        "market_rate": 5100,
+        "currency": "USD",
+        "rate_unit": "per_container",
+        "equipment_type": "40ft_reefer",
+        "min_volume": 50
+      },
+      {
+        "origin_port": "CNQIN",
+        "origin_name": "Qingdao, China",
+        "destination_port": "USLAX",
+        "destination_name": "Los Angeles, CA",
+        "contracted_rate": 2800,
+        "market_rate": 4500,
+        "currency": "USD",
+        "rate_unit": "per_container",
+        "equipment_type": "40ft",
+        "min_volume": 20
+      }
+    ]
+  },
+  {
+    "id": "contract-002",
+    "name": "Hall Pass Drayage — Port of Hueneme",
+    "carrier_code": "HALL_PASS",
+    "contract_type": "spot",
+    "effective_date": "2026-04-07",
+    "expiry_date": "2026-07-07",
+    "status": "active",
+    "notes": "Cross-dock operations — Trader Joe's supply chain",
+    "lanes": [
+      {
+        "origin_port": "USWAI",
+        "origin_name": "Port of Hueneme, CA",
+        "destination_port": "USPLM",
+        "destination_name": "Palmdale/Lancaster, CA",
+        "contracted_rate": 850,
+        "market_rate": 1400,
+        "currency": "USD",
+        "rate_unit": "per_load",
+        "equipment_type": "drayage",
+        "min_volume": 0,
+        "notes": "Via 126/Fillmore bypass — 70 miles"
+      },
+      {
+        "origin_port": "USLAX",
+        "origin_name": "Port of Los Angeles, CA",
+        "destination_port": "USPLM",
+        "destination_name": "Palmdale/Lancaster, CA",
+        "contracted_rate": 1200,
+        "market_rate": 1600,
+        "currency": "USD",
+        "rate_unit": "per_load",
+        "equipment_type": "drayage",
+        "min_volume": 0,
+        "notes": "Through LA traffic — 150+ miles"
+      }
+    ]
+  },
+  {
+    "id": "contract-003",
+    "name": "Matson Hawaii Service",
+    "carrier_code": "MATSON",
+    "contract_type": "180day",
+    "effective_date": "2026-02-01",
+    "expiry_date": "2026-07-31",
+    "status": "active",
+    "notes": "Jones Act — domestic American flag vessel",
+    "lanes": [
+      {
+        "origin_port": "USLAX",
+        "origin_name": "Los Angeles, CA",
+        "destination_port": "USHNL",
+        "destination_name": "Honolulu, HI",
+        "contracted_rate": 4500,
+        "market_rate": 6200,
+        "currency": "USD",
+        "rate_unit": "per_container",
+        "equipment_type": "40ft",
+        "min_volume": 5,
+        "is_jones_act": true,
+        "customs_required": false
+      },
+      {
+        "origin_port": "USOAK",
+        "origin_name": "Oakland, CA",
+        "destination_port": "USHNL",
+        "destination_name": "Honolulu, HI",
+        "contracted_rate": 4200,
+        "market_rate": 5800,
+        "currency": "USD",
+        "rate_unit": "per_container",
+        "equipment_type": "40ft",
+        "min_volume": 5,
+        "is_jones_act": true,
+        "customs_required": false
+      }
+    ]
+  },
+  {
+    "id": "contract-004",
+    "name": "Chiquita Backhaul — Great White Fleet",
+    "carrier_code": "GWF",
+    "contract_type": "365day",
+    "effective_date": "2025-09-01",
+    "expiry_date": "2026-08-31",
+    "status": "active",
+    "notes": "95% of Chiquita European exports — backhaul program",
+    "lanes": [
+      {
+        "origin_port": "NLRTM",
+        "origin_name": "Rotterdam, Netherlands",
+        "destination_port": "GTPRB",
+        "destination_name": "Puerto Barrios, Guatemala",
+        "contracted_rate": 1800,
+        "market_rate": 3400,
+        "currency": "USD",
+        "rate_unit": "per_container",
+        "equipment_type": "40ft_reefer",
+        "min_volume": 150,
+        "notes": "Backhaul — fill empty return containers with apples"
+      }
+    ]
+  }
+]
