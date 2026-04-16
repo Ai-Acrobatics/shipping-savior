@@ -408,7 +408,70 @@ export default function JVAgreementPage() {
         </section>
 
         <section className="space-y-6">
-          <h2 className="text-2xl font-bold text-white border-b border-white/10 pb-3">8. Signatures</h2>
+          <h2 className="text-2xl font-bold text-white border-b border-white/10 pb-3">8. Terms &amp; Conditions</h2>
+          <p className="text-sm text-gray-400">The following standard terms apply to this Joint Venture Agreement and govern the relationship between the parties.</p>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3">
+              <h3 className="text-sm font-semibold text-white">8.1 Governing Law &amp; Jurisdiction</h3>
+              <p className="text-sm text-gray-400">This Agreement is governed by the laws of the State of California, without regard to conflict-of-laws principles. Any disputes not resolved through the process in Section 8.2 will be brought in the state or federal courts located in San Diego County, California.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3">
+              <h3 className="text-sm font-semibold text-white">8.2 Dispute Resolution</h3>
+              <p className="text-sm text-gray-400">The parties agree to first attempt in good-faith resolution of any dispute through direct discussion for at least 30 days. Unresolved disputes will then proceed to non-binding mediation before any litigation. Each party bears its own costs unless otherwise ordered.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3">
+              <h3 className="text-sm font-semibold text-white">8.3 Entire Agreement</h3>
+              <p className="text-sm text-gray-400">This Agreement, together with any signed amendments, constitutes the entire understanding between the parties regarding the Shipping Savior venture and supersedes all prior discussions, proposals, and communications, written or oral.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3">
+              <h3 className="text-sm font-semibold text-white">8.4 Amendments</h3>
+              <p className="text-sm text-gray-400">Any modification to this Agreement must be in writing and signed (including electronic signature) by both parties. Informal messages, emails, or verbal statements do not modify the Agreement unless confirmed in a signed amendment.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3">
+              <h3 className="text-sm font-semibold text-white">8.5 Assignment</h3>
+              <p className="text-sm text-gray-400">Neither party may assign or transfer its rights or obligations under this Agreement without the prior written consent of the other party, except that either party may assign to a successor entity formed for the purpose of incorporating the venture.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3">
+              <h3 className="text-sm font-semibold text-white">8.6 Severability</h3>
+              <p className="text-sm text-gray-400">If any provision of this Agreement is found invalid or unenforceable, the remaining provisions will remain in full force and effect. The invalid provision will be replaced with an enforceable provision that most closely reflects the parties&apos; original intent.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3">
+              <h3 className="text-sm font-semibold text-white">8.7 Warranties &amp; Disclaimers</h3>
+              <p className="text-sm text-gray-400">Each party represents that it has the authority to enter into this Agreement and that its contributions do not infringe on any third-party rights. Except as expressly stated, all work product is provided &quot;as is&quot; without any other warranty, express or implied.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3">
+              <h3 className="text-sm font-semibold text-white">8.8 Limitation of Liability</h3>
+              <p className="text-sm text-gray-400">Neither party will be liable to the other for indirect, incidental, consequential, special, or punitive damages arising from or related to this Agreement. Each party&apos;s aggregate liability is limited to the amount of documented contributions made to the venture to date.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3">
+              <h3 className="text-sm font-semibold text-white">8.9 Indemnification</h3>
+              <p className="text-sm text-gray-400">Each party will indemnify, defend, and hold harmless the other from any third-party claims arising from (a) that party&apos;s gross negligence or willful misconduct, or (b) a material breach of its representations or obligations under this Agreement.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3">
+              <h3 className="text-sm font-semibold text-white">8.10 Force Majeure</h3>
+              <p className="text-sm text-gray-400">Neither party is liable for delay or failure to perform caused by events beyond reasonable control, including acts of God, war, terrorism, pandemics, government action, or infrastructure outages, provided the affected party notifies the other promptly and resumes performance when able.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3">
+              <h3 className="text-sm font-semibold text-white">8.11 Notices</h3>
+              <p className="text-sm text-gray-400">Formal notices must be sent in writing to the other party&apos;s primary email address listed in Section 1. Notices are effective on delivery. The parties agree that email is an acceptable method of notice for all matters under this Agreement.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3">
+              <h3 className="text-sm font-semibold text-white">8.12 Counterparts &amp; Electronic Signatures</h3>
+              <p className="text-sm text-gray-400">This Agreement may be executed in counterparts, including by electronic signature or &quot;click-to-sign&quot; as implemented in Section 9. Each signed counterpart is an original, and together they constitute one and the same instrument.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3 md:col-span-2">
+              <h3 className="text-sm font-semibold text-white">8.13 Relationship of the Parties</h3>
+              <p className="text-sm text-gray-400">This Agreement establishes a joint venture between independent parties. Nothing in this Agreement creates an employer/employee, agency, or franchise relationship. Neither party has authority to bind the other beyond the Joint Decision Requirements in Section 2 unless expressly authorized in writing.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 space-y-3 md:col-span-2">
+              <h3 className="text-sm font-semibold text-white">8.14 Survival</h3>
+              <p className="text-sm text-gray-400">The following sections survive termination or dissolution of this Agreement: Section 3 (IP Ownership), Section 7 (Confidentiality &amp; Exit), and Sections 8.1, 8.2, 8.7, 8.8, 8.9, and 8.11 of these Terms &amp; Conditions.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-6">
+          <h2 className="text-2xl font-bold text-white border-b border-white/10 pb-3">9. Signatures</h2>
           <p className="text-sm text-gray-400">By clicking below, each party acknowledges and agrees to the terms outlined in this Joint Venture Agreement.</p>
           <div className="grid md:grid-cols-2 gap-6">
             <div className={`rounded-xl border p-6 space-y-4 transition-all duration-300 ${signatures.julian.signed ? "border-blue-500/50 bg-blue-500/5" : "border-white/10 bg-white/[0.02]"}`}>
