@@ -7,6 +7,8 @@ import {
   jsonb,
   pgEnum,
   uniqueIndex,
+  integer,
+  boolean,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -37,6 +39,24 @@ export const auditActionEnum = pgEnum('audit_action', [
   'invite_accepted',
   'calculation_saved',
   'calculation_deleted',
+]);
+
+export const documentTypeEnum = pgEnum('document_type', [
+  'bill_of_lading',
+  'commercial_invoice',
+  'packing_list',
+  'customs_declaration',
+  'certificate_of_origin',
+  'isf_filing',
+  'arrival_notice',
+  'other',
+]);
+
+export const extractionStatusEnum = pgEnum('extraction_status', [
+  'pending',
+  'processing',
+  'completed',
+  'failed',
 ]);
 
 // ── Organizations ──────────────────────────────────────
@@ -127,6 +147,29 @@ export const invites = pgTable('invites', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
+// ── Document Extractions ──────────────────────────────
+
+export const documentExtractions = pgTable('document_extractions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  orgId: uuid('org_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  fileName: varchar('file_name', { length: 500 }).notNull(),
+  fileSize: integer('file_size').notNull(),
+  documentType: documentTypeEnum('document_type').notNull().default('other'),
+  status: extractionStatusEnum('status').notNull().default('pending'),
+  extractedData: jsonb('extracted_data'),
+  rawText: text('raw_text'),
+  confidence: integer('confidence'),
+  errorMessage: text('error_message'),
+  reviewed: boolean('reviewed').notNull().default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
 // ── Relations ──────────────────────────────────────────
 
 export const organizationsRelations = relations(organizations, ({ many }) => ({
@@ -134,6 +177,7 @@ export const organizationsRelations = relations(organizations, ({ many }) => ({
   calculations: many(calculations),
   auditLogs: many(auditLogs),
   invites: many(invites),
+  documentExtractions: many(documentExtractions),
 }));
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -141,6 +185,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   calculations: many(calculations),
   auditLogs: many(auditLogs),
   invitesSent: many(invites),
+  documentExtractions: many(documentExtractions),
 }));
 
 export const orgMembersRelations = relations(orgMembers, ({ one }) => ({
@@ -187,6 +232,17 @@ export const invitesRelations = relations(invites, ({ one }) => ({
   }),
 }));
 
+export const documentExtractionsRelations = relations(documentExtractions, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [documentExtractions.orgId],
+    references: [organizations.id],
+  }),
+  user: one(users, {
+    fields: [documentExtractions.userId],
+    references: [users.id],
+  }),
+}));
+
 // ── Type Exports ───────────────────────────────────────
 
 export type Organization = typeof organizations.$inferSelect;
@@ -207,8 +263,13 @@ export type NewAuditLog = typeof auditLogs.$inferInsert;
 export type Invite = typeof invites.$inferSelect;
 export type NewInvite = typeof invites.$inferInsert;
 
+export type DocumentExtraction = typeof documentExtractions.$inferSelect;
+export type NewDocumentExtraction = typeof documentExtractions.$inferInsert;
+
 // Enum type helpers
 export type OrgRole = (typeof orgRoleEnum.enumValues)[number];
 export type CalculationType = (typeof calculatorTypeEnum.enumValues)[number];
 export type AuditAction = (typeof auditActionEnum.enumValues)[number];
+export type DocumentType = (typeof documentTypeEnum.enumValues)[number];
+export type ExtractionStatus = (typeof extractionStatusEnum.enumValues)[number];
 export type Plan = 'free' | 'pro' | 'enterprise';
