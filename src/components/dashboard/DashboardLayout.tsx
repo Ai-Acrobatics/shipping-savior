@@ -7,12 +7,15 @@ import {
   Ship, LayoutDashboard, MapPin, BarChart3, PiggyBank,
   Bell, Activity, ChevronLeft, ChevronRight, RefreshCw,
   Menu, X, Settings, Monitor, TrendingUp, Database,
+  Plus, Sparkles,
 } from "lucide-react";
 import { notifications as notifData } from "@/lib/data/dashboard";
 
 const sidebarLinks = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Book Shipment", href: "/dashboard/booking", icon: Plus },
   { label: "Tracking", href: "/dashboard/tracking", icon: MapPin },
+  { label: "Recommendations", href: "/dashboard/recommendations", icon: Sparkles },
   { label: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
   { label: "Monitoring", href: "/dashboard/monitoring", icon: Monitor },
   { label: "Data Pipeline", href: "/dashboard/data-pipeline", icon: Database },

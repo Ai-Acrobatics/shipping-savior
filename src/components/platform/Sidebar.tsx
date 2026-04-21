@@ -20,6 +20,7 @@ import {
   FileText,
   Users,
   Building2,
+  ScanText,
 } from "lucide-react";
 import UserMenu from "./UserMenu";
 
@@ -58,6 +59,12 @@ const navSections: NavSection[] = [
           { label: "Tariff Scenarios", href: "/platform/calculators/tariff-scenario", icon: FileText },
         ],
       },
+    ],
+  },
+  {
+    title: "AI Tools",
+    items: [
+      { label: "Document OCR", href: "/platform/documents", icon: ScanText },
     ],
   },
   {
