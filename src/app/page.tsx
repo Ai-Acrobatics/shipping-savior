@@ -13,6 +13,7 @@ import PortComparisonTool from "@/components/PortComparisonTool";
 import PricingTiers from "@/components/PricingTiers";
 import PlatformWireframes from "@/components/PlatformWireframes";
 import CTASection from "@/components/CTASection";
+import HeroSearch from "@/components/HeroSearch";
 import {
   Ship, Globe, Calculator, Shield, BarChart3, FileText,
   Anchor, Container, Route, Database, Map, Truck,
@@ -165,75 +166,74 @@ export default function Home() {
       <Header />
 
       {/* ===== HERO ===== */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden hero-gradient grain-overlay">
-        {/* Dot grid pattern */}
-        <div className="absolute inset-0 pattern-dots-hero" />
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden hero-ocean-bg grain-overlay">
+        {/* Animated ocean CSS background layers */}
+        <div className="absolute inset-0 hero-ocean-layer1" />
+        <div className="absolute inset-0 hero-ocean-layer2" />
 
-        {/* Animated gradient orbs */}
-        <div className="orb top-1/4 -left-32 w-[500px] h-[500px] bg-ocean-300/30 animate-orb-float-1" />
-        <div className="orb bottom-1/4 -right-32 w-[400px] h-[400px] bg-indigo-300/25 animate-orb-float-2" />
-        <div className="orb top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-ocean-200/20 animate-orb-float-3" />
+        {/* Animated SVG wave — cargo/ocean theme */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full hero-wave-1">
+            <path d="M0,60 C240,100 480,20 720,60 C960,100 1200,20 1440,60 L1440,120 L0,120 Z" fill="rgba(255,255,255,0.08)" />
+          </svg>
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full hero-wave-2" style={{ marginTop: "-60px" }}>
+            <path d="M0,80 C360,30 720,110 1080,60 C1260,35 1380,70 1440,80 L1440,120 L0,120 Z" fill="rgba(255,255,255,0.06)" />
+          </svg>
+          <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full" style={{ marginTop: "-40px" }}>
+            <path d="M0,40 C180,70 360,10 540,40 C720,70 900,10 1080,40 C1260,70 1380,30 1440,40 L1440,80 L0,80 Z" fill="white" />
+          </svg>
+        </div>
+
+        {/* Floating cargo container silhouettes */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="hero-cargo-dot hero-cargo-1" />
+          <div className="hero-cargo-dot hero-cargo-2" />
+          <div className="hero-cargo-dot hero-cargo-3" />
+        </div>
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-ocean-200/60 rounded-full px-5 py-2.5 mb-8 shadow-soft">
-            <Zap className="w-4 h-4 text-ocean-600" />
-            <span className="text-sm font-medium text-navy-600">AI-Powered International Logistics Platform</span>
+          <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/25 rounded-full px-5 py-2.5 mb-8 shadow-soft">
+            <Zap className="w-4 h-4 text-teal-300" />
+            <span className="text-sm font-medium text-white/90">AI-Powered International Logistics Platform</span>
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-6 text-navy-900">
-            <span className="gradient-text-hero">Shipping</span>{" "}
+          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-6 text-white">
+            <span className="hero-text-gradient">Shipping</span>{" "}
             <span>Savior</span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-navy-600 max-w-3xl mx-auto mb-4 leading-relaxed">
+          <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-4 leading-relaxed">
             Turn manual freight brokerage into{" "}
-            <span className="text-ocean-600 font-semibold">data-driven operations</span>.
+            <span className="text-teal-300 font-semibold">data-driven operations</span>.
             Calculators, route comparison, FTZ strategy, and tariff optimization
             — all powered by autonomous AI agents.
           </p>
 
-          <p className="text-lg text-navy-400 max-w-2xl mx-auto mb-10">
+          <p className="text-lg text-white/60 max-w-2xl mx-auto mb-10">
             Built for international freight operators who dominate cold chain exports
             and are expanding into SE Asia consumer goods imports.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#calculators" className="btn-primary px-8 py-4 text-base">
-              Try Live Calculators
-              <ArrowRight className="w-5 h-5" />
-            </a>
-            <Link href="/agreement" className="btn-secondary px-8 py-4 text-base">
-              <FileText className="w-5 h-5" />
-              View Full Proposal
-            </Link>
-          </div>
+          {/* Unified hero search bar */}
+          <HeroSearch />
 
           {/* Stats bar */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { label: "HTS Codes", value: "100K+", icon: Database },
               { label: "Ports Mapped", value: "3,700+", icon: Anchor },
               { label: "FTZ Zones", value: "260+", icon: Shield },
               { label: "API Cost", value: "$0", icon: DollarSign },
             ].map((stat) => (
-              <div key={stat.label} className="group bg-white/70 backdrop-blur-sm border border-navy-200/50 rounded-xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all duration-300">
-                <stat.icon className="w-5 h-5 text-ocean-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-navy-900">
+              <div key={stat.label} className="group bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-5 shadow-soft hover:bg-white/20 hover:-translate-y-0.5 transition-all duration-300">
+                <stat.icon className="w-5 h-5 text-teal-300 mx-auto mb-2" />
+                <div className="text-2xl font-bold text-white">
                   <AnimatedCounter value={stat.value} />
                 </div>
-                <div className="text-xs font-medium text-navy-400 mt-1">{stat.label}</div>
-                {/* Accent line */}
-                <div className="mt-3 h-0.5 w-8 mx-auto rounded-full bg-gradient-to-r from-ocean-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="text-xs font-medium text-white/60 mt-1">{stat.label}</div>
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Wave divider at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 z-10">
-          <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0,32L80,26.7C160,21,320,11,480,10.7C640,11,800,21,960,26.7C1120,32,1280,32,1360,32L1440,32L1440,60L0,60Z" fill="white" />
-          </svg>
         </div>
       </section>
 
