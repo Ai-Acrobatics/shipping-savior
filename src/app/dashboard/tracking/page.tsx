@@ -2,19 +2,51 @@
 
 export const dynamic = "force-dynamic";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   Ship, Package, MapPin, Clock, ChevronRight, ChevronDown,
   AlertTriangle, CheckCircle2, Thermometer, Box, Anchor,
   Shield, Calendar, Search, Filter, ArrowLeft,
-  Truck, Globe, BarChart3,
+  Truck, Globe, BarChart3, Activity, RefreshCw,
 } from "lucide-react";
 import {
   dashboardShipments,
   type DashboardShipment,
   type ShipmentStatus,
 } from "@/lib/data/dashboard";
+
+// ─── Real-Time Polling Hook (DEMO — simulates live status updates) ───────────
+
+function useShipmentPolling(intervalMs: number = 30000) {
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const refresh = () => {
+    setIsRefreshing(true);
+    // DEMO: simulate a 600ms API round-trip, then update timestamp
+    setTimeout(() => {
+      setLastUpdated(new Date());
+      setIsRefreshing(false);
+    }, 600);
+  };
+
+  useEffect(() => {
+    intervalRef.current = setInterval(refresh, intervalMs);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [intervalMs]);
+
+  const timeAgo = () => {
+    const seconds = Math.floor((Date.now() - lastUpdated.getTime()) / 1000);
+    if (seconds < 60) return `${seconds}s ago`;
+    return `${Math.floor(seconds / 60)}m ago`;
+  };
+
+  return { lastUpdated, isRefreshing, refresh, timeAgo };
+}
 
 // ─── Status Badge ─────────────────────────────────────────────
 
@@ -266,6 +298,7 @@ export default function TrackingPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<ShipmentStatus | "all">("all");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const { isRefreshing, refresh, timeAgo } = useShipmentPolling(30000);
 
   const filtered = dashboardShipments.filter((s) => {
     const matchesSearch = search === "" ||
@@ -291,9 +324,28 @@ export default function TrackingPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-navy-900">Shipment Tracking</h1>
-          <p className="text-sm text-navy-400 mt-1">
+          <p className="text-sm text-navy-400 mt-1 flex items-center gap-2">
             Real-time tracking for all active and completed shipments
+            <span className="inline-flex items-center gap-1 text-emerald-600 text-xs font-medium">
+              <Activity className="w-3 h-3" />
+              Live
+            </span>
           </p>
+        </div>
+        <div className="flex items-center gap-2">
+          {/* DEMO badge */}
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full uppercase tracking-wide">
+            DEMO DATA
+          </span>
+          {/* Live refresh button */}
+          <button
+            onClick={refresh}
+            disabled={isRefreshing}
+            className="flex items-center gap-2 text-xs bg-white border border-navy-200 hover:bg-navy-50 px-3 py-2 rounded-lg text-navy-600 transition-colors disabled:opacity-60"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
+            Updated {timeAgo()}
+          </button>
         </div>
       </div>
 
