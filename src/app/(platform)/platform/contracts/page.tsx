@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   FileText,
   Plus,
@@ -13,6 +13,9 @@ import {
   Clock,
   X,
   Loader2,
+  Upload,
+  CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────
@@ -162,6 +165,24 @@ function formatCurrency(val: number | null): string {
 
 // ── Main component ────────────────────────────────────
 
+// ── AI Parse Modal types ──────────────────────────────
+
+interface ParsedContract {
+  carrier?: string;
+  contract_number?: string | null;
+  start_date?: string;
+  end_date?: string;
+  lanes?: Array<{
+    origin_port?: string;
+    dest_port?: string;
+    rate_20ft?: number | null;
+    rate_40ft?: number | null;
+    rate_40hc?: number | null;
+    currency?: string;
+    commodity?: string | null;
+  }>;
+}
+
 export default function ContractsPage() {
   const [contractsList, setContractsList] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(true);
@@ -170,6 +191,16 @@ export default function ContractsPage() {
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // AI Upload modal state
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadDragOver, setUploadDragOver] = useState(false);
+  const [uploadParsing, setUploadParsing] = useState(false);
+  const [parsedContract, setParsedContract] = useState<ParsedContract | null>(null);
+  const [uploadFileName, setUploadFileName] = useState<string | null>(null);
+  const [uploadSaving, setUploadSaving] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
+  const uploadFileRef = useRef<HTMLInputElement>(null);
 
   // Form state
   const [formCarrier, setFormCarrier] = useState(CARRIERS[0].name);
@@ -364,6 +395,93 @@ export default function ContractsPage() {
     }
   };
 
+  // ── AI Upload handlers ────────────────────────────────
+
+  const handleContractFileUpload = async (file: File) => {
+    setUploadParsing(true);
+    setError(null);
+    setParsedContract(null);
+    setUploadFileName(file.name);
+
+    const fd = new FormData();
+    fd.append("file", file);
+
+    try {
+      const res = await fetch("/api/contracts/parse", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || "Parse failed");
+      setParsedContract(data.extracted);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to parse contract");
+    } finally {
+      setUploadParsing(false);
+    }
+  };
+
+  const handleUploadFileDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setUploadDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleContractFileUpload(file);
+  };
+
+  const handleUploadFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleContractFileUpload(file);
+  };
+
+  const handleSaveParsedContract = async () => {
+    if (!parsedContract) return;
+    setUploadSaving(true);
+    setError(null);
+
+    try {
+      const lanes = (parsedContract.lanes || [])
+        .filter((l) => l.origin_port && l.dest_port)
+        .map((l) => ({
+          originPort: (l.origin_port || "").slice(0, 10).toUpperCase(),
+          originPortName: l.origin_port || "",
+          destPort: (l.dest_port || "").slice(0, 10).toUpperCase(),
+          destPortName: l.dest_port || "",
+          rate20ft: l.rate_20ft ?? undefined,
+          rate40ft: l.rate_40ft ?? undefined,
+          rate40hc: l.rate_40hc ?? undefined,
+          commodity: l.commodity || undefined,
+        }));
+
+      const res = await fetch("/api/contracts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          carrier: parsedContract.carrier || "Unknown",
+          carrierCode: (parsedContract.carrier || "UNKN").slice(0, 4).toUpperCase(),
+          contractType: "365_day",
+          contractNumber: parsedContract.contract_number || undefined,
+          startDate: parsedContract.start_date || new Date().toISOString().slice(0, 10),
+          endDate: parsedContract.end_date || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
+          notes: `Parsed from uploaded document: ${uploadFileName}`,
+          lanes,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to save contract");
+      }
+
+      setUploadSuccess(`Contract saved from ${uploadFileName}`);
+      setShowUploadModal(false);
+      setParsedContract(null);
+      setUploadFileName(null);
+      fetchContracts();
+      setTimeout(() => setUploadSuccess(null), 4000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save contract");
+    } finally {
+      setUploadSaving(false);
+    }
+  };
+
   const resetForm = () => {
     setFormCarrier(CARRIERS[0].name);
     setFormCarrierCode(CARRIERS[0].code);
@@ -409,14 +527,31 @@ export default function ContractsPage() {
             Track ocean freight contracts, lanes, and rates across carriers
           </p>
         </div>
-        <button
-          onClick={() => { resetForm(); setShowModal(true); }}
-          className="inline-flex items-center gap-2 rounded-xl bg-ocean-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-ocean-600"
-        >
-          <Plus className="h-4 w-4" />
-          Add Contract
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => { setShowUploadModal(true); setParsedContract(null); setError(null); }}
+            className="inline-flex items-center gap-2 rounded-xl border border-ocean-200 bg-ocean-50 px-4 py-2.5 text-sm font-semibold text-ocean-700 shadow-sm transition-colors hover:bg-ocean-100"
+          >
+            <Sparkles className="h-4 w-4" />
+            Upload Contract
+          </button>
+          <button
+            onClick={() => { resetForm(); setShowModal(true); }}
+            className="inline-flex items-center gap-2 rounded-xl bg-ocean-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-ocean-600"
+          >
+            <Plus className="h-4 w-4" />
+            Add Contract
+          </button>
+        </div>
       </div>
+
+      {/* Success banner */}
+      {uploadSuccess && (
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 shrink-0" />
+          {uploadSuccess}
+        </div>
+      )}
 
       {/* Error banner */}
       {error && (
@@ -655,6 +790,165 @@ export default function ContractsPage() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* ── AI Upload Contract Modal ────────────────────── */}
+      {showUploadModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl">
+            {/* Modal header */}
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-navy-100 bg-white px-6 py-4 rounded-t-2xl">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-ocean-500" />
+                <h2 className="text-lg font-bold text-navy-900">Upload Contract</h2>
+              </div>
+              <button
+                onClick={() => { setShowUploadModal(false); setParsedContract(null); }}
+                className="rounded-lg p-1.5 text-navy-400 hover:bg-navy-100 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="px-6 py-5 space-y-5">
+              {/* Drop zone */}
+              {!parsedContract && (
+                <div
+                  onDragOver={(e) => { e.preventDefault(); setUploadDragOver(true); }}
+                  onDragLeave={() => setUploadDragOver(false)}
+                  onDrop={handleUploadFileDrop}
+                  onClick={() => uploadFileRef.current?.click()}
+                  className={`cursor-pointer rounded-2xl border-2 border-dashed p-10 text-center transition-colors ${
+                    uploadDragOver
+                      ? "border-ocean-400 bg-ocean-50"
+                      : "border-navy-300 hover:border-ocean-400 hover:bg-navy-50"
+                  }`}
+                >
+                  <input
+                    ref={uploadFileRef}
+                    type="file"
+                    accept=".pdf,image/*"
+                    className="hidden"
+                    onChange={handleUploadFileChange}
+                  />
+                  {uploadParsing ? (
+                    <div className="flex flex-col items-center gap-3">
+                      <Loader2 className="h-10 w-10 animate-spin text-ocean-500" />
+                      <p className="font-semibold text-navy-700">AI is reading your contract...</p>
+                      <p className="text-sm text-navy-500">Extracting lanes and rates with Claude</p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-ocean-50">
+                        <Upload className="h-7 w-7 text-ocean-500" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-navy-700">Drop your rate sheet or contract here</p>
+                        <p className="mt-1 text-sm text-navy-500">PDF or image — AI will extract carrier, lanes, and rates</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Extracted Contract Preview */}
+              {parsedContract && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
+                    <span className="text-sm font-semibold text-emerald-700">
+                      AI extracted contract from {uploadFileName}
+                    </span>
+                    <button
+                      onClick={() => { setParsedContract(null); setUploadFileName(null); }}
+                      className="ml-auto text-emerald-500 hover:text-emerald-700"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  {/* Summary */}
+                  <div className="rounded-xl border border-navy-200 bg-navy-50/50 p-4 space-y-3">
+                    <h3 className="text-sm font-semibold text-navy-800">Contract Summary</h3>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <span className="text-navy-500">Carrier:</span>
+                        <span className="ml-2 font-semibold text-navy-800">{parsedContract.carrier || "--"}</span>
+                      </div>
+                      <div>
+                        <span className="text-navy-500">Contract #:</span>
+                        <span className="ml-2 font-mono font-semibold text-navy-800">{parsedContract.contract_number || "--"}</span>
+                      </div>
+                      <div>
+                        <span className="text-navy-500">Start:</span>
+                        <span className="ml-2 text-navy-800">{parsedContract.start_date || "--"}</span>
+                      </div>
+                      <div>
+                        <span className="text-navy-500">End:</span>
+                        <span className="ml-2 text-navy-800">{parsedContract.end_date || "--"}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Lanes */}
+                  {parsedContract.lanes && parsedContract.lanes.length > 0 && (
+                    <div>
+                      <h3 className="text-sm font-semibold text-navy-800 mb-2">
+                        Lanes ({parsedContract.lanes.length})
+                      </h3>
+                      <div className="overflow-x-auto rounded-xl border border-navy-200">
+                        <table className="w-full text-xs">
+                          <thead className="bg-navy-50 border-b border-navy-200">
+                            <tr className="text-left font-semibold uppercase tracking-wider text-navy-500">
+                              <th className="px-3 py-2">Origin</th>
+                              <th className="px-3 py-2">Destination</th>
+                              <th className="px-3 py-2 text-right">20ft</th>
+                              <th className="px-3 py-2 text-right">40ft</th>
+                              <th className="px-3 py-2 text-right">40HC</th>
+                              <th className="px-3 py-2">Commodity</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {parsedContract.lanes.map((lane, i) => (
+                              <tr key={i} className="border-b border-navy-100 last:border-0">
+                                <td className="px-3 py-2 font-mono font-semibold text-navy-700">{lane.origin_port || "--"}</td>
+                                <td className="px-3 py-2 font-mono font-semibold text-navy-700">{lane.dest_port || "--"}</td>
+                                <td className="px-3 py-2 text-right text-navy-800">{lane.rate_20ft ? `$${lane.rate_20ft.toLocaleString()}` : "--"}</td>
+                                <td className="px-3 py-2 text-right text-navy-800">{lane.rate_40ft ? `$${lane.rate_40ft.toLocaleString()}` : "--"}</td>
+                                <td className="px-3 py-2 text-right text-navy-800">{lane.rate_40hc ? `$${lane.rate_40hc.toLocaleString()}` : "--"}</td>
+                                <td className="px-3 py-2 text-navy-500">{lane.commodity || "--"}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Modal footer */}
+            <div className="sticky bottom-0 flex items-center justify-end gap-3 border-t border-navy-100 bg-white px-6 py-4 rounded-b-2xl">
+              <button
+                onClick={() => { setShowUploadModal(false); setParsedContract(null); }}
+                className="rounded-xl px-4 py-2 text-sm font-medium text-navy-600 hover:bg-navy-100 transition-colors"
+              >
+                Cancel
+              </button>
+              {parsedContract && (
+                <button
+                  onClick={handleSaveParsedContract}
+                  disabled={uploadSaving}
+                  className="inline-flex items-center gap-2 rounded-xl bg-ocean-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-ocean-600 disabled:opacity-50"
+                >
+                  {uploadSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+                  Save Contract
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       )}
 

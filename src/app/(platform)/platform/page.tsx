@@ -13,6 +13,7 @@ import {
   Box,
   FileText,
 } from "lucide-react";
+import TariffAlertCard from "@/components/platform/TariffAlertCard";
 
 const stats = [
   { label: "Total Calculations", value: "0", icon: Calculator, color: "ocean" },
@@ -108,6 +109,9 @@ export default async function DashboardPage() {
           })}
         </div>
       </div>
+
+      {/* Tariff Alert */}
+      <TariffAlertCard />
 
       {/* Recent Activity */}
       <div>

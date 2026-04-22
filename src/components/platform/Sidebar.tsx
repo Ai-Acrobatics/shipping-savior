@@ -20,6 +20,7 @@ import {
   FileText,
   Users,
   Building2,
+  Package,
 } from "lucide-react";
 import UserMenu from "./UserMenu";
 
@@ -64,6 +65,7 @@ const navSections: NavSection[] = [
     title: "Data",
     items: [
       { label: "History", href: "/platform/history", icon: Clock },
+      { label: "Shipments", href: "/platform/shipments", icon: Package },
       { label: "Contracts", href: "/platform/contracts", icon: FileText },
     ],
   },

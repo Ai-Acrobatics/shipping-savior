@@ -136,6 +136,7 @@ export const organizationsRelations = relations(organizations, ({ many }) => ({
   auditLogs: many(auditLogs),
   invites: many(invites),
   contracts: many(contracts),
+  shipments: many(shipments),
 }));
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -294,3 +295,59 @@ export type CalculationType = (typeof calculatorTypeEnum.enumValues)[number];
 export type AuditAction = (typeof auditActionEnum.enumValues)[number];
 export type ContractType = (typeof contractTypeEnum.enumValues)[number];
 export type Plan = 'free' | 'pro' | 'enterprise';
+
+// ── Shipment Enums ────────────────────────────────────
+
+export const shipmentStatusEnum = pgEnum('shipment_status', [
+  'in_transit',
+  'arrived',
+  'delayed',
+  'pending',
+]);
+
+export const shipmentSourceEnum = pgEnum('shipment_source', [
+  'manual',
+  'bol_ocr',
+]);
+
+// ── Shipments ─────────────────────────────────────────
+
+export const shipments = pgTable('shipments', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  orgId: uuid('org_id').references(() => organizations.id, { onDelete: 'set null' }),
+  containerNumber: varchar('container_number', { length: 20 }),
+  vesselName: varchar('vessel_name', { length: 200 }),
+  voyageNumber: varchar('voyage_number', { length: 100 }),
+  pol: varchar('pol', { length: 200 }),
+  pod: varchar('pod', { length: 200 }),
+  etd: timestamp('etd', { withTimezone: true }),
+  eta: timestamp('eta', { withTimezone: true }),
+  carrier: varchar('carrier', { length: 100 }),
+  shipper: varchar('shipper', { length: 300 }),
+  consignee: varchar('consignee', { length: 300 }),
+  notifyParty: varchar('notify_party', { length: 300 }),
+  goodsDescription: text('goods_description'),
+  weightKg: integer('weight_kg'),
+  quantity: integer('quantity'),
+  status: shipmentStatusEnum('status').notNull().default('in_transit'),
+  source: shipmentSourceEnum('source').notNull().default('manual'),
+  rawBolText: text('raw_bol_text'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+// ── Shipment Relations ────────────────────────────────
+
+export const shipmentsRelations = relations(shipments, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [shipments.orgId],
+    references: [organizations.id],
+  }),
+}));
+
+// ── Shipment Type Exports ─────────────────────────────
+
+export type Shipment = typeof shipments.$inferSelect;
+export type NewShipment = typeof shipments.$inferInsert;
+export type ShipmentStatus = (typeof shipmentStatusEnum.enumValues)[number];
+export type ShipmentSource = (typeof shipmentSourceEnum.enumValues)[number];
