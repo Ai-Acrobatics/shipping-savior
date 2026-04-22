@@ -440,6 +440,18 @@ html {
   mask-composite: exclude;
 }
 
+/* Home page — partner logo marquee (seamless infinite scroll) */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Home page — active feature progress bar */
+@keyframes featureProgress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
