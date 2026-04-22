@@ -1,25 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import * as fs from "fs";
-import * as path from "path";
-import * as os from "os";
+import { put } from "@vercel/blob";
+import { db } from "@/lib/db";
+import { bolDocuments } from "@/lib/db/schema";
 
-const BOL_EXTRACTION_PROMPT = `You are extracting shipment data from a Bill of Lading document. Extract ALL of the following fields (use null if not found):
-- container_numbers: array of container numbers (format: XXXX1234567)
-- vessel_name: name of the vessel
-- voyage_number: voyage/trip number
-- port_of_loading: full port name
-- port_of_discharge: full port name
-- etd: estimated departure date (ISO format if possible)
-- eta: estimated arrival date (ISO format if possible)
-- carrier: shipping line name
-- shipper: shipper/exporter name
-- consignee: consignee/importer name
-- notify_party: notify party name
-- goods_description: description of goods
-- weight_kg: gross weight in kg (convert if in lbs: divide lbs by 2.20462)
-- quantity: number of packages/units
-Return ONLY valid JSON, no markdown.`;
+const BOL_EXTRACTION_PROMPT = `You are extracting shipment data from a Bill of Lading document.
+
+Return ONLY valid JSON (no markdown) with two top-level keys:
+
+1. "extracted": object with fields below. Use null if not found.
+   - container_numbers: array of container numbers (format: XXXX1234567)
+   - vessel_name: name of the vessel
+   - voyage_number: voyage/trip number
+   - port_of_loading: full port name
+   - port_of_discharge: full port name
+   - etd: estimated departure date (ISO format if possible)
+   - eta: estimated arrival date (ISO format if possible)
+   - carrier: shipping line name (e.g. Maersk, MSC, CMA CGM, ONE, Hapag-Lloyd)
+   - shipper: shipper/exporter name
+   - consignee: consignee/importer name
+   - notify_party: notify party name
+   - goods_description: description of goods
+   - weight_kg: gross weight in kg (convert if in lbs: divide lbs by 2.20462)
+   - quantity: number of packages/units
+
+2. "confidence": object with a score 0.0-1.0 for each field above indicating how confident you are in the extracted value. Use 0.0 for any field returned as null. Examples of calibration: 1.0 = clearly legible and unambiguous; 0.7 = visible but slight interpretation required; 0.4 = partially obscured or inferred; 0.0 = missing/not found.
+
+Example response shape:
+{"extracted":{"container_numbers":["MSCU1234567"],"vessel_name":"MSC OSCAR","voyage_number":"24W","port_of_loading":"Shanghai","port_of_discharge":"Long Beach","etd":"2026-05-01","eta":"2026-05-22","carrier":"MSC","shipper":"ACME CO","consignee":"BETA INC","notify_party":"BETA INC","goods_description":"Electronics","weight_kg":18500,"quantity":240},"confidence":{"container_numbers":0.98,"vessel_name":0.95,"voyage_number":0.9,"port_of_loading":0.97,"port_of_discharge":0.97,"etd":0.88,"eta":0.88,"carrier":0.99,"shipper":0.92,"consignee":0.92,"notify_party":0.85,"goods_description":0.8,"weight_kg":0.9,"quantity":0.75}}`;
 
 export async function POST(request: NextRequest) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -59,19 +67,32 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Write file to /tmp for processing
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  const tmpPath = path.join(os.tmpdir(), `bol-${Date.now()}-${file.name}`);
-  fs.writeFileSync(tmpPath, buffer);
+
+  // ── 1. Upload original to Vercel Blob ──────────────────
+  // If BLOB_READ_WRITE_TOKEN is not configured, skip blob upload so OCR still
+  // works in local dev / preview environments without blob billing.
+  let blobUrl: string | null = null;
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const blobPath = `bol/${Date.now()}-${safeName}`;
+      const blob = await put(blobPath, buffer, {
+        access: "public",
+        contentType: fileType,
+        addRandomSuffix: false,
+      });
+      blobUrl = blob.url;
+    } catch (err) {
+      console.warn("Blob upload failed, continuing without persistence:", err);
+    }
+  }
 
   try {
     const client = new Anthropic({ apiKey });
-
-    // Convert to base64
     const base64Data = buffer.toString("base64");
 
-    // Determine media type for Claude
     let mediaType: "application/pdf" | "image/jpeg" | "image/png" | "image/webp" | "image/gif";
     if (fileType === "application/pdf") {
       mediaType = "application/pdf";
@@ -85,7 +106,6 @@ export async function POST(request: NextRequest) {
       mediaType = "image/jpeg";
     }
 
-    // Send to Claude for extraction
     const contentBlock =
       mediaType === "application/pdf"
         ? {
@@ -127,51 +147,63 @@ export async function POST(request: NextRequest) {
       .map((b) => b.text)
       .join("");
 
-    // Parse JSON response
-    let extracted: Record<string, unknown>;
+    let parsed: { extracted?: Record<string, unknown>; confidence?: Record<string, number> };
     try {
-      // Strip any markdown code fences if present
       const cleaned = textContent
         .replace(/^```json\s*/i, "")
         .replace(/^```\s*/i, "")
         .replace(/```\s*$/i, "")
         .trim();
-      extracted = JSON.parse(cleaned);
+      parsed = JSON.parse(cleaned);
     } catch {
-      // If JSON parse fails, return the raw text for debugging
       return NextResponse.json({
         success: false,
         error: "Failed to parse AI response as JSON",
         raw: textContent,
+        blobUrl,
       });
     }
 
-    // Clean up tmp file
-    try {
-      fs.unlinkSync(tmpPath);
-    } catch {
-      // Ignore cleanup errors
+    const extracted = parsed.extracted ?? (parsed as Record<string, unknown>);
+    const confidence = parsed.confidence ?? null;
+
+    // ── 2. Persist bol_documents row ───────────────────────
+    let bolDocumentId: string | null = null;
+    if (blobUrl) {
+      try {
+        const [row] = await db
+          .insert(bolDocuments)
+          .values({
+            blobUrl,
+            fileName: file.name,
+            fileType,
+            fileSizeBytes: buffer.byteLength,
+            rawText: textContent,
+            extractedJson: extracted as unknown as Record<string, unknown>,
+            confidenceJson: (confidence ?? null) as unknown as Record<string, unknown>,
+          })
+          .returning();
+        bolDocumentId = row?.id ?? null;
+      } catch (err) {
+        console.error("Failed to persist bol_documents row:", err);
+      }
     }
 
     return NextResponse.json({
       success: true,
       extracted,
+      confidence,
       rawText: textContent,
       fileName: file.name,
       fileType,
+      blobUrl,
+      bolDocumentId,
     });
   } catch (error: unknown) {
-    // Clean up tmp file on error
-    try {
-      fs.unlinkSync(tmpPath);
-    } catch {
-      // Ignore
-    }
-
     console.error("BOL OCR error:", error);
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: `OCR processing failed: ${message}` },
+      { error: `OCR processing failed: ${message}`, blobUrl },
       { status: 500 }
     );
   }

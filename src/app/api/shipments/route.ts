@@ -1,14 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { shipments } from "@/lib/db/schema";
-import { desc } from "drizzle-orm";
+import { shipments, bolDocuments } from "@/lib/db/schema";
+import { desc, eq } from "drizzle-orm";
 
-// GET /api/shipments — fetch all shipments (MVP: no auth required)
+// GET /api/shipments — fetch all shipments with linked BOL blob URL (MVP: no auth required)
 export async function GET() {
   try {
     const rows = await db
-      .select()
+      .select({
+        id: shipments.id,
+        orgId: shipments.orgId,
+        containerNumber: shipments.containerNumber,
+        vesselName: shipments.vesselName,
+        voyageNumber: shipments.voyageNumber,
+        pol: shipments.pol,
+        pod: shipments.pod,
+        etd: shipments.etd,
+        eta: shipments.eta,
+        carrier: shipments.carrier,
+        shipper: shipments.shipper,
+        consignee: shipments.consignee,
+        notifyParty: shipments.notifyParty,
+        goodsDescription: shipments.goodsDescription,
+        weightKg: shipments.weightKg,
+        quantity: shipments.quantity,
+        status: shipments.status,
+        source: shipments.source,
+        bolDocumentId: shipments.bolDocumentId,
+        bolBlobUrl: bolDocuments.blobUrl,
+        bolFileName: bolDocuments.fileName,
+        createdAt: shipments.createdAt,
+        updatedAt: shipments.updatedAt,
+      })
       .from(shipments)
+      .leftJoin(bolDocuments, eq(shipments.bolDocumentId, bolDocuments.id))
       .orderBy(desc(shipments.createdAt));
 
     return NextResponse.json({ shipments: rows });
@@ -48,6 +73,7 @@ export async function POST(request: NextRequest) {
     status = "in_transit",
     source = "manual",
     rawBolText,
+    bolDocumentId,
     orgId,
   } = body as Record<string, unknown>;
 
@@ -73,6 +99,7 @@ export async function POST(request: NextRequest) {
         status: (status as "in_transit" | "arrived" | "delayed" | "pending") || "in_transit",
         source: (source as "manual" | "bol_ocr") || "manual",
         rawBolText: typeof rawBolText === "string" ? rawBolText : null,
+        bolDocumentId: typeof bolDocumentId === "string" ? bolDocumentId : null,
       })
       .returning();
 

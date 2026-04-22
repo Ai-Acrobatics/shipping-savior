@@ -332,8 +332,24 @@ export const shipments = pgTable('shipments', {
   status: shipmentStatusEnum('status').notNull().default('in_transit'),
   source: shipmentSourceEnum('source').notNull().default('manual'),
   rawBolText: text('raw_bol_text'),
+  bolDocumentId: uuid('bol_document_id'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+// ── BOL Documents ─────────────────────────────────────
+
+export const bolDocuments = pgTable('bol_documents', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  orgId: uuid('org_id').references(() => organizations.id, { onDelete: 'set null' }),
+  blobUrl: text('blob_url').notNull(),
+  fileName: varchar('file_name', { length: 500 }),
+  fileType: varchar('file_type', { length: 100 }),
+  fileSizeBytes: integer('file_size_bytes'),
+  rawText: text('raw_text'),
+  extractedJson: jsonb('extracted_json'),
+  confidenceJson: jsonb('confidence_json'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
 // ── Shipment Relations ────────────────────────────────
@@ -341,6 +357,17 @@ export const shipments = pgTable('shipments', {
 export const shipmentsRelations = relations(shipments, ({ one }) => ({
   organization: one(organizations, {
     fields: [shipments.orgId],
+    references: [organizations.id],
+  }),
+  bolDocument: one(bolDocuments, {
+    fields: [shipments.bolDocumentId],
+    references: [bolDocuments.id],
+  }),
+}));
+
+export const bolDocumentsRelations = relations(bolDocuments, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [bolDocuments.orgId],
     references: [organizations.id],
   }),
 }));
@@ -351,3 +378,5 @@ export type Shipment = typeof shipments.$inferSelect;
 export type NewShipment = typeof shipments.$inferInsert;
 export type ShipmentStatus = (typeof shipmentStatusEnum.enumValues)[number];
 export type ShipmentSource = (typeof shipmentSourceEnum.enumValues)[number];
+export type BolDocument = typeof bolDocuments.$inferSelect;
+export type NewBolDocument = typeof bolDocuments.$inferInsert;
