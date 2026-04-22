@@ -3,9 +3,24 @@
 ## Current Position
 
 Phase: v1.1 Investor Demo Sprint (consolidates M2+M3+M4)
-Plan: Public home redesign (hero chat, 3D globe) + dashboard command bar — shipped 2026-04-22. Next: M2 carrier intel backend + M3 contract upload.
+Plan: AI-8486 BOL OCR + AI-8487 Contract Rate Integration — shipped 2026-04-21.
 Status: Active development toward May 11 investor pitch (Las Vegas)
-Last activity: 2026-04-22 — v1.1 kickoff, Terra template analyzed (23 test cases in DESIGN-STANDARD.json), 4 UI components integrated (hero chat, 3D shipping globe, file cards, task plan visualizer), milestone decisions documented in PROJECT.md
+Last activity: 2026-04-21 — AI-8486 (BOL OCR via Claude) + AI-8487 (contract rate parsing + tariff detection) fully built and deployed to production.
+
+## Latest Shipped (2026-04-21)
+
+### AI-8486: BOL OCR Processing
+- POST /api/bol: Claude claude-sonnet-4-6 extracts full BOL data from PDF/image
+- GET/POST /api/shipments: shipment CRUD API
+- /platform/shipments page: drag-drop BOL upload, AI-extracted review form, shipments tracking table
+- shipments DB table pushed to Neon (container_number, vessel, voyage, pol, pod, etd, eta, carrier, shipper, consignee, goods, weight, quantity, status, source)
+- Shipments nav item in sidebar
+
+### AI-8487: Contract Rate Integration
+- POST /api/contracts/parse: Claude extracts carrier, dates, lane rates from rate sheet PDF/image
+- Upload Contract AI modal on /platform/contracts page
+- TariffAlertCard on platform dashboard: compares recent shipment routes vs active contracts, shows tariff-booked count + savings estimate
+- /api/contracts/check-tariff confirmed complete and functional
 
 ## Joint Venture Structure
 
