@@ -13,6 +13,7 @@ import {
   Ship,
   MapPin,
   ChevronDown,
+  FileText,
 } from "lucide-react";
 
 // ── Types ──────────────────────────────────────────────
@@ -34,6 +35,23 @@ interface ExtractedBOL {
   quantity?: number | null;
 }
 
+interface BOLConfidence {
+  container_numbers?: number | null;
+  vessel_name?: number | null;
+  voyage_number?: number | null;
+  port_of_loading?: number | null;
+  port_of_discharge?: number | null;
+  etd?: number | null;
+  eta?: number | null;
+  carrier?: number | null;
+  shipper?: number | null;
+  consignee?: number | null;
+  notify_party?: number | null;
+  goods_description?: number | null;
+  weight_kg?: number | null;
+  quantity?: number | null;
+}
+
 interface Shipment {
   id: string;
   containerNumber: string | null;
@@ -51,6 +69,8 @@ interface Shipment {
   quantity: number | null;
   status: "in_transit" | "arrived" | "delayed" | "pending";
   source: "manual" | "bol_ocr";
+  bolBlobUrl?: string | null;
+  bolFileName?: string | null;
   createdAt: string;
 }
 
@@ -85,6 +105,25 @@ function formatDate(d: string | null | undefined): string {
   }
 }
 
+function ConfidenceBadge({ score }: { score: number | null | undefined }) {
+  if (score == null || Number.isNaN(score)) return null;
+  const pct = Math.round(score * 100);
+  const tier =
+    score >= 0.85
+      ? { label: `${pct}% confident`, classes: "bg-emerald-50 text-emerald-700 border-emerald-200" }
+      : score >= 0.6
+        ? { label: `${pct}% — verify`, classes: "bg-amber-50 text-amber-700 border-amber-200" }
+        : { label: `${pct}% — low`, classes: "bg-red-50 text-red-700 border-red-200" };
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-1.5 py-0 text-[10px] font-semibold ${tier.classes}`}
+      title="AI-estimated confidence — review before saving"
+    >
+      {tier.label}
+    </span>
+  );
+}
+
 // ── Main Component ─────────────────────────────────────
 
 export default function ShipmentsPage() {
@@ -98,6 +137,9 @@ export default function ShipmentsPage() {
   const [dragOver, setDragOver] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [extracted, setExtracted] = useState<ExtractedBOL | null>(null);
+  const [confidence, setConfidence] = useState<BOLConfidence | null>(null);
+  const [bolDocumentId, setBolDocumentId] = useState<string | null>(null);
+  const [bolBlobUrl, setBolBlobUrl] = useState<string | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -165,6 +207,9 @@ export default function ShipmentsPage() {
     setUploading(true);
     setError(null);
     setExtracted(null);
+    setConfidence(null);
+    setBolDocumentId(null);
+    setBolBlobUrl(null);
     setUploadedFileName(file.name);
 
     const fd = new FormData();
@@ -179,6 +224,9 @@ export default function ShipmentsPage() {
       }
 
       setExtracted(data.extracted);
+      setConfidence(data.confidence || null);
+      setBolDocumentId(data.bolDocumentId || null);
+      setBolBlobUrl(data.blobUrl || null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
@@ -223,6 +271,7 @@ export default function ShipmentsPage() {
           quantity: form.quantity ? parseInt(form.quantity) : null,
           status: form.status,
           source: extracted ? "bol_ocr" : "manual",
+          bolDocumentId: bolDocumentId,
         }),
       });
 
@@ -234,6 +283,9 @@ export default function ShipmentsPage() {
       setSuccess("Shipment saved successfully");
       setUploadMode(false);
       setExtracted(null);
+      setConfidence(null);
+      setBolDocumentId(null);
+      setBolBlobUrl(null);
       setUploadedFileName(null);
       setForm({
         containerNumber: "",
@@ -389,14 +441,33 @@ export default function ShipmentsPage() {
 
             {/* Extraction success notice */}
             {extracted && uploadedFileName && (
-              <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+              <div className="flex flex-wrap items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
                 <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
                 <div className="text-sm">
                   <span className="font-semibold text-emerald-700">AI extracted data from {uploadedFileName}</span>
-                  <span className="ml-1 text-emerald-600">— review and edit before saving</span>
+                  <span className="ml-1 text-emerald-600">
+                    — review fields with <span className="font-semibold">amber/red</span> confidence before saving
+                  </span>
                 </div>
+                {bolBlobUrl && (
+                  <a
+                    href={bolBlobUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-white px-2.5 py-0.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100"
+                  >
+                    <FileText className="h-3 w-3" />
+                    View original
+                  </a>
+                )}
                 <button
-                  onClick={() => { setExtracted(null); setUploadedFileName(null); }}
+                  onClick={() => {
+                    setExtracted(null);
+                    setConfidence(null);
+                    setBolDocumentId(null);
+                    setBolBlobUrl(null);
+                    setUploadedFileName(null);
+                  }}
                   className="ml-auto text-emerald-500 hover:text-emerald-700"
                 >
                   <X className="h-4 w-4" />
@@ -413,7 +484,10 @@ export default function ShipmentsPage() {
               {/* Row 1: Container, Carrier */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-navy-600 mb-1">Container Number</label>
+                  <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                    Container Number
+                    <ConfidenceBadge score={confidence?.container_numbers} />
+                  </label>
                   <input
                     className="input-light"
                     placeholder="e.g. MAEU1234567"
@@ -422,7 +496,10 @@ export default function ShipmentsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-navy-600 mb-1">Carrier</label>
+                  <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                    Carrier
+                    <ConfidenceBadge score={confidence?.carrier} />
+                  </label>
                   <input
                     className="input-light"
                     placeholder="e.g. Maersk"
@@ -435,7 +512,10 @@ export default function ShipmentsPage() {
               {/* Row 2: Vessel, Voyage */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-navy-600 mb-1">Vessel Name</label>
+                  <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                    Vessel Name
+                    <ConfidenceBadge score={confidence?.vessel_name} />
+                  </label>
                   <input
                     className="input-light"
                     placeholder="e.g. Emma Maersk"
@@ -444,7 +524,10 @@ export default function ShipmentsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-navy-600 mb-1">Voyage Number</label>
+                  <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                    Voyage Number
+                    <ConfidenceBadge score={confidence?.voyage_number} />
+                  </label>
                   <input
                     className="input-light"
                     placeholder="e.g. 123W"
@@ -457,7 +540,10 @@ export default function ShipmentsPage() {
               {/* Row 3: POL, POD */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-navy-600 mb-1">Port of Loading (POL)</label>
+                  <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                    Port of Loading (POL)
+                    <ConfidenceBadge score={confidence?.port_of_loading} />
+                  </label>
                   <input
                     className="input-light"
                     placeholder="e.g. Shanghai, China"
@@ -466,7 +552,10 @@ export default function ShipmentsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-navy-600 mb-1">Port of Discharge (POD)</label>
+                  <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                    Port of Discharge (POD)
+                    <ConfidenceBadge score={confidence?.port_of_discharge} />
+                  </label>
                   <input
                     className="input-light"
                     placeholder="e.g. Los Angeles, USA"
@@ -479,7 +568,10 @@ export default function ShipmentsPage() {
               {/* Row 4: ETD, ETA */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-navy-600 mb-1">ETD</label>
+                  <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                    ETD
+                    <ConfidenceBadge score={confidence?.etd} />
+                  </label>
                   <input
                     type="date"
                     className="input-light"
@@ -488,7 +580,10 @@ export default function ShipmentsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-navy-600 mb-1">ETA</label>
+                  <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                    ETA
+                    <ConfidenceBadge score={confidence?.eta} />
+                  </label>
                   <input
                     type="date"
                     className="input-light"
@@ -501,7 +596,10 @@ export default function ShipmentsPage() {
               {/* Row 5: Shipper, Consignee */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-navy-600 mb-1">Shipper</label>
+                  <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                    Shipper
+                    <ConfidenceBadge score={confidence?.shipper} />
+                  </label>
                   <input
                     className="input-light"
                     placeholder="Exporter name"
@@ -510,7 +608,10 @@ export default function ShipmentsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-navy-600 mb-1">Consignee</label>
+                  <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                    Consignee
+                    <ConfidenceBadge score={confidence?.consignee} />
+                  </label>
                   <input
                     className="input-light"
                     placeholder="Importer name"
@@ -523,7 +624,10 @@ export default function ShipmentsPage() {
               {/* Row 6: Weight, Quantity, Status */}
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-navy-600 mb-1">Weight (kg)</label>
+                  <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                    Weight (kg)
+                    <ConfidenceBadge score={confidence?.weight_kg} />
+                  </label>
                   <input
                     type="number"
                     className="input-light"
@@ -533,7 +637,10 @@ export default function ShipmentsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-navy-600 mb-1">Quantity (pkgs)</label>
+                  <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                    Quantity (pkgs)
+                    <ConfidenceBadge score={confidence?.quantity} />
+                  </label>
                   <input
                     type="number"
                     className="input-light"
@@ -562,7 +669,10 @@ export default function ShipmentsPage() {
 
               {/* Goods Description */}
               <div>
-                <label className="block text-xs font-medium text-navy-600 mb-1">Goods Description</label>
+                <label className="flex items-center gap-2 text-xs font-medium text-navy-600 mb-1">
+                  Goods Description
+                  <ConfidenceBadge score={confidence?.goods_description} />
+                </label>
                 <textarea
                   className="input-light min-h-[60px]"
                   placeholder="Description of cargo..."
@@ -626,6 +736,7 @@ export default function ShipmentsPage() {
                   <th className="px-4 py-3">ETA</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Source</th>
+                  <th className="px-4 py-3">BOL</th>
                 </tr>
               </thead>
               <tbody>
@@ -660,6 +771,22 @@ export default function ShipmentsPage() {
                       }`}>
                         {s.source === "bol_ocr" ? "AI / OCR" : "Manual"}
                       </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      {s.bolBlobUrl ? (
+                        <a
+                          href={s.bolBlobUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 rounded-lg border border-navy-200 px-2 py-0.5 text-xs font-medium text-navy-700 hover:border-ocean-400 hover:bg-ocean-50 hover:text-ocean-700"
+                          title={s.bolFileName || "View original BOL"}
+                        >
+                          <FileText className="h-3 w-3" />
+                          View
+                        </a>
+                      ) : (
+                        <span className="text-xs text-navy-300">--</span>
+                      )}
                     </td>
                   </tr>
                 ))}
