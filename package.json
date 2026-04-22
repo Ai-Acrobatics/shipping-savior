@@ -26,6 +26,7 @@
     "@types/recharts": "^1.8.29",
     "bcryptjs": "^3.0.3",
     "cheerio": "^1.2.0",
+    "cobe": "^2.0.1",
     "csv-parse": "^6.2.1",
     "drizzle-orm": "^0.45.1",
     "framer-motion": "^12.38.0",

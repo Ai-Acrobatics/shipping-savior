@@ -10,6 +10,8 @@ import StatsBar from "@/components/ui/StatsBar";
 import ProblemCard from "@/components/ui/ProblemCard";
 import FeatureCard from "@/components/ui/FeatureCard";
 import HowItWorksStep from "@/components/ui/HowItWorksStep";
+import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
+import { GlobeFlights } from "@/components/ui/cobe-globe-flights";
 import { motion } from "framer-motion";
 import {
   Ship, Globe, Calculator, Shield, BarChart3,
@@ -236,6 +238,16 @@ export default function Home() {
             </GradientButton>
           </motion.div>
 
+          {/* Agent chat — ask a shipping question */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85, duration: 0.6 }}
+            className="mt-14 mb-10"
+          >
+            <VercelV0Chat />
+          </motion.div>
+
           {/* Stats bar */}
           <StatsBar stats={heroStats} />
         </div>
@@ -381,6 +393,42 @@ export default function Home() {
               </AnimatedItem>
             ))}
           </AnimatedSection>
+        </div>
+      </section>
+
+      {/* ══════════ GLOBAL TRADE LANES ══════════ */}
+      <section className="py-24 md:py-32 px-6 bg-white relative overflow-hidden">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <p className="text-sm font-medium text-ocean-600 tracking-wider uppercase mb-4">
+              Global Coverage
+            </p>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-navy-900 mb-6">
+              Every lane, <span className="gradient-text-hero">every carrier</span>, one view
+            </h2>
+            <p className="text-lg text-navy-500 leading-relaxed mb-6">
+              We aggregate live schedules, reliability scores, and rates across 3,700+ ports
+              and 8+ major carrier lines — including Jones Act carriers for domestic US routes.
+              From Qingdao to Long Beach, Rotterdam to Central America, Seattle to Honolulu.
+            </p>
+            <ul className="space-y-3 text-navy-700">
+              <li className="flex items-start gap-2">
+                <span className="mt-1 w-2 h-2 rounded-full bg-ocean-500 flex-shrink-0" />
+                <span>Ocean · rail intermodal · air freight · drayage</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-1 w-2 h-2 rounded-full bg-ocean-500 flex-shrink-0" />
+                <span>Carrier reliability scoring from VSA alliance + on-time history</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-1 w-2 h-2 rounded-full bg-ocean-500 flex-shrink-0" />
+                <span>Jones Act support (Matson, Pasha Hawaii) for domestic US routes</span>
+              </li>
+            </ul>
+          </div>
+          <div className="w-full max-w-lg mx-auto">
+            <GlobeFlights />
+          </div>
         </div>
       </section>
 

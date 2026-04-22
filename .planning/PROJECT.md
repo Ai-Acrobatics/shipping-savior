@@ -108,26 +108,66 @@ Give the founder a complete digital toolkit that turns manual freight brokerage 
 
 ---
 
-## Current Milestone: v1.0 M1 Foundation
+## Current Milestone: v1.1 Investor Demo Sprint
 
-**Goal:** Turn the demo into a real platform with authentication, multi-tenant database, calculator persistence, and audit logging.
+**Goal:** Ship an investor-grade public home + platform dashboard ready for Larry's pitch on May 11, consolidating M2 (Carrier Intelligence) + M3 (Contract Management MVP) + M4 (Investor Demo) into one sprint.
+
+**Investor pitch:** 2026-05-11 in Las Vegas (golf tournament w/ Larry, Hall Pass owner)
+**Code freeze target:** 2026-05-08
 
 **Target features:**
-- [ ] NextAuth v5 with email/password (bcrypt) — register, login, logout
-- [ ] Organization model — multi-tenant from day one with org_id on all rows
-- [ ] Role-based access: owner / admin / member / viewer
-- [ ] Invite-only registration (beta access control)
-- [ ] Neon PostgreSQL + Drizzle ORM migrations
-- [ ] Tables: organizations, users, shipments, calculations, audit_logs, hts_lookups
-- [ ] All calculator data persists to database (landed cost, FTZ, unit economics, container util, tariff scenarios)
-- [ ] Audit log captures all auth events
-- [ ] JWT sessions with 30-day expiry
+
+*Public marketing surface (new)*
+- [x] Hero AI chat ("What can we help you ship?") with Claude tool-use
+- [x] Interactive 3D globe showing real shipping lanes (Qingdao→LB, Rotterdam→Balboa, Jones Act domestic, etc.)
+- [ ] Animated counter metrics strip (3,700 ports · 200+ HTS · 260 FTZs · 8 carriers)
+- [ ] Logo marquee (Chiquita · Kingsco · Hall Pass · Great White Fleet · Lineage · Trader Joe's · Maersk · Matson · Pasha Hawaii)
+- [ ] Industries vertical pages: cold-chain · automotive · personal-care
+- [ ] Tiered pricing page (Free with ads / Premium / Enterprise · 8 / 20 / unlimited user bundles per Blake's April 7)
+
+*M2 Carrier Intelligence*
+- [ ] Shipping line schedule aggregator (Maersk, MSC, CMA CGM, ONE, Hapag-Lloyd)
+- [ ] Port-to-port carrier discovery with overlap detection
+- [ ] Carrier performance/reliability scoring (VSA alliance + on-time history)
+- [ ] Jones Act carrier support (Matson, Pasha Hawaii)
+- [ ] Multi-modal indicator (ocean/rail/air/drayage)
+
+*M3 Contract Management MVP*
+- [ ] Contract upload with Claude vision PDF parsing
+- [ ] Lane visibility across contracts
+- [ ] Booking-on-tariff detection
+- [ ] Cross-dock facility tracking concept (Hall Pass/Port Hueneme use case)
+
+*M4 Investor Demo polish*
+- [x] Dashboard AI command bar ("What can we help you ship?")
+- [ ] Guided demo flow — Qingdao→LA + Trader Joe's/Hall Pass use cases
+- [ ] Executive dashboard with real analytics from DB
+- [ ] PDF export capabilities
+- [ ] Mobile responsiveness pass
+
+*Navigation redesign*
+- [ ] Platform sidebar reorganized: Plan (Carrier/Route/Multi-modal) · Find (Port/HTS/FTZ) · Price (6 calculators) · Operate (Contracts/Shipments/Cross-dock)
 
 **Success criteria:**
-- Users can register, log in, and log out
-- Org owner can invite team members
-- All calculator results save to database and reload
-- Audit log captures every auth event
+- Investors can hit the home page and immediately understand the product via hero chat + rotating globe
+- Demo flow walks through Qingdao→LA + Trader Joe's use cases with real data
+- All 23 test cases in `.planning/template-analysis/v0-terra/DESIGN-STANDARD.json` pass via `/template-analyzer --mode verify`
+- Mobile responsive at 375px
+- Pricing page live with three tiers
+- At least 3 industries pages live
+
+## Key Decisions (v1.1)
+
+| Decision | Rationale | Outcome |
+|----------|-----------|---------|
+| Consolidate M2+M3+M4 into v1.1 Investor Demo Sprint | May 11 deadline too tight for 3 separate milestones; one unified sprint with hard freeze May 8 | ✓ Decided 2026-04-22 |
+| Home audience = both investor + B2B customer | Hero AI chat works for either; content hedges neither | ✓ Decided 2026-04-22 |
+| Industries scope: cold-chain + automotive + personal-care only | Matches Blake's pitch verticals; avoid scope creep | ✓ Decided 2026-04-22 |
+| Contract upload MVP uses Claude vision PDF parsing | Matches Blake's "contracts in one place" vision; Anthropic SDK already integrated | ✓ Decided 2026-04-22 |
+| Pricing = Free (ads) / Premium / Enterprise, 8 / 20 / unlimited users | Per Blake April 7 framing — tested with real buyers | ✓ Decided 2026-04-22 |
+| Platform nav: Plan / Find / Price / Operate | Job-to-be-done grouping beats current tool-type grouping for B2B users | ✓ Decided 2026-04-22 |
+| Use v0 Terra template patterns as the visual spec | Blake and Larry are visual-first; Terra's animation polish gives investor-grade feel | ✓ 23 test cases in DESIGN-STANDARD.json |
+| Include Chiquita, Kingsco, Hall Pass, Great White Fleet, Lineage as logos | Real Blake relationships per April 1 + 7 meeting transcripts | ✓ Built into globe markers + marquee plan |
 
 ---
 
@@ -137,7 +177,8 @@ Give the founder a complete digital toolkit that turns manual freight brokerage 
 |-----------|--------|-------|
 | Phase 1: Proposal Site | **Complete** | Interactive proposal with 6 calculators, route map, knowledge base, wireframes |
 | Phase 2: Planning | **Complete** | Architecture, pipeline, AI agents, GTM, financial model docs |
-| v1.0 M1 Foundation | **In Progress** | Auth, DB, org model, calculator persistence |
+| v1.0 M1 Foundation | **Complete** | Auth, DB, org model, calculator persistence — shipped Mar 2026 |
+| v1.1 Investor Demo Sprint | **In Progress** | Home redesign + M2/M3/M4 consolidated, target May 8 freeze for May 11 pitch |
 
 ---
-*Last updated: 2026-03-26 — Milestone v1.0 M1 Foundation started*
+*Last updated: 2026-04-22 — Milestone v1.1 Investor Demo Sprint started (consolidates M2+M3+M4)*

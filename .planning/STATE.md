@@ -2,10 +2,10 @@
 
 ## Current Position
 
-Phase: JV Formation + Pre-Investor Demo Sprint
-Plan: M2 Carrier Intelligence — in progress
-Status: Active development toward May 11 investor demo
-Last activity: 2026-04-07 — JV agreement deployed, Telegram group live, UX audit complete, Blake call (new intel)
+Phase: v1.1 Investor Demo Sprint (consolidates M2+M3+M4)
+Plan: Public home redesign (hero chat, 3D globe) + dashboard command bar — shipped 2026-04-22. Next: M2 carrier intel backend + M3 contract upload.
+Status: Active development toward May 11 investor pitch (Las Vegas)
+Last activity: 2026-04-22 — v1.1 kickoff, Terra template analyzed (23 test cases in DESIGN-STANDARD.json), 4 UI components integrated (hero chat, 3D shipping globe, file cards, task plan visualizer), milestone decisions documented in PROJECT.md
 
 ## Joint Venture Structure
 
@@ -72,6 +72,24 @@ Last activity: 2026-04-07 — JV agreement deployed, Telegram group live, UX aud
 - ✅ Contract Manager with DB schema/CRUD/UI
 - ✅ Executive Dashboard
 - ✅ 3,700+ ports, 200+ HTS codes, 260+ FTZ zones
+
+### v1.1 Investor Demo Sprint — NEW UMBRELLA (started 2026-04-22)
+
+**Target:** May 8 code freeze for May 11 investor pitch. Consolidates M2 + M3 + M4 + adds nav + home redesign.
+
+- [x] Template analysis of v0 Terra landing page (23 test cases, `.planning/template-analysis/v0-terra/DESIGN-STANDARD.json`)
+- [x] Hero AI chat on home page (`VercelV0Chat` — "What can we help you ship?")
+- [x] Interactive 3D globe on home page (`GlobeFlights` with real shipping lanes)
+- [x] Dashboard command bar (compact chat widget)
+- [x] 4 reusable UI components in `src/components/ui/`: `agent-plan`, `v0-ai-chat`, `cobe-globe-flights`, `file-card-collections`, plus `textarea` + `cn` utility
+- [x] 4 standalone demo routes: `/agent-plan`, `/v0-chat`, `/globe`, `/file-cards`
+- [x] Permission fix: `src/components/ui/` restored to fleet-standard `2775` (was `2755`, blocking group writes)
+- [ ] Chat `onSubmit` handler wired to Claude API (currently UI-only)
+- [ ] Logo marquee (Chiquita/Kingsco/Hall Pass/Great White Fleet/Lineage/Trader Joe's/Maersk/Matson/Pasha Hawaii)
+- [ ] Animated counter metrics strip (3,700 ports, etc.)
+- [ ] Industries pages (cold-chain / automotive / personal-care)
+- [ ] Pricing page with 3 tiers + user bundles
+- [ ] Platform sidebar nav IA redesign (Plan/Find/Price/Operate)
 
 ### M2: Carrier Intelligence (IN PROGRESS — Target: April 15)
 - [ ] Shipping line schedule aggregator (Maersk, MSC, CMA CGM, ONE, Hapag-Lloyd)

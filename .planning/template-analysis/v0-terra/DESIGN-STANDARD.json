@@ -1,0 +1,465 @@
+{
+  "$schema_version": "1.0",
+  "source": {
+    "name": "v0-terra-landing-page-Template",
+    "github": "https://github.com/Julianb233/v0-terra-landing-page-Template",
+    "classification": "design-template",
+    "analyzed_at": "2026-04-22"
+  },
+  "stack": {
+    "framework": "Next.js 16 App Router",
+    "animation_libs": ["framer-motion 12", "native CSS keyframes", "Tailwind transitions"],
+    "design_system": "custom glassmorphism on top of shadcn/ui + Tailwind 4"
+  },
+  "design_tokens": {
+    "color": {
+      "bg_primary": "#0B0C0F",
+      "text_primary": "#F2F3F5",
+      "text_muted": "#A7ABB3",
+      "accent_pink": "#EC4899",
+      "accent_purple": "#A855F7",
+      "glass_bg": "rgba(15, 17, 23, 0.3)",
+      "glass_border": "rgba(255, 255, 255, 0.08)",
+      "emphasis_gradient": "linear-gradient(135deg, #d9a7c7 0%, #fffcdc 100%)"
+    },
+    "font": {
+      "sans": "Geist, Geist Fallback",
+      "serif": "Georgia, Times New Roman, serif",
+      "mono": "Geist Mono, Geist Mono Fallback"
+    },
+    "radius": {
+      "nav_pill_wide": "56px",
+      "nav_pill_tight": "16px",
+      "dashboard_mock": "24px",
+      "shadcn_base": "1.75rem"
+    },
+    "spacing": {
+      "section_y_mobile": "py-20 (80px)",
+      "section_y_desktop": "py-32 (128px)",
+      "content_max_width": "1120px",
+      "narrow_max_width_faq_cta": "800px",
+      "subhead_max_width": "600px"
+    },
+    "glass_system": {
+      "nav": "background rgba(15,17,23,.35) + backdrop-blur 24px + 1px rgba(255,255,255,.08) border + box-shadow 0 12px 40px rgba(0,0,0,.45)",
+      "card": "background rgba(15,17,23,.25) + backdrop-blur 16px + 1px rgba(255,255,255,.08) border",
+      "button": "backdrop-blur 16px + box-shadow 0 4px 16px rgba(0,0,0,.3) + color #F2F3F5",
+      "pill": "background rgba(15,17,23,.4) + backdrop-blur 16px + 1px rgba(255,255,255,.1) border"
+    }
+  },
+  "test_cases": [
+    {
+      "id": "A01",
+      "category": "animation",
+      "name": "Hero mount scale + fade-in",
+      "page": "/",
+      "trigger": { "type": "mount", "detail": "Fires once when TerraPage sets isLoaded = true in first useEffect" },
+      "timing": { "duration_ms": 1200, "easing": "cubic-bezier(0.16, 1, 0.3, 1)" },
+      "values": { "initial": { "scale": 1.03, "opacity": 0 }, "final": { "scale": 1.0, "opacity": 1 } },
+      "pass_criteria": [
+        "Hero section begins at opacity 0 and scale 1.03 on initial render",
+        "Reaches opacity 1 and scale 1.0 by 1200ms ± 200ms",
+        "Easing feel: slow-fast-slow with gentle settle (not linear, not ease-in-out)"
+      ],
+      "screenshot_points": ["t=0ms", "t=600ms", "t=1200ms+"],
+      "verification_method": "browserbase_stagehand_navigate then browserbase_screenshot at mount + 600ms + 1300ms; compare scale and opacity",
+      "source_ref": "app/page.tsx:248-257"
+    },
+    {
+      "id": "A02",
+      "category": "animation",
+      "name": "Hero background parallax",
+      "page": "/",
+      "trigger": { "type": "scroll", "detail": "window.scroll — bound to scrollY state in useEffect" },
+      "timing": { "duration_ms": "continuous", "easing": "linear" },
+      "values": { "formula": "translateY(scrollY * 0.5)" },
+      "pass_criteria": [
+        "Scrolling 100px moves the parallax overlay 50px upward",
+        "Base layer has background-attachment: fixed (scrolls against viewport)",
+        "No jank — 60fps on modern hardware"
+      ],
+      "verification_method": "Browserbase: scroll 200px, observe overlay translateY = -100px via computed style",
+      "source_ref": "app/page.tsx:258-266"
+    },
+    {
+      "id": "A03",
+      "category": "animation",
+      "name": "Hero content parallax",
+      "page": "/",
+      "trigger": { "type": "scroll" },
+      "timing": { "duration_ms": "continuous", "easing": "linear" },
+      "values": { "formula": "translateY(scrollY * 0.2)" },
+      "pass_criteria": [
+        "Hero content wrapper moves at 0.2× scroll speed",
+        "Content moves SLOWER than background overlay (0.2 < 0.5) so content visually lags"
+      ],
+      "verification_method": "Scroll 200px, measure content translateY = -40px",
+      "source_ref": "app/page.tsx:270-274"
+    },
+    {
+      "id": "A04",
+      "category": "animation",
+      "name": "Dynamic word swap on hero headline",
+      "page": "/",
+      "trigger": { "type": "interval", "detail": "setInterval every 3000ms" },
+      "timing": { "duration_ms": 500, "blur_out_ms": 300, "easing": "tailwind ease-in-out" },
+      "values": {
+        "word_list": ["forests", "nature", "animals", "ecosystems", "biodiversity", "wildlife", "habitats"],
+        "cycle_ms": 3000
+      },
+      "pass_criteria": [
+        "Word in headline changes every 3s",
+        "During swap: opacity goes 100 → 0 (blur lg) → swap → 0 → 100 (blur 0)",
+        "Word list cycles in order, loops forever",
+        "AnimatedText character reveal plays on each new word (coupled via key remount)"
+      ],
+      "verification_method": "Browserbase: wait 10s on page, capture text every 200ms, confirm word list cycles",
+      "source_ref": "app/page.tsx:71-81, 278-284"
+    },
+    {
+      "id": "A05",
+      "category": "animation",
+      "name": "AnimatedText character-by-character reveal",
+      "page": "/",
+      "trigger": { "type": "mount", "detail": "component remounts when parent key changes" },
+      "timing": { "duration_ms": 500, "stagger_ms": 30, "easing": "cubic-bezier(0.21, 0.47, 0.32, 0.98)" },
+      "values": { "initial": { "opacity": 0, "y": 20, "filter": "blur(8px)" }, "final": { "opacity": 1, "y": 0, "filter": "blur(0px)" } },
+      "pass_criteria": [
+        "Each character is wrapped in its own motion.span",
+        "Characters appear sequentially with 30ms offset",
+        "Spaces preserved (rendered as non-breaking space)",
+        "Full word reveal completes within ~700ms for a 7-character word"
+      ],
+      "verification_method": "framer-motion — inspect per-character spans and initial/animate props",
+      "source_ref": "components/animated-text.tsx:10-29"
+    },
+    {
+      "id": "A06",
+      "category": "animation",
+      "name": "Stagger-reveal entry cascade",
+      "page": "/",
+      "trigger": { "type": "mount" },
+      "timing": { "duration_ms": 900, "easing": "cubic-bezier(0.16, 1, 0.3, 1)" },
+      "values": {
+        "keyframe": "blur-reveal",
+        "from": { "opacity": 0, "translateY": "12px", "blur": "8px" },
+        "to": { "opacity": 1, "translateY": "0", "blur": "0" },
+        "cascade_delays_ms": [0, 90, 180, 270, 360]
+      },
+      "pass_criteria": [
+        "Hero block elements reveal in cascade: headline span 1 → span 2 (90ms) → subheading (180ms) → CTA (270ms) → dashboard (360ms)",
+        "Each element fades up with simultaneous blur reduction",
+        "Animation-fill-mode is forwards (elements remain visible after)"
+      ],
+      "verification_method": "Screenshot at t=100ms, 200ms, 300ms, 400ms, 500ms, 1300ms; verify cascade order",
+      "source_ref": "app/globals.css:197-212 + app/page.tsx:279,285,291,296,303"
+    },
+    {
+      "id": "A07",
+      "category": "animation",
+      "name": "Dashboard 3D scroll-tilt",
+      "page": "/",
+      "trigger": { "type": "scroll" },
+      "timing": { "duration_ms": 50, "easing": "linear" },
+      "values": {
+        "formula": "rotateX(0deg) when dashboardRef.top >= 0.8*vh, rotateX(15deg) when top <= 0.2*vh, linear interp between",
+        "parent_perspective": "1200px",
+        "transform_style": "preserve-3d"
+      },
+      "pass_criteria": [
+        "Dashboard tilts from 0deg to 15deg as it scrolls from 80% viewport height to 20% viewport height",
+        "Perspective is set on a parent wrapper (not the animated element)",
+        "Smooth transition (50ms) between scroll-driven values"
+      ],
+      "verification_method": "Browserbase: scroll to multiple positions, inspect computed transform matrix",
+      "source_ref": "app/page.tsx:83-111, 304-318"
+    },
+    {
+      "id": "A08",
+      "category": "animation",
+      "name": "Dashboard slide-up on mount",
+      "page": "/",
+      "trigger": { "type": "mount" },
+      "timing": { "duration_ms": 600, "easing": "cubic-bezier(0.83, 0, 0.17, 1)" },
+      "values": { "from": { "translateY": "200px", "opacity": 0 }, "to": { "translateY": "0", "opacity": 1 } },
+      "pass_criteria": [
+        "Dashboard image enters from 200px below its resting position",
+        "Duration 600ms ± 100ms",
+        "Easing is punchy expo-like (fast middle, slow ends)",
+        "Plays simultaneously with A06 stagger-reveal wrapper (which has its own 900ms animation + 360ms delay)"
+      ],
+      "verification_method": "Screenshot at mount + 300ms + 700ms; verify translateY",
+      "source_ref": "app/globals.css:217-230 + app/page.tsx:313-317"
+    },
+    {
+      "id": "A09",
+      "category": "animation",
+      "name": "Partner logo infinite marquee",
+      "page": "/",
+      "trigger": { "type": "always-on" },
+      "timing": { "duration_ms": 40000, "easing": "linear", "iterations": "infinite" },
+      "values": { "keyframe": "translateX(0) → translateX(-50%)" },
+      "pass_criteria": [
+        "Logo strip scrolls continuously right-to-left",
+        "Seamless loop (second copy of 8 logos is rendered to fill the gap)",
+        "40s per complete cycle",
+        "Opacity 0.4 default, 0.6 on hover (500ms transition)",
+        "Logos rendered brightness-0 invert (monochrome white)",
+        "prefers-reduced-motion pauses the animation"
+      ],
+      "verification_method": "Record 45s of page; verify continuous motion and loop seam invisibility",
+      "source_ref": "app/globals.css:279-309 + app/page.tsx:329-359"
+    },
+    {
+      "id": "A10",
+      "category": "animation",
+      "name": "Animated counter on scroll-into-view",
+      "page": "/",
+      "trigger": { "type": "intersection", "detail": "IntersectionObserver threshold 0.5" },
+      "timing": { "duration_ms": 960, "frames": 60, "frame_interval_ms": 16, "easing": "linear" },
+      "values": {
+        "input_values": ["2.4M", "12K+", "18M", "99.4%"],
+        "parse_strategy": "numeric portion + unit suffix"
+      },
+      "pass_criteria": [
+        "Counter starts at 0 when 50% of the grid is visible",
+        "Reaches target value in ~60 frames (960ms)",
+        "Numeric value formatting preserved (decimal, suffix: M, K+, %)",
+        "Does not restart on re-enter (observer disconnects after first trigger)"
+      ],
+      "verification_method": "Scroll metrics section into view, screenshot at 0/500/1000ms, OCR the values",
+      "source_ref": "app/page.tsx:12-51, 386-404"
+    },
+    {
+      "id": "A11",
+      "category": "animation",
+      "name": "Feature carousel auto-rotation",
+      "page": "/",
+      "trigger": { "type": "interval", "detail": "setInterval every 6000ms; resets on autoRotationKey change" },
+      "timing": { "cycle_ms": 6000, "fade_ms": 300, "easing": "tailwind ease-in-out" },
+      "values": { "count": 4, "selector_flow": "imageFade:false → 300ms → selectedFeature = (prev+1) % 4 → imageFade:true" },
+      "pass_criteria": [
+        "Active feature rotates through 4 items on 6s cycle",
+        "Cross-fade between images takes 300ms",
+        "User click on any feature immediately switches + resets the 6s countdown",
+        "Mobile: single image element cross-fades",
+        "Desktop: stacked-card deck rotates (see A12)"
+      ],
+      "verification_method": "Wait 30s, capture active feature index; verify cycles forward through all 4",
+      "source_ref": "app/page.tsx:133-145"
+    },
+    {
+      "id": "A12",
+      "category": "animation",
+      "name": "Feature stacked-card 3D offset (desktop)",
+      "page": "/",
+      "trigger": { "type": "state-change", "detail": "selectedFeature changes" },
+      "timing": { "duration_ms": 600, "easing": "ease-out" },
+      "values": {
+        "position_formula": "(i - selectedFeature + 4) % 4",
+        "transform": "translateX(positionInStack * 16px) scale(1 - positionInStack * 0.02)",
+        "z_index": "4 - positionInStack",
+        "opacity": "isActive ? 1 : 0.6 - positionInStack * 0.15"
+      },
+      "pass_criteria": [
+        "4 cards visible stacked, offset 16px right and 2% smaller per position back",
+        "Front card (position 0): full opacity, scale 1.0, z-index 4",
+        "Back card (position 3): opacity 0.15, scale 0.94, translateX 48px, z-index 1",
+        "Transition is 600ms ease-out",
+        "Only renders on md+ breakpoints (hidden on mobile)"
+      ],
+      "verification_method": "Browserbase desktop 1920×1080: click each feature, capture z-index + transform of all 4 cards",
+      "source_ref": "app/page.tsx:540-582"
+    },
+    {
+      "id": "A13",
+      "category": "animation",
+      "name": "Active-feature progress bar countdown",
+      "page": "/",
+      "trigger": { "type": "conditional-mount", "detail": "rendered only when selectedFeature === i; remounts on each feature change" },
+      "timing": { "duration_ms": 6000, "easing": "linear" },
+      "values": { "keyframe": "progress { from width 0%; to width 100% }" },
+      "pass_criteria": [
+        "Progress bar visible only under the active feature",
+        "Animates from 0% to 100% width over 6s (matching A11 cycle)",
+        "Resets to 0% when user clicks a different feature (due to remount)"
+      ],
+      "verification_method": "Capture progress bar width at t=0/2000/4000/6000ms after feature click",
+      "source_ref": "app/globals.css:264-272 + app/page.tsx:530-535"
+    },
+    {
+      "id": "A14",
+      "category": "animation",
+      "name": "FAQ accordion expand/collapse",
+      "page": "/",
+      "trigger": { "type": "click", "detail": "FAQ header button" },
+      "timing": { "duration_ms": 300, "easing": "ease-in-out" },
+      "values": { "open": { "max_height": "500px", "opacity": 1 }, "closed": { "max_height": "0", "opacity": 0 } },
+      "pass_criteria": [
+        "Click header expands answer panel within 300ms",
+        "Chevron rotates 180deg simultaneously",
+        "Click same header again collapses",
+        "Click different header collapses current + expands new (accordion behavior)",
+        "Only one item open at a time"
+      ],
+      "verification_method": "Browserbase: click each FAQ in sequence, assert expansion state",
+      "source_ref": "app/page.tsx:646-670"
+    },
+    {
+      "id": "A15",
+      "category": "animation",
+      "name": "CTA section fixed-attachment parallax",
+      "page": "/",
+      "trigger": { "type": "scroll" },
+      "timing": { "duration_ms": "continuous", "easing": "native" },
+      "values": { "background_attachment": "fixed", "overlay": "linear-gradient to-b from-#0B0C0F via-#0B0C0F/60 to-transparent" },
+      "pass_criteria": [
+        "CTA background image stays fixed relative to viewport while content scrolls over it",
+        "Gradient overlay darkens the top of the section for text readability"
+      ],
+      "verification_method": "Scroll past CTA; verify background image does not scroll with content",
+      "source_ref": "app/page.tsx:675-685"
+    },
+    {
+      "id": "A16",
+      "category": "static-style",
+      "name": "Gradient text clip on emphasis words",
+      "page": "/",
+      "trigger": { "type": "static" },
+      "timing": null,
+      "values": {
+        "gradient": "linear-gradient(135deg, #d9a7c7 0%, #fffcdc 100%)",
+        "clip": "WebkitBackgroundClip: text",
+        "fill": "WebkitTextFillColor: transparent"
+      },
+      "pass_criteria": [
+        "Emphasis words render as gradient-filled text (pink-peach)",
+        "Applied consistently to H2 emphasis words across sections: Impact, matters, questions",
+        "Gracefully degrades to solid color in browsers without -webkit-background-clip"
+      ],
+      "verification_method": "Computed style inspection — color should be transparent, background-image should be the gradient",
+      "source_ref": "app/page.tsx:365-377, 443-454, 594-607"
+    },
+    {
+      "id": "I01",
+      "category": "interaction",
+      "name": "Wordmark click scrolls to top",
+      "page": "/",
+      "trigger": { "type": "click", "selector": "header button[TERRA wordmark]" },
+      "pass_criteria": [
+        "Page smoothly scrolls to y=0",
+        "Uses native smooth scroll behavior"
+      ],
+      "verification_method": "Scroll to y=1000, click wordmark, verify y=0",
+      "source_ref": "app/page.tsx:160-164"
+    },
+    {
+      "id": "I02",
+      "category": "interaction",
+      "name": "Nav link → section anchor scroll",
+      "page": "/",
+      "trigger": { "type": "click", "selector": "header nav button" },
+      "pass_criteria": [
+        "Click Impact → smooth scroll to #metrics",
+        "Click Projects → #map",
+        "Click Technology → #narrative",
+        "Click FAQ → #faq",
+        "Click Join us → #cta",
+        "Mobile: clicking any link also closes the fullscreen menu"
+      ],
+      "verification_method": "Click each nav link, verify scrollY position and visible section",
+      "source_ref": "app/page.tsx:147-198, 214-243"
+    },
+    {
+      "id": "I03",
+      "category": "interaction",
+      "name": "Mobile menu toggle",
+      "page": "/",
+      "trigger": { "type": "click", "selector": "header button[aria-label='Toggle menu']" },
+      "pass_criteria": [
+        "Hamburger icon becomes X when menu is open",
+        "Fullscreen overlay slides into view (bg-[#0B0C0F]/95 + backdrop-blur-md)",
+        "Large serif links become visible",
+        "Clicking X dismisses the menu",
+        "Clicking any menu link also dismisses"
+      ],
+      "verification_method": "Browserbase mobile 375×812: click hamburger, verify overlay present; click X, verify dismissed",
+      "source_ref": "app/page.tsx:200-206, 211-246"
+    },
+    {
+      "id": "I04",
+      "category": "interaction",
+      "name": "Feature card click with rotation reset",
+      "page": "/",
+      "trigger": { "type": "click", "selector": "narrative section feature button" },
+      "pass_criteria": [
+        "Active border changes from white/10 to white/20",
+        "Icon color changes from text-green-500/60 to text-green-400",
+        "Progress bar mounts under the newly-active card and animates from 0% to 100% over 6s",
+        "Image cross-fades (300ms) to the selected feature's image",
+        "6s auto-rotation interval resets (via autoRotationKey increment)"
+      ],
+      "verification_method": "Click feature 3; wait 3s; verify still on feature 3 (would have auto-rotated without reset)",
+      "source_ref": "app/page.tsx:507-536 + effect dep at 145"
+    },
+    {
+      "id": "I05",
+      "category": "interaction",
+      "name": "FAQ accordion toggle",
+      "page": "/",
+      "trigger": { "type": "click", "selector": "FAQ header button" },
+      "pass_criteria": [
+        "Click closed item → expands (max-height + opacity transition)",
+        "Click open item → collapses",
+        "Click different item → old collapses, new expands (accordion pattern)",
+        "Chevron rotates 180deg on expand"
+      ],
+      "a11y_gap": "Missing aria-expanded and aria-controls — flag in recreation",
+      "verification_method": "Click 6 FAQs in sequence; after each, verify only one is open",
+      "source_ref": "app/page.tsx:651-661"
+    },
+    {
+      "id": "I07",
+      "category": "interaction",
+      "name": "Feature auto-rotation reset on user interaction",
+      "page": "/",
+      "trigger": { "type": "side-effect", "detail": "fires when I04 increments autoRotationKey" },
+      "pass_criteria": [
+        "The 6s setInterval is torn down and recreated on autoRotationKey change",
+        "User click gets ~6s of 'their chosen feature' before auto-rotation resumes"
+      ],
+      "verification_method": "Click feature 3 at t=0; verify at t=5.5s still on feature 3; verify at t=6.5s on feature 0",
+      "source_ref": "app/page.tsx:133-145"
+    },
+    {
+      "id": "I06",
+      "category": "scaffolded",
+      "name": "World map marker (not wired in source)",
+      "page": "/",
+      "trigger": { "type": "would-be-click", "detail": "WorldMap component has projection math and handlers scaffolded but JSX only renders <img src='/map.svg' />" },
+      "pass_criteria": [
+        "NOTE: This is a scaffolded-but-not-rendered feature",
+        "Projection: d3.geoNaturalEarth1, centered on average of 5 experience lat/lng",
+        "getMarkerPosition(exp) returns [x, y] pixel coords",
+        "colorMap and colorClassMap defined for pink/yellow/green/blue markers",
+        "handlers onSelectExperience and hoveredExp state exist but have no DOM attachment"
+      ],
+      "recreation_note": "To make this work, render <svg> with <circle> elements positioned via getMarkerPosition and attach onMouseEnter/onMouseLeave/onClick",
+      "source_ref": "components/world-map.tsx:1-79"
+    }
+  ],
+  "complexity_score": {
+    "value": 7,
+    "scale": 10,
+    "rationale": [
+      "High animation count (16) across 3+ technologies",
+      "Two scroll-driven animations with different mathematical mappings (A02/A03/A07)",
+      "Custom easing curves (3 distinct cubic-beziers)",
+      "One half-finished feature (world map) with dead code path",
+      "Full glass morphism system with 6 glass variants",
+      "Mobile/desktop branching on feature carousel (stacked-card desktop vs cross-fade mobile)",
+      "Interaction-paced auto-rotation (user click resets timer)",
+      "NOT complex enough for 8+ because: only 1 route, no backend, no shaders/WebGL, no physics, no scroll-linked video or canvas"
+    ]
+  }
+}

@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
 import {
   Ship,
   Package,
@@ -447,6 +448,15 @@ export default function DashboardPage() {
       </header>
 
       <div className="max-w-screen-2xl mx-auto px-6 py-8 space-y-8">
+
+        {/* Agent command bar */}
+        <div className="max-w-3xl mx-auto w-full">
+          <VercelV0Chat
+            compact
+            heading="What can we help you ship?"
+            placeholder="Ask about a shipment, carrier rates, HTS code, or port..."
+          />
+        </div>
 
         {/* Page Header */}
         <div className="flex items-center justify-between">
