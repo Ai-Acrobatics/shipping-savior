@@ -177,8 +177,10 @@ async function extractWithGemini(input: ExtractionInput): Promise<ExtractionResu
 }
 
 // ─── Kimi K2 provider (Moonshot AI — OpenAI-compatible) ───────────────────────
-// Requires KIMI_API_KEY env var. Sign up: platform.moonshot.cn
-// Model: kimi-k2-0711-preview (or latest from: api.moonshot.cn/v1/models)
+// Requires KIMI_API_KEY env var. Sign up: platform.moonshot.ai
+// Model: kimi-k2.6 (latest as of 2026-04-22; 256K context, vision + reasoning)
+// Verified available models: api.moonshot.ai/v1/models
+// Base URL: https://api.moonshot.ai/v1 (NOT .cn — .cn returns auth errors)
 
 async function extractWithKimi(input: ExtractionInput): Promise<ExtractionResult> {
   const apiKey = process.env.KIMI_API_KEY;
@@ -190,7 +192,7 @@ async function extractWithKimi(input: ExtractionInput): Promise<ExtractionResult
 
   // Kimi K2 uses OpenAI-compatible vision format
   const body = {
-    model: "kimi-k2-0711-preview",
+    model: "kimi-k2.6",
     max_tokens: 4096,
     messages: [
       {
@@ -203,7 +205,7 @@ async function extractWithKimi(input: ExtractionInput): Promise<ExtractionResult
     ],
   };
 
-  const res = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+  const res = await fetch("https://api.moonshot.ai/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -244,7 +246,7 @@ async function extractWithKimi(input: ExtractionInput): Promise<ExtractionResult
 const PROVIDERS: Array<(input: ExtractionInput) => Promise<ExtractionResult>> = [
   extractWithClaude,
   extractWithGemini,
-  // extractWithKimi,  // Uncomment once KIMI_API_KEY is set in Vercel
+  extractWithKimi,  // kimi-k2.6 — KIMI_API_KEY active in Vercel as of 2026-04-22
 ];
 
 // ─── Main: fallback extraction ────────────────────────────────────────────────
