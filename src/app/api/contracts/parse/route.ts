@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
-import * as fs from "fs";
-import * as path from "path";
-import * as os from "os";
 import { db } from "@/lib/db";
 import { contracts, contractLanes } from "@/lib/db/schema";
+import { extractWithFallback } from "@/lib/ai/providers";
 
 const CONTRACT_EXTRACTION_PROMPT = `You are extracting rate information from a carrier freight contract or rate sheet. Extract:
 - carrier: carrier/shipping line name
@@ -22,14 +19,6 @@ const CONTRACT_EXTRACTION_PROMPT = `You are extracting rate information from a c
 Return ONLY valid JSON.`;
 
 export async function POST(request: NextRequest) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return NextResponse.json(
-      { error: "AI service unavailable — API key not configured." },
-      { status: 503 }
-    );
-  }
-
   let formData: FormData;
   try {
     formData = await request.formData();
@@ -39,7 +28,6 @@ export async function POST(request: NextRequest) {
 
   const file = formData.get("file") as File | null;
   const saveToDb = formData.get("saveToDb") === "true";
-  // For MVP: use demo org/user IDs if not provided
   const orgId = (formData.get("orgId") as string) || null;
   const userId = (formData.get("userId") as string) || null;
 
@@ -64,171 +52,113 @@ export async function POST(request: NextRequest) {
 
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  const tmpPath = path.join(os.tmpdir(), `contract-${Date.now()}-${file.name}`);
-  fs.writeFileSync(tmpPath, buffer);
 
+  // ── Extract via multi-provider fallback ────────────────
+  let aiResult;
   try {
-    const client = new Anthropic({ apiKey });
-    const base64Data = buffer.toString("base64");
-
-    let mediaType: "application/pdf" | "image/jpeg" | "image/png" | "image/webp";
-    if (fileType === "application/pdf") {
-      mediaType = "application/pdf";
-    } else if (fileType === "image/png") {
-      mediaType = "image/png";
-    } else if (fileType === "image/webp") {
-      mediaType = "image/webp";
-    } else {
-      mediaType = "image/jpeg";
-    }
-
-    const contentBlock =
-      mediaType === "application/pdf"
-        ? {
-            type: "document" as const,
-            source: {
-              type: "base64" as const,
-              media_type: "application/pdf" as const,
-              data: base64Data,
-            },
-          }
-        : {
-            type: "image" as const,
-            source: {
-              type: "base64" as const,
-              media_type: mediaType as "image/jpeg" | "image/png" | "image/webp",
-              data: base64Data,
-            },
-          };
-
-    const response = await client.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 4096,
-      messages: [
-        {
-          role: "user",
-          content: [
-            contentBlock,
-            {
-              type: "text",
-              text: CONTRACT_EXTRACTION_PROMPT,
-            },
-          ],
-        },
-      ],
-    });
-
-    const textContent = response.content
-      .filter((b): b is Anthropic.TextBlock => b.type === "text")
-      .map((b) => b.text)
-      .join("");
-
-    // Parse JSON response
-    let extracted: {
-      carrier?: string;
-      contract_number?: string | null;
-      start_date?: string;
-      end_date?: string;
-      lanes?: Array<{
-        origin_port?: string;
-        dest_port?: string;
-        rate_20ft?: number | null;
-        rate_40ft?: number | null;
-        rate_40hc?: number | null;
-        currency?: string;
-        commodity?: string | null;
-      }>;
-    };
-
-    try {
-      const cleaned = textContent
-        .replace(/^```json\s*/i, "")
-        .replace(/^```\s*/i, "")
-        .replace(/```\s*$/i, "")
-        .trim();
-      extracted = JSON.parse(cleaned);
-    } catch {
-      return NextResponse.json({
-        success: false,
-        error: "Failed to parse AI response as JSON",
-        raw: textContent,
-      });
-    }
-
-    // Optionally save to DB
-    let savedContract = null;
-    if (saveToDb && orgId && userId && extracted.carrier) {
-      try {
-        const [contract] = await db
-          .insert(contracts)
-          .values({
-            orgId,
-            userId,
-            carrier: extracted.carrier || "Unknown",
-            carrierCode: extracted.carrier?.slice(0, 4).toUpperCase() || "UNKN",
-            contractNumber: extracted.contract_number || null,
-            contractType: "365_day" as const,
-            startDate: extracted.start_date ? new Date(extracted.start_date) : new Date(),
-            endDate: extracted.end_date
-              ? new Date(extracted.end_date)
-              : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
-            notes: `Parsed from uploaded contract: ${file.name}`,
-          })
-          .returning();
-
-        // Insert lanes
-        if (extracted.lanes && extracted.lanes.length > 0) {
-          const laneValues = extracted.lanes
-            .filter((l) => l.origin_port && l.dest_port)
-            .map((lane) => ({
-              contractId: contract.id,
-              originPort: (lane.origin_port || "").slice(0, 10).toUpperCase(),
-              originPortName: lane.origin_port || "",
-              destPort: (lane.dest_port || "").slice(0, 10).toUpperCase(),
-              destPortName: lane.dest_port || "",
-              rate20ft: lane.rate_20ft ?? null,
-              rate40ft: lane.rate_40ft ?? null,
-              rate40hc: lane.rate_40hc ?? null,
-              currency: lane.currency || "USD",
-              commodity: lane.commodity ?? null,
-            }));
-
-          if (laneValues.length > 0) {
-            await db.insert(contractLanes).values(laneValues);
-          }
-        }
-
-        savedContract = contract;
-      } catch (dbError) {
-        console.error("Failed to save contract to DB:", dbError);
-        // Return parsed data even if DB save fails
-      }
-    }
-
-    // Clean up tmp
-    try {
-      fs.unlinkSync(tmpPath);
-    } catch {
-      // Ignore
-    }
-
-    return NextResponse.json({
-      success: true,
-      extracted,
-      savedContract,
+    aiResult = await extractWithFallback({
+      buffer,
+      fileType,
+      prompt: CONTRACT_EXTRACTION_PROMPT,
+      taskType: "contract",
       fileName: file.name,
     });
-  } catch (error: unknown) {
-    try {
-      fs.unlinkSync(tmpPath);
-    } catch {
-      // Ignore
-    }
-    console.error("Contract parse error:", error);
-    const message = error instanceof Error ? error.message : "Unknown error";
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json(
-      { error: `Contract parsing failed: ${message}` },
+      { error: `Contract parsing failed: ${msg}` },
       { status: 500 }
     );
   }
+
+  // ── Parse JSON response ────────────────────────────────
+  let extracted: {
+    carrier?: string;
+    contract_number?: string | null;
+    start_date?: string;
+    end_date?: string;
+    lanes?: Array<{
+      origin_port?: string;
+      dest_port?: string;
+      rate_20ft?: number | null;
+      rate_40ft?: number | null;
+      rate_40hc?: number | null;
+      currency?: string;
+      commodity?: string | null;
+    }>;
+  };
+
+  try {
+    const cleaned = aiResult.text
+      .replace(/^```json\s*/i, "")
+      .replace(/^```\s*/i, "")
+      .replace(/```\s*$/i, "")
+      .trim();
+    extracted = JSON.parse(cleaned);
+  } catch {
+    return NextResponse.json({
+      success: false,
+      provider: aiResult.provider,
+      error: "Failed to parse AI response as JSON",
+      raw: aiResult.text,
+    });
+  }
+
+  // ── Optionally save to DB ──────────────────────────────
+  let savedContract = null;
+  if (saveToDb && orgId && userId && extracted.carrier) {
+    try {
+      const [contract] = await db
+        .insert(contracts)
+        .values({
+          orgId,
+          userId,
+          carrier: extracted.carrier || "Unknown",
+          carrierCode: extracted.carrier?.slice(0, 4).toUpperCase() || "UNKN",
+          contractNumber: extracted.contract_number || null,
+          contractType: "365_day" as const,
+          startDate: extracted.start_date ? new Date(extracted.start_date) : new Date(),
+          endDate: extracted.end_date
+            ? new Date(extracted.end_date)
+            : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+          notes: `Parsed from uploaded contract: ${file.name}`,
+        })
+        .returning();
+
+      if (extracted.lanes && extracted.lanes.length > 0) {
+        const laneValues = extracted.lanes
+          .filter((l) => l.origin_port && l.dest_port)
+          .map((lane) => ({
+            contractId: contract.id,
+            originPort: (lane.origin_port || "").slice(0, 10).toUpperCase(),
+            originPortName: lane.origin_port || "",
+            destPort: (lane.dest_port || "").slice(0, 10).toUpperCase(),
+            destPortName: lane.dest_port || "",
+            rate20ft: lane.rate_20ft ?? null,
+            rate40ft: lane.rate_40ft ?? null,
+            rate40hc: lane.rate_40hc ?? null,
+            currency: lane.currency || "USD",
+            commodity: lane.commodity ?? null,
+          }));
+
+        if (laneValues.length > 0) {
+          await db.insert(contractLanes).values(laneValues);
+        }
+      }
+
+      savedContract = contract;
+    } catch (dbError) {
+      console.error("Failed to save contract to DB:", dbError);
+    }
+  }
+
+  return NextResponse.json({
+    success: true,
+    provider: aiResult.provider,
+    latencyMs: aiResult.latencyMs,
+    estimatedCostUsd: aiResult.estimatedCostUsd,
+    extracted,
+    savedContract,
+    fileName: file.name,
+  });
 }

@@ -8,6 +8,8 @@ import {
   pgEnum,
   uniqueIndex,
   integer,
+  boolean,
+  numeric,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -371,6 +373,28 @@ export const bolDocumentsRelations = relations(bolDocuments, ({ one }) => ({
     references: [organizations.id],
   }),
 }));
+
+// ── Model Comparison Audit Log ────────────────────────
+//
+// Every AI call in /api/bol and /api/contracts/parse is logged here.
+// Use /api/ai/compare to run all providers simultaneously and compare results.
+
+export const modelComparisonLogs = pgTable('model_comparison_logs', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  taskType: varchar('task_type', { length: 50 }).notNull(),   // 'bol' | 'contract'
+  fileName: varchar('file_name', { length: 500 }),
+  provider: varchar('provider', { length: 50 }).notNull(),    // 'claude-sonnet-4' | 'gemini-2.5-pro' | 'kimi-k2'
+  success: boolean('success').notNull().default(false),
+  latencyMs: integer('latency_ms'),
+  inputTokens: integer('input_tokens'),
+  outputTokens: integer('output_tokens'),
+  estimatedCostUsd: numeric('estimated_cost_usd', { precision: 10, scale: 6 }),
+  errorMessage: text('error_message'),
+  responsePreview: text('response_preview'),  // first 500 chars of response
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export type ModelComparisonLog = typeof modelComparisonLogs.$inferSelect;
 
 // ── Shipment Type Exports ─────────────────────────────
 
