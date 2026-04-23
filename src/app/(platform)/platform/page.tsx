@@ -14,6 +14,7 @@ import {
   FileText,
 } from "lucide-react";
 import TariffAlertCard from "@/components/platform/TariffAlertCard";
+import SavingsKpiCard from "@/components/platform/SavingsKpiCard";
 
 const stats = [
   { label: "Total Calculations", value: "0", icon: Calculator, color: "ocean" },
@@ -110,8 +111,15 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Tariff Alert */}
-      <TariffAlertCard />
+      {/* Contract Savings + Tariff Alert */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-1">
+          <SavingsKpiCard />
+        </div>
+        <div className="lg:col-span-2">
+          <TariffAlertCard />
+        </div>
+      </div>
 
       {/* Recent Activity */}
       <div>

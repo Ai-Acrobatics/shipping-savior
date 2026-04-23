@@ -183,6 +183,16 @@ interface ParsedContract {
   }>;
 }
 
+interface UnifiedLaneRow extends Lane {
+  carrier: string;
+  carrierCode: string;
+  contractNumber: string | null;
+  contractEndDate: string;
+  contractId: string;
+}
+
+type ContractsTab = "manage" | "rates";
+
 export default function ContractsPage() {
   const [contractsList, setContractsList] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(true);
@@ -191,6 +201,13 @@ export default function ContractsPage() {
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Unified rates tab state
+  const [activeTab, setActiveTab] = useState<ContractsTab>("manage");
+  const [unifiedLanes, setUnifiedLanes] = useState<UnifiedLaneRow[]>([]);
+  const [unifiedLoading, setUnifiedLoading] = useState(false);
+  const [rateFilter, setRateFilter] = useState({ carrier: "", origin: "", destination: "" });
+  const [rateSort, setRateSort] = useState<{ key: keyof UnifiedLaneRow | "rate40ft"; dir: "asc" | "desc" }>({ key: "carrier", dir: "asc" });
 
   // AI Upload modal state
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -253,6 +270,51 @@ export default function ContractsPage() {
   useEffect(() => {
     fetchContracts();
   }, [fetchContracts]);
+
+  // Fetch unified lanes for the "All Rates" tab
+  const fetchUnifiedLanes = useCallback(async () => {
+    setUnifiedLoading(true);
+    try {
+      const res = await fetch("/api/contracts");
+      if (!res.ok) throw new Error("Failed to fetch contracts");
+      const data = await res.json();
+      const contracts: Contract[] = data.contracts || [];
+
+      // For each contract, fetch its lanes
+      const laneResults = await Promise.all(
+        contracts.map(async (c) => {
+          try {
+            const r = await fetch(`/api/contracts/${c.id}`);
+            if (!r.ok) return [];
+            const cd = await r.json();
+            const lanes: Lane[] = cd.contract?.lanes || [];
+            return lanes.map((lane) => ({
+              ...lane,
+              carrier: c.carrier,
+              carrierCode: c.carrierCode,
+              contractNumber: c.contractNumber,
+              contractEndDate: c.endDate,
+              contractId: c.id,
+            } as UnifiedLaneRow));
+          } catch {
+            return [];
+          }
+        }),
+      );
+
+      setUnifiedLanes(laneResults.flat());
+    } catch {
+      setError("Failed to load unified rates");
+    } finally {
+      setUnifiedLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "rates" && unifiedLanes.length === 0 && !unifiedLoading) {
+      fetchUnifiedLanes();
+    }
+  }, [activeTab, unifiedLanes.length, unifiedLoading, fetchUnifiedLanes]);
 
   // Expand/collapse a contract — fetch lanes on expand
   const toggleExpand = async (id: string) => {
@@ -563,6 +625,30 @@ export default function ContractsPage() {
         </div>
       )}
 
+      {/* Tab switcher */}
+      <div className="flex items-center gap-1 border-b border-navy-200">
+        <button
+          onClick={() => setActiveTab("manage")}
+          className={`px-4 py-2 text-sm font-semibold transition-colors border-b-2 -mb-px ${
+            activeTab === "manage"
+              ? "border-ocean-500 text-ocean-700"
+              : "border-transparent text-navy-500 hover:text-navy-700"
+          }`}
+        >
+          Contract Manager
+        </button>
+        <button
+          onClick={() => setActiveTab("rates")}
+          className={`px-4 py-2 text-sm font-semibold transition-colors border-b-2 -mb-px ${
+            activeTab === "rates"
+              ? "border-ocean-500 text-ocean-700"
+              : "border-transparent text-navy-500 hover:text-navy-700"
+          }`}
+        >
+          All Rates
+        </button>
+      </div>
+
       {/* Stats row */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {[
@@ -585,8 +671,8 @@ export default function ContractsPage() {
         ))}
       </div>
 
-      {/* Contract list */}
-      {loading ? (
+      {/* Contract list (Manage tab) */}
+      {activeTab === "manage" && (loading ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-ocean-500" />
         </div>
@@ -790,6 +876,138 @@ export default function ContractsPage() {
               </div>
             );
           })}
+        </div>
+      ))}
+
+      {/* All Rates tab — unified lane table across all active contracts */}
+      {activeTab === "rates" && (
+        <div className="card rounded-2xl p-4">
+          {/* Filters */}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 mb-4">
+            <div>
+              <label className="block text-xs font-semibold text-navy-600 mb-1">Carrier</label>
+              <input
+                className="input-light text-sm"
+                placeholder="Filter by carrier..."
+                value={rateFilter.carrier}
+                onChange={(e) => setRateFilter({ ...rateFilter, carrier: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-navy-600 mb-1">Origin</label>
+              <input
+                className="input-light text-sm"
+                placeholder="e.g. CNSHA"
+                value={rateFilter.origin}
+                onChange={(e) => setRateFilter({ ...rateFilter, origin: e.target.value.toUpperCase() })}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-navy-600 mb-1">Destination</label>
+              <input
+                className="input-light text-sm"
+                placeholder="e.g. USLAX"
+                value={rateFilter.destination}
+                onChange={(e) => setRateFilter({ ...rateFilter, destination: e.target.value.toUpperCase() })}
+              />
+            </div>
+          </div>
+
+          {unifiedLoading ? (
+            <div className="flex items-center justify-center py-10">
+              <Loader2 className="h-6 w-6 animate-spin text-ocean-500" />
+            </div>
+          ) : unifiedLanes.length === 0 ? (
+            <div className="py-12 text-center">
+              <Route className="mx-auto h-10 w-10 text-navy-300" />
+              <p className="mt-3 text-sm font-medium text-navy-700">No lanes in any contract yet</p>
+              <p className="mt-1 text-xs text-navy-500">Upload a contract or add lanes to see them here.</p>
+            </div>
+          ) : (
+            (() => {
+              const filtered = unifiedLanes.filter((lane) => {
+                if (rateFilter.carrier && !lane.carrier.toLowerCase().includes(rateFilter.carrier.toLowerCase())) return false;
+                if (rateFilter.origin && !lane.originPort.includes(rateFilter.origin)) return false;
+                if (rateFilter.destination && !lane.destPort.includes(rateFilter.destination)) return false;
+                return true;
+              });
+              const sorted = [...filtered].sort((a, b) => {
+                const key = rateSort.key as keyof UnifiedLaneRow;
+                const av = a[key];
+                const bv = b[key];
+                if (av == null) return 1;
+                if (bv == null) return -1;
+                if (typeof av === "number" && typeof bv === "number") {
+                  return rateSort.dir === "asc" ? av - bv : bv - av;
+                }
+                return rateSort.dir === "asc"
+                  ? String(av).localeCompare(String(bv))
+                  : String(bv).localeCompare(String(av));
+              });
+
+              const toggleSort = (key: keyof UnifiedLaneRow) => {
+                setRateSort((prev) =>
+                  prev.key === key
+                    ? { key, dir: prev.dir === "asc" ? "desc" : "asc" }
+                    : { key, dir: "asc" },
+                );
+              };
+
+              return (
+                <>
+                  <div className="text-xs text-navy-500 mb-2">
+                    Showing {sorted.length} of {unifiedLanes.length} active lanes across {contractsList.length} contracts
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-navy-200 text-left text-xs font-semibold uppercase tracking-wider text-navy-500">
+                          <th className="pb-2 pr-3 cursor-pointer hover:text-ocean-600" onClick={() => toggleSort("carrier")}>Carrier</th>
+                          <th className="pb-2 pr-3 cursor-pointer hover:text-ocean-600" onClick={() => toggleSort("originPort")}>Origin</th>
+                          <th className="pb-2 pr-3 cursor-pointer hover:text-ocean-600" onClick={() => toggleSort("destPort")}>Destination</th>
+                          <th className="pb-2 pr-3 text-right cursor-pointer hover:text-ocean-600" onClick={() => toggleSort("rate20ft")}>20ft</th>
+                          <th className="pb-2 pr-3 text-right cursor-pointer hover:text-ocean-600" onClick={() => toggleSort("rate40ft")}>40ft</th>
+                          <th className="pb-2 pr-3 text-right cursor-pointer hover:text-ocean-600" onClick={() => toggleSort("rate40hc")}>40HC</th>
+                          <th className="pb-2 pr-3">Commodity</th>
+                          <th className="pb-2 pr-3">Contract #</th>
+                          <th className="pb-2 pr-3 cursor-pointer hover:text-ocean-600" onClick={() => toggleSort("contractEndDate")}>Expires</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sorted.map((lane) => {
+                          const status = getStatus(lane.contractEndDate);
+                          return (
+                            <tr key={lane.id} className="border-b border-navy-100 last:border-0 hover:bg-navy-50/60">
+                              <td className="py-2 pr-3">
+                                {carrierBadge(lane.carrier, lane.carrierCode)}
+                              </td>
+                              <td className="py-2 pr-3">
+                                <span className="font-mono text-xs font-semibold text-navy-700">{lane.originPort}</span>
+                                <span className="ml-1 text-navy-500">{lane.originPortName}</span>
+                              </td>
+                              <td className="py-2 pr-3">
+                                <span className="font-mono text-xs font-semibold text-navy-700">{lane.destPort}</span>
+                                <span className="ml-1 text-navy-500">{lane.destPortName}</span>
+                              </td>
+                              <td className="py-2 pr-3 text-right font-medium text-navy-800">{formatCurrency(lane.rate20ft)}</td>
+                              <td className="py-2 pr-3 text-right font-medium text-navy-800">{formatCurrency(lane.rate40ft)}</td>
+                              <td className="py-2 pr-3 text-right font-medium text-navy-800">{formatCurrency(lane.rate40hc)}</td>
+                              <td className="py-2 pr-3 text-navy-500">{lane.commodity || "—"}</td>
+                              <td className="py-2 pr-3 font-mono text-xs text-navy-600">{lane.contractNumber || "—"}</td>
+                              <td className="py-2 pr-3 whitespace-nowrap">
+                                <span className="text-xs text-navy-600">{formatDate(lane.contractEndDate)}</span>
+                                <span className="ml-2">{statusBadge(status)}</span>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              );
+            })()
+          )}
         </div>
       )}
 
