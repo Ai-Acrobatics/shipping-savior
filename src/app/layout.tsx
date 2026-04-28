@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import SessionProvider from "@/components/providers/SessionProvider";
 import ChatAssistant from "@/components/ChatAssistant";
+import CookieConsent from "@/components/CookieConsent";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -54,6 +55,7 @@ export default function RootLayout({
       >
         <SessionProvider>{children}</SessionProvider>
         <ChatAssistant />
+        <CookieConsent />
       </body>
     </html>
   );
