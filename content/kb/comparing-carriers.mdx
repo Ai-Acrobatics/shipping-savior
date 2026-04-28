@@ -1,0 +1,82 @@
+---
+title: "Comparing 8+ carriers for a single lane"
+slug: "comparing-carriers"
+description: "How transit time, reliability, and rate combine into a real-world score — with a worked example on the Qingdao–LA lane."
+category: "carriers"
+published_at: "2026-04-27"
+updated_at: "2026-04-27"
+read_time_minutes: 7
+---
+
+Forwarders quote you a number. The carrier promises a transit time. Neither of those is what you actually pay for, because the cheap quote that lands 9 days late costs more than the expensive quote that lands on time — once you factor demurrage, missed sale dates, and the engineering hours your team spends rebooking downstream trucking.
+
+The platform's carrier comparison is built around three numbers per carrier per lane, blended into one score. Here's what's underneath.
+
+## The three inputs
+
+### 1. Transit time
+
+This is the median end-to-end ocean transit on the lane, measured port-to-port from your own shipment history (or a blended index when you don't have enough data yet). NOT the carrier's published transit — that's marketing.
+
+Why median, not average? Because one 25-day blank-sailing event will skew an average and lie about the typical experience. Median is what your operations team actually plans against.
+
+### 2. Reliability
+
+Schedule reliability — the percentage of sailings that arrive within 24 hours of their announced ETA. The industry-wide number has bounced between 32% and 64% over the last 5 years. On a per-carrier-per-lane basis it can range from 40% to 85%.
+
+This is the number that hides money. A 70% reliability carrier saves you ~$280 per container per year in demurrage and detention versus a 50% reliability carrier on a typical lane (50 days late × $7-12/day, weighted by frequency). At 200 containers/year that's $56k.
+
+We pull this from sailings logged into the platform plus public AIS data on vessel arrivals. Five sailings minimum to score; below that we show "insufficient data."
+
+### 3. Rate
+
+The all-in ocean rate quoted to you, normalized per TEU and per FEU. We don't use spot index numbers (Drewry, Shanghai Containerized) for scoring because what matters is the rate YOU were quoted, not what someone else paid in someone else's contract.
+
+If you don't have your own quote history, the platform falls back to indexed pricing for that lane, but flags the comparison as "indicative."
+
+## How they combine
+
+The composite score is a weighted blend, default 35% transit / 35% reliability / 30% rate. You can re-weight per lane — the FTZ-bound importer pulling DDP cares less about transit and more about reliability; the e-commerce importer running JIT cares more about transit.
+
+The output: one number 0-100 per carrier, ranked. Click in to see the underlying inputs and override the weights.
+
+## Worked example: Qingdao to Los Angeles
+
+Lane: CNTAO → USLAX. 8 carriers we have enough data on. Default weights.
+
+| Carrier | Median transit | Reliability | Rate (per FEU) | Score |
+|---|---|---|---|---|
+| ONE (Ocean Network Express) | 17 days | 71% | $2,180 | 81 |
+| Maersk | 18 days | 68% | $2,290 | 78 |
+| MSC | 17 days | 62% | $2,050 | 76 |
+| CMA CGM | 19 days | 65% | $2,140 | 74 |
+| Hapag-Lloyd | 18 days | 73% | $2,420 | 73 |
+| COSCO | 16 days | 56% | $1,950 | 71 |
+| Evergreen | 19 days | 58% | $2,080 | 68 |
+| Yang Ming | 20 days | 51% | $1,890 | 62 |
+
+Read this carefully:
+
+- **COSCO is the cheapest and fastest, but third-from-last on score.** 56% reliability means nearly half your sailings will be late. If you're moving inventory that needs to hit a retailer's allocation window, COSCO costs you more than ONE despite quoting $230 less per FEU.
+- **Yang Ming is dead last.** $290 cheaper than ONE, but 51% reliability + 20-day median makes it the worst combination. Only book Yang Ming if you have flex inventory and a forgiving downstream.
+- **Hapag-Lloyd is the most reliable on the lane.** If you have time-sensitive cargo and budget room, it's worth the $240 premium per FEU. Re-weight reliability to 50% and Hapag jumps to #1.
+
+## What you do with this
+
+1. **Set lane defaults.** Most teams pick 1-2 primary carriers per major lane and book 70%+ of volume there. The platform writes those defaults into the booking flow.
+2. **Re-score quarterly.** Reliability shifts. The carrier that was 75% in Q1 might be 60% in Q3 if they redeployed vessels off the lane.
+3. **Pull this into RFP cycles.** When you're negotiating annual contracts, walking in with "Carrier X scored 78 on this lane vs. 71 for the incumbent" puts numbers behind the conversation.
+
+## What this doesn't account for
+
+A few things we deliberately don't bake into the score, because they're company-specific:
+
+- **Equipment availability.** Some carriers have chronic 40HC shortages on certain origins. If you've had a refusal in the last 60 days, score it down manually.
+- **Service quality.** Customer-service responsiveness, exception handling, document accuracy. Real, but not measurable from data.
+- **Strategic relationships.** Sometimes you book with the carrier whose VP took your CFO golfing. We don't model that.
+
+Use the score as the starting point of the conversation, not the end of it.
+
+## Where to find this
+
+Platform → Carrier Comparison → pick a lane. Or click any lane on the dashboard map.

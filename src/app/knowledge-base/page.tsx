@@ -1,124 +1,66 @@
 import Header from "@/components/Header";
 import ScrollReveal from "@/components/ScrollReveal";
 import KnowledgeBase from "@/components/KnowledgeBase";
-import { BookOpen, Globe, Scale, FileText, AlertTriangle, Lightbulb, Anchor, Snowflake, ClipboardList } from "lucide-react";
+import KbArticleGrid from "@/components/kb/KbArticleGrid";
+import { getAllArticleMeta } from "@/lib/kb";
+import { BookOpen, Globe, AlertTriangle } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Knowledge Base | Shipping Savior",
-  description: "Comprehensive reference for international shipping: glossary, Incoterms, port guides, compliance checklists, cold chain requirements, trade regulations, CBP forms, and document generation for commercial invoices and packing lists.",
+  description:
+    "Operator-grade reference for international shipping: FTZ playbooks, carrier scoring methodology, tariff guidance, calculator how-tos, and onboarding walkthroughs.",
 };
 
-const features = [
-  {
-    icon: BookOpen,
-    title: "40+ Glossary Terms",
-    description: "Every key term from Demurrage to Drawback — categorized and searchable.",
-    bgLight: "bg-ocean-50",
-    iconColor: "text-ocean-600",
-  },
-  {
-    icon: Globe,
-    title: "All 11 Incoterms 2020",
-    description: "Interactive breakdown of seller/buyer responsibilities for every Incoterm.",
-    bgLight: "bg-purple-50",
-    iconColor: "text-purple-600",
-  },
-  {
-    icon: Scale,
-    title: "Compliance Guides",
-    description: "ISF, customs bonds, FTZ operations, HTS classification, FDA, APHIS, and export controls.",
-    bgLight: "bg-emerald-50",
-    iconColor: "text-emerald-600",
-  },
-  {
-    icon: Anchor,
-    title: "Port Guides",
-    description: "Detailed profiles for 8 major ports: congestion, costs, cold chain, FTZ proximity.",
-    bgLight: "bg-teal-50",
-    iconColor: "text-teal-600",
-  },
-  {
-    icon: Snowflake,
-    title: "Cold Chain Requirements",
-    description: "Temperature zones, reefer specs, FSMA compliance, pharma GDP, and loading best practices.",
-    bgLight: "bg-blue-50",
-    iconColor: "text-blue-600",
-  },
-  {
-    icon: ClipboardList,
-    title: "Document Generator",
-    description: "Generate commercial invoices and packing lists with all required fields for customs.",
-    bgLight: "bg-amber-50",
-    iconColor: "text-amber-600",
-  },
-  {
-    icon: AlertTriangle,
-    title: "Trade Regulations",
-    description: "Section 301 tariffs, GSP status by country, FTAs, UFLPA, and active embargoes.",
-    bgLight: "bg-red-50",
-    iconColor: "text-red-600",
-  },
-  {
-    icon: FileText,
-    title: "CBP Forms Reference",
-    description: "10 essential customs forms with purpose, use case, and official source links.",
-    bgLight: "bg-indigo-50",
-    iconColor: "text-indigo-600",
-  },
-  {
-    icon: Lightbulb,
-    title: "SE Asia Focus",
-    description: "Specific guidance on Vietnam, Thailand, Indonesia, and Cambodia trade status.",
-    bgLight: "bg-amber-50",
-    iconColor: "text-amber-600",
-  },
-];
-
 export default function KnowledgeBasePage() {
+  const articles = getAllArticleMeta();
+
   return (
     <main className="min-h-screen bg-white">
       <Header />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-16 px-6 overflow-hidden bg-gradient-to-br from-white via-ocean-50 to-white">
+      <section className="relative pt-32 pb-12 px-6 overflow-hidden bg-gradient-to-br from-white via-ocean-50 to-white">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-ocean-100/50 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-100/30 rounded-full blur-3xl" />
 
         <div className="relative z-10 max-w-5xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-navy-200/60 rounded-full px-4 py-2 mb-6 shadow-soft">
             <BookOpen className="w-4 h-4 text-ocean-500" />
-            <span className="text-sm font-medium text-navy-600">Phase 5 — Knowledge Base + Documents</span>
+            <span className="text-sm font-medium text-navy-600">Articles &amp; Reference</span>
           </div>
 
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-5 text-navy-900">
-            Shipping{" "}
-            <span className="gradient-text">Reference</span>
+            Knowledge <span className="gradient-text">Base</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-navy-500 max-w-3xl mx-auto mb-8 leading-relaxed">
-            Everything you need to know about international shipping regulations,
-            trade terms, customs compliance, port operations, cold chain handling,
-            and documentation — in one searchable reference.
+          <p className="text-lg md:text-xl text-navy-500 max-w-3xl mx-auto leading-relaxed">
+            Practical writeups from people who have run the math, filed the entries, and chased the
+            demurrage. Skim, search, or read the deep dives.
           </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            {features.map((feature) => (
-              <div key={feature.title} className="bg-white border border-navy-100 rounded-xl p-4 text-left shadow-soft hover:shadow-card transition-shadow">
-                <div className={`w-8 h-8 rounded-lg ${feature.bgLight} flex items-center justify-center mb-3`}>
-                  <feature.icon className={`w-4 h-4 ${feature.iconColor}`} />
-                </div>
-                <div className="text-sm font-semibold text-navy-900 mb-1">{feature.title}</div>
-                <p className="text-xs text-navy-500 leading-relaxed">{feature.description}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* Knowledge Base */}
-      <section className="py-12 px-6 bg-navy-50">
+      {/* Article grid + search */}
+      <section className="py-8 px-6 bg-navy-50">
         <div className="max-w-5xl mx-auto">
+          <ScrollReveal>
+            <div className="bg-white border border-navy-100 rounded-2xl p-6 md:p-8 shadow-card">
+              <KbArticleGrid articles={articles} />
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Existing reference component (glossary, Incoterms, ports, forms) */}
+      <section className="py-12 px-6 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-navy-900">Reference Library</h2>
+            <p className="text-navy-500 mt-1 text-sm">
+              Glossary, Incoterms, port profiles, CBP forms, and compliance checklists.
+            </p>
+          </div>
           <ScrollReveal>
             <div className="bg-white border border-navy-100 rounded-2xl p-6 md:p-8 shadow-card">
               <KnowledgeBase />
@@ -154,7 +96,7 @@ export default function KnowledgeBasePage() {
             </span>
           </a>
           <div className="text-sm text-navy-400">
-            International Logistics Platform — Built with AI Acrobatics
+            International Logistics Platform &mdash; Built with AI Acrobatics
           </div>
           <a href="/" className="text-xs text-ocean-600 hover:text-ocean-700 transition-colors font-medium">
             &larr; Back to Platform

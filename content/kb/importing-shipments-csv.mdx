@@ -1,0 +1,77 @@
+---
+title: "Importing your first shipment via CSV"
+slug: "importing-shipments-csv"
+description: "Step-by-step CSV upload — required columns, sample row, and the validation errors you'll hit on day one."
+category: "onboarding"
+published_at: "2026-04-27"
+updated_at: "2026-04-27"
+read_time_minutes: 5
+---
+
+Most teams come in with shipment history scattered across forwarder portals, spreadsheets from the customs broker, and one ops person's email folder. Before any of the platform's analysis tools are useful, that history has to live in one place. CSV import is the fastest way.
+
+## What you need before you start
+
+A spreadsheet with one row per shipment leg. Not one row per container, not one row per PO — one row per ocean leg from origin port to destination port. If a single PO moved on three containers across two sailings, that's three rows.
+
+Pull your last 12 months at minimum. The carrier-comparison and FTZ-savings calculators are noisy under 50 shipments and useful at 200+.
+
+## Required columns
+
+These eight columns are mandatory. Headers must match exactly (case-insensitive, but the spelling matters):
+
+| Column | Format | Example |
+|---|---|---|
+| `reference` | Your internal ID — PO, BL, or anything unique | `PO-44291` |
+| `origin_port` | UN/LOCODE or full name | `CNSHA` or `Shanghai, China` |
+| `destination_port` | UN/LOCODE or full name | `USLAX` or `Los Angeles, USA` |
+| `carrier` | SCAC code or full name | `MAEU` or `Maersk` |
+| `etd` | YYYY-MM-DD | `2026-02-14` |
+| `eta` | YYYY-MM-DD | `2026-03-09` |
+| `container_count` | Integer | `2` |
+| `container_type` | `20GP`, `40GP`, `40HC`, `45HC`, `20RF`, `40RF` | `40HC` |
+
+## Optional but useful columns
+
+These unlock more of the platform. If you have them, include them:
+
+- `actual_arrival` (YYYY-MM-DD) — the real-world arrival date. Drives reliability scoring.
+- `freight_cost_usd` — ocean freight only, not landed cost. Drives rate benchmarking.
+- `commodity_hts` — HTS code at 6 or 10 digits. Drives duty math.
+- `commodity_description` — plain-English. Helps with classification follow-ups.
+- `incoterm` — `FOB`, `CIF`, `EXW`, `DDP`, etc. Affects who's holding the risk.
+- `notes` — free text. Demurrage events, damage, anything.
+
+## Sample row
+
+```csv
+reference,origin_port,destination_port,carrier,etd,eta,container_count,container_type,actual_arrival,freight_cost_usd,commodity_hts,incoterm
+PO-44291,CNSHA,USLAX,MAEU,2026-02-14,2026-03-09,2,40HC,2026-03-12,4850,640299,FOB
+```
+
+That row tells the platform: 2 forty-foot high-cubes of footwear (HTS 6402.99), Shanghai to LA on Maersk, departed Feb 14, ETA March 9, actually arrived March 12 (3-day delay), $4,850 freight, FOB Shanghai. Enough to score Maersk on this lane and surface the delay.
+
+## Where to upload
+
+Platform → Shipments → Import. Drag the CSV onto the dropzone. The validator will tell you, line by line, what failed.
+
+## Errors you'll hit on day one
+
+These are the validations that catch ~90% of first-time imports:
+
+1. **`unknown_carrier`** — you used a forwarder's nickname instead of the SCAC. The error message will suggest the closest SCAC match. Confirm and re-upload.
+2. **`port_not_recognized`** — you typed `Long Beach` and we couldn't disambiguate from `Long Beach, NSW Australia`. Use the UN/LOCODE (`USLGB`) for any port outside the top 10.
+3. **`eta_before_etd`** — usually a typo or a year-rollover bug from your spreadsheet. Fix the date.
+4. **`container_type_invalid`** — you wrote `40ft` or `HC40`. Use the ISO codes from the table above.
+5. **`reference_duplicate`** — same reference appears twice. Either it's a real duplicate (delete one row) or you re-used a PO across sailings (append `-A`, `-B`).
+
+The validator will let you fix-and-retry without re-uploading the whole file. Failed rows go into a download for editing; the rest get committed.
+
+## What happens after upload
+
+- Carrier scorecards populate for any carrier with 5+ rows.
+- Lane analysis lights up for any origin-destination pair with 10+ rows.
+- The FTZ savings calculator can now run against your real volume.
+- Tariff exposure shows up on the dashboard once we have HTS codes.
+
+If you want a head start without your own data, [download the sample CSV](/platform/shipments/import?sample=true) — it has 50 mock shipments across 5 lanes. Useful for kicking the tires before you commit your real history.
