@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
+import ScheduleDemoButton from "@/components/cal/ScheduleDemoButton";
 import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
 import { GlobeFlights } from "@/components/ui/cobe-globe-flights";
 import { AnimatedText } from "@/components/animated-text";
@@ -813,13 +814,14 @@ export default function Home() {
             contract intelligence. 20 minutes, zero slides.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/demo"
+            <ScheduleDemoButton
+              source="homepage_footer_cta"
+              modalTitle="Book a 20-minute walkthrough"
               className="group inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-ocean-700 font-semibold shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all"
             >
-              See Live Demo
+              Schedule Demo
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
+            </ScheduleDemoButton>
             <Link
               href="/jv-agreement"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white font-semibold hover:bg-white/20 transition-all"
