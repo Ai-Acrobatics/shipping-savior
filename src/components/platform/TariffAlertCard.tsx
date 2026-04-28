@@ -43,7 +43,8 @@ export default function TariffAlertCard() {
       try {
         // Fetch recent shipments to get real routes
         const shipmentsRes = await fetch("/api/shipments");
-        let routes = DEMO_ROUTES.map((r) => ({ ...r, containerNumber: null }));
+        let routes: Array<{ origin: string; destination: string; containerNumber: string | null }> =
+          DEMO_ROUTES.map((r) => ({ ...r, containerNumber: null }));
 
         if (shipmentsRes.ok) {
           const data = await shipmentsRes.json();

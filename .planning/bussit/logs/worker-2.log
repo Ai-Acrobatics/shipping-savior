@@ -1,0 +1,130 @@
+# Worker 2 — AI-8781 Production Hardening (Foundation)
+
+**Branch:** `worktree-agent-a0024035ff2cd7c1b`
+**Status:** Complete. All 4 in-scope sub-areas shipped + verified. Branch committed locally.
+
+## Sub-areas completed
+
+### A. Sentry monitoring — DONE
+- Installed `@sentry/nextjs` (only allowed dep — already in scope per ticket)
+- Created `sentry.client.config.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts`
+- Created `instrumentation.ts` (Next.js 14+ runtime-aware loader, re-exports `captureRequestError` as `onRequestError`)
+- Created `src/app/global-error.tsx` so React Server Component render errors propagate to Sentry (Sentry build-time recommendation)
+- DSN read from `process.env.NEXT_PUBLIC_SENTRY_DSN` / `process.env.SENTRY_DSN`; SDK is no-op when no DSN is set so dev + missing-env prod stay quiet
+- `tracesSampleRate=0.1` in prod, `1.0` in dev; `replaysOnErrorSampleRate=1.0`
+- Source-map upload wired via `withSentryConfig` in `next.config.mjs` with `silent: !process.env.SENTRY_AUTH_TOKEN`
+- TODO comment in `next.config.mjs`: `// Sentry config — set NEXT_PUBLIC_SENTRY_DSN, SENTRY_ORG, SENTRY_PROJECT, SENTRY_AUTH_TOKEN env vars to activate`
+- Tunnel route `/monitoring` set to dodge ad-blockers
+
+### C. Security headers — DONE
+Applied to `/(.*)` via `next.config.mjs` `headers()`:
+- `Content-Security-Policy`: full policy with Stripe / Sentry / PostHog / Cal.com allowlists, `frame-ancestors 'none'`, `upgrade-insecure-requests`, `object-src 'none'`
+- `Strict-Transport-Security`: `max-age=63072000; includeSubDomains; preload`
+- `X-Frame-Options: DENY`
+- `X-Content-Type-Options: nosniff`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Permissions-Policy: camera=(), microphone=(), geolocation=()`
+
+### D. Build hygiene — DONE
+- Removed `typescript.ignoreBuildErrors: true`
+- Removed `eslint.ignoreDuringBuilds: true`
+- `npm run build` exits 0
+- `npx tsc --noEmit` exits 0
+- 71/71 static pages generated cleanly
+
+### H. Health endpoint — DONE
+- New file `src/app/api/health/route.ts`
+- `GET /api/health` returns `{ status, uptime, commit, timestamp }`
+- Pings Neon with `await db.execute(sql\`SELECT 1\`)` using existing drizzle import from `src/lib/db/index.ts`
+- Returns 503 + `{ status: 'error', error }` on DB failure
+- `runtime: 'nodejs'` + `dynamic = 'force-dynamic'` (postgres-js can't run in Edge — confirmed by build warnings on existing routes)
+- Confirmed registered as a dynamic route in `npm run build` output
+
+## Files modified / added
+
+```
+A  instrumentation.ts
+A  sentry.client.config.ts
+A  sentry.server.config.ts
+A  sentry.edge.config.ts
+A  src/app/global-error.tsx
+A  src/app/api/health/route.ts
+A  src/lib/types/schedules.ts
+M  next.config.mjs
+M  src/components/platform/TariffAlertCard.tsx
+M  package.json (added @sentry/nextjs)
+M  package-lock.json
+```
+
+## TS errors fixed
+
+Total: **2 distinct error sites**, fixing build for all 71 routes.
+
+| # | Category | File | Fix |
+|---|----------|------|-----|
+| 1 | Missing module / 6 type exports | `src/app/api/alliances/route.ts`, `src/app/api/schedules/search/route.ts`, `src/app/api/carriers/{reliability,ports,market-share}/route.ts` | Created `src/lib/types/schedules.ts` exporting `VesselSharingAgreement` + 5 sibling types reverse-engineered from usage. Marked TODO for canonical-schema follow-up. |
+| 2 | Inferred-too-narrow array type | `src/components/platform/TariffAlertCard.tsx` | Annotated `routes` as `Array<{origin: string; destination: string; containerNumber: string\|null}>` so reassignment from `realRoutes` (string\|null) into the demo-routes initializer (null) compiles. |
+
+The codebase was in surprisingly good TS shape once the missing types module was provided. No `any` casts were needed.
+
+## Skipped (out of scope — needs Julian / external account)
+
+| Sub-area | Why |
+|----------|-----|
+| **B. Custom domain** | Julian must pick TLD, register, set DNS. Code-side is ready (security headers, HSTS preload). |
+| **E. Database backups** | Neon backups are config-side; restore drill is manual. |
+| **F. Status page** | Needs BetterStack / Statuspage account creation. The `/api/health` endpoint shipped here gives the future status page a probe target. |
+| **G. Rate limiting** | Needs Upstash Redis or Vercel WAF account + env vars. |
+| **I. Logs aggregation** | Needs Axiom / BetterStack account + drain config. |
+
+## Env vars Julian must set in Vercel to activate Sentry
+
+| Var | Value source | Required? |
+|-----|--------------|-----------|
+| `NEXT_PUBLIC_SENTRY_DSN` | Sentry project → Settings → Client Keys (DSN) | Yes — without it Sentry is a no-op |
+| `SENTRY_DSN` | Same DSN (or omit if you reuse `NEXT_PUBLIC_*`) | Optional |
+| `SENTRY_ORG` | Sentry org slug | Required for source-map upload |
+| `SENTRY_PROJECT` | Sentry project slug | Required for source-map upload |
+| `SENTRY_AUTH_TOKEN` | Sentry → Settings → Auth Tokens (scope: project:releases) | Required for source-map upload |
+
+Without `SENTRY_AUTH_TOKEN`, builds succeed silently and source maps just don't upload — no breakage.
+
+## Build status
+
+```
+npm run build      → exit 0  (71/71 static pages, all dynamic routes registered)
+npx tsc --noEmit   → exit 0
+```
+
+## Coordination compliance
+
+- Did NOT touch `src/lib/data/dashboard.ts` (Worker 1 territory)
+- Did NOT touch `src/app/knowledge-base/` or `content/kb/` (Worker 3 territory)
+- Did NOT install any deps outside `@sentry/nextjs`
+- Did NOT auto-merge to main — branch ready for orchestrator-led PR
+
+## Commits (4 atomic, all prefixed `AI-8781`)
+
+```
+8192bad  feat(api):   AI-8781 add /api/health endpoint
+20d767d  fix(types):  AI-8781 enable strict TS build
+028481f  feat(infra): AI-8781 add security headers + wrap with Sentry
+7442c25  chore(infra): AI-8781 wire Sentry + sourcemap upload
+```
+
+## Follow-up tickets (recommend orchestrator open)
+
+- **AI-8781-B** Custom domain registration + DNS + HSTS preload submission
+- **AI-8781-E** Neon backup verification + restore drill
+- **AI-8781-F** Status page (BetterStack), point at `/api/health`
+- **AI-8781-G** Rate limiting via Upstash + middleware on `/api/*`
+- **AI-8781-I** Logs aggregation (Axiom or BetterStack drain)
+- **AI-8781-types** Replace TODO in `src/lib/types/schedules.ts` with canonical schema once `data/*.json` formats are locked
+- **AI-8781-sentry-warning** Sentry recommends migrating `sentry.client.config.ts` content to `instrumentation-client.ts` for Turbopack compatibility — not blocking today
+
+## Post-deploy verification gates (for orchestrator)
+
+1. Hit `https://<domain>/api/health` → expect 200, `status: "ok"`
+2. `securityheaders.com` scan → expect A+
+3. With Sentry env vars set, trigger a test error → expect Sentry event in dashboard
+4. Hit any page, inspect response headers → expect all 6 headers present
