@@ -3,21 +3,7 @@ import { parse } from "csv-parse/sync";
 import { auth } from "@/lib/auth";
 import { bulkInsertShipments } from "@/lib/db/queries/shipments";
 import type { NewShipment, ShipmentStatus } from "@/lib/db/schema";
-
-// CSV template columns (in order — also the canonical download header):
-export const CSV_TEMPLATE_COLUMNS = [
-  "reference",
-  "origin_port",
-  "dest_port",
-  "carrier",
-  "etd",
-  "eta",
-  "container_count",
-  "container_type",
-  "cargo_type",
-  "weight_kg",
-  "value_usd",
-] as const;
+import { CSV_TEMPLATE_COLUMNS } from "@/lib/shipments/csv-template";
 
 type CsvRow = Record<string, string>;
 
