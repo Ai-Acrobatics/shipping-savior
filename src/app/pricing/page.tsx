@@ -498,17 +498,17 @@ export default function PricingPage() {
 function renderCellValue(value: FeatureValue) {
   if (value === true) {
     return (
-      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-ocean-500/20">
-        <Check className="w-3.5 h-3.5 text-ocean-400" />
+      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-emerald-500/30 ring-1 ring-emerald-400/40">
+        <Check className="w-4 h-4 text-emerald-300" strokeWidth={3} />
       </span>
     );
   }
   if (value === false) {
     return (
-      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-800/50">
-        <X className="w-3.5 h-3.5 text-gray-600" />
+      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-700/60 ring-1 ring-gray-600/40">
+        <X className="w-4 h-4 text-gray-400" strokeWidth={3} />
       </span>
     );
   }
-  return <span className="text-gray-300">{value}</span>;
+  return <span className="text-white font-medium">{value}</span>;
 }

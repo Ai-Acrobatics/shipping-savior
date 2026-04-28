@@ -89,7 +89,7 @@ const shipments: Shipment[] = [
     carrier: "COSCO",
     status: "in-transit",
     cargoType: "general",
-    eta: "Apr 14, 2026",
+    eta: "May 14, 2026",
     containers: 2,
     weight: "42,000 kg",
     value: "$187,400",
@@ -104,7 +104,7 @@ const shipments: Shipment[] = [
     carrier: "TOTE Maritime",
     status: "in-transit",
     cargoType: "cold-chain",
-    eta: "Apr 3, 2026",
+    eta: "May 3, 2026",
     containers: 1,
     weight: "18,500 kg",
     value: "$94,200",
@@ -119,7 +119,7 @@ const shipments: Shipment[] = [
     carrier: "Evergreen",
     status: "customs",
     cargoType: "general",
-    eta: "Apr 2, 2026",
+    eta: "May 2, 2026",
     containers: 3,
     weight: "61,800 kg",
     value: "$312,600",
@@ -135,7 +135,7 @@ const shipments: Shipment[] = [
     carrier: "Lineage Logistics",
     status: "delivered",
     cargoType: "cold-chain",
-    eta: "Mar 28, 2026",
+    eta: "Apr 18, 2026",
     containers: 1,
     weight: "22,000 kg",
     value: "$78,900",
@@ -150,7 +150,7 @@ const shipments: Shipment[] = [
     carrier: "MSC",
     status: "delayed",
     cargoType: "general",
-    eta: "Apr 8, 2026",
+    eta: "May 8, 2026",
     containers: 2,
     weight: "38,400 kg",
     value: "$156,300",
@@ -166,7 +166,7 @@ const shipments: Shipment[] = [
     carrier: "APL",
     status: "at-port",
     cargoType: "cold-chain",
-    eta: "Apr 5, 2026",
+    eta: "May 5, 2026",
     containers: 2,
     weight: "35,200 kg",
     value: "$143,700",
@@ -226,7 +226,7 @@ interface RecentCalc {
 const recentCalculations: RecentCalc[] = [
   {
     type: "Landed Cost",
-    date: "Mar 25, 2026",
+    date: "Apr 25, 2026",
     route: "Shanghai → Los Angeles",
     result: "$4.92/unit",
     status: "Saved",
@@ -236,7 +236,7 @@ const recentCalculations: RecentCalc[] = [
   },
   {
     type: "FTZ Analysis",
-    date: "Mar 24, 2026",
+    date: "Apr 24, 2026",
     route: "Ho Chi Minh City → Long Beach",
     result: "21.3% savings",
     status: "Saved",
@@ -246,7 +246,7 @@ const recentCalculations: RecentCalc[] = [
   },
   {
     type: "Container Util",
-    date: "Mar 23, 2026",
+    date: "Apr 23, 2026",
     route: "Bangkok → Oakland",
     result: "82% utilization",
     status: "Draft",
@@ -256,7 +256,7 @@ const recentCalculations: RecentCalc[] = [
   },
   {
     type: "Landed Cost",
-    date: "Mar 22, 2026",
+    date: "Apr 22, 2026",
     route: "Jakarta → Seattle",
     result: "$6.18/unit",
     status: "Saved",
@@ -266,7 +266,7 @@ const recentCalculations: RecentCalc[] = [
   },
   {
     type: "FTZ Analysis",
-    date: "Mar 20, 2026",
+    date: "Apr 20, 2026",
     route: "Taipei → Los Angeles",
     result: "14.7% savings",
     status: "Draft",
@@ -394,59 +394,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-navy-50">
-      {/* Top Nav */}
-      <header className="bg-white/90 header-frosted border-b border-navy-100 px-6 py-4 sticky top-0 z-40 shadow-soft">
-        <div className="max-w-screen-2xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-ocean-500 to-ocean-700 flex items-center justify-center shadow-sm">
-                <Ship className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-bold text-sm text-navy-900">
-                Shipping<span className="gradient-text">Savior</span>
-              </span>
-            </Link>
-            <nav className="hidden md:flex items-center gap-1">
-              {[
-                { label: "Dashboard", href: "/dashboard", active: true },
-                { label: "Routes", href: "/routes" },
-                { label: "FTZ Zones", href: "/ftz-analyzer" },
-                { label: "Proposal", href: "/" },
-              ].map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-colors font-medium ${
-                    item.active
-                      ? "bg-ocean-50 text-ocean-700"
-                      : "text-navy-500 hover:text-navy-900 hover:bg-navy-50"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-          </div>
-          <div className="flex items-center gap-3">
-            {alertCount > 0 && (
-              <button className="relative p-2 rounded-lg hover:bg-navy-50 transition-colors">
-                <Bell className="w-4 h-4 text-navy-500" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center">
-                  {alertCount}
-                </span>
-              </button>
-            )}
-            <button className="flex items-center gap-2 text-xs border border-navy-200 hover:bg-navy-50 px-3 py-2 rounded-lg text-navy-500 transition-colors">
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Last updated: 2 min ago</span>
-            </button>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-ocean-500 to-ocean-700 flex items-center justify-center text-xs font-bold text-white shadow-sm">
-              JS
-            </div>
-          </div>
-        </div>
-      </header>
-
       <div className="max-w-screen-2xl mx-auto px-6 py-8 space-y-8">
 
         {/* Agent command bar */}
@@ -655,7 +602,7 @@ export default function DashboardPage() {
             <div className="bg-white border border-navy-100 rounded-2xl p-5 shadow-soft">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-semibold text-navy-900">Cost vs. Margin</h3>
-                <span className="text-xs text-navy-400">March 2026</span>
+                <span className="text-xs text-navy-400">April 2026</span>
               </div>
               <div className="space-y-3">
                 {[
@@ -931,16 +878,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Back to Proposal */}
-        <div className="flex items-center justify-center pb-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-navy-400 hover:text-ocean-600 transition-colors font-medium"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Proposal
-          </Link>
-        </div>
       </div>
     </div>
   );

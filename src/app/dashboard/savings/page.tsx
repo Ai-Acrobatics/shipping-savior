@@ -40,11 +40,11 @@ export default function SavingsPage() {
 
   // Quarterly savings trend (mock)
   const quarterlyData = [
-    { quarter: "Q1 2023", savings: 156000 },
-    { quarter: "Q2 2023", savings: 178000 },
-    { quarter: "Q3 2023", savings: 201000 },
-    { quarter: "Q4 2023", savings: 234000 },
-    { quarter: "Q1 2024", savings: totalSavings },
+    { quarter: "Q1 2025", savings: 156000 },
+    { quarter: "Q2 2025", savings: 178000 },
+    { quarter: "Q3 2025", savings: 201000 },
+    { quarter: "Q4 2025", savings: 234000 },
+    { quarter: "Q1 2026", savings: totalSavings },
   ];
 
   // ROI calculation
@@ -56,8 +56,8 @@ export default function SavingsPage() {
     <div className="max-w-screen-2xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Savings Report</h1>
-        <p className="text-sm text-navy-400 mt-1">
+        <h1 className="text-2xl font-bold text-navy-900">Savings Report</h1>
+        <p className="text-sm text-navy-600 mt-1">
           FTZ savings, rate optimization, and cost reduction analysis
         </p>
       </div>
@@ -67,22 +67,22 @@ export default function SavingsPage() {
         <div className="glass rounded-2xl p-5">
           <div className="flex items-center gap-2 mb-2">
             <PiggyBank className="w-4 h-4 text-green-400" />
-            <span className="text-xs text-navy-400">Total Savings (Q1)</span>
+            <span className="text-xs text-navy-600">Total Savings (Q1)</span>
           </div>
-          <div className="text-2xl font-bold text-white">{formatCurrency(totalSavings)}</div>
+          <div className="text-2xl font-bold text-navy-900">{formatCurrency(totalSavings)}</div>
           <span className="text-xs text-green-400 flex items-center gap-0.5 mt-1">
             <TrendingUp className="w-3 h-3" />
-            +21.4% vs Q4 2023
+            +21.4% vs Q4 2025
           </span>
         </div>
 
         <div className="glass rounded-2xl p-5">
           <div className="flex items-center gap-2 mb-2">
             <Shield className="w-4 h-4 text-green-400" />
-            <span className="text-xs text-navy-400">FTZ Savings</span>
+            <span className="text-xs text-navy-600">FTZ Savings</span>
           </div>
-          <div className="text-2xl font-bold text-white">{formatCurrency(ftzSavings)}</div>
-          <span className="text-xs text-navy-500 mt-1">
+          <div className="text-2xl font-bold text-navy-900">{formatCurrency(ftzSavings)}</div>
+          <span className="text-xs text-navy-600 mt-1">
             Across 3 FTZ zones
           </span>
         </div>
@@ -90,10 +90,10 @@ export default function SavingsPage() {
         <div className="glass rounded-2xl p-5">
           <div className="flex items-center gap-2 mb-2">
             <Zap className="w-4 h-4 text-ocean-400" />
-            <span className="text-xs text-navy-400">FTZ ROI</span>
+            <span className="text-xs text-navy-600">FTZ ROI</span>
           </div>
           <div className="text-2xl font-bold text-green-400">{ftzROI.toFixed(0)}%</div>
-          <span className="text-xs text-navy-500 mt-1">
+          <span className="text-xs text-navy-600 mt-1">
             On ${(ftzInvestment / 1000).toFixed(0)}K annual investment
           </span>
         </div>
@@ -101,12 +101,12 @@ export default function SavingsPage() {
         <div className="glass rounded-2xl p-5">
           <div className="flex items-center gap-2 mb-2">
             <DollarSign className="w-4 h-4 text-cargo-400" />
-            <span className="text-xs text-navy-400">Avg Savings/Shipment</span>
+            <span className="text-xs text-navy-600">Avg Savings/Shipment</span>
           </div>
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-navy-900">
             {formatCurrency(totalSavings / 14)}
           </div>
-          <span className="text-xs text-navy-500 mt-1">Based on 14 shipments</span>
+          <span className="text-xs text-navy-600 mt-1">Based on 14 shipments</span>
         </div>
       </div>
 
@@ -114,7 +114,7 @@ export default function SavingsPage() {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Savings by Type (Pie) */}
         <div className="glass rounded-2xl p-5">
-          <h3 className="text-sm font-semibold text-white mb-4">Savings by Category</h3>
+          <h3 className="text-sm font-semibold text-navy-900 mb-4">Savings by Category</h3>
           <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -132,8 +132,8 @@ export default function SavingsPage() {
                 <Tooltip
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   formatter={(value: any) => [`$${Number(value).toLocaleString()}`, ""]}
-                  contentStyle={{ background: "#0a1929", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "12px" }}
-                  itemStyle={{ color: "#e7f0ff" }}
+                  contentStyle={{ background: "#ffffff", border: "1px solid rgba(15,23,42,0.1)", borderRadius: "8px", fontSize: "12px" }}
+                  itemStyle={{ color: "#0f172a" }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -149,9 +149,9 @@ export default function SavingsPage() {
                       className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                       style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }}
                     />
-                    <span className="text-xs text-navy-300">{config?.label || t.type}</span>
+                    <span className="text-xs text-navy-700">{config?.label || t.type}</span>
                   </div>
-                  <span className="text-xs text-white font-medium">{formatCurrency(t.amount)}</span>
+                  <span className="text-xs text-navy-900 font-medium">{formatCurrency(t.amount)}</span>
                 </div>
               );
             })}
@@ -160,16 +160,16 @@ export default function SavingsPage() {
 
         {/* Quarterly Trend (Bar) */}
         <div className="lg:col-span-2 glass rounded-2xl p-5">
-          <h3 className="text-sm font-semibold text-white mb-4">Quarterly Savings Trend</h3>
+          <h3 className="text-sm font-semibold text-navy-900 mb-4">Quarterly Savings Trend</h3>
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={quarterlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="quarter" tick={{ fill: "#4d6a8a", fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: "#4d6a8a", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(15,23,42,0.05)" />
+                <XAxis dataKey="quarter" tick={{ fill: "#475569", fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: "#475569", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`} />
                 <Tooltip
-                  contentStyle={{ background: "#0a1929", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "12px" }}
-                  itemStyle={{ color: "#e7f0ff" }}
+                  contentStyle={{ background: "#ffffff", border: "1px solid rgba(15,23,42,0.1)", borderRadius: "8px", fontSize: "12px" }}
+                  itemStyle={{ color: "#0f172a" }}
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   formatter={(value: any) => [`$${Number(value).toLocaleString()}`, "Savings"]}
                 />
@@ -183,8 +183,8 @@ export default function SavingsPage() {
       {/* Savings Entries Table */}
       <div className="glass rounded-2xl p-5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-white">Savings Breakdown — Q1 2024</h3>
-          <button className="flex items-center gap-1.5 text-xs glass glass-hover px-3 py-1.5 rounded-lg text-navy-300">
+          <h3 className="text-sm font-semibold text-navy-900">Savings Breakdown — Q1 2026</h3>
+          <button className="flex items-center gap-1.5 text-xs glass glass-hover px-3 py-1.5 rounded-lg text-navy-700">
             <FileText className="w-3.5 h-3.5" />
             Export Report
           </button>
@@ -192,11 +192,11 @@ export default function SavingsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/5">
-                <th className="text-left text-xs text-navy-400 font-medium py-3 px-3">Source</th>
-                <th className="text-left text-xs text-navy-400 font-medium py-3 px-3">Type</th>
-                <th className="text-left text-xs text-navy-400 font-medium py-3 px-3">Description</th>
-                <th className="text-right text-xs text-navy-400 font-medium py-3 px-3">Amount</th>
+              <tr className="border-b border-navy-100">
+                <th className="text-left text-xs text-navy-600 font-medium py-3 px-3">Source</th>
+                <th className="text-left text-xs text-navy-600 font-medium py-3 px-3">Type</th>
+                <th className="text-left text-xs text-navy-600 font-medium py-3 px-3">Description</th>
+                <th className="text-right text-xs text-navy-600 font-medium py-3 px-3">Amount</th>
               </tr>
             </thead>
             <tbody>
@@ -204,18 +204,18 @@ export default function SavingsPage() {
                 const config = typeConfig[entry.type];
                 const Icon = config?.icon || DollarSign;
                 return (
-                  <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                  <tr key={i} className="border-b border-navy-100 hover:bg-navy-50 transition-colors">
                     <td className="py-3 px-3">
-                      <div className="text-white font-medium">{entry.source}</div>
+                      <div className="text-navy-900 font-medium">{entry.source}</div>
                     </td>
                     <td className="py-3 px-3">
-                      <span className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full ${config?.bgColor || "bg-white/10"} ${config?.color || "text-white"}`}>
+                      <span className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full ${config?.bgColor || "bg-navy-100"} ${config?.color || "text-navy-900"}`}>
                         <Icon className="w-3 h-3" />
                         {config?.label || entry.type}
                       </span>
                     </td>
                     <td className="py-3 px-3">
-                      <div className="text-xs text-navy-400 max-w-sm">{entry.description}</div>
+                      <div className="text-xs text-navy-600 max-w-sm">{entry.description}</div>
                     </td>
                     <td className="py-3 px-3 text-right">
                       <span className="text-green-400 font-bold">{formatCurrency(entry.amount)}</span>
@@ -225,8 +225,8 @@ export default function SavingsPage() {
               })}
             </tbody>
             <tfoot>
-              <tr className="border-t border-white/10">
-                <td colSpan={3} className="py-3 px-3 text-sm font-semibold text-white">Total Q1 2024 Savings</td>
+              <tr className="border-t border-navy-200">
+                <td colSpan={3} className="py-3 px-3 text-sm font-semibold text-navy-900">Total Q1 2026 Savings</td>
                 <td className="py-3 px-3 text-right text-lg font-bold text-green-400">{formatCurrency(totalSavings)}</td>
               </tr>
             </tfoot>
@@ -238,7 +238,7 @@ export default function SavingsPage() {
       <div className="glass rounded-2xl p-5">
         <div className="flex items-center gap-2 mb-4">
           <Shield className="w-4 h-4 text-green-400" />
-          <h3 className="text-sm font-semibold text-white">FTZ Return on Investment</h3>
+          <h3 className="text-sm font-semibold text-navy-900">FTZ Return on Investment</h3>
         </div>
         <div className="grid md:grid-cols-3 gap-4">
           {[
@@ -264,27 +264,27 @@ export default function SavingsPage() {
               description: "Cold chain duty deferral for Alaska cargo",
             },
           ].map((zone) => (
-            <div key={zone.zone} className="bg-white/5 rounded-xl p-4">
-              <div className="text-sm font-medium text-white mb-2">{zone.zone}</div>
+            <div key={zone.zone} className="bg-navy-50 rounded-xl p-4">
+              <div className="text-sm font-medium text-navy-900 mb-2">{zone.zone}</div>
               <div className="grid grid-cols-2 gap-3 mb-3">
                 <div>
-                  <div className="text-[10px] text-navy-500">Annual Fee</div>
-                  <div className="text-sm font-medium text-navy-300">{zone.investment}</div>
+                  <div className="text-[10px] text-navy-600">Annual Fee</div>
+                  <div className="text-sm font-medium text-navy-700">{zone.investment}</div>
                 </div>
                 <div>
-                  <div className="text-[10px] text-navy-500">Q1 Savings</div>
+                  <div className="text-[10px] text-navy-600">Q1 Savings</div>
                   <div className="text-sm font-bold text-green-400">{zone.savings}</div>
                 </div>
               </div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] text-navy-500">Annualized ROI</span>
+                <span className="text-[10px] text-navy-600">Annualized ROI</span>
                 <span className={`text-sm font-bold ${
                   parseInt(zone.roi) > 100 ? "text-green-400" :
                   parseInt(zone.roi) > 0 ? "text-cargo-400" :
                   "text-red-400"
                 }`}>{zone.roi}</span>
               </div>
-              <div className="text-xs text-navy-400">{zone.description}</div>
+              <div className="text-xs text-navy-600">{zone.description}</div>
             </div>
           ))}
         </div>

@@ -39,10 +39,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="p-4 border-b border-navy-100">
           <Link href="/" className="flex items-center gap-2.5 group">
             <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-ocean-500 to-ocean-700 flex items-center justify-center flex-shrink-0">
-              <Ship className="w-4.5 h-4.5 text-navy-900" />
+              <Ship className="w-4.5 h-4.5 text-white" />
             </div>
             {!collapsed && (
-              <span className="font-bold text-sm whitespace-nowrap">
+              <span className="font-bold text-sm whitespace-nowrap text-white">
                 Shipping<span className="gradient-text">Savior</span>
               </span>
             )}
@@ -123,10 +123,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 )}
               </Link>
 
-              <button className="flex items-center gap-2 text-xs bg-white border border-navy-100 hover:shadow-card hover:border-navy-200 transition-all px-3 py-2 rounded-lg text-navy-500">
-                <RefreshCw className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Live</span>
-              </button>
+              <div
+                className="flex items-center gap-1.5 text-xs bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-lg text-emerald-700"
+                title="Data is updating in real time"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                <span className="hidden sm:inline font-medium">Live</span>
+              </div>
 
               <button className="p-2 rounded-lg bg-white border border-navy-100 shadow-soft glass-hover">
                 <Settings className="w-4 h-4 text-navy-500" />
@@ -149,9 +155,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             >
               <div className="flex items-center gap-2.5 mb-6">
                 <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-ocean-500 to-ocean-700 flex items-center justify-center">
-                  <Ship className="w-4.5 h-4.5 text-navy-900" />
+                  <Ship className="w-4.5 h-4.5 text-white" />
                 </div>
-                <span className="font-bold text-sm">
+                <span className="font-bold text-sm text-white">
                   Shipping<span className="gradient-text">Savior</span>
                 </span>
               </div>
