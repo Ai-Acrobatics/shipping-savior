@@ -1,0 +1,72 @@
+# Worker 1 — AI-8779 Real product data foundation
+
+## Status: COMPLETE — Sub-areas A, B, E shipped. Build passing.
+
+## Sub-areas completed
+
+### A. CSV shipment import — DONE
+- New page: `src/app/(platform)/platform/shipments/import/page.tsx` with drag-drop CSV uploader, preview table, error reporting, and commit button.
+- Downloadable template: GET `/api/shipments/import` returns `shipments-template.csv` with canonical 11-column header and a sample row.
+- Import API: POST `/api/shipments/import` (auth-gated). Accepts multipart, JSON, or raw CSV. `?dryRun=1` returns a preview with per-row validation errors. Without dryRun, validates and bulk-inserts scoped to `session.user.orgId`. Refuses to insert if any row is invalid.
+- Validation covers: required fields (reference, origin_port, dest_port), date coercion (etd/eta), integer coercion (container_count, weight_kg), float coercion (value_usd), status whitelist.
+
+### B. Schema + DB-driven shipments query — DONE
+- Extended `shipments` table in `src/lib/db/schema.ts` with new columns: userId FK, reference, originPort, destPort, containerCount, containerType, cargoType, valueUsd, progress, currentLocation. Kept existing BOL-OCR columns intact for backward compatibility.
+- Broadened `shipmentStatusEnum` to: booked, in_transit, at_port, customs, delivered, delayed, arrived, pending.
+- Added `csv_import` to `shipmentSourceEnum`.
+- New queries file `src/lib/db/queries/shipments.ts`: `getShipmentsByOrg(orgId)`, `createShipment(data)`, `bulkInsertShipments(rows)`, `getOrgDemoFlag(orgId)`.
+- Generated initial drizzle migration at `drizzle/0000_milky_hellcat.sql` (covers entire current schema; this was the first generated migration in this repo).
+
+### E. Demo mode separation — DONE
+- Added `isDemo` boolean to `organizations` table, default false.
+- Renamed `src/lib/data/dashboard.ts` -> `src/lib/data/demo-data.ts`. The old path is now a re-export shim so the 11 existing component imports keep compiling without churn.
+- Converted `src/app/dashboard/page.tsx` and `src/app/dashboard/savings/page.tsx` into server components that gate on session + org `is_demo`:
+  - Unauthenticated visitor -> demo view (preserves marketing/demo browsing)
+  - Authenticated, no orgId -> empty state
+  - Authenticated, demo org -> demo view
+  - Authenticated, real org with 0 shipments -> empty state with "Import CSV" CTA
+  - Authenticated, real org with shipments -> demo view (placeholder; real DB-backed render is follow-up)
+- New components: `DashboardDemoView.tsx`, `DashboardEmptyState.tsx`, `SavingsDemoView.tsx`, `SavingsEmptyState.tsx`. Empty states link to `/platform/shipments/import`.
+
+## Skipped (out of scope per ticket)
+- C: Manual shipment entry form
+- D: Three missing calculators (FTZ Savings, PF/NPF, Tariff Scenario)
+- Ephemeral `/demo` session route
+
+## Files created
+- `drizzle/0000_milky_hellcat.sql`
+- `drizzle/meta/0000_snapshot.json`
+- `drizzle/meta/_journal.json`
+- `src/lib/db/queries/shipments.ts`
+- `src/app/api/shipments/import/route.ts`
+- `src/app/(platform)/platform/shipments/import/page.tsx`
+- `src/app/dashboard/DashboardDemoView.tsx` (renamed from page.tsx)
+- `src/app/dashboard/DashboardEmptyState.tsx`
+- `src/app/dashboard/savings/SavingsDemoView.tsx` (copy of original page.tsx)
+- `src/app/dashboard/savings/SavingsEmptyState.tsx`
+- `src/lib/data/demo-data.ts` (renamed from dashboard.ts)
+- `.planning/bussit/logs/worker-1-plan.md`
+- `.planning/bussit/logs/worker-1.log`
+
+## Files modified
+- `src/lib/db/schema.ts` — extend shipments + organizations
+- `src/lib/data/dashboard.ts` — re-export shim only
+- `src/app/dashboard/page.tsx` — server component gate
+- `src/app/dashboard/savings/page.tsx` — server component gate
+
+## Build status
+- `npm run build` -> PASSING (compiled successfully, 73/73 static pages generated)
+- `npx tsc --noEmit` -> 26 errors, all pre-existing in unrelated files (alliances, carriers, schedules, TariffAlertCard). My changes introduced 0 new TS errors. Baseline before my changes: 32 errors. My changes net -6 because the new shipments columns happened to satisfy type expectations in `app/api/carriers/ports/route.ts` (still an unrelated module — not deliberately fixed).
+
+## Follow-ups for orchestrator / next PRs
+1. **C — Manual shipment entry form** — single-record form at `/platform/shipments/new` posting to existing `/api/shipments`. Low priority since CSV covers v1.
+2. **D — Three missing calculators** — FTZ Savings, PF/NPF, Tariff Scenario. Each is 6-8 hours and needs its own PR per ticket.
+3. **Real-data dashboard renders** — `DashboardDemoView` is currently the fallback even for real orgs with imported shipments. Build a `DashboardRealView` that takes the queried shipments[] and renders KPIs, status filters, and the shipment table from real data. The schema + `getShipmentsByOrg` query are in place.
+4. **Ephemeral `/demo` session route** — anonymous demo session that pretends to be a demo org without persisting anything.
+5. **Update existing `POST /api/shipments`** — currently lacks auth and orgId scoping. Should be tightened to match the import route's pattern, but that change is out of this ticket's scope.
+6. **Run `npm run db:push`** in production after deploy — the new migration adds columns to organizations + shipments.
+
+## Commit hashes shipped (on branch worktree-agent-abdfde8e2b4583807)
+- 9cb8f5e `feat(shipments): AI-8779 add shipments schema, queries, and initial migration`
+- ddcde75 `feat(shipments): AI-8779 add CSV import API route and drag-drop UI`
+- a701a2a `feat(dashboard): AI-8779 separate demo and real-data dashboards`
