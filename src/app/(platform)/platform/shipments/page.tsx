@@ -15,6 +15,7 @@ import {
   ChevronDown,
   FileText,
 } from "lucide-react";
+import HelpHint from "@/components/ui/HelpHint";
 
 // ── Types ──────────────────────────────────────────────
 
@@ -321,11 +322,17 @@ export default function ShipmentsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-navy-900">Shipment Tracker</h1>
-          <p className="mt-1 text-sm text-navy-500">
-            Upload Bills of Lading to extract and track your container shipments
-          </p>
+        <div className="flex items-center gap-2">
+          <div>
+            <h1 className="text-2xl font-bold text-navy-900">Shipment Tracker</h1>
+            <p className="mt-1 text-sm text-navy-500">
+              Upload Bills of Lading to extract and track your container shipments
+            </p>
+          </div>
+          <HelpHint
+            articleSlug="importing-shipments-csv"
+            label="Bulk loading shipments? Read the CSV import walkthrough."
+          />
         </div>
         <button
           onClick={() => { setUploadMode(true); setExtracted(null); setError(null); }}
