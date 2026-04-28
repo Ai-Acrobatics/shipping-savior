@@ -5,15 +5,16 @@ import Link from "next/link";
 import { Ship, Menu, X, LayoutDashboard, ChevronDown } from "lucide-react";
 
 const navLinks = [
-  { label: "Platform", href: "/#platform" },
-  { label: "Calculators", href: "/#calculators" },
-  { label: "Carriers", href: "/carrier-comparison" },
+  { label: "Calculators", href: "/calculators" },
   { label: "Demo", href: "/demo" },
   { label: "Pricing", href: "/pricing" },
   { label: "Dashboard", href: "/dashboard" },
 ];
 
 const moreLinks = [
+  { label: "Carriers", href: "/carrier-comparison" },
+  { label: "FTZ Analyzer", href: "/ftz-analyzer" },
+  { label: "Port Finder", href: "/port-finder" },
   { label: "Knowledge Base", href: "/knowledge-base" },
   { label: "Data Intelligence", href: "/data-intelligence" },
   { label: "Architecture", href: "/platform-architecture" },
@@ -21,8 +22,6 @@ const moreLinks = [
   { label: "Six Sigma", href: "/six-sigma" },
   { label: "Monetization", href: "/monetization" },
   { label: "Tech Spec", href: "/tech-spec" },
-  { label: "FTZ Analyzer", href: "/ftz-analyzer" },
-  { label: "Port Finder", href: "/port-finder" },
 ];
 
 export default function Header() {

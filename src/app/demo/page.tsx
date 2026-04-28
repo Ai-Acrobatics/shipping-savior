@@ -50,7 +50,7 @@ const scenarios: Scenario[] = [
     ],
     metric: { value: "$1,200", label: "FTZ savings per container" },
     insight: "Compare 7 carriers in seconds instead of hours of manual research",
-    cta: { label: "Try Route Comparison", href: "/dashboard" },
+    cta: { label: "Try Route Comparison", href: "/dashboard?scenario=qingdao-la" },
   },
   {
     id: 2,
@@ -69,7 +69,7 @@ const scenarios: Scenario[] = [
     ],
     metric: { value: "$350", label: "savings per load + 3 hours faster" },
     insight: "Optimize last-mile routing to cut costs and transit time",
-    cta: { label: "Try Route Optimizer", href: "/dashboard" },
+    cta: { label: "Try Route Optimizer", href: "/dashboard?scenario=tj-crossdock" },
   },
   {
     id: 3,
@@ -87,7 +87,7 @@ const scenarios: Scenario[] = [
     ],
     metric: { value: "$0", label: "customs/duties — domestic American flag vessels" },
     insight: "Compare Jones Act carriers for US territory shipping",
-    cta: { label: "Search Jones Act Routes", href: "/dashboard" },
+    cta: { label: "Search Jones Act Routes", href: "/dashboard?scenario=ja-hawaii" },
   },
   {
     id: 4,
@@ -106,14 +106,14 @@ const scenarios: Scenario[] = [
     ],
     metric: { value: "40%", label: "cost reduction via backhaul fill" },
     insight: "Turn empty return containers into revenue",
-    cta: { label: "Explore Backhaul Deals", href: "/dashboard" },
+    cta: { label: "Explore Backhaul Deals", href: "/dashboard?scenario=eu-backhaul" },
   },
 ];
 
 /* ────────── COMPONENT ────────── */
 
 export default function DemoPage() {
-  const [activeId, setActiveId] = useState<number | null>(null);
+  const [activeId, setActiveId] = useState<number | null>(1);
 
   return (
     <main className="min-h-screen bg-[#0a0a1a] text-white overflow-hidden">
@@ -327,15 +327,24 @@ export default function DemoPage() {
           <p className="text-white/40 mb-8 max-w-lg mx-auto">
             Start comparing carriers, calculating landed costs, and finding savings across every shipping lane.
           </p>
-          <Link
-            href="/pricing"
-            className="inline-flex items-center gap-3 bg-gradient-to-r from-ocean-500 to-indigo-600 text-white font-bold px-10 py-4 rounded-full text-lg
-              shadow-[0_8px_32px_rgba(37,99,235,0.3)] hover:shadow-[0_12px_48px_rgba(37,99,235,0.45)]
-              hover:brightness-110 transition-all duration-300"
-          >
-            View Pricing
-            <ArrowRight className="w-5 h-5" />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-ocean-500 to-indigo-600 text-white font-bold px-10 py-4 rounded-full text-lg
+                shadow-[0_8px_32px_rgba(37,99,235,0.3)] hover:shadow-[0_12px_48px_rgba(37,99,235,0.45)]
+                hover:brightness-110 transition-all duration-300"
+            >
+              Schedule Demo
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link
+              href="/pricing"
+              className="inline-flex items-center gap-3 border border-white/20 hover:border-white/40 text-white font-medium px-10 py-4 rounded-full text-lg
+                hover:bg-white/5 transition-all duration-300"
+            >
+              View Pricing
+            </Link>
+          </div>
         </div>
       </section>
     </main>

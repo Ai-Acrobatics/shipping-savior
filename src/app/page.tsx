@@ -301,9 +301,9 @@ export default function Home() {
             transition={{ delay: 0.3, duration: 0.7 }}
             className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-7 text-balance"
           >
-            <span className="block">Ship </span>
+            <span>Ship </span>
             <span
-              className={`block transition-all duration-300 ${
+              className={`inline-block transition-all duration-300 ${
                 wordVisible ? "opacity-100 blur-0" : "opacity-0 blur-md"
               }`}
             >
@@ -905,7 +905,9 @@ export default function Home() {
           </div>
           <div className="pt-8 border-t border-ocean-50 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-navy-400">
             <div>© 2026 Shipping Savior · Julian Bradley × Blake Harwell</div>
-            <div>Built by AI Acrobatics</div>
+            {process.env.NEXT_PUBLIC_INVESTOR_BUILD !== "true" && (
+              <div>Built by AI Acrobatics</div>
+            )}
           </div>
         </div>
       </footer>

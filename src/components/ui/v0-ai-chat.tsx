@@ -122,11 +122,11 @@ export function VercelV0Chat({
       )}
     >
       {compact ? (
-        <h2 className="text-lg font-semibold text-black dark:text-white self-start">
+        <h2 className="text-lg font-semibold text-navy-900 self-start">
           {heading}
         </h2>
       ) : (
-        <h1 className="text-4xl font-bold text-black dark:text-white">
+        <h1 className="text-4xl font-bold text-navy-900">
           {heading}
         </h1>
       )}
