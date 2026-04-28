@@ -54,14 +54,14 @@ const scenarios: Scenario[] = [
   },
   {
     id: 2,
-    title: "Cross-Dock — Trader Joe's Supply Chain",
+    title: "Cross-Dock — West Coast Last-Mile",
     subtitle: "Optimize last-mile routing to cut costs and transit time",
     accent: "text-emerald-400",
     accentBg: "bg-emerald-500/10",
     accentBorder: "border-emerald-500/30",
     accentGlow: "shadow-[0_0_40px_rgba(16,185,129,0.15)]",
     icon: Truck,
-    route: { origin: "Port of Hueneme", destination: "Palmdale/Lancaster (TJ Dist. Center)", distance: "70 mi via 126/Fillmore" },
+    route: { origin: "Port of Hueneme", destination: "Palmdale / Lancaster (Inland DC)", distance: "70 mi via 126/Fillmore" },
     carriers: [
       { name: "126/Fillmore Bypass", transit: "1.5 hrs", reliability: "70 mi", highlight: true },
       { name: "San Diego via LA", transit: "4.5 hrs", reliability: "150+ mi" },
@@ -100,7 +100,7 @@ const scenarios: Scenario[] = [
     icon: Package,
     route: { origin: "Rotterdam", destination: "Puerto Barrios, Guatemala", distance: "5,100 nmi" },
     carriers: [
-      { name: "Chiquita / Great White Fleet", transit: "14 days", reliability: "78%", highlight: true },
+      { name: "Great White Fleet", transit: "14 days", reliability: "78%", highlight: true },
       { name: "CMA CGM", transit: "18 days", reliability: "72%" },
       { name: "Hapag-Lloyd", transit: "16 days", reliability: "74%" },
     ],

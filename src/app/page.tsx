@@ -42,13 +42,13 @@ const dynamicWords = [
 ];
 
 const partners = [
-  "Chiquita",
   "Kingsco",
   "Hall Pass",
   "Great White Fleet",
   "Lineage",
-  "Trader Joe's",
   "Maersk",
+  "MSC",
+  "CMA CGM",
   "Matson",
   "Pasha Hawaii",
 ];
@@ -110,7 +110,7 @@ const faqs = [
   },
   {
     q: "Who is this built for?",
-    a: "B2B shippers, freight brokers, NVOCCs (there are 10,000+ globally), and enterprise importers. It works equally well for cold-chain exporters like Chiquita (where we move 95% of their European exports), automotive and personal-care CPG, and general cargo.",
+    a: "B2B shippers, freight brokers, NVOCCs (there are 10,000+ globally), and enterprise importers. It works equally well for cold-chain exporters (where one of our co-founders moves the majority of a top global producer's European exports), automotive and personal-care CPG, and general cargo.",
   },
   {
     q: "How is this different from Freightos or Flexport?",
