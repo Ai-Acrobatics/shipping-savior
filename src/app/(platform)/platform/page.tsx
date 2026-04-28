@@ -14,6 +14,8 @@ import {
   FileText,
 } from "lucide-react";
 import TariffAlertCard from "@/components/platform/TariffAlertCard";
+import OnboardingWizard from "@/components/platform/OnboardingWizard";
+import HelpHint from "@/components/ui/HelpHint";
 
 const stats = [
   { label: "Total Calculations", value: "0", icon: Calculator, color: "ocean" },
@@ -45,14 +47,23 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      {/* First-run onboarding (gated by localStorage on the client) */}
+      <OnboardingWizard initialName={userName} />
+
       {/* Welcome */}
-      <div>
-        <h1 className="text-2xl font-bold text-navy-900">
-          Welcome back, {userName}
-        </h1>
-        <p className="text-navy-500 mt-1">
-          Your logistics command center. Run calculations, analyze routes, and optimize costs.
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-navy-900">
+            Welcome back, {userName}
+          </h1>
+          <p className="text-navy-500 mt-1">
+            Your logistics command center. Run calculations, analyze routes, and optimize costs.
+          </p>
+        </div>
+        <HelpHint
+          articleSlug="importing-shipments-csv"
+          label="Getting started? Read the import walkthrough."
+        />
       </div>
 
       {/* Stat Cards */}

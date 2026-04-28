@@ -8,6 +8,7 @@ import {
   FileText,
   ArrowRight,
 } from "lucide-react";
+import HelpHint from "@/components/ui/HelpHint";
 
 const calculators = [
   {
@@ -63,11 +64,17 @@ const iconBg: Record<string, string> = {
 export default function CalculatorsPage() {
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-navy-900">Calculators</h1>
-        <p className="text-navy-500 mt-1">
-          Powerful trade and logistics calculators to optimize your supply chain costs.
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-navy-900">Calculators</h1>
+          <p className="text-navy-500 mt-1">
+            Powerful trade and logistics calculators to optimize your supply chain costs.
+          </p>
+        </div>
+        <HelpHint
+          articleSlug="what-is-an-ftz"
+          label="New to FTZs? Read what they are and when they pay off."
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

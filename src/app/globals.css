@@ -460,3 +460,94 @@ html {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Knowledge Base article body */
+.kb-article {
+  color: #334155;
+  line-height: 1.7;
+  font-size: 16px;
+}
+.kb-article h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+.kb-article h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.kb-article p {
+  margin-bottom: 1rem;
+}
+.kb-article ul, .kb-article ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+.kb-article ul { list-style: disc; }
+.kb-article ol { list-style: decimal; }
+.kb-article li {
+  margin-bottom: 0.4rem;
+}
+.kb-article strong {
+  color: #0f172a;
+  font-weight: 600;
+}
+.kb-article a {
+  color: #0284c7;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.kb-article a:hover {
+  color: #0369a1;
+}
+.kb-article code {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.9em;
+  color: #1e293b;
+}
+.kb-article pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+.kb-article pre code {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+}
+.kb-article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+.kb-article th, .kb-article td {
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.kb-article th {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #0f172a;
+}
+.kb-article blockquote {
+  border-left: 3px solid #0284c7;
+  padding-left: 1rem;
+  color: #475569;
+  font-style: italic;
+  margin: 1rem 0;
+}

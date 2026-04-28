@@ -1,0 +1,100 @@
+# Worker 3 — AI-8784 Final Report
+
+**Branch:** `worktree-agent-ab6290dd68ea6891d`
+**Worktree:** `/opt/agency-workspace/shipping-savior/.claude/worktrees/agent-ab6290dd68ea6891d`
+**Status:** COMPLETE — pushed to remote, PR not opened (per ticket instructions)
+
+## Sub-areas completed
+
+### C. Knowledge base content system + first 3 articles — DONE
+- Installed `next-mdx-remote@^6` and `gray-matter@^4` (no other deps touched)
+- Created `content/kb/` directory with 3 MDX articles + frontmatter contract
+- Built `src/lib/kb.ts` (server-only fs loader using `node:fs`/`node:path`) and `src/lib/kb-types.ts` (client-safe types/labels) — split was necessary because the client KbArticleGrid imports the type
+- Rewrote `src/app/knowledge-base/page.tsx` to render a searchable category-grouped article grid above the existing reference library (preserved the original `KnowledgeBase` glossary/Incoterms/ports component as the secondary section)
+- Added `src/app/knowledge-base/[slug]/page.tsx` for article rendering with `generateStaticParams` (3 routes statically generated)
+- Added `.kb-article` prose styles in `globals.css` (h2/h3/p/ul/ol/code/pre/table/blockquote)
+
+### A. First-run onboarding wizard skeleton — DONE
+- Created `src/components/platform/OnboardingWizard.tsx` (client component)
+- 4 steps: use case picker, company info form (TEU + lanes + carriers), sample CSV / start fresh, run-first-calculator CTA
+- Persists progress to `localStorage` (`ss_onboarded`, `ss_onboarding_progress`)
+- "Skip for now" link on every step
+- Mounted in `src/app/(platform)/platform/page.tsx` — only renders when `ss_onboarded !== "true"` (gated client-side)
+- TODO comment present: `// TODO: persist completion to org.onboarded_at — schema migration needed (depends on AI-8779)`
+
+### E. Contextual help (?) icons — DONE
+- Created `src/components/ui/HelpHint.tsx` — tooltip on hover/focus, links to `/knowledge-base/[slug]`
+- 3 placements:
+  1. Dashboard top right header → `importing-shipments-csv`
+  2. Calculators hub page header → `what-is-an-ftz`
+  3. Shipments page header → `importing-shipments-csv`
+
+## Files created
+- `content/kb/what-is-an-ftz.mdx`
+- `content/kb/importing-shipments-csv.mdx`
+- `content/kb/comparing-carriers.mdx`
+- `src/lib/kb.ts`
+- `src/lib/kb-types.ts`
+- `src/components/kb/KbArticleGrid.tsx`
+- `src/app/knowledge-base/[slug]/page.tsx`
+- `src/components/platform/OnboardingWizard.tsx`
+- `src/components/ui/HelpHint.tsx`
+- `.planning/bussit/logs/worker-3-plan.md`
+- `.planning/bussit/logs/worker-3.log`
+
+## Files modified
+- `package.json`, `package-lock.json` (deps)
+- `src/app/knowledge-base/page.tsx` (rewritten to add article grid)
+- `src/app/globals.css` (KB article prose styles appended)
+- `src/app/(platform)/platform/page.tsx` (mounted wizard + HelpHint, surgical)
+- `src/app/(platform)/platform/calculators/page.tsx` (HelpHint, surgical)
+- `src/app/(platform)/platform/shipments/page.tsx` (HelpHint in header, surgical)
+
+## KB article slugs and titles
+1. `what-is-an-ftz` — "What is a Foreign Trade Zone (FTZ) and when does it pay off?" (FTZ category, 6-min read)
+2. `importing-shipments-csv` — "Importing your first shipment via CSV" (Onboarding category, 5-min read)
+3. `comparing-carriers` — "Comparing 8+ carriers for a single lane" (Carriers category, 7-min read)
+
+All three written in logistics-operator voice with real numbers, specific lanes, and concrete decision criteria — no lorem ipsum, no AI-marketer prose.
+
+## Skipped sub-areas (separate PRs)
+- **B. In-app product tour (react-joyride)** — separate PR. Wizard handles first-run onboarding; product tour is a follow-up enhancement that doesn't block launch.
+- **D. Support email routing (`support@shippingsavior.com`)** — depends on AI-8781 (domain) and AI-8776 (Resend) per ticket spec.
+- **F. Onboarding email sequence** — depends on AI-8776 (Resend wiring). Cannot ship without email infra.
+- **G. Public changelog page** — separate PR. Unrelated to onboarding/KB foundation.
+
+## Follow-up tickets to file
+
+### KB content (priority: medium)
+The 9 remaining starter articles called out in the ticket:
+1. `understanding-incoterms-2020.mdx` — Incoterms 2020, EXW vs FOB vs CIF vs DDP
+2. `section-301-china-tariffs.mdx` — Section 301 lists, exclusions, duty stacking
+3. `pf-vs-npf-status.mdx` — Privileged vs Non-Privileged Foreign status
+4. `weekly-entry-explained.mdx` — FTZ weekly entry mechanics
+5. `landed-cost-calculator-guide.mdx` — How to use the Landed Cost calculator
+6. `unit-economics-guide.mdx` — Per-unit profitability calculator walkthrough
+7. `port-selection-east-vs-west.mdx` — East vs West Coast port selection tradeoffs
+8. `demurrage-and-detention.mdx` — D&D charges, free time, dispute strategy
+9. `customs-bonds-101.mdx` — Continuous vs single-entry bonds
+
+### Other follow-ups
+- **AI-8784-followup-tour:** Sub-area B (react-joyride product tour)
+- **AI-8784-followup-support:** Sub-area D (support@shippingsavior.com email routing — gated on AI-8781 + AI-8776)
+- **AI-8784-followup-emails:** Sub-area F (onboarding email sequence — gated on AI-8776)
+- **AI-8784-followup-changelog:** Sub-area G (public changelog page)
+- **AI-8784-followup-onboarded-at:** Persist wizard completion to `org.onboarded_at` (gated on AI-8779 schema migration owned by Worker 1)
+- **AI-8784-followup-pagefind:** Replace client-side title/description filter with full-text Pagefind search
+
+## Build status
+- `npm run build`: **EXIT 0** (Compiled successfully, 3 KB articles statically generated)
+- `npx tsc --noEmit`: pre-existing errors in unrelated files (alliances/route.ts, schedules/search/route.ts, TariffAlertCard.tsx — owned by Workers 1/2). **Zero errors in any file I created or modified.**
+
+## Coordination notes
+- Did NOT touch Worker 1 territory: `src/lib/db/schema.ts`, `src/lib/data/dashboard.ts`, `src/app/api/shipments/`, `src/app/(platform)/platform/shipments/import/`. Only edited `shipments/page.tsx` (top-level, not under `/import/`) for HelpHint header injection.
+- Did NOT touch Worker 2 territory: `next.config.mjs`, `src/instrumentation.ts`, `sentry.*.config.ts`, `src/app/api/health/`.
+- Wizard mount in `(platform)/platform/page.tsx` was a 2-spot surgical edit (import + render). No refactor.
+
+## Commits
+- `ce3ff9f` feat(kb): AI-8784 add MDX article system + 3 starter articles
+- `3e7b0a7` feat(onboarding): AI-8784 first-run wizard skeleton
+- `3fa3385` feat(ui): AI-8784 add HelpHint component + 3 placements
