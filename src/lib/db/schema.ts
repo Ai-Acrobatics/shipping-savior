@@ -49,6 +49,7 @@ export const organizations = pgTable('organizations', {
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 255 }).notNull().unique(),
   plan: varchar('plan', { length: 50 }).notNull().default('free'),
+  isDemo: boolean('is_demo').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
@@ -301,15 +302,20 @@ export type Plan = 'free' | 'pro' | 'enterprise';
 // ── Shipment Enums ────────────────────────────────────
 
 export const shipmentStatusEnum = pgEnum('shipment_status', [
+  'booked',
   'in_transit',
-  'arrived',
+  'at_port',
+  'customs',
+  'delivered',
   'delayed',
+  'arrived',
   'pending',
 ]);
 
 export const shipmentSourceEnum = pgEnum('shipment_source', [
   'manual',
   'bol_ocr',
+  'csv_import',
 ]);
 
 // ── Shipments ─────────────────────────────────────────
@@ -317,6 +323,18 @@ export const shipmentSourceEnum = pgEnum('shipment_source', [
 export const shipments = pgTable('shipments', {
   id: uuid('id').defaultRandom().primaryKey(),
   orgId: uuid('org_id').references(() => organizations.id, { onDelete: 'set null' }),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
+  // CSV-importable identifiers
+  reference: varchar('reference', { length: 100 }),
+  originPort: varchar('origin_port', { length: 200 }),
+  destPort: varchar('dest_port', { length: 200 }),
+  containerCount: integer('container_count'),
+  containerType: varchar('container_type', { length: 50 }),
+  cargoType: varchar('cargo_type', { length: 100 }),
+  valueUsd: numeric('value_usd', { precision: 14, scale: 2 }),
+  progress: integer('progress').default(0),
+  currentLocation: varchar('current_location', { length: 300 }),
+  // BOL OCR-flavored columns (kept for backward compatibility)
   containerNumber: varchar('container_number', { length: 20 }),
   vesselName: varchar('vessel_name', { length: 200 }),
   voyageNumber: varchar('voyage_number', { length: 100 }),
@@ -360,6 +378,10 @@ export const shipmentsRelations = relations(shipments, ({ one }) => ({
   organization: one(organizations, {
     fields: [shipments.orgId],
     references: [organizations.id],
+  }),
+  user: one(users, {
+    fields: [shipments.userId],
+    references: [users.id],
   }),
   bolDocument: one(bolDocuments, {
     fields: [shipments.bolDocumentId],
