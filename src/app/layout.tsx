@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import SessionProvider from "@/components/providers/SessionProvider";
+import AnalyticsProvider from "@/components/providers/AnalyticsProvider";
 import ChatAssistant from "@/components/ChatAssistant";
 import "./globals.css";
 
@@ -53,6 +54,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans bg-white text-navy-900`}
       >
         <SessionProvider>{children}</SessionProvider>
+        <AnalyticsProvider />
         <ChatAssistant />
       </body>
     </html>
