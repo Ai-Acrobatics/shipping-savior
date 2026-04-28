@@ -808,8 +808,8 @@ export default function Home() {
             Ready to see it in action?
           </h2>
           <p className="text-white/85 text-lg md:text-xl mb-10 leading-relaxed max-w-2xl mx-auto">
-            Book a walkthrough of the platform — Qingdao → LA, the Trader
-            Joe's supply chain, multi-modal routing, FTZ strategy, and
+            Book a walkthrough of the platform — Qingdao → LA, West Coast
+            cross-dock optimization, multi-modal routing, FTZ strategy, and
             contract intelligence. 20 minutes, zero slides.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
