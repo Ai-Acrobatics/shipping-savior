@@ -4,7 +4,6 @@
 // AI-8779: replaces hardcoded mock view with a DB-backed empty state.
 
 import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import { getOrgDemoFlag, getShipmentsByOrg } from "@/lib/db/queries/shipments";
 import SavingsDemoView from "./SavingsDemoView";
 import SavingsEmptyState from "./SavingsEmptyState";
@@ -13,7 +12,12 @@ export const dynamic = "force-dynamic";
 
 export default async function SavingsPage() {
   const session = await auth();
-  if (!session?.user) redirect("/login");
+
+  // Unauthenticated visitors get the demo so the public marketing dashboard
+  // tour stays coherent (mirrors dashboard/page.tsx).
+  if (!session?.user) {
+    return <SavingsDemoView />;
+  }
 
   const orgId = session.user.orgId;
   if (!orgId) {

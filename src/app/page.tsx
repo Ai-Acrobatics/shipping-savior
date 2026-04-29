@@ -190,7 +190,6 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [dynamicWordIndex, setDynamicWordIndex] = useState(0);
-  const [wordVisible, setWordVisible] = useState(true);
   const [dashboardTilt, setDashboardTilt] = useState(0);
   const [selectedFeature, setSelectedFeature] = useState(0);
   const [featureFade, setFeatureFade] = useState(true);
@@ -202,14 +201,11 @@ export default function Home() {
     setIsLoaded(true);
   }, []);
 
-  // Dynamic word rotation
+  // Dynamic word rotation — AnimatedText handles its own char-by-char
+  // reveal on key change, so we just bump the index every 2.6s.
   useEffect(() => {
     const interval = setInterval(() => {
-      setWordVisible(false);
-      setTimeout(() => {
-        setDynamicWordIndex((i) => (i + 1) % dynamicWords.length);
-        setWordVisible(true);
-      }, 280);
+      setDynamicWordIndex((i) => (i + 1) % dynamicWords.length);
     }, 2600);
     return () => clearInterval(interval);
   }, []);
@@ -302,18 +298,12 @@ export default function Home() {
             className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-7 text-balance"
           >
             <span>Ship </span>
-            <span
-              className={`inline-block transition-all duration-300 ${
-                wordVisible ? "opacity-100 blur-0" : "opacity-0 blur-md"
-              }`}
-            >
-              <span className="bg-gradient-to-br from-ocean-600 via-ocean-500 to-cyan-400 bg-clip-text text-transparent">
-                <AnimatedText
-                  key={dynamicWordIndex}
-                  text={dynamicWords[dynamicWordIndex]}
-                  delay={0}
-                />
-              </span>
+            <span className="inline-block bg-gradient-to-br from-ocean-600 via-ocean-500 to-cyan-400 bg-clip-text text-transparent">
+              <AnimatedText
+                key={dynamicWordIndex}
+                text={dynamicWords[dynamicWordIndex]}
+                delay={0}
+              />
             </span>
           </motion.h1>
 
@@ -905,9 +895,6 @@ export default function Home() {
           </div>
           <div className="pt-8 border-t border-ocean-50 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-navy-400">
             <div>© 2026 Shipping Savior · Julian Bradley × Blake Harwell</div>
-            {process.env.NEXT_PUBLIC_INVESTOR_BUILD !== "true" && (
-              <div>Built by AI Acrobatics</div>
-            )}
           </div>
         </div>
       </footer>
