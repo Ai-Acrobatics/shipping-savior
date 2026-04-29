@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Header from "@/components/Header";
 import { Calculator, Shield, BarChart3, TrendingDown, Box, Globe, ArrowRight, Lock } from "lucide-react";
 
 export const metadata = {
@@ -64,7 +65,8 @@ const colorMap: Record<string, string> = {
 export default function CalculatorsPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-ocean-50/30 to-white">
-      <div className="max-w-6xl mx-auto px-6 py-20">
+      <Header />
+      <div className="max-w-6xl mx-auto px-6 pt-32 pb-20">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 glass-premium rounded-full px-5 py-2.5 mb-6 shadow-soft">
             <Calculator className="w-4 h-4 text-ocean-600" />

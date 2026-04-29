@@ -48,10 +48,8 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "bg-white/90 header-frosted shadow-soft border-b border-navy-100 py-3"
-          : "bg-transparent py-5"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-white/90 header-frosted border-b border-navy-100 ${
+        scrolled ? "shadow-soft py-3" : "py-4"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
