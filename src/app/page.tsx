@@ -5,7 +5,6 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
 import { GlobeFlights } from "@/components/ui/cobe-globe-flights";
-import { AnimatedText } from "@/components/animated-text";
 import { motion } from "framer-motion";
 import {
   Ship,
@@ -201,8 +200,9 @@ export default function Home() {
     setIsLoaded(true);
   }, []);
 
-  // Dynamic word rotation — AnimatedText handles its own char-by-char
-  // reveal on key change, so we just bump the index every 2.6s.
+  // Dynamic word rotation — instant swap, always visible. Per-char
+  // reveal animation removed because it left an opacity-0 frame on
+  // every cycle which made the headline read just "Ship" mid-rotation.
   useEffect(() => {
     const interval = setInterval(() => {
       setDynamicWordIndex((i) => (i + 1) % dynamicWords.length);
@@ -299,11 +299,7 @@ export default function Home() {
           >
             <span>Ship </span>
             <span className="inline-block bg-gradient-to-br from-ocean-600 via-ocean-500 to-cyan-400 bg-clip-text text-transparent">
-              <AnimatedText
-                key={dynamicWordIndex}
-                text={dynamicWords[dynamicWordIndex]}
-                delay={0}
-              />
+              {dynamicWords[dynamicWordIndex]}
             </span>
           </motion.h1>
 
