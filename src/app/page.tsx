@@ -5,6 +5,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
 import { GlobeFlights } from "@/components/ui/cobe-globe-flights";
+import { LogoMarquee } from "@/components/marketing/LogoMarquee";
 import { motion } from "framer-motion";
 import {
   Ship,
@@ -38,18 +39,6 @@ const dynamicWords = [
   "cold-chain",
   "containers",
   "at scale",
-];
-
-const partners = [
-  "Kingsco",
-  "Hall Pass",
-  "Great White Fleet",
-  "Lineage",
-  "Maersk",
-  "MSC",
-  "CMA CGM",
-  "Matson",
-  "Pasha Hawaii",
 ];
 
 const metrics = [
@@ -432,27 +421,7 @@ export default function Home() {
       </section>
 
       {/* ══════════════════ LOGO MARQUEE ══════════════════ */}
-      <section className="relative py-14 border-y border-ocean-50 bg-white overflow-hidden">
-        <div className="max-w-5xl mx-auto px-6 mb-6 text-center">
-          <p className="text-xs md:text-sm uppercase tracking-[0.2em] text-navy-400 font-medium">
-            Trusted by logistics leaders, cold-chain giants, and NVOCCs
-          </p>
-        </div>
-        <div className="flex overflow-hidden select-none [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="flex shrink-0 animate-[marquee_40s_linear_infinite] motion-reduce:animate-none">
-            {[...partners, ...partners].map((name, i) => (
-              <div
-                key={i}
-                className="mx-10 md:mx-14 flex items-center justify-center flex-shrink-0"
-              >
-                <span className="text-2xl md:text-3xl font-semibold tracking-tight text-navy-300 hover:text-ocean-500 transition-colors whitespace-nowrap">
-                  {name}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <LogoMarquee />
 
       {/* ══════════════════ METRICS ══════════════════ */}
       <section id="metrics" className="relative py-24 md:py-32 px-6 bg-white">
