@@ -131,8 +131,8 @@ export function VercelV0Chat({
         </h1>
       )}
 
-      <div className="w-full">
-        <div className="relative bg-neutral-900 rounded-xl border border-neutral-800">
+      <div className="w-full isolate">
+        <div className="relative isolate bg-neutral-900 rounded-xl border border-neutral-800">
           <div className="overflow-y-auto">
             <Textarea
               ref={textareaRef}
@@ -151,7 +151,7 @@ export function VercelV0Chat({
                 "text-white text-sm",
                 "focus:outline-none",
                 "focus-visible:ring-0 focus-visible:ring-offset-0",
-                "placeholder:text-neutral-500 placeholder:text-sm",
+                "placeholder:text-neutral-300 placeholder:text-sm",
                 "min-h-[60px]",
               )}
               style={{ overflow: "hidden" }}
@@ -162,10 +162,11 @@ export function VercelV0Chat({
             <div className="flex items-center gap-2">
               <button
                 type="button"
+                aria-label="Attach file"
                 className="group p-2 hover:bg-neutral-800 rounded-lg transition-colors flex items-center gap-1"
               >
-                <Paperclip className="w-4 h-4 text-white" />
-                <span className="text-xs text-zinc-400 hidden group-hover:inline transition-opacity">
+                <Paperclip aria-hidden="true" className="w-4 h-4 text-white" />
+                <span className="text-xs text-zinc-300 hidden group-hover:inline transition-opacity">
                   Attach
                 </span>
               </button>
@@ -173,7 +174,7 @@ export function VercelV0Chat({
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                className="px-2 py-1 rounded-lg text-sm text-zinc-400 transition-colors border border-dashed border-zinc-700 hover:border-zinc-600 hover:bg-zinc-800 flex items-center justify-between gap-1"
+                className="px-2 py-1 rounded-lg text-sm text-zinc-300 transition-colors border border-dashed border-zinc-700 hover:border-zinc-600 hover:bg-zinc-800 flex items-center justify-between gap-1"
               >
                 <PlusIcon className="w-4 h-4" />
                 Project
@@ -183,13 +184,13 @@ export function VercelV0Chat({
                 onClick={handleSend}
                 className={cn(
                   "px-1.5 py-1.5 rounded-lg text-sm transition-colors border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-800 flex items-center justify-between gap-1",
-                  value.trim() ? "bg-white text-black" : "text-zinc-400",
+                  value.trim() ? "bg-white text-black" : "text-zinc-300",
                 )}
               >
                 <ArrowUpIcon
                   className={cn(
                     "w-4 h-4",
-                    value.trim() ? "text-black" : "text-zinc-400",
+                    value.trim() ? "text-black" : "text-zinc-300",
                   )}
                 />
                 <span className="sr-only">Send</span>
@@ -236,7 +237,7 @@ function ActionButton({ icon, label }: ActionButtonProps) {
   return (
     <button
       type="button"
-      className="flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 rounded-full border border-neutral-800 text-neutral-400 hover:text-white transition-colors"
+      className="flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 rounded-full border border-neutral-800 text-neutral-300 hover:text-white transition-colors"
     >
       {icon}
       <span className="text-xs">{label}</span>

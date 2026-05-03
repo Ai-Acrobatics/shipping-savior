@@ -266,11 +266,11 @@ export default function PricingPage() {
                     <div className="flex items-baseline gap-1">
                       <span className="text-4xl font-bold text-white">{tier.price}</span>
                       {tier.period && (
-                        <span className="text-gray-500 text-sm">{tier.period}</span>
+                        <span className="text-gray-300 text-sm">{tier.period}</span>
                       )}
                     </div>
                     {tier.perUserNote && (
-                      <p className="text-sm text-ocean-400 mt-1">{tier.perUserNote}</p>
+                      <p className="text-sm text-ocean-300 mt-1">{tier.perUserNote}</p>
                     )}
                   </div>
 
@@ -376,11 +376,14 @@ export default function PricingPage() {
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.6 }}
             className="overflow-x-auto"
+            tabIndex={0}
+            role="region"
+            aria-label="Plan feature comparison"
           >
             <table className="w-full border-collapse min-w-[640px]">
               <thead>
                 <tr className="border-b border-gray-700/50">
-                  <th className="text-left py-4 px-4 text-sm font-medium text-gray-500 w-1/4">
+                  <th className="text-left py-4 px-4 text-sm font-medium text-gray-300 w-1/4">
                     Feature
                   </th>
                   <th className="text-center py-4 px-4 text-sm font-bold text-gray-300 w-1/4">
@@ -454,7 +457,7 @@ export default function PricingPage() {
                 >
                   <span className="text-sm font-medium text-gray-200">{faq.q}</span>
                   <ChevronDown
-                    className={`w-4 h-4 text-gray-500 shrink-0 transition-transform duration-300 ${
+                    className={`w-4 h-4 text-gray-300 shrink-0 transition-transform duration-300 ${
                       openFaq === i ? "rotate-180" : ""
                     }`}
                   />
@@ -513,11 +516,11 @@ export default function PricingPage() {
               </span>
             </span>
           </div>
-          <div className="text-xs text-gray-600">
+          <div className="text-xs text-gray-300">
             Powered by{" "}
             <a
               href="https://aiacrobatics.com"
-              className="text-ocean-500 hover:underline"
+              className="text-ocean-300 hover:underline"
               target="_blank"
               rel="noopener noreferrer"
             >

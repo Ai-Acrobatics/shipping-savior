@@ -133,17 +133,17 @@ export default function DemoPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start gap-2 mb-1 flex-wrap">
-                    <span className={`text-xs font-mono ${accent.text} opacity-60 uppercase tracking-wider mt-1 flex-shrink-0`}>
+                    <span className={`text-xs font-mono ${accent.text} uppercase tracking-wider mt-1 flex-shrink-0`}>
                       {scenario.mode === "jones-act-multimodal" ? "Jones Act" : scenario.mode === "ocean-reefer" ? "Reefer" : "Ocean dry"}
                     </span>
                     {/* AI-6543 mobile: allow 2-line wrap so titles aren't clipped on narrow viewports */}
                     <h2 className="text-base sm:text-lg font-bold leading-snug line-clamp-2">{scenario.name}</h2>
                   </div>
-                  <p className="text-xs sm:text-sm text-white/40 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-white/70 line-clamp-2">
                     {scenario.containerCount}× {scenario.containerType} · {scenario.commodity.split(" (")[0]}
                   </p>
                 </div>
-                <div className="hidden sm:flex items-center gap-1.5 text-xs text-white/40 font-medium">
+                <div className="hidden sm:flex items-center gap-1.5 text-xs text-white/70 font-medium">
                   <Clock className="w-3.5 h-3.5" />
                   {scenario.walkthroughLength}
                 </div>
@@ -178,22 +178,27 @@ export default function DemoPage() {
                   </div>
 
                   {/* Carrier table — AI-6543 mobile: horizontal scroll instead of clipping */}
-                  <div className="rounded-xl border border-white/5 overflow-x-auto">
+                  <div
+                    className="rounded-xl border border-white/5 overflow-x-auto"
+                    tabIndex={0}
+                    role="region"
+                    aria-label={`${scenario.name} carriers comparison`}
+                  >
                     <table className="w-full text-sm min-w-[480px]">
                       <thead>
                         <tr className="border-b border-white/5">
-                          <th className="text-left px-3 sm:px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider whitespace-nowrap">Carrier</th>
-                          <th className="text-left px-3 sm:px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider whitespace-nowrap">
+                          <th className="text-left px-3 sm:px-4 py-3 text-white/70 font-medium text-xs uppercase tracking-wider whitespace-nowrap">Carrier</th>
+                          <th className="text-left px-3 sm:px-4 py-3 text-white/70 font-medium text-xs uppercase tracking-wider whitespace-nowrap">
                             <span className="inline-flex items-center gap-1">
                               <DollarSign className="w-3 h-3" /> Rate
                             </span>
                           </th>
-                          <th className="text-left px-3 sm:px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider whitespace-nowrap">
+                          <th className="text-left px-3 sm:px-4 py-3 text-white/70 font-medium text-xs uppercase tracking-wider whitespace-nowrap">
                             <span className="inline-flex items-center gap-1">
                               <Clock className="w-3 h-3" /> Transit
                             </span>
                           </th>
-                          <th className="text-left px-3 sm:px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider whitespace-nowrap">
+                          <th className="text-left px-3 sm:px-4 py-3 text-white/70 font-medium text-xs uppercase tracking-wider whitespace-nowrap">
                             <span className="inline-flex items-center gap-1">
                               <Shield className="w-3 h-3" /> Reliability
                             </span>
@@ -242,7 +247,7 @@ export default function DemoPage() {
 
                   {/* CTA */}
                   <div className="flex items-center justify-between flex-wrap gap-4">
-                    <div className="flex items-center gap-2 text-xs text-white/40">
+                    <div className="flex items-center gap-2 text-xs text-white/70">
                       <Sparkles className="w-3.5 h-3.5" />
                       Cheapest carrier on this lane:{" "}
                       <span className="text-white/80 font-semibold">
@@ -271,7 +276,7 @@ export default function DemoPage() {
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Ready to optimize your supply chain?
           </h2>
-          <p className="text-white/40 mb-8 max-w-lg mx-auto">
+          <p className="text-white/70 mb-8 max-w-lg mx-auto">
             Start comparing carriers, calculating landed costs, and finding savings across every shipping lane.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

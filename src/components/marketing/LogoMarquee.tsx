@@ -44,7 +44,7 @@ export function LogoMarquee({
       className="relative py-14 md:py-16 border-y border-ocean-50 bg-white overflow-hidden"
     >
       <div className="max-w-5xl mx-auto px-6 mb-8 text-center">
-        <p className="text-xs md:text-sm uppercase tracking-[0.2em] text-navy-400 font-medium">
+        <p className="text-xs md:text-sm uppercase tracking-[0.2em] text-navy-600 font-medium">
           {heading}
         </p>
       </div>
@@ -64,7 +64,7 @@ export function LogoMarquee({
               key={`${name}-${i}`}
               className="mx-8 sm:mx-10 md:mx-14 flex items-center justify-center flex-shrink-0"
             >
-              <span className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-slate-400 hover:text-slate-200 transition-colors whitespace-nowrap">
+              <span className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-slate-600 hover:text-ocean-600 transition-colors whitespace-nowrap">
                 {name}
               </span>
             </div>

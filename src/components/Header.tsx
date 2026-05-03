@@ -93,11 +93,15 @@ export default function Header() {
           {/* Industries dropdown (AI-8775) */}
           <div ref={industriesRef} className="relative">
             <button
+              type="button"
               onClick={() => setIndustriesOpen(!industriesOpen)}
+              aria-haspopup="menu"
+              aria-expanded={industriesOpen}
               className="relative flex items-center gap-1 text-sm font-medium text-navy-500 hover:text-ocean-600 transition-colors group"
             >
               Industries
               <ChevronDown
+                aria-hidden="true"
                 className={`w-3.5 h-3.5 transition-transform duration-200 ${industriesOpen ? "rotate-180" : ""}`}
               />
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-ocean-500 to-indigo-500 rounded-full transition-all duration-300 group-hover:w-full" />
@@ -121,11 +125,14 @@ export default function Header() {
           {/* More dropdown */}
           <div ref={moreRef} className="relative">
             <button
+              type="button"
               onClick={() => setMoreOpen(!moreOpen)}
+              aria-haspopup="menu"
+              aria-expanded={moreOpen}
               className="relative flex items-center gap-1 text-sm font-medium text-navy-500 hover:text-ocean-600 transition-colors group"
             >
               More
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${moreOpen ? "rotate-180" : ""}`} />
+              <ChevronDown aria-hidden="true" className={`w-3.5 h-3.5 transition-transform duration-200 ${moreOpen ? "rotate-180" : ""}`} />
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-ocean-500 to-indigo-500 rounded-full transition-all duration-300 group-hover:w-full" />
             </button>
             {moreOpen && (
@@ -158,15 +165,22 @@ export default function Header() {
         </Link>
 
         <button
+          type="button"
           className="lg:hidden text-navy-600"
+          aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-nav"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
-          {mobileOpen ? <X /> : <Menu />}
+          {mobileOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
         </button>
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden bg-white border border-navy-100 shadow-card mt-2 mx-4 rounded-xl p-4">
+        <div
+          id="mobile-nav"
+          className="lg:hidden bg-white border border-navy-100 shadow-card mt-2 mx-4 rounded-xl p-4"
+        >
           {navLinks.map((link) => (
             <a
               key={link.href}
@@ -180,7 +194,7 @@ export default function Header() {
 
           {/* Mobile: Industries section (AI-8775) */}
           <div className="border-t border-navy-100 mt-2 pt-2">
-            <p className="px-0 py-1.5 text-xs font-semibold text-navy-400 uppercase tracking-wider">
+            <p className="px-0 py-1.5 text-xs font-semibold text-navy-600 uppercase tracking-wider">
               Industries
             </p>
             {industryLinks.map((link) => (
@@ -197,7 +211,7 @@ export default function Header() {
 
           {/* Mobile: More section */}
           <div className="border-t border-navy-100 mt-2 pt-2">
-            <p className="px-0 py-1.5 text-xs font-semibold text-navy-400 uppercase tracking-wider">
+            <p className="px-0 py-1.5 text-xs font-semibold text-navy-600 uppercase tracking-wider">
               More
             </p>
             {moreLinks.map((link) => (

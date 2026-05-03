@@ -425,7 +425,7 @@ export default function Home() {
                 >
                   <div className="rounded-2xl border border-ocean-100 bg-white/80 backdrop-blur-sm shadow-soft p-5 md:p-6">
                     {chatPrompt && (
-                      <div className="mb-3 text-xs uppercase tracking-wider text-navy-400 font-medium">
+                      <div className="mb-3 text-xs uppercase tracking-wider text-navy-600 font-medium">
                         You asked
                       </div>
                     )}
@@ -991,7 +991,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="pt-8 border-t border-ocean-50 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-navy-400">
+          <div className="pt-8 border-t border-ocean-50 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-navy-600">
             <div>© 2026 Shipping Savior · Julian Bradley × Blake Harwell</div>
           </div>
         </div>

@@ -1,29 +1,11 @@
 /**
- * E2E: auth surface (AI-8783).
+ * E2E: auth surface (AI-8783, baseline cleared in AI-9199).
  *
  * Smoke tests confirm forms render and link to companion pages. Sign-in
  * itself requires real provider creds — out of scope here.
  */
-import { test, expect, type Page } from '@playwright/test';
-import AxeBuilder from '@axe-core/playwright';
-
-const A11Y_BASELINE_RULES = ['button-name', 'color-contrast'] as const;
-
-async function assertNoNewCriticalA11yViolations(page: Page) {
-  await page.waitForLoadState('domcontentloaded');
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa'])
-    .analyze();
-  const blocking = results.violations
-    .filter((v) => v.impact === 'critical')
-    .filter((v) => !A11Y_BASELINE_RULES.includes(v.id as (typeof A11Y_BASELINE_RULES)[number]));
-  expect(
-    blocking,
-    `New critical a11y violations (above baseline):\n${blocking
-      .map((v) => `  - ${v.id}: ${v.help}`)
-      .join('\n')}`
-  ).toEqual([]);
-}
+import { test, expect } from '@playwright/test';
+import { expectNoSeriousViolations } from './helpers/a11y';
 
 test.describe('Login', () => {
   test('renders email form + at least one OAuth button', async ({ page }) => {
@@ -33,9 +15,9 @@ test.describe('Login', () => {
     expect(await oauthBtns.count()).toBeGreaterThanOrEqual(0);
   });
 
-  test('no NEW critical a11y violations beyond baseline', async ({ page }) => {
+  test('zero serious/critical a11y violations', async ({ page }) => {
     await page.goto('/login');
-    await assertNoNewCriticalA11yViolations(page);
+    await expectNoSeriousViolations(page);
   });
 });
 
