@@ -24,16 +24,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  let body: { priceId?: string };
+  let body: { priceId?: string; plan?: string };
   try {
-    body = (await request.json()) as { priceId?: string };
+    body = (await request.json()) as { priceId?: string; plan?: string };
   } catch {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const priceId = body.priceId?.trim();
+  // Accept either a literal Stripe price ID OR a plan slug (preferred for browser
+  // callers — keeps the price ID out of public env vars). Map slug → env price.
+  let priceId = body.priceId?.trim();
+  if (!priceId || priceId === 'PREMIUM_MONTHLY' || body.plan === 'premium') {
+    priceId = process.env.STRIPE_PRICE_PREMIUM_MONTHLY;
+  } else if (priceId === 'ENTERPRISE_MONTHLY' || body.plan === 'enterprise') {
+    priceId = process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY;
+  }
   if (!priceId) {
-    return NextResponse.json({ error: 'Missing priceId' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'No priceId — set STRIPE_PRICE_PREMIUM_MONTHLY (or pass priceId).' },
+      { status: 400 }
+    );
   }
 
   const orgId = session.user.orgId;

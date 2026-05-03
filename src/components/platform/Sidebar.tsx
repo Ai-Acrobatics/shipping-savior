@@ -28,6 +28,7 @@ import {
   Upload,
   Settings as SettingsIcon,
   Sparkles,
+  CreditCard,
 } from "lucide-react";
 import UserMenu from "./UserMenu";
 
@@ -96,6 +97,7 @@ const navSections: NavSection[] = [
       { label: "Shipments", href: "/platform/shipments", icon: Package },
       { label: "BOL Upload", href: "/platform/shipments/import", icon: Upload },
       { label: "History", href: "/platform/history", icon: Clock },
+      { label: "Billing", href: "/platform/billing", icon: CreditCard },
       { label: "Settings", href: "/platform/settings", icon: SettingsIcon },
     ],
   },
