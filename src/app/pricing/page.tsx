@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Header from "@/components/Header";
+import ScheduleDemoButton from "@/components/cal/ScheduleDemoButton";
 import { motion } from "framer-motion";
 import {
   Check,
@@ -26,7 +27,9 @@ interface Tier {
   perUserNote: string | null;
   description: string;
   cta: string;
+  /** Internal/external href. If `useScheduleModal` is true, the card renders a Cal.com modal trigger instead. */
   ctaHref: string;
+  useScheduleModal?: boolean;
   highlighted: boolean;
   badge: string | null;
   features: string[];
@@ -87,8 +90,8 @@ const tiers: Tier[] = [
     description:
       "White-label intelligence, custom integrations, and dedicated success for NVOCCs and large operators.",
     cta: "Talk to Sales",
-    ctaHref:
-      "mailto:julian@aiacrobatics.com?subject=Shipping%20Savior%20Enterprise%20Inquiry",
+    ctaHref: "",
+    useScheduleModal: true,
     highlighted: false,
     badge: null,
     features: [
@@ -211,80 +214,90 @@ export default function PricingPage() {
       {/* ══════════ PRICING CARDS ══════════ */}
       <section className="relative py-16 px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 items-stretch">
-          {tiers.map((tier, i) => (
-            <motion.div
-              key={tier.name}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + i * 0.12, duration: 0.6 }}
-              className={`relative rounded-2xl p-[1px] ${
-                tier.highlighted
-                  ? "bg-gradient-to-b from-ocean-400 via-indigo-500 to-ocean-600 shadow-[0_0_60px_rgba(37,99,235,0.25)]"
-                  : "bg-gradient-to-b from-gray-700/50 to-gray-800/30"
-              }`}
-            >
-              {tier.badge && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
-                  <div className="flex items-center gap-1.5 bg-gradient-to-r from-ocean-500 to-indigo-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
-                    <Star className="w-3 h-3" />
-                    {tier.badge}
-                  </div>
-                </div>
-              )}
-
-              <div
-                className={`rounded-2xl p-8 h-full flex flex-col ${
-                  tier.highlighted ? "bg-[#0d1230]" : "bg-[#111133]/80"
+          {tiers.map((tier, i) => {
+            const ctaClasses = `block text-center font-semibold py-3 rounded-xl transition-all duration-300 ${
+              tier.highlighted
+                ? "bg-gradient-to-r from-ocean-500 to-indigo-500 text-white shadow-[0_4px_20px_rgba(37,99,235,0.4)] hover:shadow-[0_6px_28px_rgba(37,99,235,0.55)] hover:scale-[1.02]"
+                : "border border-gray-600 text-gray-300 hover:border-ocean-500 hover:text-ocean-400"
+            }`;
+            return (
+              <motion.div
+                key={tier.name}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 + i * 0.12, duration: 0.6 }}
+                className={`relative rounded-2xl p-[1px] ${
+                  tier.highlighted
+                    ? "bg-gradient-to-b from-ocean-400 via-indigo-500 to-ocean-600 shadow-[0_0_60px_rgba(37,99,235,0.25)]"
+                    : "bg-gradient-to-b from-gray-700/50 to-gray-800/30"
                 }`}
               >
-                {/* Tier header */}
-                <div className="mb-6">
-                  <p className="text-xs font-semibold tracking-wider uppercase text-ocean-400 mb-1">
-                    {tier.tagline}
-                  </p>
-                  <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed">
-                    {tier.description}
-                  </p>
-                </div>
-
-                {/* Price */}
-                <div className="mb-6">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold text-white">{tier.price}</span>
-                    {tier.period && (
-                      <span className="text-gray-500 text-sm">{tier.period}</span>
-                    )}
+                {tier.badge && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+                    <div className="flex items-center gap-1.5 bg-gradient-to-r from-ocean-500 to-indigo-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
+                      <Star className="w-3 h-3" />
+                      {tier.badge}
+                    </div>
                   </div>
-                  {tier.perUserNote && (
-                    <p className="text-sm text-ocean-400 mt-1">{tier.perUserNote}</p>
-                  )}
-                </div>
+                )}
 
-                {/* Features */}
-                <ul className="space-y-3 mb-8 flex-1">
-                  {tier.features.map((feat) => (
-                    <li key={feat} className="flex items-start gap-3">
-                      <Check className="w-4 h-4 text-ocean-400 mt-0.5 shrink-0" />
-                      <span className="text-sm text-gray-300">{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA */}
-                <Link
-                  href={tier.ctaHref}
-                  className={`block text-center font-semibold py-3 rounded-xl transition-all duration-300 ${
-                    tier.highlighted
-                      ? "bg-gradient-to-r from-ocean-500 to-indigo-500 text-white shadow-[0_4px_20px_rgba(37,99,235,0.4)] hover:shadow-[0_6px_28px_rgba(37,99,235,0.55)] hover:scale-[1.02]"
-                      : "border border-gray-600 text-gray-300 hover:border-ocean-500 hover:text-ocean-400"
+                <div
+                  className={`rounded-2xl p-8 h-full flex flex-col ${
+                    tier.highlighted ? "bg-[#0d1230]" : "bg-[#111133]/80"
                   }`}
                 >
-                  {tier.cta}
-                </Link>
-              </div>
-            </motion.div>
-          ))}
+                  {/* Tier header */}
+                  <div className="mb-6">
+                    <p className="text-xs font-semibold tracking-wider uppercase text-ocean-400 mb-1">
+                      {tier.tagline}
+                    </p>
+                    <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
+                    <p className="text-sm text-gray-400 leading-relaxed">
+                      {tier.description}
+                    </p>
+                  </div>
+
+                  {/* Price */}
+                  <div className="mb-6">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-4xl font-bold text-white">{tier.price}</span>
+                      {tier.period && (
+                        <span className="text-gray-500 text-sm">{tier.period}</span>
+                      )}
+                    </div>
+                    {tier.perUserNote && (
+                      <p className="text-sm text-ocean-400 mt-1">{tier.perUserNote}</p>
+                    )}
+                  </div>
+
+                  {/* Features */}
+                  <ul className="space-y-3 mb-8 flex-1">
+                    {tier.features.map((feat) => (
+                      <li key={feat} className="flex items-start gap-3">
+                        <Check className="w-4 h-4 text-ocean-400 mt-0.5 shrink-0" />
+                        <span className="text-sm text-gray-300">{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA */}
+                  {tier.useScheduleModal ? (
+                    <ScheduleDemoButton
+                      source={`pricing_card_${tier.name.toLowerCase()}`}
+                      modalTitle="Talk to Sales — Enterprise"
+                      className={ctaClasses + " w-full"}
+                    >
+                      {tier.cta}
+                    </ScheduleDemoButton>
+                  ) : (
+                    <Link href={tier.ctaHref} className={ctaClasses}>
+                      {tier.cta}
+                    </Link>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
@@ -315,13 +328,14 @@ export default function PricingPage() {
                   Unlimited Enterprise plans are priced on volume — talk to sales.
                 </p>
               </div>
-              <Link
-                href="mailto:julian@aiacrobatics.com?subject=Shipping%20Savior%20Enterprise%20Inquiry"
+              <ScheduleDemoButton
+                source="pricing_bundle_callout"
+                modalTitle="Build a custom user bundle"
                 className="shrink-0 inline-flex items-center gap-2 bg-gradient-to-r from-ocean-500 to-indigo-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
               >
                 Talk to Sales
                 <ArrowRight className="w-4 h-4" />
-              </Link>
+              </ScheduleDemoButton>
             </div>
           </div>
         </motion.div>
@@ -462,13 +476,14 @@ export default function PricingPage() {
             Schedule a 30-minute walkthrough. We&apos;ll show you how Shipping
             Savior fits your specific freight operation.
           </p>
-          <Link
-            href="mailto:julian@aiacrobatics.com?subject=Shipping%20Savior%20Demo%20Request"
+          <ScheduleDemoButton
+            source="pricing_bottom_cta"
+            modalTitle="Book a 30-minute walkthrough"
             className="inline-flex items-center gap-3 bg-gradient-to-r from-ocean-500 to-indigo-500 text-white font-bold px-10 py-4 rounded-full shadow-[0_4px_24px_rgba(37,99,235,0.4)] hover:shadow-[0_8px_32px_rgba(37,99,235,0.55)] hover:scale-[1.02] transition-all duration-300 text-lg"
           >
             Schedule a Demo
             <ArrowRight className="w-5 h-5" />
-          </Link>
+          </ScheduleDemoButton>
         </motion.div>
       </section>
 
