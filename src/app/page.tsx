@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import Header from "@/components/Header";
 import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
 import { GlobeFlights } from "@/components/ui/cobe-globe-flights";
 import { LogoMarquee } from "@/components/marketing/LogoMarquee";
 import { CounterStrip } from "@/components/marketing/CounterStrip";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Ship,
   Anchor,
@@ -185,6 +186,79 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const dashboardRef = useRef<HTMLDivElement>(null);
 
+  // ─── Hero chat state (AI-8775 task 3) ──────────────────────────────
+  const { data: session } = useSession();
+  const [chatPrompt, setChatPrompt] = useState<string | null>(null);
+  const [chatResponse, setChatResponse] = useState<string>("");
+  const [chatStreaming, setChatStreaming] = useState(false);
+  const [chatError, setChatError] = useState<string | null>(null);
+  const chatAbortRef = useRef<AbortController | null>(null);
+
+  const handleHeroChatSubmit = useCallback(async (message: string) => {
+    // Abort any in-flight request
+    if (chatAbortRef.current) {
+      chatAbortRef.current.abort();
+    }
+    const ac = new AbortController();
+    chatAbortRef.current = ac;
+
+    setChatPrompt(message);
+    setChatResponse("");
+    setChatError(null);
+    setChatStreaming(true);
+
+    try {
+      const res = await fetch("/api/home-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+        signal: ac.signal,
+      });
+
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        throw new Error(errBody.error || `HTTP ${res.status}`);
+      }
+
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error("No response body");
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        // Parse SSE events (data: <json>\n\n)
+        const events = buffer.split("\n\n");
+        buffer = events.pop() ?? "";
+
+        for (const evt of events) {
+          const line = evt.split("\n").find((l) => l.startsWith("data: "));
+          if (!line) continue;
+          const json = line.slice(6).trim();
+          if (!json) continue;
+          try {
+            const payload = JSON.parse(json);
+            if (payload.type === "text" && typeof payload.content === "string") {
+              setChatResponse((prev) => prev + payload.content);
+            } else if (payload.type === "error") {
+              setChatError(payload.error || "Stream error");
+            }
+          } catch {
+            // ignore malformed event
+          }
+        }
+      }
+    } catch (err) {
+      if ((err as Error).name === "AbortError") return;
+      setChatError(err instanceof Error ? err.message : "Chat failed");
+    } finally {
+      setChatStreaming(false);
+    }
+  }, []);
+
   // Hero mount fade-in
   useEffect(() => {
     setIsLoaded(true);
@@ -336,7 +410,60 @@ export default function Home() {
             transition={{ delay: 0.95, duration: 0.7 }}
             className="mb-14"
           >
-            <VercelV0Chat />
+            <VercelV0Chat onSubmit={handleHeroChatSubmit} />
+
+            <AnimatePresence>
+              {(chatPrompt || chatStreaming) && (
+                <motion.div
+                  key="hero-chat-response"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.35 }}
+                  className="max-w-4xl mx-auto mt-6 text-left"
+                >
+                  <div className="rounded-2xl border border-ocean-100 bg-white/80 backdrop-blur-sm shadow-soft p-5 md:p-6">
+                    {chatPrompt && (
+                      <div className="mb-3 text-xs uppercase tracking-wider text-navy-400 font-medium">
+                        You asked
+                      </div>
+                    )}
+                    {chatPrompt && (
+                      <p className="text-sm md:text-base text-navy-700 mb-4 italic">
+                        &ldquo;{chatPrompt}&rdquo;
+                      </p>
+                    )}
+                    <div className="text-xs uppercase tracking-wider text-ocean-600 font-medium mb-2">
+                      Shipping Savior AI
+                    </div>
+                    {chatError ? (
+                      <p className="text-sm text-red-600">
+                        {chatError}
+                      </p>
+                    ) : (
+                      <p className="text-sm md:text-base text-navy-800 whitespace-pre-wrap leading-relaxed">
+                        {chatResponse}
+                        {chatStreaming && (
+                          <span
+                            aria-hidden="true"
+                            className="inline-block w-2 h-4 ml-0.5 align-middle bg-ocean-500 animate-pulse"
+                          />
+                        )}
+                      </p>
+                    )}
+                    {!chatStreaming && !chatError && !session?.user && chatResponse.length > 0 && (
+                      <Link
+                        href="/register"
+                        className="inline-flex items-center gap-1 mt-4 text-sm font-medium text-ocean-600 hover:text-ocean-700 transition-colors"
+                      >
+                        Sign up free to save this conversation
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
 
           {/* Dashboard mock with 3D tilt */}
