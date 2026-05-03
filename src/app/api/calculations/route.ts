@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import { calculations } from "@/lib/db/schema";
 import { eq, desc, and } from "drizzle-orm";
 import type { CalculatorType } from "@/lib/types/calculations";
+import { enforceLimit, LimitExceededError } from "@/lib/billing/limits";
+import { limitExceededResponse } from "@/lib/billing/respond";
 
 const VALID_TYPES: CalculatorType[] = [
   "landed_cost",
@@ -79,6 +81,14 @@ export async function POST(request: NextRequest) {
   }
   if (!outputs || typeof outputs !== "object") {
     return NextResponse.json({ error: "Outputs object is required" }, { status: 400 });
+  }
+
+  // Tier enforcement (AI-8778) — free plan: 10 calcs/mo, premium/enterprise unlimited.
+  try {
+    await enforceLimit(orgId, "calculations");
+  } catch (err) {
+    if (err instanceof LimitExceededError) return limitExceededResponse(err);
+    throw err;
   }
 
   try {

@@ -9,8 +9,8 @@
  * shape changes.
  */
 import { db } from '@/lib/db';
-import { calculations, bolDocuments, contracts, organizations, orgMembers } from '@/lib/db/schema';
-import { eq, and, gte, count } from 'drizzle-orm';
+import { calculations, bolDocuments, contracts, organizations, orgMembers, invites } from '@/lib/db/schema';
+import { eq, and, gte, count, isNull, gt } from 'drizzle-orm';
 import type { Plan } from '@/lib/db/schema';
 
 export type LimitedResource = 'users' | 'calculations' | 'bolUploads' | 'contractUploads';
@@ -79,11 +79,24 @@ export async function getCurrentUsage(orgId: string, resource: LimitedResource):
 
   switch (resource) {
     case 'users': {
-      const [{ value }] = await db
+      // Active members + outstanding (unaccepted, unexpired) invites count
+      // against the seat cap so admins can't overshoot by mass-inviting.
+      const [members] = await db
         .select({ value: count() })
         .from(orgMembers)
         .where(eq(orgMembers.orgId, orgId));
-      return Number(value ?? 0);
+      const now = new Date();
+      const [pendingInvites] = await db
+        .select({ value: count() })
+        .from(invites)
+        .where(
+          and(
+            eq(invites.orgId, orgId),
+            isNull(invites.acceptedAt),
+            gt(invites.expiresAt, now)
+          )
+        );
+      return Number(members?.value ?? 0) + Number(pendingInvites?.value ?? 0);
     }
     case 'calculations': {
       const [{ value }] = await db

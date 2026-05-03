@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { bolDocuments } from "@/lib/db/schema";
 import { extractWithFallback } from "@/lib/ai/providers";
+import { enforceLimit, LimitExceededError } from "@/lib/billing/limits";
+import { limitExceededResponse } from "@/lib/billing/respond";
 
 const BOL_EXTRACTION_PROMPT = `You are extracting shipment data from a Bill of Lading document.
 
@@ -30,6 +33,20 @@ Example response shape:
 {"extracted":{"container_numbers":["MSCU1234567"],"vessel_name":"MSC OSCAR","voyage_number":"24W","port_of_loading":"Shanghai","port_of_discharge":"Long Beach","etd":"2026-05-01","eta":"2026-05-22","carrier":"MSC","shipper":"ACME CO","consignee":"BETA INC","notify_party":"BETA INC","goods_description":"Electronics","weight_kg":18500,"quantity":240},"confidence":{"container_numbers":0.98,"vessel_name":0.95,"voyage_number":0.9,"port_of_loading":0.97,"port_of_discharge":0.97,"etd":0.88,"eta":0.88,"carrier":0.99,"shipper":0.92,"consignee":0.92,"notify_party":0.85,"goods_description":0.8,"weight_kg":0.9,"quantity":0.75}}`;
 
 export async function POST(request: NextRequest) {
+  // Auth + tier enforcement (AI-8778). BOL upload is metered: free 5/mo, premium 100/mo, enterprise unlimited.
+  const session = await auth();
+  if (!session?.user?.orgId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const orgId = session.user.orgId;
+
+  try {
+    await enforceLimit(orgId, "bolUploads");
+  } catch (err) {
+    if (err instanceof LimitExceededError) return limitExceededResponse(err);
+    throw err;
+  }
+
   let formData: FormData;
   try {
     formData = await request.formData();
@@ -126,6 +143,7 @@ export async function POST(request: NextRequest) {
       const [row] = await db
         .insert(bolDocuments)
         .values({
+          orgId,
           blobUrl,
           fileName: file.name,
           fileType,

@@ -6,6 +6,8 @@ import { writeAuditLog } from '@/lib/auth/audit';
 import { getOrgMembership, getActiveInviteByEmail, getExistingMemberByEmail } from '@/lib/db/queries/org';
 import { db } from '@/lib/db';
 import { invites } from '@/lib/db/schema';
+import { enforceLimit, LimitExceededError } from '@/lib/billing/limits';
+import { limitExceededResponse } from '@/lib/billing/respond';
 
 export async function POST(request: Request) {
   try {
@@ -74,6 +76,16 @@ export async function POST(request: Request) {
         { error: 'An active invite already exists for this email' },
         { status: 409 }
       );
+    }
+
+    // 7b. Tier seat enforcement (AI-8778) — free 1 user, premium 8, enterprise 20.
+    // Counts active members + outstanding invites; this new invite would push the
+    // total over the cap, so check BEFORE inserting.
+    try {
+      await enforceLimit(orgId, 'users');
+    } catch (err) {
+      if (err instanceof LimitExceededError) return limitExceededResponse(err);
+      throw err;
     }
 
     // 8. Generate invite token and expiry

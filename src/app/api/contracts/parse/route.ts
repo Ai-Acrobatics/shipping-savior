@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { contracts, contractLanes } from "@/lib/db/schema";
 import { extractWithFallback } from "@/lib/ai/providers";
+import { enforceLimit, LimitExceededError } from "@/lib/billing/limits";
+import { limitExceededResponse } from "@/lib/billing/respond";
 
 const CONTRACT_EXTRACTION_PROMPT = `You are extracting rate information from a carrier freight contract or rate sheet. Extract:
 - carrier: carrier/shipping line name
@@ -19,6 +22,22 @@ const CONTRACT_EXTRACTION_PROMPT = `You are extracting rate information from a c
 Return ONLY valid JSON.`;
 
 export async function POST(request: NextRequest) {
+  // Auth + tier enforcement (AI-8778). Contract upload is metered:
+  // free 0/mo (blocked), premium 25/mo, enterprise unlimited.
+  const session = await auth();
+  if (!session?.user?.orgId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const orgId = session.user.orgId;
+  const userId = session.user.id;
+
+  try {
+    await enforceLimit(orgId, "contractUploads");
+  } catch (err) {
+    if (err instanceof LimitExceededError) return limitExceededResponse(err);
+    throw err;
+  }
+
   let formData: FormData;
   try {
     formData = await request.formData();
@@ -27,9 +46,9 @@ export async function POST(request: NextRequest) {
   }
 
   const file = formData.get("file") as File | null;
-  const saveToDb = formData.get("saveToDb") === "true";
-  const orgId = (formData.get("orgId") as string) || null;
-  const userId = (formData.get("userId") as string) || null;
+  // Persist to DB by default for any authed call — explicit saveToDb=false
+  // skips persistence for one-off "preview" extractions.
+  const saveToDb = formData.get("saveToDb") !== "false";
 
   if (!file) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -106,7 +125,7 @@ export async function POST(request: NextRequest) {
 
   // ── Optionally save to DB ──────────────────────────────
   let savedContract = null;
-  if (saveToDb && orgId && userId && extracted.carrier) {
+  if (saveToDb && extracted.carrier) {
     try {
       const [contract] = await db
         .insert(contracts)
