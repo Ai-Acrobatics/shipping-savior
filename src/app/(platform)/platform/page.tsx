@@ -19,11 +19,13 @@ import OnboardingWizard from "@/components/platform/OnboardingWizard";
 import HelpHint from "@/components/ui/HelpHint";
 import ScenarioBanner from "@/components/demo/ScenarioBanner";
 
+// AI-8729: KPI cards now carry a trend delta vs. last month.
+// Mock values flagged with mock=true so the data layer can swap them in.
 const stats = [
-  { label: "Total Calculations", value: "0", icon: Calculator, color: "ocean" },
-  { label: "Savings Identified", value: "$0", icon: DollarSign, color: "cargo" },
-  { label: "Active Routes", value: "0", icon: MapPin, color: "indigo" },
-  { label: "Team Members", value: "1", icon: Users, color: "ocean" },
+  { label: "Total Calculations", value: "0", icon: Calculator, color: "ocean", delta: "+0%", deltaPositive: true, mock: true },
+  { label: "Savings Identified", value: "$0", icon: DollarSign, color: "cargo", delta: "+0%", deltaPositive: true, mock: true },
+  { label: "Active Routes", value: "0", icon: MapPin, color: "indigo", delta: "+0%", deltaPositive: true, mock: true },
+  { label: "Team Members", value: "1", icon: Users, color: "ocean", delta: "+1 this mo.", deltaPositive: true, mock: true },
 ];
 
 const quickActions = [
@@ -81,6 +83,7 @@ export default async function DashboardPage() {
             <div
               key={stat.label}
               className="bg-white border border-navy-200 rounded-xl p-5 shadow-soft hover:shadow-card transition-shadow"
+              data-trend-mock={stat.mock ? "true" : undefined}
             >
               <div className="flex items-center justify-between">
                 <div>
@@ -97,6 +100,13 @@ export default async function DashboardPage() {
                   <Icon className="w-5 h-5 text-white" />
                 </div>
               </div>
+              <p
+                className={`mt-2 text-xs font-medium ${
+                  stat.deltaPositive ? "text-emerald-600" : "text-red-600"
+                }`}
+              >
+                {stat.delta} vs last month
+              </p>
             </div>
           );
         })}
