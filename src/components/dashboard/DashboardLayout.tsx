@@ -124,14 +124,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </Link>
 
               <div
-                className="flex items-center gap-1.5 text-xs bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-lg text-emerald-700"
-                title="Data is updating in real time"
+                className="group relative flex items-center gap-1.5 text-xs bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-lg text-emerald-700"
+                aria-label="Data refreshed every 5 minutes from connected carriers, contracts, and BOL uploads"
               >
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                 </span>
                 <span className="hidden sm:inline font-medium">Live</span>
+                <span
+                  role="tooltip"
+                  className="pointer-events-none absolute right-0 top-full mt-2 w-64 rounded-lg border border-navy-200 bg-white px-3 py-2 text-[11px] leading-snug text-navy-700 shadow-card opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50"
+                >
+                  Data refreshed every 5 minutes from connected carriers, contracts, and BOL uploads.
+                </span>
               </div>
 
               <button className="p-2 rounded-lg bg-white border border-navy-100 shadow-soft glass-hover">
