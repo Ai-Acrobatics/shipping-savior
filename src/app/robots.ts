@@ -5,8 +5,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/platform/", "/api/"],
+      disallow: ["/api/", "/platform/", "/admin/"],
     },
     sitemap: "https://shipping-savior.vercel.app/sitemap.xml",
+    host: "https://shipping-savior.vercel.app",
   };
 }
