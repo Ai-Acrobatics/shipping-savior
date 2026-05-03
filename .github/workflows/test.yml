@@ -1,0 +1,99 @@
+name: tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    name: typecheck + vitest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install deps
+        run: npm ci
+      - name: TypeScript check
+        run: npm run typecheck
+      - name: Lint (non-blocking warnings)
+        run: npm run lint || true
+      - name: Vitest
+        run: npm run test:run
+
+  e2e:
+    name: playwright + axe
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: unit
+    env:
+      # Required for next build / dev to not crash on missing env vars.
+      # CI uses placeholder values — real runtime auth/Stripe paths are not
+      # exercised in this layer.
+      DATABASE_URL: postgres://placeholder:placeholder@localhost:5432/placeholder
+      NEXTAUTH_SECRET: ci-placeholder-secret
+      NEXTAUTH_URL: http://localhost:3000
+      AUTH_SECRET: ci-placeholder-secret
+      STRIPE_SECRET_KEY: sk_test_placeholder
+      STRIPE_WEBHOOK_SECRET: whsec_placeholder
+      NEXT_PUBLIC_BASE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+      - name: Install deps
+        run: npm ci
+      - name: Install Playwright (chromium only)
+        run: npx playwright install --with-deps chromium
+      - name: Start Next dev server
+        run: |
+          npm run dev > /tmp/next-dev.log 2>&1 &
+          echo $! > /tmp/next-dev.pid
+          # Wait for port 3000 (max ~90s).
+          for i in $(seq 1 90); do
+            if curl -sSf http://localhost:3000/ >/dev/null 2>&1; then
+              echo "dev server up"
+              break
+            fi
+            sleep 1
+          done
+      - name: Run Playwright (chromium only in CI)
+        run: npx playwright test --project=chromium
+        continue-on-error: false
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+      - name: Stop Next dev server
+        if: always()
+        run: |
+          if [ -f /tmp/next-dev.pid ]; then
+            kill $(cat /tmp/next-dev.pid) 2>/dev/null || true
+          fi
+          tail -200 /tmp/next-dev.log 2>/dev/null || true

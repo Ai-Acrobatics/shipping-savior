@@ -34,3 +34,8 @@ tmp/
 
 # Stale -old directories from agent permission conflicts
 *-old/
+
+# Playwright artifacts (AI-8783)
+/test-results/
+/playwright-report/
+/playwright/.cache/
