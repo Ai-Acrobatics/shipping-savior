@@ -10,127 +10,145 @@ import {
   ArrowRight,
   Zap,
   Users,
-  Shield,
   HelpCircle,
   ChevronDown,
   Star,
 } from "lucide-react";
 import { useState } from "react";
 
-/* ─────────── TIERS ─────────── */
+/* ─────────── TIERS (per Blake's pricing model — AI-7252) ─────────── */
 
-const tiers = [
+interface Tier {
+  name: string;
+  tagline: string;
+  price: string;
+  period: string;
+  perUserNote: string | null;
+  description: string;
+  cta: string;
+  ctaHref: string;
+  highlighted: boolean;
+  badge: string | null;
+  features: string[];
+}
+
+const tiers: Tier[] = [
   {
-    name: "Explorer",
-    tagline: "Free",
+    name: "Free",
+    tagline: "For exploration",
     price: "$0",
     period: "/month",
-    annualNote: null,
-    description: "Get started with core logistics tools and limited searches.",
+    perUserNote: null,
+    description:
+      "Try the platform — basic carrier directory, knowledge base, and a starter credit pack.",
     cta: "Get Started Free",
     ctaHref: "/register",
     highlighted: false,
     badge: null,
     features: [
       "1 user",
-      "10 schedule searches/day",
-      "3 calculator uses/month",
-      "Community support",
+      "10 calculations / month",
+      "5 BOL uploads / month",
+      "Basic carrier directory access",
+      "Knowledge base articles",
       "Ad-supported experience",
+      "Community support",
     ],
   },
   {
-    name: "Navigator",
-    tagline: "Premium",
-    price: "$299",
+    name: "Premium",
+    tagline: "For growing operators",
+    price: "$499",
     period: "/month",
-    annualNote: "$249/mo billed annually",
+    perUserNote: "$62 / user / month at 8 users",
     description:
-      "Full platform access for growing freight teams who need reliable data.",
-    cta: "Contact Sales",
-    ctaHref: "/demo",
+      "Full intelligence stack for freight teams who make daily routing, carrier, and tariff decisions.",
+    cta: "Start Free Trial",
+    ctaHref: "/register?plan=premium",
     highlighted: true,
-    badge: "RECOMMENDED",
+    badge: "MOST POPULAR",
     features: [
-      "Up to 8 users",
-      "Unlimited schedule search",
-      "Full carrier comparison + reliability scores",
-      "Contract management (up to 10 contracts)",
-      "PDF exports",
-      "Email support",
+      "Up to 8 users (bundle pricing)",
+      "Unlimited calculations",
+      "100 BOL OCR extractions / month",
+      "25 contract uploads / month",
+      "Full carrier intelligence + reliability scores",
+      "Tariff alerts (real-time HTS changes)",
+      "FTZ savings calculator",
+      "Priority email support",
     ],
   },
   {
-    name: "Commander",
-    tagline: "Enterprise",
+    name: "Enterprise",
+    tagline: "For supply chain teams",
     price: "Custom",
     period: "",
-    annualNote: null,
+    perUserNote: "From $50 / user / month at 20 users",
     description:
-      "White-glove solution for NVOCCs and large freight operations.",
-    cta: "Contact Sales",
-    ctaHref: "/demo",
+      "White-label intelligence, custom integrations, and dedicated success for NVOCCs and large operators.",
+    cta: "Talk to Sales",
+    ctaHref:
+      "mailto:julian@aiacrobatics.com?subject=Shipping%20Savior%20Enterprise%20Inquiry",
     highlighted: false,
     badge: null,
     features: [
-      "20+ users (custom bundles)",
-      "Everything in Navigator",
-      "Unlimited contracts",
-      "API access",
-      "Custom integrations",
-      "White-label option for NVOCCs",
-      "Dedicated account manager",
+      "Up to 20 / unlimited users",
+      "Everything in Premium",
+      "White-label deployment for NVOCCs",
+      "Custom carrier API integrations",
+      "Dedicated success manager",
+      "SSO / SAML",
+      "Audit logs + compliance reporting",
+      "99.9% uptime SLA",
     ],
   },
 ];
 
-/* ─────────── COMPARISON MATRIX ─────────── */
+/* ─────────── COMPARISON MATRIX (AI-8725: no empty cells) ─────────── */
 
 type FeatureValue = boolean | string;
 
 interface ComparisonFeature {
   feature: string;
-  explorer: FeatureValue;
-  navigator: FeatureValue;
-  commander: FeatureValue;
+  free: FeatureValue;
+  premium: FeatureValue;
+  enterprise: FeatureValue;
 }
 
+// Every cell renders ✓ / ✗ / value — no empty cells per AI-8725.
 const comparisonFeatures: ComparisonFeature[] = [
-  { feature: "Users", explorer: "1", navigator: "Up to 8", commander: "20+ (custom)" },
-  { feature: "Schedule searches", explorer: "10/day", navigator: "Unlimited", commander: "Unlimited" },
-  { feature: "Calculator uses", explorer: "3/month", navigator: "Unlimited", commander: "Unlimited" },
-  { feature: "Carrier comparison", explorer: false, navigator: true, commander: true },
-  { feature: "Reliability scores", explorer: false, navigator: true, commander: true },
-  { feature: "Contract management", explorer: false, navigator: "Up to 10", commander: "Unlimited" },
-  { feature: "PDF exports", explorer: false, navigator: true, commander: true },
-  { feature: "API access", explorer: false, navigator: false, commander: true },
-  { feature: "Custom integrations", explorer: false, navigator: false, commander: true },
-  { feature: "White-label option", explorer: false, navigator: false, commander: true },
-  { feature: "Support", explorer: "Community", navigator: "Email", commander: "Dedicated manager" },
+  { feature: "Users", free: "1", premium: "Up to 8", enterprise: "Up to 20 / unlimited" },
+  { feature: "Calculations", free: "10 / mo", premium: "Unlimited", enterprise: "Unlimited" },
+  { feature: "BOL OCR uploads", free: "5 / mo", premium: "100 / mo", enterprise: "Unlimited" },
+  { feature: "Contract uploads", free: false, premium: "25 / mo", enterprise: "Unlimited" },
+  { feature: "Carrier intelligence", free: "Basic directory", premium: "Full + reliability", enterprise: "Full + reliability" },
+  { feature: "Tariff alerts", free: false, premium: true, enterprise: true },
+  { feature: "FTZ calculator", free: false, premium: true, enterprise: true },
+  { feature: "Multi-modal (rail / air / drayage)", free: false, premium: true, enterprise: true },
+  { feature: "API access", free: false, premium: false, enterprise: true },
+  { feature: "SSO / SAML", free: false, premium: false, enterprise: true },
+  { feature: "Audit log", free: false, premium: false, enterprise: true },
+  { feature: "Support SLA", free: "Community", premium: "Priority email", enterprise: "Dedicated manager + 99.9%" },
 ];
 
 /* ─────────── FAQ ─────────── */
 
 const faqs = [
   {
-    q: "How does per-user pricing work for larger teams?",
-    a: "Navigator includes up to 8 users. For teams needing more seats, Commander offers custom user bundles with volume discounts. Contact sales and we'll build a package that fits your organization.",
+    q: "Can I change plans later?",
+    a: "Yes. Upgrade from Free to Premium any time directly from your settings — your data and history come with you. Moving to Enterprise is handled by our success team to set up SSO, custom integrations, and per-seat bundles.",
   },
   {
-    q: "Can I switch plans as my team grows?",
-    a: "Absolutely. You can upgrade from Explorer to Navigator at any time. Moving to Commander is handled through our sales team to ensure a smooth transition with dedicated onboarding.",
+    q: "What happens if I exceed limits?",
+    a: "On Free, you'll see a soft cap with the option to upgrade — no surprise charges. On Premium, BOL OCR and contract uploads burst up to 25% above your monthly cap before we reach out about an Enterprise plan that fits your volume.",
   },
   {
-    q: "What data sources power the carrier comparisons?",
-    a: "We aggregate real-time schedule data from 8+ major container shipping lines, combining transit times, historical on-time performance, equipment availability, and rate benchmarks into a single view.",
+    q: "Do you offer annual billing?",
+    a: "Yes — Premium annual saves 17% (effectively $415/mo when billed yearly). Enterprise contracts are typically 12 months and include volume discounts on the per-user bundle.",
   },
   {
-    q: "Is there a long-term contract requirement?",
-    a: "Navigator is available month-to-month or with an annual commitment (save ~17%). Commander agreements are tailored to your organization and typically run 12 months.",
-  },
-  {
-    q: "How does the API access work on the Commander plan?",
-    a: "Commander includes RESTful API access to schedule search, carrier comparison, and calculator endpoints. We provide OpenAPI docs, sandbox environments, and integration support from your dedicated account manager.",
+    q: "Is there a free trial for Premium?",
+    a: "Yes. Premium includes a 14-day free trial — full feature access, no credit card required. Cancel anytime during the trial and you stay on Free with no charge.",
   },
 ];
 
@@ -158,7 +176,7 @@ export default function PricingPage() {
             <div className="inline-flex items-center gap-2 border border-ocean-500/30 bg-ocean-500/10 rounded-full px-5 py-2 mb-8">
               <Zap className="w-4 h-4 text-ocean-400" />
               <span className="text-sm font-medium text-ocean-300">
-                Transparent B2B Pricing
+                Value-based pricing for B2B freight teams
               </span>
             </div>
           </motion.div>
@@ -183,9 +201,9 @@ export default function PricingPage() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-lg text-gray-400 max-w-2xl mx-auto"
           >
-            One missed backhaul deal or suboptimal routing decision costs more
-            than a year of Shipping Savior. Choose the plan that fits your
-            operation.
+            One missed backhaul or suboptimal routing decision costs more than a
+            year of Shipping Savior. Pick the plan that fits your operation —
+            scale your team without recalculating per-seat costs every month.
           </motion.p>
         </div>
       </section>
@@ -216,9 +234,7 @@ export default function PricingPage() {
 
               <div
                 className={`rounded-2xl p-8 h-full flex flex-col ${
-                  tier.highlighted
-                    ? "bg-[#0d1230]"
-                    : "bg-[#111133]/80"
+                  tier.highlighted ? "bg-[#0d1230]" : "bg-[#111133]/80"
                 }`}
               >
                 {/* Tier header */}
@@ -226,9 +242,7 @@ export default function PricingPage() {
                   <p className="text-xs font-semibold tracking-wider uppercase text-ocean-400 mb-1">
                     {tier.tagline}
                   </p>
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    {tier.name}
-                  </h3>
+                  <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
                   <p className="text-sm text-gray-400 leading-relaxed">
                     {tier.description}
                   </p>
@@ -237,15 +251,13 @@ export default function PricingPage() {
                 {/* Price */}
                 <div className="mb-6">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold text-white">
-                      {tier.price}
-                    </span>
+                    <span className="text-4xl font-bold text-white">{tier.price}</span>
                     {tier.period && (
                       <span className="text-gray-500 text-sm">{tier.period}</span>
                     )}
                   </div>
-                  {tier.annualNote && (
-                    <p className="text-sm text-ocean-400 mt-1">{tier.annualNote}</p>
+                  {tier.perUserNote && (
+                    <p className="text-sm text-ocean-400 mt-1">{tier.perUserNote}</p>
                   )}
                 </div>
 
@@ -276,7 +288,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ══════════ PER-USER BUNDLE CALLOUT ══════════ */}
+      {/* ══════════ WHY PER-USER BUNDLES ══════════ */}
       <section className="py-12 px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -292,17 +304,19 @@ export default function PricingPage() {
               </div>
               <div className="flex-1 text-center md:text-left">
                 <h3 className="text-xl font-bold text-white mb-2">
-                  Need a custom user bundle?
+                  Why per-user bundles?
                 </h3>
                 <p className="text-gray-400 text-sm leading-relaxed">
-                  Teams of 10, 50, or 200 -- we offer volume-based per-seat pricing
-                  that scales with your organization. Commander plans include
-                  dedicated onboarding, SSO, and SLA guarantees. Contact our sales
-                  team to build the right package.
+                  Buy a bundle, scale your team without recalculating per-seat
+                  costs every month. Up to 8 users on Premium ={" "}
+                  <span className="text-ocean-300 font-semibold">$62 / user</span>.
+                  Up to 20 on Enterprise ={" "}
+                  <span className="text-ocean-300 font-semibold">$50 / user</span>.
+                  Unlimited Enterprise plans are priced on volume — talk to sales.
                 </p>
               </div>
               <Link
-                href="/demo"
+                href="mailto:julian@aiacrobatics.com?subject=Shipping%20Savior%20Enterprise%20Inquiry"
                 className="shrink-0 inline-flex items-center gap-2 bg-gradient-to-r from-ocean-500 to-indigo-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
               >
                 Talk to Sales
@@ -323,10 +337,10 @@ export default function PricingPage() {
             className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Full Feature Comparison
+              Full feature comparison
             </h2>
             <p className="text-gray-400 max-w-xl mx-auto">
-              See exactly what&apos;s included in each plan.
+              Every plan, side by side. No empty cells.
             </p>
           </motion.div>
 
@@ -337,20 +351,20 @@ export default function PricingPage() {
             transition={{ delay: 0.1, duration: 0.6 }}
             className="overflow-x-auto"
           >
-            <table className="w-full border-collapse">
+            <table className="w-full border-collapse min-w-[640px]">
               <thead>
                 <tr className="border-b border-gray-700/50">
                   <th className="text-left py-4 px-4 text-sm font-medium text-gray-500 w-1/4">
                     Feature
                   </th>
                   <th className="text-center py-4 px-4 text-sm font-bold text-gray-300 w-1/4">
-                    Explorer
+                    Free
                   </th>
                   <th className="text-center py-4 px-4 text-sm font-bold text-ocean-400 w-1/4">
-                    Navigator
+                    Premium
                   </th>
                   <th className="text-center py-4 px-4 text-sm font-bold text-gray-300 w-1/4">
-                    Commander
+                    Enterprise
                   </th>
                 </tr>
               </thead>
@@ -365,16 +379,11 @@ export default function PricingPage() {
                     <td className="py-3.5 px-4 text-sm text-gray-300 font-medium">
                       {row.feature}
                     </td>
-                    {(["explorer", "navigator", "commander"] as const).map(
-                      (plan) => (
-                        <td
-                          key={plan}
-                          className="py-3.5 px-4 text-center text-sm"
-                        >
-                          {renderCellValue(row[plan])}
-                        </td>
-                      )
-                    )}
+                    {(["free", "premium", "enterprise"] as const).map((plan) => (
+                      <td key={plan} className="py-3.5 px-4 text-center text-sm">
+                        {renderCellValue(row[plan])}
+                      </td>
+                    ))}
                   </tr>
                 ))}
               </tbody>
@@ -397,7 +406,7 @@ export default function PricingPage() {
               <span className="text-sm font-medium text-gray-400">FAQ</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Frequently Asked Questions
+              Frequently asked questions
             </h2>
           </motion.div>
 
@@ -412,12 +421,12 @@ export default function PricingPage() {
                 className="rounded-xl border border-gray-800/60 bg-[#111133]/50 overflow-hidden"
               >
                 <button
+                  type="button"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between gap-4 px-6 py-4 text-left"
+                  aria-expanded={openFaq === i}
                 >
-                  <span className="text-sm font-medium text-gray-200">
-                    {faq.q}
-                  </span>
+                  <span className="text-sm font-medium text-gray-200">{faq.q}</span>
                   <ChevronDown
                     className={`w-4 h-4 text-gray-500 shrink-0 transition-transform duration-300 ${
                       openFaq === i ? "rotate-180" : ""
@@ -426,9 +435,7 @@ export default function PricingPage() {
                 </button>
                 {openFaq === i && (
                   <div className="px-6 pb-4">
-                    <p className="text-sm text-gray-400 leading-relaxed">
-                      {faq.a}
-                    </p>
+                    <p className="text-sm text-gray-400 leading-relaxed">{faq.a}</p>
                   </div>
                 )}
               </motion.div>
@@ -452,11 +459,11 @@ export default function PricingPage() {
             Ready to see it in action?
           </h2>
           <p className="text-gray-400 mb-8 max-w-lg mx-auto">
-            Schedule a 30-minute walkthrough with our team. We&apos;ll show you
-            how Shipping Savior fits your specific operation.
+            Schedule a 30-minute walkthrough. We&apos;ll show you how Shipping
+            Savior fits your specific freight operation.
           </p>
           <Link
-            href="/demo"
+            href="mailto:julian@aiacrobatics.com?subject=Shipping%20Savior%20Demo%20Request"
             className="inline-flex items-center gap-3 bg-gradient-to-r from-ocean-500 to-indigo-500 text-white font-bold px-10 py-4 rounded-full shadow-[0_4px_24px_rgba(37,99,235,0.4)] hover:shadow-[0_8px_32px_rgba(37,99,235,0.55)] hover:scale-[1.02] transition-all duration-300 text-lg"
           >
             Schedule a Demo
@@ -473,7 +480,10 @@ export default function PricingPage() {
               <Ship className="w-4 h-4 text-white" />
             </div>
             <span className="text-sm font-bold text-gray-300">
-              Shipping<span className="bg-gradient-to-r from-ocean-400 to-indigo-400 bg-clip-text text-transparent">Savior</span>
+              Shipping
+              <span className="bg-gradient-to-r from-ocean-400 to-indigo-400 bg-clip-text text-transparent">
+                Savior
+              </span>
             </span>
           </div>
           <div className="text-xs text-gray-600">
@@ -495,6 +505,7 @@ export default function PricingPage() {
 
 /* ─────────── HELPERS ─────────── */
 
+// AI-8725: every cell renders ✓ / ✗ / value — never empty.
 function renderCellValue(value: FeatureValue) {
   if (value === true) {
     return (
