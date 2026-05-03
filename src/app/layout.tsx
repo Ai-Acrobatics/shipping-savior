@@ -17,6 +17,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://shipping-savior.vercel.app"),
   title: "Shipping Savior | International Logistics Platform",
   description:
     "Comprehensive logistics platform for international freight, cold chain, and import/export operations. Landed cost calculators, FTZ savings analysis, route comparison, and tariff optimization.",
@@ -25,21 +26,16 @@ export const metadata: Metadata = {
     description:
       "Turn manual freight brokerage into data-driven operations. Calculators, route comparison, FTZ strategy, and more.",
     type: "website",
-    images: [
-      {
-        url: "/images/og-image.svg",
-        width: 1200,
-        height: 630,
-        alt: "Shipping Savior — AI-Powered Global Trade Intelligence Platform",
-      },
-    ],
+    siteName: "Shipping Savior",
+    url: "https://shipping-savior.vercel.app",
+    // OG image is auto-generated from src/app/opengraph-image.tsx
   },
   twitter: {
     card: "summary_large_image",
     title: "Shipping Savior | International Logistics Platform",
     description:
       "Turn manual freight brokerage into data-driven operations. Calculators, route comparison, FTZ strategy, and more.",
-    images: ["/images/og-image.svg"],
+    // Twitter image is auto-generated from src/app/twitter-image.tsx
   },
 };
 
