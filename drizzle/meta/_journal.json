@@ -22,6 +22,13 @@
       "when": 1777769456961,
       "tag": "0002_acoustic_spirit",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1777788397264,
+      "tag": "0003_add_is_demo_to_organizations",
+      "breakpoints": true
     }
   ]
 }
