@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Sidebar from "@/components/platform/Sidebar";
 import UserMenu from "@/components/platform/UserMenu";
 import MobileNav from "@/components/platform/MobileNav";
+import { UpgradePromptHost } from "@/components/billing/UpgradePrompt";
 import { Bell } from "lucide-react";
 
 const SIDEBAR_KEY = "shipping-savior-sidebar-collapsed";
@@ -14,10 +15,11 @@ interface PlatformShellProps {
     email?: string | null;
     image?: string | null;
   };
+  planTier?: "free" | "premium" | "enterprise";
   children: React.ReactNode;
 }
 
-export default function PlatformShell({ user, children }: PlatformShellProps) {
+export default function PlatformShell({ user, planTier, children }: PlatformShellProps) {
   const [collapsed, setCollapsed] = useState(false);
 
   // Hydrate sidebar state from localStorage
@@ -43,6 +45,7 @@ export default function PlatformShell({ user, children }: PlatformShellProps) {
         collapsed={collapsed}
         onToggle={toggleCollapsed}
         user={user}
+        planTier={planTier}
       />
 
       {/* Main Content Area */}
@@ -72,6 +75,9 @@ export default function PlatformShell({ user, children }: PlatformShellProps) {
         {/* Page Content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
+
+      {/* Tier limit upgrade prompt — listens for window CustomEvent (AI-8778) */}
+      <UpgradePromptHost />
     </div>
   );
 }
