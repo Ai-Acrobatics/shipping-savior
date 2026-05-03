@@ -8,18 +8,81 @@ import {
   Ship,
   Menu,
   X,
-  LayoutDashboard,
+  LogOut,
   Calculator,
   Clock,
-  Settings,
-  LogOut,
+  DollarSign,
+  BarChart3,
+  Shield,
+  Scale,
+  Box,
+  FileText,
+  Package,
+  BookOpen,
+  Compass,
+  Map,
+  Activity,
+  Bell,
+  LayoutDashboard,
+  Upload,
+  Settings as SettingsIcon,
+  Sparkles,
 } from "lucide-react";
 
-const navLinks = [
-  { label: "Dashboard", href: "/platform", icon: LayoutDashboard },
-  { label: "Calculators", href: "/platform/calculators", icon: Calculator },
-  { label: "History", href: "/platform/history", icon: Clock },
-  { label: "Settings", href: "/platform/settings", icon: Settings },
+interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+interface NavSection {
+  title: string;
+  items: NavItem[];
+}
+
+/* ─────────── IA: PLAN / FIND / PRICE / OPERATE (AI-8775) ─────────── */
+// Mirrors desktop Sidebar — same 4 sections, same routes.
+const navSections: NavSection[] = [
+  {
+    title: "Plan",
+    items: [
+      { label: "Calculators", href: "/platform/calculators", icon: Calculator },
+      { label: "Landed Cost", href: "/platform/calculators/landed-cost", icon: DollarSign },
+      { label: "Unit Economics", href: "/platform/calculators/unit-economics", icon: BarChart3 },
+      { label: "FTZ Analyzer", href: "/platform/calculators/ftz-savings", icon: Shield },
+      { label: "PF/NPF Compare", href: "/platform/calculators/pf-npf", icon: Scale },
+      { label: "Container Util", href: "/platform/calculators/container", icon: Box },
+      { label: "Tariff Scenarios", href: "/platform/calculators/tariff-scenario", icon: FileText },
+      { label: "Knowledge Base", href: "/knowledge-base", icon: BookOpen },
+      { label: "Onboarding", href: "/platform/settings", icon: Sparkles },
+    ],
+  },
+  {
+    title: "Find",
+    items: [
+      { label: "Carrier Discovery", href: "/carrier-comparison", icon: Compass },
+      { label: "Carrier Reliability", href: "/carrier-comparison", icon: Activity },
+      { label: "Routes", href: "/routes", icon: Map },
+    ],
+  },
+  {
+    title: "Price",
+    items: [
+      { label: "Contracts", href: "/platform/contracts", icon: FileText },
+      { label: "Tariff Alerts", href: "/platform/contracts", icon: Bell },
+      { label: "Landed Cost Calculator", href: "/platform/calculators/landed-cost", icon: DollarSign },
+    ],
+  },
+  {
+    title: "Operate",
+    items: [
+      { label: "Dashboard", href: "/platform", icon: LayoutDashboard },
+      { label: "Shipments", href: "/platform/shipments", icon: Package },
+      { label: "BOL Upload", href: "/platform/shipments/import", icon: Upload },
+      { label: "History", href: "/platform/history", icon: Clock },
+      { label: "Settings", href: "/platform/settings", icon: SettingsIcon },
+    ],
+  },
 ];
 
 interface MobileNavProps {
@@ -56,6 +119,7 @@ export default function MobileNav({ user }: MobileNavProps) {
     <div className="lg:hidden">
       {/* Hamburger Button */}
       <button
+        type="button"
         onClick={() => setOpen(true)}
         className="p-2 text-navy-600 hover:text-navy-900 transition-colors"
         aria-label="Open navigation"
@@ -89,6 +153,7 @@ export default function MobileNav({ user }: MobileNavProps) {
                 </span>
               </Link>
               <button
+                type="button"
                 onClick={() => setOpen(false)}
                 className="p-1 text-navy-400 hover:text-navy-200 transition-colors"
                 aria-label="Close navigation"
@@ -97,36 +162,51 @@ export default function MobileNav({ user }: MobileNavProps) {
               </button>
             </div>
 
-            {/* Nav Links */}
-            <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
-              {navLinks.map((link) => {
-                const active = isActive(link.href);
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                      active
-                        ? "bg-ocean-500/15 text-ocean-400"
-                        : "text-navy-400 hover:bg-navy-800/50 hover:text-navy-200"
-                    }`}
-                  >
-                    <Icon className="w-5 h-5 shrink-0" />
-                    <span>{link.label}</span>
-                  </Link>
-                );
-              })}
+            {/* Sectioned Nav Links */}
+            <nav className="flex-1 py-4 px-2 overflow-y-auto">
+              {navSections.map((section, sIdx) => (
+                <div
+                  key={section.title}
+                  className={
+                    sIdx > 0 ? "mt-4 pt-4 border-t border-navy-800/60" : ""
+                  }
+                >
+                  <p className="px-3 mb-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-ocean-500/80">
+                    {section.title}
+                  </p>
+                  <div className="space-y-0.5">
+                    {section.items.map((link) => {
+                      const active = isActive(link.href);
+                      const Icon = link.icon;
+                      return (
+                        <Link
+                          key={link.href + link.label}
+                          href={link.href}
+                          onClick={() => setOpen(false)}
+                          className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                            active
+                              ? "bg-ocean-500/15 text-ocean-400"
+                              : "text-navy-400 hover:bg-navy-800/50 hover:text-navy-200"
+                          }`}
+                        >
+                          <Icon className="w-5 h-5 shrink-0" />
+                          <span>{link.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </nav>
 
             {/* User Info */}
             <div className="px-4 py-4 border-t border-navy-800 space-y-3">
               <div className="flex items-center gap-3">
                 {user.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={user.image}
-                    alt={user.name ?? 'User'}
+                    alt={user.name ?? "User"}
                     className="w-8 h-8 rounded-full"
                   />
                 ) : (
@@ -144,6 +224,7 @@ export default function MobileNav({ user }: MobileNavProps) {
                 </div>
               </div>
               <button
+                type="button"
                 onClick={handleLogout}
                 className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm text-red-400 hover:bg-red-500/10 transition-colors"
               >
