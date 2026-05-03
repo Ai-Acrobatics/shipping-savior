@@ -132,20 +132,20 @@ export default function DemoPage() {
                   <Icon className={`w-6 h-6 ${accent.text}`} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-xs font-mono ${accent.text} opacity-60 uppercase tracking-wider`}>
+                  <div className="flex items-start gap-2 mb-1 flex-wrap">
+                    <span className={`text-xs font-mono ${accent.text} opacity-60 uppercase tracking-wider mt-1 flex-shrink-0`}>
                       {scenario.mode === "jones-act-multimodal" ? "Jones Act" : scenario.mode === "ocean-reefer" ? "Reefer" : "Ocean dry"}
                     </span>
-                    <h2 className="text-lg font-bold truncate">{scenario.name}</h2>
+                    {/* AI-6543 mobile: allow 2-line wrap so titles aren't clipped on narrow viewports */}
+                    <h2 className="text-base sm:text-lg font-bold leading-snug line-clamp-2">{scenario.name}</h2>
                   </div>
-                  <p className="text-sm text-white/40 truncate">
+                  <p className="text-xs sm:text-sm text-white/40 line-clamp-2">
                     {scenario.containerCount}× {scenario.containerType} · {scenario.commodity.split(" (")[0]}
                   </p>
                 </div>
                 <div className="hidden sm:flex items-center gap-1.5 text-xs text-white/40 font-medium">
                   <Clock className="w-3.5 h-3.5" />
                   {scenario.walkthroughLength}
-                </div>
                 <ChevronRight
                   className={`w-5 h-5 text-white/20 transition-transform duration-300 flex-shrink-0 ${
                     isOpen ? "rotate-90" : ""
