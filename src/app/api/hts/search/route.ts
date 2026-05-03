@@ -116,7 +116,7 @@ export async function GET(request: NextRequest) {
       ...code,
       formatted_code: `${code.hts_code.slice(0, 4)}.${code.hts_code.slice(4, 6)}.${code.hts_code.slice(6, 10)}`,
       country_rates: Object.keys(countryRates).length > 0 ? countryRates : undefined,
-      available_country_rates: [...new Set(chapterRates.map(r => r.country_code))],
+      available_country_rates: Array.from(new Set(chapterRates.map(r => r.country_code))),
     };
   });
 

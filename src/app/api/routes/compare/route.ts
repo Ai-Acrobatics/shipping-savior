@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
       cheapest_20ft: `$${cheapest20}`,
       cheapest_40ft: `$${cheapest40}`,
       fastest_transit: `${fastest} days`,
-      carriers: [...new Set(results.map(r => r.carrier))],
+      carriers: Array.from(new Set(results.map(r => r.carrier))),
     } : null,
     results: enriched,
   });
