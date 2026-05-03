@@ -20,6 +20,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import ScheduleDemoButton from "@/components/cal/ScheduleDemoButton";
 import {
   Ship, Truck, Anchor,
   ArrowRight, ChevronRight, Globe,
@@ -273,14 +274,22 @@ export default function DemoPage() {
             Start comparing carriers, calculating landed costs, and finding savings across every shipping lane.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/platform/dashboard"
+            <ScheduleDemoButton
+              source="demo_page_bottom_cta"
+              modalTitle="Book a Shipping Savior demo"
               className="inline-flex items-center gap-3 bg-gradient-to-r from-ocean-500 to-indigo-600 text-white font-bold px-10 py-4 rounded-full text-lg
                 shadow-[0_8px_32px_rgba(37,99,235,0.3)] hover:shadow-[0_12px_48px_rgba(37,99,235,0.45)]
                 hover:brightness-110 transition-all duration-300"
             >
-              Open Dashboard
+              Schedule a Demo
               <ArrowRight className="w-5 h-5" />
+            </ScheduleDemoButton>
+            <Link
+              href="/platform/dashboard"
+              className="inline-flex items-center gap-3 border border-white/20 hover:border-white/40 text-white font-medium px-10 py-4 rounded-full text-lg
+                hover:bg-white/5 transition-all duration-300"
+            >
+              Open Dashboard
             </Link>
             <Link
               href="/pricing"

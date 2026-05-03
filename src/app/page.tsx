@@ -1,11 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import Header from "@/components/Header";
+import ScheduleDemoButton from "@/components/cal/ScheduleDemoButton";
 import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
 import { GlobeFlights } from "@/components/ui/cobe-globe-flights";
-import { motion } from "framer-motion";
+import { LogoMarquee } from "@/components/marketing/LogoMarquee";
+import { CounterStrip } from "@/components/marketing/CounterStrip";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Ship,
   Anchor,
@@ -38,18 +42,6 @@ const dynamicWords = [
   "cold-chain",
   "containers",
   "at scale",
-];
-
-const partners = [
-  "Kingsco",
-  "Hall Pass",
-  "Great White Fleet",
-  "Lineage",
-  "Maersk",
-  "MSC",
-  "CMA CGM",
-  "Matson",
-  "Pasha Hawaii",
 ];
 
 const metrics = [
@@ -194,6 +186,79 @@ export default function Home() {
   const [featureFade, setFeatureFade] = useState(true);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const dashboardRef = useRef<HTMLDivElement>(null);
+
+  // ─── Hero chat state (AI-8775 task 3) ──────────────────────────────
+  const { data: session } = useSession();
+  const [chatPrompt, setChatPrompt] = useState<string | null>(null);
+  const [chatResponse, setChatResponse] = useState<string>("");
+  const [chatStreaming, setChatStreaming] = useState(false);
+  const [chatError, setChatError] = useState<string | null>(null);
+  const chatAbortRef = useRef<AbortController | null>(null);
+
+  const handleHeroChatSubmit = useCallback(async (message: string) => {
+    // Abort any in-flight request
+    if (chatAbortRef.current) {
+      chatAbortRef.current.abort();
+    }
+    const ac = new AbortController();
+    chatAbortRef.current = ac;
+
+    setChatPrompt(message);
+    setChatResponse("");
+    setChatError(null);
+    setChatStreaming(true);
+
+    try {
+      const res = await fetch("/api/home-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+        signal: ac.signal,
+      });
+
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        throw new Error(errBody.error || `HTTP ${res.status}`);
+      }
+
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error("No response body");
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        // Parse SSE events (data: <json>\n\n)
+        const events = buffer.split("\n\n");
+        buffer = events.pop() ?? "";
+
+        for (const evt of events) {
+          const line = evt.split("\n").find((l) => l.startsWith("data: "));
+          if (!line) continue;
+          const json = line.slice(6).trim();
+          if (!json) continue;
+          try {
+            const payload = JSON.parse(json);
+            if (payload.type === "text" && typeof payload.content === "string") {
+              setChatResponse((prev) => prev + payload.content);
+            } else if (payload.type === "error") {
+              setChatError(payload.error || "Stream error");
+            }
+          } catch {
+            // ignore malformed event
+          }
+        }
+      }
+    } catch (err) {
+      if ((err as Error).name === "AbortError") return;
+      setChatError(err instanceof Error ? err.message : "Chat failed");
+    } finally {
+      setChatStreaming(false);
+    }
+  }, []);
 
   // Hero mount fade-in
   useEffect(() => {
@@ -346,7 +411,60 @@ export default function Home() {
             transition={{ delay: 0.95, duration: 0.7 }}
             className="mb-14"
           >
-            <VercelV0Chat />
+            <VercelV0Chat onSubmit={handleHeroChatSubmit} />
+
+            <AnimatePresence>
+              {(chatPrompt || chatStreaming) && (
+                <motion.div
+                  key="hero-chat-response"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.35 }}
+                  className="max-w-4xl mx-auto mt-6 text-left"
+                >
+                  <div className="rounded-2xl border border-ocean-100 bg-white/80 backdrop-blur-sm shadow-soft p-5 md:p-6">
+                    {chatPrompt && (
+                      <div className="mb-3 text-xs uppercase tracking-wider text-navy-400 font-medium">
+                        You asked
+                      </div>
+                    )}
+                    {chatPrompt && (
+                      <p className="text-sm md:text-base text-navy-700 mb-4 italic">
+                        &ldquo;{chatPrompt}&rdquo;
+                      </p>
+                    )}
+                    <div className="text-xs uppercase tracking-wider text-ocean-600 font-medium mb-2">
+                      Shipping Savior AI
+                    </div>
+                    {chatError ? (
+                      <p className="text-sm text-red-600">
+                        {chatError}
+                      </p>
+                    ) : (
+                      <p className="text-sm md:text-base text-navy-800 whitespace-pre-wrap leading-relaxed">
+                        {chatResponse}
+                        {chatStreaming && (
+                          <span
+                            aria-hidden="true"
+                            className="inline-block w-2 h-4 ml-0.5 align-middle bg-ocean-500 animate-pulse"
+                          />
+                        )}
+                      </p>
+                    )}
+                    {!chatStreaming && !chatError && !session?.user && chatResponse.length > 0 && (
+                      <Link
+                        href="/register"
+                        className="inline-flex items-center gap-1 mt-4 text-sm font-medium text-ocean-600 hover:text-ocean-700 transition-colors"
+                      >
+                        Sign up free to save this conversation
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
 
           {/* Dashboard mock with 3D tilt */}
@@ -432,27 +550,10 @@ export default function Home() {
       </section>
 
       {/* ══════════════════ LOGO MARQUEE ══════════════════ */}
-      <section className="relative py-14 border-y border-ocean-50 bg-white overflow-hidden">
-        <div className="max-w-5xl mx-auto px-6 mb-6 text-center">
-          <p className="text-xs md:text-sm uppercase tracking-[0.2em] text-navy-400 font-medium">
-            Trusted by logistics leaders, cold-chain giants, and NVOCCs
-          </p>
-        </div>
-        <div className="flex overflow-hidden select-none [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="flex shrink-0 animate-[marquee_40s_linear_infinite] motion-reduce:animate-none">
-            {[...partners, ...partners].map((name, i) => (
-              <div
-                key={i}
-                className="mx-10 md:mx-14 flex items-center justify-center flex-shrink-0"
-              >
-                <span className="text-2xl md:text-3xl font-semibold tracking-tight text-navy-300 hover:text-ocean-500 transition-colors whitespace-nowrap">
-                  {name}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <LogoMarquee />
+
+      {/* ══════════════════ COUNTER STRIP ══════════════════ */}
+      <CounterStrip />
 
       {/* ══════════════════ METRICS ══════════════════ */}
       <section id="metrics" className="relative py-24 md:py-32 px-6 bg-white">
@@ -799,13 +900,14 @@ export default function Home() {
             contract intelligence. 20 minutes, zero slides.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/demo"
+            <ScheduleDemoButton
+              source="homepage_footer_cta"
+              modalTitle="Book a 20-minute walkthrough"
               className="group inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-ocean-700 font-semibold shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all"
             >
-              See Live Demo
+              Schedule Demo
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
+            </ScheduleDemoButton>
             <Link
               href="/jv-agreement"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white font-semibold hover:bg-white/20 transition-all"
