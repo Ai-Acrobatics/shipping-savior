@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.90.0",
+    "@calcom/embed-react": "^1.5.3",
     "@neondatabase/serverless": "^1.0.2",
     "@sentry/nextjs": "^10.50.0",
     "@types/recharts": "^1.8.29",
@@ -40,9 +41,12 @@
     "next-mdx-remote": "^6.0.0",
     "node-fetch": "^3.3.2",
     "postgres": "^3.4.8",
+    "posthog-js": "^1.372.3",
+    "posthog-node": "^5.30.6",
     "react": "^18",
     "react-dom": "^18",
-    "recharts": "^3.8.1"
+    "recharts": "^3.8.1",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

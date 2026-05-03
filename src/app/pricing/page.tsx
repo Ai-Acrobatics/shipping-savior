@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Header from "@/components/Header";
+import ScheduleDemoButton from "@/components/cal/ScheduleDemoButton";
 import { motion } from "framer-motion";
 import {
   Check,
@@ -48,7 +49,7 @@ const tiers = [
     description:
       "Full platform access for growing freight teams who need reliable data.",
     cta: "Contact Sales",
-    ctaHref: "/demo",
+    ctaHref: "/contact",
     highlighted: true,
     badge: "RECOMMENDED",
     features: [
@@ -69,7 +70,7 @@ const tiers = [
     description:
       "White-glove solution for NVOCCs and large freight operations.",
     cta: "Contact Sales",
-    ctaHref: "/demo",
+    ctaHref: "/contact",
     highlighted: false,
     badge: null,
     features: [
@@ -302,7 +303,7 @@ export default function PricingPage() {
                 </p>
               </div>
               <Link
-                href="/demo"
+                href="/contact"
                 className="shrink-0 inline-flex items-center gap-2 bg-gradient-to-r from-ocean-500 to-indigo-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
               >
                 Talk to Sales
@@ -455,13 +456,14 @@ export default function PricingPage() {
             Schedule a 30-minute walkthrough with our team. We&apos;ll show you
             how Shipping Savior fits your specific operation.
           </p>
-          <Link
-            href="/demo"
+          <ScheduleDemoButton
+            source="pricing_bottom_cta"
+            modalTitle="Book a 30-minute walkthrough"
             className="inline-flex items-center gap-3 bg-gradient-to-r from-ocean-500 to-indigo-500 text-white font-bold px-10 py-4 rounded-full shadow-[0_4px_24px_rgba(37,99,235,0.4)] hover:shadow-[0_8px_32px_rgba(37,99,235,0.55)] hover:scale-[1.02] transition-all duration-300 text-lg"
           >
             Schedule a Demo
             <ArrowRight className="w-5 h-5" />
-          </Link>
+          </ScheduleDemoButton>
         </motion.div>
       </section>
 
