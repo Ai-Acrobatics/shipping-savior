@@ -107,6 +107,7 @@ export const authConfig: NextAuthConfig = {
           name: user.name,
           orgId: membership?.orgId,
           role: membership?.role,
+          emailVerified: !!user.emailVerifiedAt,
         };
       },
     }),
@@ -222,7 +223,7 @@ export const authConfig: NextAuthConfig = {
         return false;
       }
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       // On initial sign-in, persist user data into the JWT
       if (user) {
         token.userId = user.id as string;
@@ -231,6 +232,8 @@ export const authConfig: NextAuthConfig = {
         // already supplied orgId/role on `user`.
         const passedOrgId = (user as { orgId?: string }).orgId;
         const passedRole = (user as { role?: string }).role;
+        const passedEmailVerified = (user as { emailVerified?: boolean })
+          .emailVerified;
 
         if (passedOrgId) {
           token.orgId = passedOrgId;
@@ -244,13 +247,39 @@ export const authConfig: NextAuthConfig = {
           token.orgId = membership?.orgId ?? '';
           token.role = membership?.role ?? 'member';
         }
+
+        if (typeof passedEmailVerified === 'boolean') {
+          token.emailVerified = passedEmailVerified;
+        } else if (user.id) {
+          // OAuth path: look up the verification flag we just set in signIn.
+          const [row] = await db
+            .select({ emailVerifiedAt: users.emailVerifiedAt })
+            .from(users)
+            .where(eq(users.id, user.id as string))
+            .limit(1);
+          token.emailVerified = !!row?.emailVerifiedAt;
+        }
       }
+
+      // Refresh the verified flag when the client calls update() (e.g. right
+      // after the user clicks the verification link in another tab).
+      if (trigger === 'update' && token.userId) {
+        const [row] = await db
+          .select({ emailVerifiedAt: users.emailVerifiedAt })
+          .from(users)
+          .where(eq(users.id, token.userId as string))
+          .limit(1);
+        token.emailVerified = !!row?.emailVerifiedAt;
+      }
+
       return token;
     },
     async session({ session, token }) {
       session.user.id = token.userId as string;
       session.user.orgId = token.orgId as string;
       session.user.role = token.role as string;
+      (session.user as unknown as { emailVerified?: boolean }).emailVerified =
+        !!token.emailVerified;
       return session;
     },
   },

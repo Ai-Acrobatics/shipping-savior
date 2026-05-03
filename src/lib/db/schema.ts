@@ -127,6 +127,19 @@ export const passwordResetTokens = pgTable('password_reset_tokens', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
+// ── Email Verifications ───────────────────────────────
+
+export const emailVerifications = pgTable('email_verifications', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  tokenHash: text('token_hash').notNull(),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+  verifiedAt: timestamp('verified_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
 // ── Invites ────────────────────────────────────────────
 
 export const invites = pgTable('invites', {
@@ -302,6 +315,9 @@ export type NewInvite = typeof invites.$inferInsert;
 
 export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
 export type NewPasswordResetToken = typeof passwordResetTokens.$inferInsert;
+
+export type EmailVerification = typeof emailVerifications.$inferSelect;
+export type NewEmailVerification = typeof emailVerifications.$inferInsert;
 
 export type Contract = typeof contracts.$inferSelect;
 export type NewContract = typeof contracts.$inferInsert;
