@@ -47,6 +47,13 @@ function LoginForm() {
 
   return (
     <div className="bg-white rounded-xl shadow-card p-8">
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1 text-xs text-navy-500 hover:text-ocean-600 font-medium mb-4 transition-colors"
+      >
+        <span aria-hidden>←</span> Back to home
+      </Link>
+
       <h2 className="text-xl font-semibold text-navy-900 text-center mb-6">
         Sign in to your account
       </h2>

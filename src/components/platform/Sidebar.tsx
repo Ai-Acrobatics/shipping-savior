@@ -111,9 +111,17 @@ interface SidebarProps {
     email?: string | null;
     image?: string | null;
   };
+  planTier?: "free" | "premium" | "enterprise";
 }
 
-export default function Sidebar({ collapsed, onToggle, user }: SidebarProps) {
+const PLAN_BADGE_STYLES: Record<string, string> = {
+  free: "bg-slate-700/60 text-slate-200 border-slate-600",
+  premium: "bg-ocean-500/15 text-ocean-300 border-ocean-500/40",
+  enterprise:
+    "bg-gradient-to-r from-amber-500/25 to-yellow-500/15 text-amber-200 border-amber-500/40",
+};
+
+export default function Sidebar({ collapsed, onToggle, user, planTier = "free" }: SidebarProps) {
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({
     "/platform/calculators": true,
@@ -264,6 +272,37 @@ export default function Sidebar({ collapsed, onToggle, user }: SidebarProps) {
 
       {/* User Menu */}
       {user && <UserMenu user={user} collapsed={collapsed} />}
+
+      {/* Tier badge (AI-8778) */}
+      {!collapsed && (
+        <div className="px-3 pb-3 border-t border-navy-800 pt-3">
+          <Link
+            href="/platform/billing"
+            title="Manage plan →"
+            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wider transition-opacity hover:opacity-90 ${
+              PLAN_BADGE_STYLES[planTier] ?? PLAN_BADGE_STYLES.free
+            }`}
+          >
+            {planTier}
+          </Link>
+        </div>
+      )}
+      {collapsed && (
+        <div className="flex justify-center pb-3 border-t border-navy-800 pt-3">
+          <Link
+            href="/platform/billing"
+            title={`${planTier.toUpperCase()} plan — manage`}
+            className={`w-2 h-2 rounded-full ${
+              planTier === "enterprise"
+                ? "bg-amber-400"
+                : planTier === "premium"
+                  ? "bg-ocean-400"
+                  : "bg-slate-400"
+            }`}
+            aria-label={`${planTier} plan`}
+          />
+        </div>
+      )}
 
       {/* Collapse Toggle */}
       <button
