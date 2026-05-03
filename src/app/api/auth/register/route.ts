@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { users, organizations, orgMembers } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { writeAuditLog } from '@/lib/auth/audit';
+import { issueVerificationToken } from '@/lib/auth/verification';
 
 export async function POST(request: Request) {
   try {
@@ -72,6 +73,13 @@ export async function POST(request: Request) {
         metadata: { email: normalizedEmail, inviteToken },
       });
 
+      // Fire-and-forget: send the verification email. Failures don't block
+      // registration — the user can request a resend from /verify-email.
+      issueVerificationToken({ userId: user.id, email: normalizedEmail }).catch(
+        (err) =>
+          console.error('[register] verification email send failed:', err)
+      );
+
       return NextResponse.json(
         {
           id: user.id,
@@ -129,6 +137,14 @@ export async function POST(request: Request) {
       action: 'register',
       metadata: { email: normalizedEmail },
     });
+
+    // Fire-and-forget: send the verification email.
+    issueVerificationToken({
+      userId: result.user.id,
+      email: normalizedEmail,
+    }).catch((err) =>
+      console.error('[register] verification email send failed:', err)
+    );
 
     return NextResponse.json(
       {
