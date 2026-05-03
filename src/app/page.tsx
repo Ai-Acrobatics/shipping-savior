@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import { VercelV0Chat } from "@/components/ui/v0-ai-chat";
 import { GlobeFlights } from "@/components/ui/cobe-globe-flights";
 import { LogoMarquee } from "@/components/marketing/LogoMarquee";
+import { CounterStrip } from "@/components/marketing/CounterStrip";
 import { motion } from "framer-motion";
 import {
   Ship,
@@ -422,6 +423,9 @@ export default function Home() {
 
       {/* ══════════════════ LOGO MARQUEE ══════════════════ */}
       <LogoMarquee />
+
+      {/* ══════════════════ COUNTER STRIP ══════════════════ */}
+      <CounterStrip />
 
       {/* ══════════════════ METRICS ══════════════════ */}
       <section id="metrics" className="relative py-24 md:py-32 px-6 bg-white">
