@@ -1,6 +1,8 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import PlatformShell from "./PlatformShell";
+import GuidedTour from "@/components/demo/GuidedTour";
 
 export const metadata = {
   title: "Platform | Shipping Savior",
@@ -26,6 +28,10 @@ export default async function PlatformLayout({
   return (
     <PlatformShell user={user}>
       {children}
+      {/* AI-6542 — guided investor walkthrough; mounts itself only when ?tour=true */}
+      <Suspense fallback={null}>
+        <GuidedTour />
+      </Suspense>
     </PlatformShell>
   );
 }

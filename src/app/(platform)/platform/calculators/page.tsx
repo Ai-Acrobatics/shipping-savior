@@ -84,6 +84,7 @@ export default function CalculatorsPage() {
             <Link
               key={calc.href}
               href={calc.href}
+              data-tour-step={calc.href === "/platform/calculators/ftz-savings" ? "5" : undefined}
               className="group bg-white border border-navy-200 rounded-xl p-6 hover:border-ocean-300 hover:shadow-card-hover transition-all"
             >
               <div

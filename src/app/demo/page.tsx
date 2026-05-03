@@ -1,120 +1,75 @@
 "use client";
 
+/**
+ * /demo — public investor scenario picker.
+ *
+ * Linear: AI-8727
+ *
+ * Replaces the previous broken state where each card linked to a generic
+ * /dashboard with a fake "0/4" progress indicator that did nothing.
+ *
+ * Now:
+ *  - Three real scenarios pulled from src/lib/data/demo-scenarios.ts
+ *  - Each card CTA links to /platform/scenarios/<id>?tour=true, which
+ *    redirects into the dashboard with the lane pre-loaded and the
+ *    GuidedTour overlay activated.
+ *  - Each card surfaces its real walkthrough length (5 min vs 12 min deep
+ *    dive) instead of a fake progress counter.
+ *  - Fourth backhaul card removed per the v1.1 demo brief.
+ */
+
 import { useState } from "react";
 import Link from "next/link";
 import ScheduleDemoButton from "@/components/cal/ScheduleDemoButton";
 import {
-  Ship, Truck, Anchor, Package,
+  Ship, Truck, Anchor,
   ArrowRight, ChevronRight, Globe,
-  DollarSign, Clock, Shield, TrendingDown,
+  DollarSign, Clock, Shield, TrendingDown, Sparkles,
 } from "lucide-react";
+import { demoScenarios, type DemoScenario } from "@/lib/data/demo-scenarios";
 
-/* ────────── SCENARIO DATA ────────── */
-
-type Scenario = {
-  id: number;
-  title: string;
-  subtitle: string;
-  accent: string;
-  accentBg: string;
-  accentBorder: string;
-  accentGlow: string;
-  icon: typeof Ship;
-  route: { origin: string; destination: string; distance: string };
-  carriers: {
-    name: string;
-    transit: string;
-    reliability: string;
-    highlight?: boolean;
-  }[];
-  metric: { value: string; label: string };
-  insight: string;
-  cta: { label: string; href: string };
+const accentClasses: Record<DemoScenario["accent"], {
+  text: string;
+  bg: string;
+  border: string;
+  glow: string;
+  ringFrom: string;
+}> = {
+  blue: {
+    text: "text-blue-400",
+    bg: "bg-blue-500/10",
+    border: "border-blue-500/30",
+    glow: "shadow-[0_0_40px_rgba(59,130,246,0.15)]",
+    ringFrom: "from-blue-500",
+  },
+  emerald: {
+    text: "text-emerald-400",
+    bg: "bg-emerald-500/10",
+    border: "border-emerald-500/30",
+    glow: "shadow-[0_0_40px_rgba(16,185,129,0.15)]",
+    ringFrom: "from-emerald-500",
+  },
+  amber: {
+    text: "text-amber-400",
+    bg: "bg-amber-500/10",
+    border: "border-amber-500/30",
+    glow: "shadow-[0_0_40px_rgba(245,158,11,0.15)]",
+    ringFrom: "from-amber-500",
+  },
 };
 
-const scenarios: Scenario[] = [
-  {
-    id: 1,
-    title: "Ocean Freight — Asia to West Coast",
-    subtitle: "Compare 7 carriers in seconds instead of hours of manual research",
-    accent: "text-blue-400",
-    accentBg: "bg-blue-500/10",
-    accentBorder: "border-blue-500/30",
-    accentGlow: "shadow-[0_0_40px_rgba(59,130,246,0.15)]",
-    icon: Ship,
-    route: { origin: "Qingdao, China", destination: "Port of Los Angeles", distance: "6,252 nmi" },
-    carriers: [
-      { name: "Maersk", transit: "32 days", reliability: "75%", highlight: false },
-      { name: "MSC", transit: "34 days", reliability: "68%" },
-      { name: "CMA CGM", transit: "31 days", reliability: "72%", highlight: true },
-      { name: "COSCO", transit: "33 days", reliability: "70%" },
-    ],
-    metric: { value: "$1,200", label: "FTZ savings per container" },
-    insight: "Compare 7 carriers in seconds instead of hours of manual research",
-    cta: { label: "Try Route Comparison", href: "/dashboard?scenario=qingdao-la" },
-  },
-  {
-    id: 2,
-    title: "Cross-Dock — West Coast Last-Mile",
-    subtitle: "Optimize last-mile routing to cut costs and transit time",
-    accent: "text-emerald-400",
-    accentBg: "bg-emerald-500/10",
-    accentBorder: "border-emerald-500/30",
-    accentGlow: "shadow-[0_0_40px_rgba(16,185,129,0.15)]",
-    icon: Truck,
-    route: { origin: "Port of Hueneme", destination: "Palmdale / Lancaster (Inland DC)", distance: "70 mi via 126/Fillmore" },
-    carriers: [
-      { name: "126/Fillmore Bypass", transit: "1.5 hrs", reliability: "70 mi", highlight: true },
-      { name: "San Diego via LA", transit: "4.5 hrs", reliability: "150+ mi" },
-      { name: "I-5 Corridor", transit: "3.5 hrs", reliability: "120 mi" },
-    ],
-    metric: { value: "$350", label: "savings per load + 3 hours faster" },
-    insight: "Optimize last-mile routing to cut costs and transit time",
-    cta: { label: "Try Route Optimizer", href: "/dashboard?scenario=tj-crossdock" },
-  },
-  {
-    id: 3,
-    title: "Jones Act — Domestic Hawaii",
-    subtitle: "Compare Jones Act carriers for US territory shipping",
-    accent: "text-amber-400",
-    accentBg: "bg-amber-500/10",
-    accentBorder: "border-amber-500/30",
-    accentGlow: "shadow-[0_0_40px_rgba(245,158,11,0.15)]",
-    icon: Anchor,
-    route: { origin: "Los Angeles", destination: "Honolulu", distance: "2,226 nmi" },
-    carriers: [
-      { name: "Matson (CLX)", transit: "5 days", reliability: "85%", highlight: true },
-      { name: "Pasha Hawaii", transit: "6 days", reliability: "82%" },
-    ],
-    metric: { value: "$0", label: "customs/duties — domestic American flag vessels" },
-    insight: "Compare Jones Act carriers for US territory shipping",
-    cta: { label: "Search Jones Act Routes", href: "/dashboard?scenario=ja-hawaii" },
-  },
-  {
-    id: 4,
-    title: "Backhaul — European Export Program",
-    subtitle: "Turn empty return containers into revenue",
-    accent: "text-purple-400",
-    accentBg: "bg-purple-500/10",
-    accentBorder: "border-purple-500/30",
-    accentGlow: "shadow-[0_0_40px_rgba(168,85,247,0.15)]",
-    icon: Package,
-    route: { origin: "Rotterdam", destination: "Puerto Barrios, Guatemala", distance: "5,100 nmi" },
-    carriers: [
-      { name: "Great White Fleet", transit: "14 days", reliability: "78%", highlight: true },
-      { name: "CMA CGM", transit: "18 days", reliability: "72%" },
-      { name: "Hapag-Lloyd", transit: "16 days", reliability: "74%" },
-    ],
-    metric: { value: "40%", label: "cost reduction via backhaul fill" },
-    insight: "Turn empty return containers into revenue",
-    cta: { label: "Explore Backhaul Deals", href: "/dashboard?scenario=eu-backhaul" },
-  },
-];
+const modeIcon = {
+  "ocean-reefer": Ship,
+  "ocean-dry": Ship,
+  "jones-act-multimodal": Anchor,
+} as const;
 
-/* ────────── COMPONENT ────────── */
+function formatMoney(v: number) {
+  return v.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+}
 
 export default function DemoPage() {
-  const [activeId, setActiveId] = useState<number | null>(1);
+  const [activeId, setActiveId] = useState<string | null>(demoScenarios[0]?.id ?? null);
 
   return (
     <main className="min-h-screen bg-[#0a0a1a] text-white overflow-hidden">
@@ -130,7 +85,7 @@ export default function DemoPage() {
             </span>
           </Link>
           <Link
-            href="/dashboard"
+            href="/platform/dashboard"
             className="text-sm text-white/60 hover:text-white transition-colors"
           >
             Open Dashboard
@@ -139,69 +94,57 @@ export default function DemoPage() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative pt-32 pb-20 px-6 text-center">
-        {/* Background glow */}
+      <section className="relative pt-32 pb-16 px-6 text-center">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-ocean-500/8 rounded-full blur-[120px] pointer-events-none" />
-
         <p className="text-sm font-semibold text-ocean-400 tracking-widest uppercase mb-4">
           Live Demo
         </p>
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter mb-5">
-          Shipping Savior
+          Pick a real shipment
         </h1>
-        <p className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto leading-relaxed mb-10">
-          See how global trade intelligence works across 4 real-world scenarios
+        <p className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto leading-relaxed">
+          Three pre-loaded scenarios. Real lanes, real carriers, real numbers.
+          Click one and we&apos;ll walk you through the platform with that data live.
         </p>
-
-        {/* Progress dots */}
-        <div className="flex items-center justify-center gap-3 mb-6">
-          {scenarios.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => setActiveId(activeId === s.id ? null : s.id)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                activeId === s.id
-                  ? "scale-125 bg-ocean-400 ring-2 ring-ocean-400/40"
-                  : "bg-white/20 hover:bg-white/40"
-              }`}
-              aria-label={`Scenario ${s.id}`}
-            />
-          ))}
-          <span className="ml-3 text-xs text-white/30 font-mono">
-            {activeId ? `${activeId}/4` : "0/4"}
-          </span>
-        </div>
       </section>
 
       {/* ── SCENARIO CARDS ── */}
       <section className="max-w-5xl mx-auto px-6 pb-32 space-y-6">
-        {scenarios.map((scenario) => {
+        {demoScenarios.map((scenario) => {
           const isOpen = activeId === scenario.id;
-          const Icon = scenario.icon;
+          const accent = accentClasses[scenario.accent];
+          const Icon = modeIcon[scenario.mode] ?? Ship;
+          const cheapest = [...scenario.carriers].sort((a, b) => a.rate - b.rate)[0];
 
           return (
             <div
               key={scenario.id}
               className={`rounded-2xl border transition-all duration-500 cursor-pointer
                 ${isOpen
-                  ? `${scenario.accentBorder} ${scenario.accentGlow} bg-white/[0.03]`
+                  ? `${accent.border} ${accent.glow} bg-white/[0.03]`
                   : "border-white/5 bg-white/[0.02] hover:border-white/10 hover:bg-white/[0.04]"
                 }`}
               onClick={() => setActiveId(isOpen ? null : scenario.id)}
             >
               {/* Header */}
               <div className="flex items-center gap-4 p-6">
-                <div className={`w-12 h-12 rounded-xl ${scenario.accentBg} flex items-center justify-center flex-shrink-0`}>
-                  <Icon className={`w-6 h-6 ${scenario.accent}`} />
+                <div className={`w-12 h-12 rounded-xl ${accent.bg} flex items-center justify-center flex-shrink-0`}>
+                  <Icon className={`w-6 h-6 ${accent.text}`} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-xs font-mono ${scenario.accent} opacity-60`}>
-                      {String(scenario.id).padStart(2, "0")}
+                    <span className={`text-xs font-mono ${accent.text} opacity-60 uppercase tracking-wider`}>
+                      {scenario.mode === "jones-act-multimodal" ? "Jones Act" : scenario.mode === "ocean-reefer" ? "Reefer" : "Ocean dry"}
                     </span>
-                    <h2 className="text-lg font-bold truncate">{scenario.title}</h2>
+                    <h2 className="text-lg font-bold truncate">{scenario.name}</h2>
                   </div>
-                  <p className="text-sm text-white/40 truncate">{scenario.subtitle}</p>
+                  <p className="text-sm text-white/40 truncate">
+                    {scenario.containerCount}× {scenario.containerType} · {scenario.commodity.split(" (")[0]}
+                  </p>
+                </div>
+                <div className="hidden sm:flex items-center gap-1.5 text-xs text-white/40 font-medium">
+                  <Clock className="w-3.5 h-3.5" />
+                  {scenario.walkthroughLength}
                 </div>
                 <ChevronRight
                   className={`w-5 h-5 text-white/20 transition-transform duration-300 flex-shrink-0 ${
@@ -213,35 +156,36 @@ export default function DemoPage() {
               {/* Expanded Content */}
               <div
                 className={`overflow-hidden transition-all duration-500 ${
-                  isOpen ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
+                  isOpen ? "max-h-[900px] opacity-100" : "max-h-0 opacity-0"
                 }`}
               >
                 <div className="px-6 pb-6 space-y-6">
-                  {/* Divider */}
-                  <div className={`h-px ${scenario.accentBg}`} />
+                  <div className={`h-px ${accent.bg}`} />
 
-                  {/* Route Visualization */}
+                  {/* Route */}
                   <div className="flex items-center gap-3 flex-wrap">
                     <div className="flex items-center gap-2">
-                      <Globe className={`w-4 h-4 ${scenario.accent}`} />
-                      <span className="text-sm font-medium">{scenario.route.origin}</span>
+                      <Globe className={`w-4 h-4 ${accent.text}`} />
+                      <span className="text-sm font-medium">{scenario.origin}</span>
                     </div>
                     <div className="flex items-center gap-2 text-white/20">
                       <div className="w-12 h-px bg-current" />
-                      <span className="text-xs font-mono">{scenario.route.distance}</span>
-                      <div className="w-12 h-px bg-current" />
                       <ArrowRight className="w-4 h-4" />
+                      <div className="w-12 h-px bg-current" />
                     </div>
-                    <span className="text-sm font-medium">{scenario.route.destination}</span>
+                    <span className="text-sm font-medium">{scenario.destination}</span>
                   </div>
 
-                  {/* Carrier Comparison Table */}
+                  {/* Carrier table */}
                   <div className="rounded-xl border border-white/5 overflow-hidden">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-white/5">
+                          <th className="text-left px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider">Carrier</th>
                           <th className="text-left px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider">
-                            {scenario.id === 2 ? "Route" : "Carrier"}
+                            <span className="inline-flex items-center gap-1">
+                              <DollarSign className="w-3 h-3" /> Rate
+                            </span>
                           </th>
                           <th className="text-left px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider">
                             <span className="inline-flex items-center gap-1">
@@ -250,67 +194,68 @@ export default function DemoPage() {
                           </th>
                           <th className="text-left px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider">
                             <span className="inline-flex items-center gap-1">
-                              <Shield className="w-3 h-3" /> {scenario.id === 2 ? "Distance" : "Reliability"}
+                              <Shield className="w-3 h-3" /> Reliability
                             </span>
                           </th>
                         </tr>
                       </thead>
                       <tbody>
-                        {scenario.carriers.map((c, i) => (
+                        {scenario.carriers.map((c) => (
                           <tr
                             key={c.name}
                             className={`border-b border-white/5 last:border-0 ${
-                              c.highlight ? `${scenario.accentBg}` : ""
+                              c.highlight ? `${accent.bg}` : ""
                             }`}
                           >
                             <td className="px-4 py-3 font-medium">
                               {c.name}
                               {c.highlight && (
-                                <span className={`ml-2 text-[10px] font-bold uppercase ${scenario.accent}`}>
+                                <span className={`ml-2 text-[10px] font-bold uppercase ${accent.text}`}>
                                   Best
                                 </span>
                               )}
                             </td>
-                            <td className="px-4 py-3 text-white/70 font-mono text-xs">{c.transit}</td>
-                            <td className="px-4 py-3 text-white/70 font-mono text-xs">{c.reliability}</td>
+                            <td className="px-4 py-3 text-white/70 font-mono text-xs">{formatMoney(c.rate)}</td>
+                            <td className="px-4 py-3 text-white/70 font-mono text-xs">{c.transitDays}d</td>
+                            <td className="px-4 py-3 text-white/70 font-mono text-xs">
+                              {c.reliabilityLabel ?? `${c.reliability}%`}
+                            </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
                   </div>
 
-                  {/* Key Metric Callout */}
-                  <div className={`rounded-xl ${scenario.accentBg} border ${scenario.accentBorder} p-5 flex items-center gap-4`}>
-                    <div className={`w-14 h-14 rounded-xl bg-[#0a0a1a] flex items-center justify-center flex-shrink-0`}>
-                      {scenario.id === 3 ? (
-                        <Shield className={`w-7 h-7 ${scenario.accent}`} />
-                      ) : scenario.id === 4 ? (
-                        <TrendingDown className={`w-7 h-7 ${scenario.accent}`} />
-                      ) : (
-                        <DollarSign className={`w-7 h-7 ${scenario.accent}`} />
-                      )}
+                  {/* Savings callout */}
+                  <div className={`rounded-xl ${accent.bg} border ${accent.border} p-5 flex items-center gap-4`}>
+                    <div className="w-14 h-14 rounded-xl bg-[#0a0a1a] flex items-center justify-center flex-shrink-0">
+                      <TrendingDown className={`w-7 h-7 ${accent.text}`} />
                     </div>
-                    <div>
-                      <div className={`text-3xl font-bold ${scenario.accent}`}>
-                        {scenario.metric.value}
+                    <div className="flex-1">
+                      <div className={`text-xl font-bold ${accent.text}`}>
+                        {scenario.savingsCallout}
                       </div>
-                      <div className="text-sm text-white/50">{scenario.metric.label}</div>
+                      <div className="text-sm text-white/50 mt-1">{scenario.useCase}</div>
                     </div>
                   </div>
 
-                  {/* Insight + CTA */}
+                  {/* CTA */}
                   <div className="flex items-center justify-between flex-wrap gap-4">
-                    <p className="text-sm text-white/40 italic max-w-md">
-                      &ldquo;{scenario.insight}&rdquo;
-                    </p>
+                    <div className="flex items-center gap-2 text-xs text-white/40">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      Cheapest carrier on this lane:{" "}
+                      <span className="text-white/80 font-semibold">
+                        {cheapest?.name ?? "—"} {cheapest ? `at ${formatMoney(cheapest.rate)}` : ""}
+                      </span>
+                    </div>
                     <Link
-                      href={scenario.cta.href}
+                      href={`/platform/scenarios/${scenario.id}?tour=true`}
                       onClick={(e) => e.stopPropagation()}
                       className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold
-                        ${scenario.accentBg} ${scenario.accent} border ${scenario.accentBorder}
+                        ${accent.bg} ${accent.text} border ${accent.border}
                         hover:brightness-125 transition-all`}
                     >
-                      {scenario.cta.label}
+                      Start guided walkthrough
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
@@ -336,9 +281,16 @@ export default function DemoPage() {
                 shadow-[0_8px_32px_rgba(37,99,235,0.3)] hover:shadow-[0_12px_48px_rgba(37,99,235,0.45)]
                 hover:brightness-110 transition-all duration-300"
             >
-              Schedule Demo
+              Schedule a Demo
               <ArrowRight className="w-5 h-5" />
             </ScheduleDemoButton>
+            <Link
+              href="/platform/dashboard"
+              className="inline-flex items-center gap-3 border border-white/20 hover:border-white/40 text-white font-medium px-10 py-4 rounded-full text-lg
+                hover:bg-white/5 transition-all duration-300"
+            >
+              Open Dashboard
+            </Link>
             <Link
               href="/pricing"
               className="inline-flex items-center gap-3 border border-white/20 hover:border-white/40 text-white font-medium px-10 py-4 rounded-full text-lg

@@ -335,6 +335,7 @@ export default function ShipmentsPage() {
           />
         </div>
         <button
+          data-tour-step="3"
           onClick={() => { setUploadMode(true); setExtracted(null); setError(null); }}
           className="inline-flex items-center gap-2 rounded-xl bg-ocean-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-ocean-600"
         >
