@@ -1,38 +1,19 @@
 /**
- * E2E: marketing surface (AI-8783).
+ * E2E: marketing surface (AI-8783, baseline cleared in AI-9199).
  *
  * Top of the funnel: homepage, /pricing, /demo. These pages must work
- * unauthenticated, render fast, and not regress beyond the documented a11y
- * baseline.
+ * unauthenticated, render fast, and have ZERO serious/critical a11y
+ * violations.
  *
- * a11y baseline (May 2026): the marketing surface ships with two known issues
- * that pre-date this PR — color-contrast on accent colors (impact: serious)
- * and one icon-only header button missing an aria-label (rule: button-name,
- * impact: critical). Both are tracked under the next polish sprint. We
- * filter them out so this suite catches NEW regressions without blocking on
- * the baseline. When the polish sprint lands, drop A11Y_BASELINE_RULES to []
- * and the suite will start enforcing zero criticals.
+ * a11y enforcement: AI-8783 originally shipped with an A11Y_BASELINE_RULES
+ * filter that excluded two pre-existing critical violations
+ * (`button-name` on the icon-only mobile menu button + `color-contrast`
+ * on the LogoMarquee accent text). AI-9199 fixed both root causes and
+ * dropped the filter — any new critical or serious violation now breaks
+ * CI. See e2e/helpers/a11y.ts for the helper.
  */
-import { test, expect, type Page } from '@playwright/test';
-import AxeBuilder from '@axe-core/playwright';
-
-const A11Y_BASELINE_RULES = ['button-name', 'color-contrast'] as const;
-
-async function assertNoNewCriticalA11yViolations(page: Page) {
-  await page.waitForLoadState('domcontentloaded');
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa'])
-    .analyze();
-  const blocking = results.violations
-    .filter((v) => v.impact === 'critical')
-    .filter((v) => !A11Y_BASELINE_RULES.includes(v.id as (typeof A11Y_BASELINE_RULES)[number]));
-  expect(
-    blocking,
-    `New critical a11y violations (above baseline):\n${blocking
-      .map((v) => `  - ${v.id}: ${v.help}`)
-      .join('\n')}`
-  ).toEqual([]);
-}
+import { test, expect } from '@playwright/test';
+import { expectNoSeriousViolations } from './helpers/a11y';
 
 test.describe('Homepage', () => {
   test('loads, exposes hero CTA + key marketing sections', async ({ page }) => {
@@ -43,9 +24,9 @@ test.describe('Homepage', () => {
     expect(await pricingLinks.count()).toBeGreaterThan(0);
   });
 
-  test('no NEW critical a11y violations beyond baseline', async ({ page }) => {
+  test('zero serious/critical a11y violations', async ({ page }) => {
     await page.goto('/');
-    await assertNoNewCriticalA11yViolations(page);
+    await expectNoSeriousViolations(page);
   });
 });
 
@@ -57,9 +38,9 @@ test.describe('Pricing page', () => {
     await expect(page.getByText(/^Enterprise$/).first()).toBeVisible();
   });
 
-  test('no NEW critical a11y violations beyond baseline', async ({ page }) => {
+  test('zero serious/critical a11y violations', async ({ page }) => {
     await page.goto('/pricing');
-    await assertNoNewCriticalA11yViolations(page);
+    await expectNoSeriousViolations(page);
   });
 });
 
