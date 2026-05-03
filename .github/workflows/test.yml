@@ -25,7 +25,10 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - name: Install deps
-        run: npm ci
+        # `npm install` (not ci) — Node 20 ships with npm 10 which is strict
+        # about transitive-dep peer flags written by newer npm versions; install
+        # is forgiving and produces the same node_modules tree.
+        run: npm install --no-audit --no-fund
       - name: TypeScript check
         run: npm run typecheck
       - name: Lint (non-blocking warnings)
@@ -63,7 +66,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-playwright-
       - name: Install deps
-        run: npm ci
+        # `npm install` (not ci) — Node 20 ships with npm 10 which is strict
+        # about transitive-dep peer flags written by newer npm versions; install
+        # is forgiving and produces the same node_modules tree.
+        run: npm install --no-audit --no-fund
       - name: Install Playwright (chromium only)
         run: npx playwright install --with-deps chromium
       - name: Start Next dev server
