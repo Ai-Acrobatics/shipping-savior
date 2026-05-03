@@ -18,7 +18,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? 'sk_test_placeholder', {
   // Pin to a stable API version so dashboard webhook deliveries match what this code expects.
   // Update intentionally when migrating to a newer version.
-  apiVersion: '2025-09-30.clover',
+  apiVersion: '2026-04-22.dahlia',
   appInfo: {
     name: 'shipping-savior',
     version: '0.1.0',

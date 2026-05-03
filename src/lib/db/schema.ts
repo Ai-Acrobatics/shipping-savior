@@ -42,14 +42,44 @@ export const auditActionEnum = pgEnum('audit_action', [
   'calculation_deleted',
 ]);
 
+// ── Billing Enums (AI-8777) ─────────────────────────────
+//
+// `plan` enum drives tier limits + feature gating. We keep the existing
+// organizations.plan varchar column for backward compat (defaulted to 'free')
+// and add a typed enum column alongside; the webhook handler writes to both
+// so we can flip readers over to the enum incrementally.
+
+export const planEnum = pgEnum('plan_tier', ['free', 'premium', 'enterprise']);
+
+export const subscriptionStatusEnum = pgEnum('subscription_status', [
+  'active',
+  'past_due',
+  'canceled',
+  'trialing',
+  'incomplete',
+  'incomplete_expired',
+  'unpaid',
+  'paused',
+]);
+
 // ── Organizations ──────────────────────────────────────
 
 export const organizations = pgTable('organizations', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 255 }).notNull().unique(),
+  // Legacy free-form plan column. Kept for backward compat with existing readers.
+  // New code should prefer `planTier` (typed enum) — they are kept in sync by the
+  // Stripe webhook handler.
   plan: varchar('plan', { length: 50 }).notNull().default('free'),
   isDemo: boolean('is_demo').notNull().default(false),
+  // ── Billing (AI-8777) ──
+  planTier: planEnum('plan_tier').notNull().default('free'),
+  stripeCustomerId: text('stripe_customer_id'),
+  stripeSubscriptionId: text('stripe_subscription_id'),
+  stripePriceId: text('stripe_price_id'),
+  subscriptionStatus: subscriptionStatusEnum('subscription_status'),
+  currentPeriodEnd: timestamp('current_period_end', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
@@ -297,7 +327,11 @@ export type OrgRole = (typeof orgRoleEnum.enumValues)[number];
 export type CalculationType = (typeof calculatorTypeEnum.enumValues)[number];
 export type AuditAction = (typeof auditActionEnum.enumValues)[number];
 export type ContractType = (typeof contractTypeEnum.enumValues)[number];
-export type Plan = 'free' | 'pro' | 'enterprise';
+// AI-8777 — Plan tier matches `planEnum` enum values. 'pro' alias kept out;
+// any legacy 'pro' rows in the varchar `plan` column are treated as 'premium'
+// when read through the typed plan tier helpers.
+export type Plan = (typeof planEnum.enumValues)[number];
+export type SubscriptionStatus = (typeof subscriptionStatusEnum.enumValues)[number];
 
 // ── Shipment Enums ────────────────────────────────────
 
