@@ -47,11 +47,28 @@ function GitHubIcon() {
   );
 }
 
+/**
+ * Validate a candidate callbackUrl is a same-origin relative path.
+ * Rejects protocol-relative URLs (`//evil.com`), absolute URLs, and anything
+ * that does not start with a single forward slash. Open-redirect protection
+ * (AI-9199).
+ */
+function safeCallbackUrl(raw: string | null | undefined): string | null {
+  if (!raw) return null;
+  if (!raw.startsWith('/')) return null;
+  if (raw.startsWith('//')) return null;
+  if (raw.startsWith('/\\')) return null;
+  return raw;
+}
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const inviteToken = searchParams.get('invite');
   const verified = searchParams.get('verified') === '1';
+  // AI-9199 — honor ?callbackUrl=<path> when middleware/layout bounced an
+  // unauth user here. Validated against open-redirect.
+  const callbackUrlParam = safeCallbackUrl(searchParams.get('callbackUrl'));
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -71,9 +88,11 @@ function LoginForm() {
       setError('Invalid email or password');
       setLoading(false);
     } else {
-      // Redirect to invite page if logging in via invite link
+      // Redirect priority: invite token > callbackUrl > /platform default
       if (inviteToken) {
         router.push(`/invite/${inviteToken}`);
+      } else if (callbackUrlParam) {
+        router.push(callbackUrlParam);
       } else {
         router.push('/platform');
       }
@@ -81,7 +100,9 @@ function LoginForm() {
   }
 
   function handleOAuth(provider: 'google' | 'github') {
-    const callbackUrl = inviteToken ? `/invite/${inviteToken}` : '/platform';
+    const callbackUrl = inviteToken
+      ? `/invite/${inviteToken}`
+      : callbackUrlParam ?? '/platform';
     void signIn(provider, { callbackUrl });
   }
 

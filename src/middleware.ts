@@ -14,8 +14,13 @@ export default auth((req) => {
   const isVerifyEmailPage = req.nextUrl.pathname.startsWith('/verify-email');
 
   // Unauthenticated user hitting /platform/* → redirect to /login
+  // Preserve the original path + query as callbackUrl so the user lands
+  // back on the page they intended after sign-in (AI-9199).
   if (isPlatformRoute && !isAuthenticated) {
-    return NextResponse.redirect(new URL('/login', req.url));
+    const callbackUrl = req.nextUrl.pathname + req.nextUrl.search;
+    const loginUrl = new URL('/login', req.url);
+    loginUrl.searchParams.set('callbackUrl', callbackUrl);
+    return NextResponse.redirect(loginUrl);
   }
 
   // Email-verification gate (opt-in via env). Authenticated users on
@@ -45,7 +50,13 @@ export default auth((req) => {
     return NextResponse.next();
   }
 
-  return NextResponse.next();
+  // Forward the original path + query to downstream server components via a
+  // request header so a layout-level redirect (defense-in-depth) can also
+  // build a correct callbackUrl. Next.js does not expose the pathname to
+  // server components otherwise (AI-9199).
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set('x-pathname', req.nextUrl.pathname + req.nextUrl.search);
+  return NextResponse.next({ request: { headers: requestHeaders } });
 });
 
 export const config = {
