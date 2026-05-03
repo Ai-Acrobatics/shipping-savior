@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import { contracts, contractLanes } from "@/lib/db/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import type { ContractType } from "@/lib/db/schema";
+import { enforceLimit, LimitExceededError } from "@/lib/billing/limits";
+import { limitExceededResponse } from "@/lib/billing/respond";
 
 const VALID_CONTRACT_TYPES: ContractType[] = ["spot", "90_day", "180_day", "365_day"];
 
@@ -108,6 +110,14 @@ export async function POST(request: NextRequest) {
   }
   if (end <= start) {
     return NextResponse.json({ error: "End date must be after start date" }, { status: 400 });
+  }
+
+  // Tier enforcement (AI-8778) — contracts metered same as parsed uploads.
+  try {
+    await enforceLimit(orgId, "contractUploads");
+  } catch (err) {
+    if (err instanceof LimitExceededError) return limitExceededResponse(err);
+    throw err;
   }
 
   try {
