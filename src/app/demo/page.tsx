@@ -146,6 +146,7 @@ export default function DemoPage() {
                 <div className="hidden sm:flex items-center gap-1.5 text-xs text-white/40 font-medium">
                   <Clock className="w-3.5 h-3.5" />
                   {scenario.walkthroughLength}
+                </div>
                 <ChevronRight
                   className={`w-5 h-5 text-white/20 transition-transform duration-300 flex-shrink-0 ${
                     isOpen ? "rotate-90" : ""

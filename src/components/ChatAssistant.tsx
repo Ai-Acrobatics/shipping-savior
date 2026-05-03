@@ -242,26 +242,27 @@ export default function ChatAssistant() {
 
   return (
     <>
-      {/* ── Floating button ─────────────────────────────────────────────── */}
+      {/* ── Floating button — AI-6543 mobile: smaller + tighter inset so it stops overlapping demo card content ── */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-50 group"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 group"
           title="Ask AI"
+          aria-label="Open AI assistant"
         >
           <div className="relative">
             {/* Pulse ring */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-ocean-500 to-indigo-500 animate-ping opacity-20" />
             {/* Button */}
             <div
-              className="relative w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg
+              className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-white shadow-lg
                          hover:scale-110 transition-transform duration-300"
               style={{
                 background: 'linear-gradient(135deg, #2563eb, #6366f1)',
                 boxShadow: '0 4px 20px rgba(37, 99, 235, 0.4)',
               }}
             >
-              <ShipIcon className="w-6 h-6" />
+              <ShipIcon className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
           </div>
           {/* Tooltip */}
