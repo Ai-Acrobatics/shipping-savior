@@ -11,9 +11,19 @@ export default function ForgotPasswordPage() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
-    // TODO: wire to /api/auth/forgot-password once the backend route exists
-    // For now, swallow + show confirmation so the UX flow is testable end-to-end
-    await new Promise((r) => setTimeout(r, 600));
+    const formData = new FormData(e.currentTarget);
+    const email = String(formData.get("email") || "");
+
+    try {
+      await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+    } catch {
+      // Swallow — we always show the same confirmation regardless of result
+      // to prevent email enumeration.
+    }
     setSubmitted(true);
     setLoading(false);
   }
@@ -28,7 +38,7 @@ export default function ForgotPasswordPage() {
           Check your email
         </h2>
         <p className="text-sm text-navy-600 mb-6">
-          If an account exists for that email, we sent a reset link. The link expires in 30 minutes.
+          If an account exists for that email, we sent a reset link. The link expires in 60 minutes.
         </p>
         <Link
           href="/login"

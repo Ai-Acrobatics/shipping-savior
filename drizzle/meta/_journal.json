@@ -15,6 +15,13 @@
       "when": 1777768751343,
       "tag": "0001_complete_pepper_potts",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777768952106,
+      "tag": "0002_whole_fantastic_four",
+      "breakpoints": true
     }
   ]
 }
