@@ -12,22 +12,15 @@
     {
       "idx": 1,
       "version": "7",
-      "when": 1777768751343,
-      "tag": "0001_complete_pepper_potts",
+      "when": 1777768554173,
+      "tag": "0001_tranquil_synch",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
-      "when": 1777768952106,
-      "tag": "0002_whole_fantastic_four",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1777769185442,
-      "tag": "0003_parallel_the_liberteens",
+      "when": 1777769456961,
+      "tag": "0002_acoustic_spirit",
       "breakpoints": true
     }
   ]

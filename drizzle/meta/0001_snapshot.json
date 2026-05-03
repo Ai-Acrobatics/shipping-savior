@@ -1,5 +1,5 @@
 {
-  "id": "fbba3d9a-8521-4cc6-a8d0-ed92a528bac7",
+  "id": "2885f170-07d9-4bb8-b5bd-62cf5c743d11",
   "prevId": "afbccfef-0dc0-4d7a-83c9-35b0e68793a3",
   "version": "7",
   "dialect": "postgresql",
@@ -851,6 +851,45 @@
           "notNull": true,
           "default": false
         },
+        "plan_tier": {
+          "name": "plan_tier",
+          "type": "plan_tier",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'free'"
+        },
+        "stripe_customer_id": {
+          "name": "stripe_customer_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stripe_subscription_id": {
+          "name": "stripe_subscription_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stripe_price_id": {
+          "name": "stripe_price_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subscription_status": {
+          "name": "subscription_status",
+          "type": "subscription_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current_period_end": {
+          "name": "current_period_end",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -1157,12 +1196,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "email_verified_at": {
-          "name": "email_verified_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -1242,6 +1275,15 @@
         "viewer"
       ]
     },
+    "public.plan_tier": {
+      "name": "plan_tier",
+      "schema": "public",
+      "values": [
+        "free",
+        "premium",
+        "enterprise"
+      ]
+    },
     "public.shipment_source": {
       "name": "shipment_source",
       "schema": "public",
@@ -1263,6 +1305,20 @@
         "delayed",
         "arrived",
         "pending"
+      ]
+    },
+    "public.subscription_status": {
+      "name": "subscription_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "past_due",
+        "canceled",
+        "trialing",
+        "incomplete",
+        "incomplete_expired",
+        "unpaid",
+        "paused"
       ]
     }
   },
