@@ -11,6 +11,14 @@ const navLinks = [
   { label: "Dashboard", href: "/dashboard" },
 ];
 
+// AI-8775: vertical landing pages — surfaced as a dedicated Industries dropdown
+// so persona-specific buyers can self-serve into the funnel.
+const industryLinks = [
+  { label: "Cold-chain", href: "/industries/cold-chain" },
+  { label: "Automotive", href: "/industries/automotive" },
+  { label: "Personal care + beauty", href: "/industries/personal-care" },
+];
+
 const moreLinks = [
   { label: "Carriers", href: "/carrier-comparison" },
   { label: "FTZ Analyzer", href: "/ftz-analyzer" },
@@ -28,7 +36,9 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [industriesOpen, setIndustriesOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
+  const industriesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -40,6 +50,12 @@ export default function Header() {
     function handleClickOutside(e: MouseEvent) {
       if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
         setMoreOpen(false);
+      }
+      if (
+        industriesRef.current &&
+        !industriesRef.current.contains(e.target as Node)
+      ) {
+        setIndustriesOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -73,6 +89,34 @@ export default function Header() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-ocean-500 to-indigo-500 rounded-full transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
+
+          {/* Industries dropdown (AI-8775) */}
+          <div ref={industriesRef} className="relative">
+            <button
+              onClick={() => setIndustriesOpen(!industriesOpen)}
+              className="relative flex items-center gap-1 text-sm font-medium text-navy-500 hover:text-ocean-600 transition-colors group"
+            >
+              Industries
+              <ChevronDown
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${industriesOpen ? "rotate-180" : ""}`}
+              />
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-ocean-500 to-indigo-500 rounded-full transition-all duration-300 group-hover:w-full" />
+            </button>
+            {industriesOpen && (
+              <div className="absolute top-full right-0 mt-3 w-56 bg-white border border-navy-100 rounded-xl shadow-card p-2 z-50">
+                {industryLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="block px-3 py-2 text-sm text-navy-600 hover:text-ocean-600 hover:bg-ocean-50 rounded-lg transition-colors"
+                    onClick={() => setIndustriesOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* More dropdown */}
           <div ref={moreRef} className="relative">
@@ -133,6 +177,23 @@ export default function Header() {
               {link.label}
             </a>
           ))}
+
+          {/* Mobile: Industries section (AI-8775) */}
+          <div className="border-t border-navy-100 mt-2 pt-2">
+            <p className="px-0 py-1.5 text-xs font-semibold text-navy-400 uppercase tracking-wider">
+              Industries
+            </p>
+            {industryLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="block py-2 text-sm text-navy-500 hover:text-ocean-600"
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
 
           {/* Mobile: More section */}
           <div className="border-t border-navy-100 mt-2 pt-2">

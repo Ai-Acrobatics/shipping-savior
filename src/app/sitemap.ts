@@ -19,6 +19,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/port-finder`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${baseUrl}/data-intelligence`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${baseUrl}/knowledge-base`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
+    // AI-8775: vertical industry landing pages
+    { url: `${baseUrl}/industries/cold-chain`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${baseUrl}/industries/automotive`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${baseUrl}/industries/personal-care`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/platform-architecture`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${baseUrl}/tech-spec`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${baseUrl}/six-sigma`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
