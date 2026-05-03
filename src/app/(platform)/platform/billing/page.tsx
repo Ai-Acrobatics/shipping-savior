@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { organizations } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { CheckCircle2, AlertTriangle, CreditCard } from "lucide-react";
+import { CheckCircle2, AlertTriangle, CreditCard, Gauge } from "lucide-react";
 import BillingActions from "./BillingActions";
+import { getAllUsage, resourceLabel } from "@/lib/billing/usage";
 
 /**
  * /platform/billing (AI-8777)
@@ -89,6 +90,9 @@ export default async function BillingPage({
 
   const justSucceeded = searchParams?.success === "1";
 
+  // Monthly usage snapshot (AI-8778)
+  const { usage } = await getAllUsage(orgId);
+
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-6">
       <header>
@@ -153,6 +157,58 @@ export default async function BillingPage({
           hasActiveSubscription={hasActiveSubscription}
           premiumPriceId={process.env.STRIPE_PRICE_PREMIUM_MONTHLY ?? ""}
         />
+      </div>
+
+      {/* This month's usage card (AI-8778) */}
+      <div className="rounded-2xl border border-navy-800 bg-[#0d1230]/80 p-6">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-10 h-10 rounded-lg bg-emerald-500/15 flex items-center justify-center">
+            <Gauge className="w-5 h-5 text-emerald-400" />
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-wider text-navy-500 font-semibold">
+              This month&apos;s usage
+            </p>
+            <p className="text-base font-semibold text-white">Resource consumption</p>
+          </div>
+        </div>
+
+        <ul className="space-y-4">
+          {usage.map((u) => {
+            const label = resourceLabel(u.resource);
+            const display = u.unlimited
+              ? `${u.used} (unlimited)`
+              : `${u.used} / ${u.limit}`;
+            const barColor =
+              u.pctUsed >= 100
+                ? "bg-red-500"
+                : u.pctUsed >= 80
+                  ? "bg-amber-400"
+                  : "bg-emerald-500";
+            return (
+              <li key={u.resource}>
+                <div className="flex items-baseline justify-between mb-1.5">
+                  <span className="text-sm font-medium text-navy-200 capitalize">{label}</span>
+                  <span className="text-xs text-navy-400 tabular-nums">{display}</span>
+                </div>
+                {!u.unlimited && (
+                  <div className="h-1.5 w-full rounded-full bg-navy-800 overflow-hidden">
+                    <div
+                      className={`h-full ${barColor} transition-all duration-500`}
+                      style={{ width: `${u.pctUsed}%` }}
+                      aria-label={`${u.pctUsed}% used`}
+                    />
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+
+        <p className="mt-5 text-xs text-navy-500">
+          Counts reset on the first of each month (UTC). Seat count includes
+          active members and outstanding invites.
+        </p>
       </div>
 
       {/* Plan reference card */}
