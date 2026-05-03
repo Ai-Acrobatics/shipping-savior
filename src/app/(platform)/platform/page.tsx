@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { Suspense } from "react";
 import {
   Calculator,
   DollarSign,
@@ -16,6 +17,7 @@ import {
 import TariffAlertCard from "@/components/platform/TariffAlertCard";
 import OnboardingWizard from "@/components/platform/OnboardingWizard";
 import HelpHint from "@/components/ui/HelpHint";
+import ScenarioBanner from "@/components/demo/ScenarioBanner";
 
 const stats = [
   { label: "Total Calculations", value: "0", icon: Calculator, color: "ocean" },
@@ -49,6 +51,11 @@ export default async function DashboardPage() {
     <div className="space-y-8">
       {/* First-run onboarding (gated by localStorage on the client) */}
       <OnboardingWizard initialName={userName} />
+
+      {/* AI-6537 — investor demo banner; renders only when ?scenario=<id> is present */}
+      <Suspense fallback={null}>
+        <ScenarioBanner />
+      </Suspense>
 
       {/* Welcome */}
       <div className="flex items-start justify-between gap-4">
@@ -121,8 +128,10 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Tariff Alert */}
-      <TariffAlertCard />
+      {/* Tariff Alert (also a tour anchor when no scenario is loaded) */}
+      <div data-tour-step="4">
+        <TariffAlertCard />
+      </div>
 
       {/* Recent Activity */}
       <div>
