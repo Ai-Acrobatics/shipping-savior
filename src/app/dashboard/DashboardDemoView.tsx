@@ -20,7 +20,6 @@ import {
   Users,
   ArrowRight,
   ArrowLeft,
-  Filter,
   Download,
   RefreshCw,
   Bell,
@@ -403,23 +402,13 @@ export default function DashboardDemoView() {
           />
         </div>
 
-        {/* Page Header */}
-        <div className="flex items-center justify-between">
+        {/* Page Header — AI-8729: removed static Filter/Export buttons that didn't ship */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div>
-            <h1 className="text-2xl font-bold text-navy-900">Operations Dashboard</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-navy-900">Operations Dashboard</h1>
             <p className="text-sm text-navy-500 mt-1">
               Real-time view of all shipments, costs, and partner activity
             </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 text-sm border border-navy-200 hover:bg-white px-4 py-2 rounded-lg text-navy-600 transition-colors">
-              <Filter className="w-4 h-4" />
-              Filter
-            </button>
-            <button className="flex items-center gap-2 text-sm border border-navy-200 hover:bg-white px-4 py-2 rounded-lg text-navy-600 transition-colors">
-              <Download className="w-4 h-4" />
-              Export
-            </button>
           </div>
         </div>
 

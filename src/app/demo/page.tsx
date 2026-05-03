@@ -132,13 +132,14 @@ export default function DemoPage() {
                   <Icon className={`w-6 h-6 ${accent.text}`} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-xs font-mono ${accent.text} opacity-60 uppercase tracking-wider`}>
+                  <div className="flex items-start gap-2 mb-1 flex-wrap">
+                    <span className={`text-xs font-mono ${accent.text} opacity-60 uppercase tracking-wider mt-1 flex-shrink-0`}>
                       {scenario.mode === "jones-act-multimodal" ? "Jones Act" : scenario.mode === "ocean-reefer" ? "Reefer" : "Ocean dry"}
                     </span>
-                    <h2 className="text-lg font-bold truncate">{scenario.name}</h2>
+                    {/* AI-6543 mobile: allow 2-line wrap so titles aren't clipped on narrow viewports */}
+                    <h2 className="text-base sm:text-lg font-bold leading-snug line-clamp-2">{scenario.name}</h2>
                   </div>
-                  <p className="text-sm text-white/40 truncate">
+                  <p className="text-xs sm:text-sm text-white/40 line-clamp-2">
                     {scenario.containerCount}× {scenario.containerType} · {scenario.commodity.split(" (")[0]}
                   </p>
                 </div>
@@ -176,23 +177,23 @@ export default function DemoPage() {
                     <span className="text-sm font-medium">{scenario.destination}</span>
                   </div>
 
-                  {/* Carrier table */}
-                  <div className="rounded-xl border border-white/5 overflow-hidden">
-                    <table className="w-full text-sm">
+                  {/* Carrier table — AI-6543 mobile: horizontal scroll instead of clipping */}
+                  <div className="rounded-xl border border-white/5 overflow-x-auto">
+                    <table className="w-full text-sm min-w-[480px]">
                       <thead>
                         <tr className="border-b border-white/5">
-                          <th className="text-left px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider">Carrier</th>
-                          <th className="text-left px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider">
+                          <th className="text-left px-3 sm:px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider whitespace-nowrap">Carrier</th>
+                          <th className="text-left px-3 sm:px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider whitespace-nowrap">
                             <span className="inline-flex items-center gap-1">
                               <DollarSign className="w-3 h-3" /> Rate
                             </span>
                           </th>
-                          <th className="text-left px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider">
+                          <th className="text-left px-3 sm:px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider whitespace-nowrap">
                             <span className="inline-flex items-center gap-1">
                               <Clock className="w-3 h-3" /> Transit
                             </span>
                           </th>
-                          <th className="text-left px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider">
+                          <th className="text-left px-3 sm:px-4 py-3 text-white/30 font-medium text-xs uppercase tracking-wider whitespace-nowrap">
                             <span className="inline-flex items-center gap-1">
                               <Shield className="w-3 h-3" /> Reliability
                             </span>
@@ -207,7 +208,7 @@ export default function DemoPage() {
                               c.highlight ? `${accent.bg}` : ""
                             }`}
                           >
-                            <td className="px-4 py-3 font-medium">
+                            <td className="px-3 sm:px-4 py-3 font-medium whitespace-nowrap">
                               {c.name}
                               {c.highlight && (
                                 <span className={`ml-2 text-[10px] font-bold uppercase ${accent.text}`}>
@@ -215,9 +216,9 @@ export default function DemoPage() {
                                 </span>
                               )}
                             </td>
-                            <td className="px-4 py-3 text-white/70 font-mono text-xs">{formatMoney(c.rate)}</td>
-                            <td className="px-4 py-3 text-white/70 font-mono text-xs">{c.transitDays}d</td>
-                            <td className="px-4 py-3 text-white/70 font-mono text-xs">
+                            <td className="px-3 sm:px-4 py-3 text-white/70 font-mono text-xs whitespace-nowrap">{formatMoney(c.rate)}</td>
+                            <td className="px-3 sm:px-4 py-3 text-white/70 font-mono text-xs whitespace-nowrap">{c.transitDays}d</td>
+                            <td className="px-3 sm:px-4 py-3 text-white/70 font-mono text-xs whitespace-nowrap">
                               {c.reliabilityLabel ?? `${c.reliability}%`}
                             </td>
                           </tr>
