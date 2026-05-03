@@ -39,3 +39,6 @@ tmp/
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# DB backups taken locally before migrations (AI-9199)
+/.planning/db-backup-*.sql
