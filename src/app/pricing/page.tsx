@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Header from "@/components/Header";
 import ScheduleDemoButton from "@/components/cal/ScheduleDemoButton";
+import PricingCheckoutCTA from "@/components/pricing/PricingCheckoutCTA";
 import { motion } from "framer-motion";
 import {
   Check,
@@ -30,6 +31,8 @@ interface Tier {
   /** Internal/external href. If `useScheduleModal` is true, the card renders a Cal.com modal trigger instead. */
   ctaHref: string;
   useScheduleModal?: boolean;
+  /** AI-8777: when set, the CTA POSTs to /api/billing/checkout (signed in) or routes to register with ?plan= (signed out). */
+  checkoutPlan?: "premium";
   highlighted: boolean;
   badge: string | null;
   features: string[];
@@ -68,6 +71,7 @@ const tiers: Tier[] = [
       "Full intelligence stack for freight teams who make daily routing, carrier, and tariff decisions.",
     cta: "Start Free Trial",
     ctaHref: "/register?plan=premium",
+    checkoutPlan: "premium",
     highlighted: true,
     badge: "MOST POPULAR",
     features: [
@@ -289,6 +293,14 @@ export default function PricingPage() {
                     >
                       {tier.cta}
                     </ScheduleDemoButton>
+                  ) : tier.checkoutPlan ? (
+                    <PricingCheckoutCTA
+                      plan={tier.checkoutPlan}
+                      source={`pricing_card_${tier.name.toLowerCase()}`}
+                      className={ctaClasses + " w-full"}
+                    >
+                      {tier.cta}
+                    </PricingCheckoutCTA>
                   ) : (
                     <Link href={tier.ctaHref} className={ctaClasses}>
                       {tier.cta}

@@ -8,6 +8,13 @@
       "when": 1777348008427,
       "tag": "0000_milky_hellcat",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777768554173,
+      "tag": "0001_tranquil_synch",
+      "breakpoints": true
     }
   ]
 }
