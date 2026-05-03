@@ -114,21 +114,14 @@ export default function RoutesPage() {
           {activeTab === "trends" && <TrendAnalysisChart />}
         </div>
 
-        {/* Bottom Navigation */}
-        <div className="flex items-center justify-between pb-8">
+        {/* Bottom Navigation — AI-8729: removed Back to Proposal (kicked platform users to marketing site) */}
+        <div className="flex items-center pb-8">
           <Link
             href="/dashboard"
             className="inline-flex items-center gap-2 text-sm text-navy-400 hover:text-ocean-400 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Dashboard
-          </Link>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-navy-400 hover:text-ocean-400 transition-colors"
-          >
-            Back to Proposal
-            <ArrowLeft className="w-4 h-4 rotate-180" />
           </Link>
         </div>
       </div>
