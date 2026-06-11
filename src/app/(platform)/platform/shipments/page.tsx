@@ -69,7 +69,7 @@ interface Shipment {
   weightKg: number | null;
   quantity: number | null;
   status: "in_transit" | "arrived" | "delayed" | "pending";
-  source: "manual" | "bol_ocr";
+  source: "manual" | "bol_ocr" | "csv_import" | "workbook_import";
   bolBlobUrl?: string | null;
   bolFileName?: string | null;
   createdAt: string;
@@ -781,9 +781,17 @@ export default function ShipmentsPage() {
                       <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                         s.source === "bol_ocr"
                           ? "bg-violet-100 text-violet-700"
-                          : "bg-navy-100 text-navy-600"
+                          : s.source === "workbook_import"
+                            ? "bg-sky-100 text-sky-700"
+                            : "bg-navy-100 text-navy-600"
                       }`}>
-                        {s.source === "bol_ocr" ? "AI / OCR" : "Manual"}
+                        {s.source === "bol_ocr"
+                          ? "AI / OCR"
+                          : s.source === "workbook_import"
+                            ? "Workbook"
+                            : s.source === "csv_import"
+                              ? "CSV"
+                              : "Manual"}
                       </span>
                     </td>
                     <td className="px-4 py-3">
