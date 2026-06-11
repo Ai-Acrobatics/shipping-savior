@@ -16,8 +16,8 @@ const config: CapacitorConfig = {
   appId: "com.shippingsavior.app",
   appName: "Shipping Savior",
   // webDir is required by the CLI but unused when server.url is set; it only
-  // needs to exist and contain an index.html (public/ does).
-  webDir: "public",
+  // needs to exist and contain an index.html.
+  webDir: "mobile-shell",
   server: {
     url: "https://shipping-savior.vercel.app",
     allowNavigation: ["shipping-savior.vercel.app", "*.stripe.com", "accounts.google.com", "github.com"],
