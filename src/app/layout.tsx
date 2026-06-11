@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import ServiceWorkerProvider from "@/components/providers/ServiceWorkerProvider";
 import SessionProvider from "@/components/providers/SessionProvider";
 import AnalyticsProvider from "@/components/providers/AnalyticsProvider";
 import ChatAssistant from "@/components/ChatAssistant";
@@ -16,8 +17,21 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0f172a",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://shipping-savior.vercel.app"),
+  applicationName: "Shipping Savior",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Shipping Savior",
+  },
   title: "Shipping Savior | International Logistics Platform",
   description:
     "Comprehensive logistics platform for international freight, cold chain, and import/export operations. Landed cost calculators, FTZ savings analysis, route comparison, and tariff optimization.",
@@ -52,6 +66,7 @@ export default function RootLayout({
         <SessionProvider>{children}</SessionProvider>
         <AnalyticsProvider />
         <ChatAssistant />
+        <ServiceWorkerProvider />
       </body>
     </html>
   );
