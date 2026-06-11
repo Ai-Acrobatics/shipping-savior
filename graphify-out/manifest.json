@@ -160,8 +160,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1781211977.5540798,
-    "ast_hash": "5127552482fdfb0127a1b9e96b7e6047",
+    "mtime": 1781212778.0916774,
+    "ast_hash": "d8bebd4599a9aa6464c120e61d1310fa",
     "semantic_hash": ""
   },
   "playwright.config.ts": {
@@ -250,13 +250,13 @@
     "semantic_hash": ""
   },
   "src/app/(auth)/login/page.tsx": {
-    "mtime": 1781211977.5610797,
-    "ast_hash": "50f7befe8c1447d6aa816cb844e5a361",
+    "mtime": 1781213664.7902644,
+    "ast_hash": "341bbb0c89408aa0a9c83bcaf9009c35",
     "semantic_hash": ""
   },
   "src/app/(auth)/register/page.tsx": {
-    "mtime": 1781211977.5610797,
-    "ast_hash": "be00dbb3981eea15a9d8ddea0aabd439",
+    "mtime": 1781213664.7902644,
+    "ast_hash": "05184c4f285878e1d9aaf3aaee623c8a",
     "semantic_hash": ""
   },
   "src/app/(auth)/reset-password/page.tsx": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "src/app/(platform)/platform/shipments/page.tsx": {
-    "mtime": 1781211977.5670795,
-    "ast_hash": "66813806ba13f0a3e878aca32f3db486",
+    "mtime": 1781213019.5832052,
+    "ast_hash": "7bb1b8526fa39eb4ed0bf07a9f06063a",
     "semantic_hash": ""
   },
   "src/app/agent-plan/page.tsx": {
@@ -580,8 +580,8 @@
     "semantic_hash": ""
   },
   "src/app/api/shipments/route.ts": {
-    "mtime": 1781211977.6020792,
-    "ast_hash": "f3b50fc550eddd4fab6daa9ff8f5e077",
+    "mtime": 1781212542.7640517,
+    "ast_hash": "8c571fa7da6dff52c9dfeb425d81ba10",
     "semantic_hash": ""
   },
   "src/app/calculators/page.tsx": {
@@ -760,8 +760,8 @@
     "semantic_hash": ""
   },
   "src/app/layout.tsx": {
-    "mtime": 1781211977.613079,
-    "ast_hash": "512d9bc0d0b5dbe134450e9a0a025cf4",
+    "mtime": 1781212669.299239,
+    "ast_hash": "c88db8978273c01a6c8a2a092fa12a16",
     "semantic_hash": ""
   },
   "src/app/monetization/page.tsx": {
@@ -2135,13 +2135,73 @@
     "semantic_hash": ""
   },
   "whats-next.md": {
-    "mtime": 1781211977.6440785,
-    "ast_hash": "523cb411a39dff6ee1f70730dfdd58ce",
+    "mtime": 1781213192.050722,
+    "ast_hash": "b5dfccb7ca042b46f539e57f44119908",
     "semantic_hash": ""
   },
   "public/images/og-image.svg": {
     "mtime": 1781211977.55508,
     "ast_hash": "06bc7eb3aa69d7953c7da2ecf6d09bd5",
+    "semantic_hash": ""
+  },
+  "capacitor.config.ts": {
+    "mtime": 1781212740.1322224,
+    "ast_hash": "a8c6bad89540fb9708b439f30788fd58",
+    "semantic_hash": ""
+  },
+  "public/sw.js": {
+    "mtime": 1781212628.7498202,
+    "ast_hash": "a4ddfd55a2a3c992733f4a3338508a0e",
+    "semantic_hash": ""
+  },
+  "src/app/api/shipments/route.test.ts": {
+    "mtime": 1781212801.026348,
+    "ast_hash": "af2e7777eef62b09d01b0d4852fde04e",
+    "semantic_hash": ""
+  },
+  "src/app/manifest.ts": {
+    "mtime": 1781212622.273913,
+    "ast_hash": "cd343bd751e2f7d5fbc510b97a895655",
+    "semantic_hash": ""
+  },
+  "src/app/offline/page.tsx": {
+    "mtime": 1781212640.7456481,
+    "ast_hash": "8da6f750f1b6d4345327a5850ee7b883",
+    "semantic_hash": ""
+  },
+  "src/components/providers/ServiceWorkerProvider.tsx": {
+    "mtime": 1781212636.3877108,
+    "ast_hash": "9265bf2bb114c4fe2470719383f634e3",
+    "semantic_hash": ""
+  },
+  "docs/MOBILE-APP-READINESS.md": {
+    "mtime": 1781212767.961823,
+    "ast_hash": "bf87617c0a1fea77d41af2aa66738413",
+    "semantic_hash": ""
+  },
+  "public/icons/icon-192-maskable.png": {
+    "mtime": 1781212600.0262318,
+    "ast_hash": "9221060ab80793e6e80a48820dd8e4f1",
+    "semantic_hash": ""
+  },
+  "public/icons/icon-192.png": {
+    "mtime": 1781212599.878234,
+    "ast_hash": "ef4aebad207077acc4ca045fcc48e75e",
+    "semantic_hash": ""
+  },
+  "public/icons/icon-512-maskable.png": {
+    "mtime": 1781212599.9582329,
+    "ast_hash": "003a4eb5b6a152bcbf6f03f31cdfd066",
+    "semantic_hash": ""
+  },
+  "public/icons/icon-512.png": {
+    "mtime": 1781212599.8232348,
+    "ast_hash": "cc9618b52eb1f924121989be578abe39",
+    "semantic_hash": ""
+  },
+  "src/app/apple-icon.png": {
+    "mtime": 1781212600.1002307,
+    "ast_hash": "79a9a434f0a03c530ac2c816fb8d0121",
     "semantic_hash": ""
   }
 }

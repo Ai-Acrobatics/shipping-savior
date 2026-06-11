@@ -45,3 +45,5 @@ tmp/
 
 # Graphify: commit the graph + report, not the extraction cache
 graphify-out/cache/
+graphify-out/.graphify_labels.json
+graphify-out/.graphify_root

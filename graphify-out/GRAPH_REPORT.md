@@ -1,16 +1,16 @@
 # Graph Report - shipping-savior  (2026-06-11)
 
 ## Corpus Check
-- 427 files · ~852,184 words
+- 434 files · ~854,683 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 8855 nodes · 9462 edges · 916 communities (892 shown, 24 thin omitted)
+- 8875 nodes · 9485 edges · 913 communities (886 shown, 27 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 2 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6b0bf2dd`
+- Built from commit: `9ebe6d84`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -801,7 +801,6 @@
 - [[_COMMUNITY_Community 783|Community 783]]
 - [[_COMMUNITY_Community 784|Community 784]]
 - [[_COMMUNITY_Community 785|Community 785]]
-- [[_COMMUNITY_Community 786|Community 786]]
 - [[_COMMUNITY_Community 787|Community 787]]
 - [[_COMMUNITY_Community 788|Community 788]]
 - [[_COMMUNITY_Community 789|Community 789]]
@@ -838,7 +837,6 @@
 - [[_COMMUNITY_Community 820|Community 820]]
 - [[_COMMUNITY_Community 821|Community 821]]
 - [[_COMMUNITY_Community 822|Community 822]]
-- [[_COMMUNITY_Community 823|Community 823]]
 - [[_COMMUNITY_Community 824|Community 824]]
 - [[_COMMUNITY_Community 825|Community 825]]
 - [[_COMMUNITY_Community 826|Community 826]]
@@ -885,7 +883,6 @@
 - [[_COMMUNITY_Community 867|Community 867]]
 - [[_COMMUNITY_Community 868|Community 868]]
 - [[_COMMUNITY_Community 869|Community 869]]
-- [[_COMMUNITY_Community 870|Community 870]]
 - [[_COMMUNITY_Community 871|Community 871]]
 - [[_COMMUNITY_Community 872|Community 872]]
 - [[_COMMUNITY_Community 873|Community 873]]
@@ -896,7 +893,6 @@
 - [[_COMMUNITY_Community 878|Community 878]]
 - [[_COMMUNITY_Community 879|Community 879]]
 - [[_COMMUNITY_Community 880|Community 880]]
-- [[_COMMUNITY_Community 881|Community 881]]
 - [[_COMMUNITY_Community 882|Community 882]]
 - [[_COMMUNITY_Community 883|Community 883]]
 - [[_COMMUNITY_Community 884|Community 884]]
@@ -912,8 +908,8 @@
 - [[_COMMUNITY_Community 912|Community 912]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `db` - 34 edges
-2. `scripts` - 25 edges
+1. `db` - 35 edges
+2. `scripts` - 28 edges
 3. `Go-to-Market Strategy — Shipping Savior` - 23 edges
 4. `Shipping Savior — Go-to-Market Strategy` - 23 edges
 5. `Go-to-Market Strategy — Shipping Savior` - 23 edges
@@ -938,15 +934,15 @@
 ## Import Cycles
 - None detected.
 
-## Communities (916 total, 24 thin omitted)
+## Communities (913 total, 27 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.09
-Nodes (44): POST(), hasPermission(), OrgRole, OrgRoleType, outranks(), Permission, PERMISSION_MIN_ROLE, requirePermission() (+36 more)
+Cohesion: 0.14
+Nodes (27): POST(), AuthContext, isAuthError(), requireRole(), invites, orgMembers, DELETE(), GET() (+19 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.04
-Nodes (46): auditActionEnum, AuditLog, auditLogsRelations, BolDocument, bolDocuments, bolDocumentsRelations, Calculation, calculationsRelations (+38 more)
+Nodes (49): auditActionEnum, AuditLog, auditLogsRelations, BolDocument, bolDocuments, bolDocumentsRelations, Calculation, calculationsRelations (+41 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.04
@@ -981,8 +977,8 @@ Cohesion: 0.04
 Nodes (44): 1. Uptime Monitoring, 2. Core Web Vitals Tracking, 3. Error Tracking, 4. Performance Budgets, 5. Alerting Setup, 6. Platform Health Dashboard, 7. Runbook Templates, 8. Implementation Checklist (+36 more)
 
 ### Community 10 - "Community 10"
-Cohesion: 0.11
-Nodes (22): writeAuditLog(), oauthProviders, baseTemplate(), getAppBaseUrl(), getFromAddress(), getResend(), renderEmailVerificationEmail(), renderPasswordResetEmail() (+14 more)
+Cohesion: 0.14
+Nodes (20): writeAuditLog(), oauthProviders, baseTemplate(), getAppBaseUrl(), getFromAddress(), getResend(), renderEmailVerificationEmail(), renderPasswordResetEmail() (+12 more)
 
 ### Community 11 - "Community 11"
 Cohesion: 0.06
@@ -1013,8 +1009,8 @@ Cohesion: 0.05
 Nodes (36): 1. Onboarding Journey, 2. Freight Quote Journey, 3. Import Workflow Journey, 4. FTZ Strategy Journey, 5. Daily Dashboard Journey, 6. AI Agent Interaction Journey, Cross-Journey Integration Points, Decision Points (+28 more)
 
 ### Community 18 - "Community 18"
-Cohesion: 0.06
-Nodes (36): name, notNull, primaryKey, type, name, notNull, primaryKey, type (+28 more)
+Cohesion: 0.05
+Nodes (37): name, notNull, primaryKey, type, carrier_code, contact_email, contract_number, contract_type (+29 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.06
@@ -1037,16 +1033,16 @@ Cohesion: 0.06
 Nodes (33): Acceptance Criteria, API Endpoints, Component Breakdown, Data Requirements, DELETE /api/settings/team/:userId, Dependencies, Desktop (1280px+), Feature: API Key Management (+25 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.08
-Nodes (12): authConfig, { auth, signIn, signOut, handlers }, requireAuth(), requireOrg(), CarrierRoute, POST(), VALID_CONTRACT_TYPES, contractLanes (+4 more)
+Cohesion: 0.10
+Nodes (10): authConfig, { auth, signIn, signOut, handlers }, requireAuth(), requireOrg(), CarrierRoute, contractLanes, contracts, ContractType (+2 more)
 
 ### Community 25 - "Community 25"
 Cohesion: 0.08
 Nodes (22): AIAgent, AIPerformanceTrend, CarrierAPIConnection, carrierAPIConnections, Competitor, CompetitorFeatureMatrix, competitors, DataFreshnessItem (+14 more)
 
 ### Community 26 - "Community 26"
-Cohesion: 0.06
-Nodes (33): name, notNull, primaryKey, type, typeSchema, calculator_type, inputs, name (+25 more)
+Cohesion: 0.07
+Nodes (27): name, notNull, primaryKey, type, typeSchema, calculator_type, inputs, name (+19 more)
 
 ### Community 27 - "Community 27"
 Cohesion: 0.06
@@ -1062,7 +1058,7 @@ Nodes (31): name, notNull, primaryKey, type, blob_url, confidence_json, extracte
 
 ### Community 30 - "Community 30"
 Cohesion: 0.06
-Nodes (31): name, notNull, primaryKey, type, blob_url, confidence_json, extracted_json, file_name (+23 more)
+Nodes (36): name, notNull, primaryKey, type, blob_url, confidence_json, extracted_json, file_name (+28 more)
 
 ### Community 31 - "Community 31"
 Cohesion: 0.06
@@ -1073,8 +1069,8 @@ Cohesion: 0.06
 Nodes (30): 1. Competitor Watchlist, 2.1 Pricing Changes, 2.2 New Feature Launches, 2.3 Funding Rounds, 2.4 Hiring Signals, 2.5 Content and SEO Moves, 2. What to Track Per Competitor, 3. Monitoring Cadence (+22 more)
 
 ### Community 33 - "Community 33"
-Cohesion: 0.12
-Nodes (22): BillingActionsProps, enforceLimit(), getCurrentUsage(), getOrgLimits(), getOrgPlan(), LimitedResource, LIMITS, OrgLimits (+14 more)
+Cohesion: 0.09
+Nodes (32): extractWithFallback(), BillingActionsProps, enforceLimit(), getCurrentUsage(), getOrgLimits(), getOrgPlan(), LimitedResource, LimitExceededError (+24 more)
 
 ### Community 34 - "Community 34"
 Cohesion: 0.08
@@ -1094,7 +1090,7 @@ Nodes (30): name, notNull, primaryKey, type, accepted_at, email, invited_by, rol
 
 ### Community 38 - "Community 38"
 Cohesion: 0.07
-Nodes (30): name, notNull, primaryKey, type, accepted_at, email, expires_at, invited_by (+22 more)
+Nodes (30): name, notNull, primaryKey, type, accepted_at, email, invited_by, role (+22 more)
 
 ### Community 39 - "Community 39"
 Cohesion: 0.07
@@ -1109,12 +1105,12 @@ Cohesion: 0.07
 Nodes (28): Alternatives Considered, Architecture Notes for Roadmap, Calculation Architecture, Calculation Engine Libraries, Carrier Schedules, Container Tracking APIs (Phase 2+), Core Technologies, Data Sources & APIs (+20 more)
 
 ### Community 42 - "Community 42"
-Cohesion: 0.13
-Nodes (20): COST_PER_M, estimateCost(), ExtractionInput, ExtractionResult, extractWithAll(), extractWithClaude(), extractWithFallback(), extractWithGemini() (+12 more)
+Cohesion: 0.20
+Nodes (12): COST_PER_M, estimateCost(), ExtractionInput, ExtractionResult, extractWithAll(), extractWithClaude(), extractWithGemini(), extractWithKimi() (+4 more)
 
 ### Community 43 - "Community 43"
-Cohesion: 0.07
-Nodes (28): name, notNull, primaryKey, type, typeSchema, calculator_type, inputs, name (+20 more)
+Cohesion: 0.06
+Nodes (33): name, notNull, primaryKey, type, typeSchema, calculator_type, inputs, name (+25 more)
 
 ### Community 44 - "Community 44"
 Cohesion: 0.07
@@ -1133,20 +1129,20 @@ Cohesion: 0.07
 Nodes (26): Acceptance Criteria, API Endpoints, Component Breakdown, Components, Data Requirements, DELETE /api/auth/session, Dependencies, Feature: Email/Password Login (+18 more)
 
 ### Community 48 - "Community 48"
-Cohesion: 0.07
-Nodes (27): name, notNull, primaryKey, type, name, notNull, primaryKey, type (+19 more)
+Cohesion: 0.06
+Nodes (36): name, notNull, primaryKey, type, name, notNull, primaryKey, type (+28 more)
 
 ### Community 49 - "Community 49"
-Cohesion: 0.07
-Nodes (27): commodity, contract_id, currency, dest_port, origin_port_name, name, notNull, primaryKey (+19 more)
+Cohesion: 0.33
+Nodes (6): commodity, name, notNull, primaryKey, type, columns
 
 ### Community 50 - "Community 50"
 Cohesion: 0.07
 Nodes (27): name, notNull, primaryKey, type, typeSchema, action, ip_address, metadata (+19 more)
 
 ### Community 51 - "Community 51"
-Cohesion: 0.07
-Nodes (27): commodity, contract_id, currency, origin_port, origin_port_name, name, notNull, primaryKey (+19 more)
+Cohesion: 0.33
+Nodes (6): commodity, name, notNull, primaryKey, type, columns
 
 ### Community 52 - "Community 52"
 Cohesion: 0.07
@@ -1157,7 +1153,7 @@ Cohesion: 0.07
 Nodes (26): 10. Known Pitfalls (from PITFALLS.md), 11. Edge Cases, 1. Overview & Purpose, 2. User Stories, 3.1 Input Panel, 3.2.1 Per-Unit Cost Breakdown, 3.2.2 Value Chain Visualization, 3.2.3 Margin Analysis (+18 more)
 
 ### Community 54 - "Community 54"
-Cohesion: 0.09
+Cohesion: 0.07
 Nodes (8): AuditAction, auditLogs, calculations, CalculationType, OrgRole, scopedWhere(), Probe, withOrgScope()
 
 ### Community 55 - "Community 55"
@@ -1165,16 +1161,16 @@ Cohesion: 0.08
 Nodes (25): Acceptance Criteria, API Endpoints, Component Breakdown, Data Requirements, Dependencies, Desktop (1280px+), Feature: Container List, Feature: Cost Breakdown (+17 more)
 
 ### Community 56 - "Community 56"
-Cohesion: 0.08
-Nodes (26): name, notNull, primaryKey, type, accepted_at, email, expires_at, invited_by (+18 more)
+Cohesion: 0.06
+Nodes (32): name, notNull, primaryKey, type, accepted_at, email, expires_at, invited_by (+24 more)
 
 ### Community 57 - "Community 57"
 Cohesion: 0.08
 Nodes (26): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+18 more)
 
 ### Community 58 - "Community 58"
-Cohesion: 0.08
-Nodes (26): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+18 more)
+Cohesion: 0.12
+Nodes (17): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+9 more)
 
 ### Community 59 - "Community 59"
 Cohesion: 0.08
@@ -1185,8 +1181,8 @@ Cohesion: 0.08
 Nodes (26): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+18 more)
 
 ### Community 61 - "Community 61"
-Cohesion: 0.08
-Nodes (26): name, notNull, primaryKey, type, carrier, contact_email, contact_name, end_date (+18 more)
+Cohesion: 0.05
+Nodes (37): name, notNull, primaryKey, type, carrier_code, contact_email, contact_name, contract_number (+29 more)
 
 ### Community 62 - "Community 62"
 Cohesion: 0.08
@@ -1217,8 +1213,8 @@ Cohesion: 0.08
 Nodes (24): Acceptance Criteria, API Endpoints, Component Breakdown, Data Requirements, Dependencies, Desktop (1280px+), Feature: Document Status Pipeline, Feature: Generate from Template (+16 more)
 
 ### Community 69 - "Community 69"
-Cohesion: 0.08
-Nodes (25): scripts, build, db:generate, db:migrate, db:push, db:studio, dev, e2e (+17 more)
+Cohesion: 0.07
+Nodes (28): scripts, build, cap:android, cap:ios, cap:sync, db:generate, db:migrate, db:push (+20 more)
 
 ### Community 70 - "Community 70"
 Cohesion: 0.08
@@ -1298,7 +1294,7 @@ Nodes (22): Acceptance Criteria, API Endpoints, Component Breakdown, Data Requir
 
 ### Community 89 - "Community 89"
 Cohesion: 0.09
-Nodes (23): created_at, id, token_hash, verified_at, default, name, notNull, primaryKey (+15 more)
+Nodes (22): created_at, expires_at, token_hash, verified_at, default, name, notNull, primaryKey (+14 more)
 
 ### Community 90 - "Community 90"
 Cohesion: 0.09
@@ -1329,16 +1325,16 @@ Cohesion: 0.09
 Nodes (21): Acceptance Criteria, API Endpoints, Component Breakdown, Data Requirements, Dependencies, Desktop (1280px+), Feature: Bulk Actions, Feature: Filterable Data Table (+13 more)
 
 ### Community 97 - "Community 97"
-Cohesion: 0.09
-Nodes (22): name, notNull, primaryKey, type, typeSchema, action, ip_address, metadata (+14 more)
+Cohesion: 0.07
+Nodes (28): name, notNull, primaryKey, type, typeSchema, action, created_at, ip_address (+20 more)
 
 ### Community 98 - "Community 98"
 Cohesion: 0.09
-Nodes (22): created_at, expires_at, token_hash, verified_at, default, name, notNull, primaryKey (+14 more)
+Nodes (22): expires_at, id, token_hash, verified_at, name, notNull, primaryKey, type (+14 more)
 
 ### Community 99 - "Community 99"
-Cohesion: 0.09
-Nodes (22): name, notNull, primaryKey, type, typeSchema, action, ip_address, metadata (+14 more)
+Cohesion: 0.07
+Nodes (27): name, notNull, primaryKey, type, typeSchema, action, ip_address, metadata (+19 more)
 
 ### Community 100 - "Community 100"
 Cohesion: 0.09
@@ -1369,8 +1365,8 @@ Cohesion: 0.10
 Nodes (20): Acceptance Criteria, API Endpoints, Component Breakdown, Data Requirements, Dependencies, Desktop (1280px+), Feature: Container Type Selector, Feature: Cost Per Unit at Scale (+12 more)
 
 ### Community 107 - "Community 107"
-Cohesion: 0.10
-Nodes (21): devDependencies, @axe-core/playwright, dotenv, drizzle-kit, eslint, eslint-config-next, jsdom, @playwright/test (+13 more)
+Cohesion: 0.08
+Nodes (25): devDependencies, @axe-core/playwright, @capacitor/android, @capacitor/cli, @capacitor/core, @capacitor/ios, dotenv, drizzle-kit (+17 more)
 
 ### Community 108 - "Community 108"
 Cohesion: 0.10
@@ -1450,7 +1446,7 @@ Nodes (17): Critical Pitfalls, Domain Pitfalls: International Shipping/Logistics
 
 ### Community 127 - "Community 127"
 Cohesion: 0.11
-Nodes (17): 10. Edge Computing Evaluation, 12. Build vs. Buy Decisions, 13. Alternative Technologies Considered and Rejected, 14. Technology Risk Assessment, 16. Final Recommended Stack Summary, 6. PDF Generation Benchmarks, 8. Infrastructure Validation, Cloudflare Workers vs. Vercel Edge (+9 more)
+Nodes (17): 10. Edge Computing Evaluation, 12. Build vs. Buy Decisions, 13. Alternative Technologies Considered and Rejected, 16. Final Recommended Stack Summary, 5. Mapping & Route Visualization Validation, 6. PDF Generation Benchmarks, 8. Infrastructure Validation, Cloudflare Workers vs. Vercel Edge (+9 more)
 
 ### Community 128 - "Community 128"
 Cohesion: 0.11
@@ -1465,16 +1461,16 @@ Cohesion: 0.11
 Nodes (17): Accessibility hardening (do NOT copy Terra's gaps), Animation Highlights (top 8), Backend alignment (v1.1 milestone bigger scope), Build Sequence Recommendation, Design System Snapshot, Files Written, Foundation (do first), Home page redesign (answers milestone question #2) (+9 more)
 
 ### Community 131 - "Community 131"
-Cohesion: 0.11
-Nodes (17): Attempted Approaches, Cleanup, Critical Context, Current State, Immediate (before deploy), M2 (Next milestone per PRODUCT-ROADMAP.md), Milestone Setup, Original Task (+9 more)
+Cohesion: 0.33
+Nodes (5): Current State, Immediate (ops, mostly Julian), ⚠️ Lost work — needs decision, Next build milestones, What's Next — Shipping Savior
 
 ### Community 132 - "Community 132"
-Cohesion: 0.12
-Nodes (17): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+9 more)
+Cohesion: 0.08
+Nodes (26): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+18 more)
 
 ### Community 133 - "Community 133"
-Cohesion: 0.12
-Nodes (17): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+9 more)
+Cohesion: 0.08
+Nodes (26): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+18 more)
 
 ### Community 134 - "Community 134"
 Cohesion: 0.12
@@ -1485,8 +1481,8 @@ Cohesion: 0.12
 Nodes (17): invites_invited_by_users_id_fk, invites_org_id_organizations_id_fk, columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom (+9 more)
 
 ### Community 136 - "Community 136"
-Cohesion: 0.12
-Nodes (17): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+9 more)
+Cohesion: 0.08
+Nodes (26): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+18 more)
 
 ### Community 137 - "Community 137"
 Cohesion: 0.12
@@ -1501,12 +1497,12 @@ Cohesion: 0.12
 Nodes (17): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+9 more)
 
 ### Community 140 - "Community 140"
-Cohesion: 0.12
-Nodes (17): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+9 more)
+Cohesion: 0.08
+Nodes (26): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+18 more)
 
 ### Community 141 - "Community 141"
-Cohesion: 0.12
-Nodes (17): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+9 more)
+Cohesion: 0.08
+Nodes (26): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, columnsFrom (+18 more)
 
 ### Community 142 - "Community 142"
 Cohesion: 0.12
@@ -1562,7 +1558,7 @@ Nodes (7): CARRIERS, Contract, CONTRACT_TYPES, daysRemaining(), getStatus(), Lan
 
 ### Community 155 - "Community 155"
 Cohesion: 0.14
-Nodes (13): 11. Cross-Agent Data Flow, 16. Risk Register, 1. Executive Summary, 2. Agent Overview Matrix, AI Agent Development Plans — Shipping Savior Platform, Carrier Quote Flow, Cross-Agent Risks, Mitigation Philosophy (+5 more)
+Nodes (13): 11. Cross-Agent Data Flow, 14. Cost Estimation Summary, 1. Executive Summary, 2. Agent Overview Matrix, AI Agent Development Plans — Shipping Savior Platform, Carrier Quote Flow, Development Cost by Agent, Revenue Impact Framing (+5 more)
 
 ### Community 156 - "Community 156"
 Cohesion: 0.14
@@ -1605,8 +1601,8 @@ Cohesion: 0.14
 Nodes (13): 12. Backup Source Index, 13. Build Method Summary, 3.1 UN/LOCODE Official Download, 3. UN/LOCODE Port Codes, 4.1 World Port Index Download, 4. World Port Index (NGA), Confidence Assessment Summary, Data Source Validation Research (+5 more)
 
 ### Community 166 - "Community 166"
-Cohesion: 0.30
-Nodes (10): planFromPriceId(), stripe, applySubscriptionToOrg(), envOrThrow(), handleCheckoutCompleted(), handlePaymentFailed(), handleSubscriptionChange(), handleSubscriptionDeleted() (+2 more)
+Cohesion: 0.24
+Nodes (11): organizations, planFromPriceId(), stripe, applySubscriptionToOrg(), envOrThrow(), handleCheckoutCompleted(), handlePaymentFailed(), handleSubscriptionChange() (+3 more)
 
 ### Community 167 - "Community 167"
 Cohesion: 0.21
@@ -1822,7 +1818,7 @@ Nodes (8): analyzeFTZ(), buildWithdrawalSchedule(), FTZ_LOCATIONS, FTZAnalysis, 
 
 ### Community 220 - "Community 220"
 Cohesion: 0.20
-Nodes (9): 10. RAG Pipeline Design, 12. Tool and Function Calling Specifications, AI Agent Technical Implementation Specifications — Shipping Savior, Chunking Strategy, Claude Tool Definitions, Context Window Management, Retrieval Augmentation Strategy, Table of Contents (+1 more)
+Nodes (9): 12. Tool and Function Calling Specifications, 14. Evaluation Metrics and Benchmarking Framework, A/B Testing Framework, AI Agent Technical Implementation Specifications — Shipping Savior, Claude Tool Definitions, Quality Score Dashboard, Table of Contents, Tool Execution Handler (+1 more)
 
 ### Community 221 - "Community 221"
 Cohesion: 0.20
@@ -1865,8 +1861,8 @@ Cohesion: 0.20
 Nodes (9): Assumptions (Need Validation), Cross-Document Dependency Map, Executive Summary, Open Questions, Open Questions and Assumptions, Phase 2 Completion Checklist, Phase 2 Planning Summary — Shipping Savior, Planning Artifacts (+1 more)
 
 ### Community 231 - "Community 231"
-Cohesion: 0.20
-Nodes (9): 12. Mobile Strategy, 2. User Personas, 8. Feature Prioritization Matrix, Persona A — The Independent Importer ("Import Indie"), Persona B — The Freight Broker ("The Broker"), Persona C — The FTZ Operator ("The Zone Manager"), Recommendation: PWA First, Native Second, Shipping Savior — Product Roadmap (+1 more)
+Cohesion: 0.14
+Nodes (13): 11. Technical Debt & Infrastructure Considerations, 12. Mobile Strategy, 1. Vision & North Star, 8. Feature Prioritization Matrix, Current Technical Debt (Phase 0), Infrastructure Roadmap, North Star Metric, Recommendation: PWA First, Native Second (+5 more)
 
 ### Community 232 - "Community 232"
 Cohesion: 0.20
@@ -1878,7 +1874,7 @@ Nodes (10): 7.1 Freight Broker License (FMCSA), 7.2 Customs Broker License (CBP)
 
 ### Community 234 - "Community 234"
 Cohesion: 0.20
-Nodes (9): 2. User Segments Overview, 4. Founding User Profile: Blake, 7. Feature Desirability Ranking, Blake's Current Manual Workflow (End-to-End Import), Blake's "I Would Pay For That" Feature List (Inferred), Profile, Table of Contents, Time Audit (Blake's Estimated Current Time Per Shipment) (+1 more)
+Nodes (9): 2. User Segments Overview, 5.1 r/supplychain Analysis, 5.2 r/freightbrokers Analysis, 5.3 r/logistics Analysis, 5.4 FreightWaves Forum Analysis, 5. Community Research Findings, 7. Feature Desirability Ranking, Table of Contents (+1 more)
 
 ### Community 235 - "Community 235"
 Cohesion: 0.20
@@ -1914,7 +1910,7 @@ Nodes (10): 7.1 Freight Broker License (FMCSA), 7.2 Customs Broker License (CBP)
 
 ### Community 243 - "Community 243"
 Cohesion: 0.20
-Nodes (9): 2. User Segments Overview, 4. Founding User Profile: Blake, 7. Feature Desirability Ranking, Blake's Current Manual Workflow (End-to-End Import), Blake's "I Would Pay For That" Feature List (Inferred), Profile, Table of Contents, Time Audit (Blake's Estimated Current Time Per Shipment) (+1 more)
+Nodes (9): 2. User Segments Overview, 5.1 r/supplychain Analysis, 5.2 r/freightbrokers Analysis, 5.3 r/logistics Analysis, 5.4 FreightWaves Forum Analysis, 5. Community Research Findings, 7. Feature Desirability Ranking, Table of Contents (+1 more)
 
 ### Community 244 - "Community 244"
 Cohesion: 0.20
@@ -2005,28 +2001,28 @@ Cohesion: 0.25
 Nodes (6): defaultArcs, defaultMarkers, FlightArc, FlightMarker, GlobeFlights(), GlobeFlightsProps
 
 ### Community 266 - "Community 266"
-Cohesion: 0.22
-Nodes (8): dialect, id, prevId, name, schema, tables, public.model_comparison_logs, version
+Cohesion: 0.11
+Nodes (17): dialect, id, prevId, checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name (+9 more)
 
 ### Community 267 - "Community 267"
 Cohesion: 0.22
 Nodes (9): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, contract_lanes_contract_id_contracts_id_fk (+1 more)
 
 ### Community 268 - "Community 268"
-Cohesion: 0.22
-Nodes (9): checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name, policies, schema, uniqueConstraints (+1 more)
+Cohesion: 0.19
+Nodes (18): hasPermission(), OrgRole, OrgRoleType, outranks(), Permission, PERMISSION_MIN_ROLE, requirePermission(), ROLE_HIERARCHY (+10 more)
 
 ### Community 269 - "Community 269"
 Cohesion: 0.22
-Nodes (9): checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name, policies, schema, uniqueConstraints (+1 more)
+Nodes (8): 1. PWA (shipped on this branch), 2. Native shells via Capacitor (scaffolded on this branch), 3. Auth note for native shells, 4. Suggested native v1.1 backlog, Android → Play Store, iOS → TestFlight → App Store (requires macOS), Mobile App Readiness — iOS / Android / PWA, What cannot be done from the Linux VPS
 
 ### Community 270 - "Community 270"
 Cohesion: 0.22
 Nodes (9): checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name, policies, schema, uniqueConstraints (+1 more)
 
 ### Community 271 - "Community 271"
-Cohesion: 0.22
-Nodes (9): checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name, policies, schema, uniqueConstraints (+1 more)
+Cohesion: 0.33
+Nodes (6): contract_type, name, notNull, primaryKey, type, typeSchema
 
 ### Community 272 - "Community 272"
 Cohesion: 0.22
@@ -2045,40 +2041,40 @@ Cohesion: 0.22
 Nodes (9): checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name, policies, schema, uniqueConstraints (+1 more)
 
 ### Community 276 - "Community 276"
-Cohesion: 0.22
-Nodes (9): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, bol_documents_org_id_organizations_id_fk (+1 more)
+Cohesion: 0.11
+Nodes (18): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, bol_documents_org_id_organizations_id_fk (+10 more)
 
 ### Community 277 - "Community 277"
 Cohesion: 0.22
 Nodes (9): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, contract_lanes_contract_id_contracts_id_fk (+1 more)
 
 ### Community 278 - "Community 278"
-Cohesion: 0.22
-Nodes (9): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, email_verifications_user_id_users_id_fk (+1 more)
+Cohesion: 0.11
+Nodes (18): columnsFrom, columnsTo, name, onDelete, onUpdate, tableFrom, tableTo, email_verifications_user_id_users_id_fk (+10 more)
 
 ### Community 279 - "Community 279"
-Cohesion: 0.22
-Nodes (9): checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name, policies, schema, uniqueConstraints (+1 more)
+Cohesion: 0.13
+Nodes (14): dialect, id, prevId, checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name (+6 more)
 
 ### Community 280 - "Community 280"
-Cohesion: 0.22
-Nodes (9): checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name, policies, schema, uniqueConstraints (+1 more)
+Cohesion: 0.33
+Nodes (6): currency, default, name, notNull, primaryKey, type
 
 ### Community 281 - "Community 281"
-Cohesion: 0.22
-Nodes (9): checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name, policies, schema, uniqueConstraints (+1 more)
+Cohesion: 0.33
+Nodes (6): updated_at, default, name, notNull, primaryKey, type
 
 ### Community 282 - "Community 282"
 Cohesion: 0.22
 Nodes (9): checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name, policies, schema, uniqueConstraints (+1 more)
 
 ### Community 283 - "Community 283"
-Cohesion: 0.22
-Nodes (9): checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name, policies, schema, uniqueConstraints (+1 more)
+Cohesion: 0.33
+Nodes (6): created_at, default, name, notNull, primaryKey, type
 
 ### Community 284 - "Community 284"
-Cohesion: 0.22
-Nodes (9): checkConstraints, compositePrimaryKeys, indexes, isRLSEnabled, name, policies, schema, uniqueConstraints (+1 more)
+Cohesion: 0.33
+Nodes (6): currency, default, name, notNull, primaryKey, type
 
 ### Community 285 - "Community 285"
 Cohesion: 0.22
@@ -2102,7 +2098,7 @@ Nodes (9): 3.1 Connector Architecture, 3.2 Connector Types, 3.3 Scraping Strateg
 
 ### Community 290 - "Community 290"
 Cohesion: 0.22
-Nodes (8): Base Scenario, Business Model Overview, Conservative Scenario (70% of Base Revenue, 110% of Base Costs), Optimistic Scenario (140% of Base Revenue, 95% of Base Costs), Revenue Architecture Rationale, Revenue Projections (M1–M18), Shipping Savior — Financial Model, Table of Contents
+Nodes (8): Business Model Overview, Cost Model by User Count, HTS Tariff Data Infrastructure, Infrastructure as % of Revenue, Infrastructure Cost Scaling, Revenue Architecture Rationale, Shipping Savior — Financial Model, Table of Contents
 
 ### Community 291 - "Community 291"
 Cohesion: 0.22
@@ -2126,7 +2122,7 @@ Nodes (9): 3.1 Connector Architecture, 3.2 Connector Types, 3.3 Scraping Strateg
 
 ### Community 296 - "Community 296"
 Cohesion: 0.22
-Nodes (8): Business Model Overview, Cost Model by User Count, HTS Tariff Data Infrastructure, Infrastructure as % of Revenue, Infrastructure Cost Scaling, Revenue Architecture Rationale, Shipping Savior — Financial Model, Table of Contents
+Nodes (8): Base Scenario, Business Model Overview, Conservative Scenario (70% of Base Revenue, 110% of Base Costs), Optimistic Scenario (140% of Base Revenue, 95% of Base Costs), Revenue Architecture Rationale, Revenue Projections (M1–M18), Shipping Savior — Financial Model, Table of Contents
 
 ### Community 297 - "Community 297"
 Cohesion: 0.22
@@ -2477,8 +2473,8 @@ Cohesion: 0.29
 Nodes (3): initialTasks, Subtask, Task
 
 ### Community 384 - "Community 384"
-Cohesion: 0.29
-Nodes (3): geistMono, geistSans, metadata
+Cohesion: 0.20
+Nodes (4): geistMono, geistSans, metadata, viewport
 
 ### Community 385 - "Community 385"
 Cohesion: 0.29
@@ -2882,19 +2878,19 @@ Nodes (3): Member, PendingInvite, ROLE_BADGE
 
 ### Community 486 - "Community 486"
 Cohesion: 0.33
-Nodes (6): created_at, default, name, notNull, primaryKey, type
+Nodes (6): id, default, name, notNull, primaryKey, type
 
 ### Community 487 - "Community 487"
-Cohesion: 0.33
-Nodes (6): role, name, notNull, primaryKey, type, typeSchema
+Cohesion: 0.40
+Nodes (5): contact_email, name, notNull, primaryKey, type
 
 ### Community 488 - "Community 488"
 Cohesion: 0.33
 Nodes (6): commodity, name, notNull, primaryKey, type, columns
 
 ### Community 489 - "Community 489"
-Cohesion: 0.33
-Nodes (6): contract_type, name, notNull, primaryKey, type, typeSchema
+Cohesion: 0.40
+Nodes (5): contract_id, name, notNull, primaryKey, type
 
 ### Community 490 - "Community 490"
 Cohesion: 0.33
@@ -2909,16 +2905,16 @@ Cohesion: 0.33
 Nodes (6): currency, default, name, notNull, primaryKey, type
 
 ### Community 493 - "Community 493"
-Cohesion: 0.33
-Nodes (6): id, default, name, notNull, primaryKey, type
+Cohesion: 0.40
+Nodes (5): dest_port, name, notNull, primaryKey, type
 
 ### Community 494 - "Community 494"
-Cohesion: 0.33
-Nodes (5): dialect, id, prevId, tables, version
+Cohesion: 0.40
+Nodes (5): origin_port_name, name, notNull, primaryKey, type
 
 ### Community 495 - "Community 495"
-Cohesion: 0.33
-Nodes (6): contract_type, name, notNull, primaryKey, type, typeSchema
+Cohesion: 0.40
+Nodes (5): name, notNull, primaryKey, type, carrier
 
 ### Community 496 - "Community 496"
 Cohesion: 0.33
@@ -3398,7 +3394,7 @@ Nodes (4): FTZZone, GET(), loadData(), Port
 
 ### Community 617 - "Community 617"
 Cohesion: 0.40
-Nodes (5): contract_number, name, notNull, primaryKey, type
+Nodes (5): contact_name, name, notNull, primaryKey, type
 
 ### Community 618 - "Community 618"
 Cohesion: 0.40
@@ -3406,11 +3402,11 @@ Nodes (5): dest_port_name, name, notNull, primaryKey, type
 
 ### Community 619 - "Community 619"
 Cohesion: 0.40
-Nodes (5): end_date, name, notNull, primaryKey, type
+Nodes (5): name, notNull, primaryKey, type, carrier
 
 ### Community 620 - "Community 620"
 Cohesion: 0.40
-Nodes (5): notes, name, notNull, primaryKey, type
+Nodes (5): contract_id, name, notNull, primaryKey, type
 
 ### Community 621 - "Community 621"
 Cohesion: 0.40
@@ -3430,15 +3426,15 @@ Nodes (5): rate_40hc, name, notNull, primaryKey, type
 
 ### Community 625 - "Community 625"
 Cohesion: 0.40
-Nodes (5): start_date, name, notNull, primaryKey, type
+Nodes (5): origin_port, name, notNull, primaryKey, type
 
 ### Community 626 - "Community 626"
 Cohesion: 0.40
-Nodes (5): token, name, notNull, primaryKey, type
+Nodes (5): origin_port_name, name, notNull, primaryKey, type
 
 ### Community 627 - "Community 627"
 Cohesion: 0.40
-Nodes (5): contact_email, name, notNull, primaryKey, type
+Nodes (5): start_date, name, notNull, primaryKey, type
 
 ### Community 628 - "Community 628"
 Cohesion: 0.40
@@ -3514,11 +3510,11 @@ Nodes (5): start_date, name, notNull, primaryKey, type
 
 ### Community 646 - "Community 646"
 Cohesion: 0.40
-Nodes (5): name, notNull, primaryKey, type, carrier_code
+Nodes (5): 4. Founding User Profile: Blake, Blake's Current Manual Workflow (End-to-End Import), Blake's "I Would Pay For That" Feature List (Inferred), Profile, Time Audit (Blake's Estimated Current Time Per Shipment)
 
 ### Community 647 - "Community 647"
 Cohesion: 0.40
-Nodes (5): contract_number, name, notNull, primaryKey, type
+Nodes (5): 4. Founding User Profile: Blake, Blake's Current Manual Workflow (End-to-End Import), Blake's "I Would Pay For That" Feature List (Inferred), Profile, Time Audit (Blake's Estimated Current Time Per Shipment)
 
 ### Community 648 - "Community 648"
 Cohesion: 0.40
@@ -3529,12 +3525,12 @@ Cohesion: 0.40
 Nodes (5): dest_port_name, name, notNull, primaryKey, type
 
 ### Community 650 - "Community 650"
-Cohesion: 0.40
-Nodes (5): notes, name, notNull, primaryKey, type
+Cohesion: 0.50
+Nodes (4): 10. RAG Pipeline Design, Chunking Strategy, Context Window Management, Retrieval Augmentation Strategy
 
 ### Community 651 - "Community 651"
-Cohesion: 0.40
-Nodes (5): org_id, name, notNull, primaryKey, type
+Cohesion: 0.50
+Nodes (4): Base Scenario, Conservative Scenario (70% of Base Revenue, 110% of Base Costs), Optimistic Scenario (140% of Base Revenue, 95% of Base Costs), Revenue Projections (M1–M18)
 
 ### Community 652 - "Community 652"
 Cohesion: 0.40
@@ -3549,12 +3545,12 @@ Cohesion: 0.40
 Nodes (5): rate_40hc, name, notNull, primaryKey, type
 
 ### Community 655 - "Community 655"
-Cohesion: 0.40
-Nodes (5): raw_text, name, notNull, primaryKey, type
+Cohesion: 0.50
+Nodes (4): 2. User Personas, Persona A — The Independent Importer ("Import Indie"), Persona B — The Freight Broker ("The Broker"), Persona C — The FTZ Operator ("The Zone Manager")
 
 ### Community 656 - "Community 656"
-Cohesion: 0.40
-Nodes (5): token, name, notNull, primaryKey, type
+Cohesion: 0.50
+Nodes (4): Cost Model by User Count, HTS Tariff Data Infrastructure, Infrastructure as % of Revenue, Infrastructure Cost Scaling
 
 ### Community 657 - "Community 657"
 Cohesion: 0.40
@@ -3705,8 +3701,8 @@ Cohesion: 0.40
 Nodes (5): 12. Summary and Strategic Implications, MVP Recommendation (Refined by User Research), Red Flags to Watch For, Top 3 Insights, Validation Targets
 
 ### Community 694 - "Community 694"
-Cohesion: 0.40
-Nodes (5): 5.1 r/supplychain Analysis, 5.2 r/freightbrokers Analysis, 5.3 r/logistics Analysis, 5.4 FreightWaves Forum Analysis, 5. Community Research Findings
+Cohesion: 0.67
+Nodes (3): 16. Risk Register, Cross-Agent Risks, Mitigation Philosophy
 
 ### Community 695 - "Community 695"
 Cohesion: 0.40
@@ -3840,10 +3836,6 @@ Nodes (5): 10. Persona Cards, Persona 1: "The Container Entrepreneur", Persona 2
 Cohesion: 0.40
 Nodes (5): 12. Summary and Strategic Implications, MVP Recommendation (Refined by User Research), Red Flags to Watch For, Top 3 Insights, Validation Targets
 
-### Community 728 - "Community 728"
-Cohesion: 0.40
-Nodes (5): 5.1 r/supplychain Analysis, 5.2 r/freightbrokers Analysis, 5.3 r/logistics Analysis, 5.4 FreightWaves Forum Analysis, 5. Community Research Findings
-
 ### Community 729 - "Community 729"
 Cohesion: 0.40
 Nodes (5): 10. Phase 2+ Scaling Path, Scalability Comparison Table, When to Add a Backend / Database, When to Add Background Workers, When to Split into Microservices
@@ -3901,8 +3893,8 @@ Cohesion: 0.50
 Nodes (4): 11. Agent Memory and State Management, Global State (Cross-organization), Organization Memory (Long-term), Session Memory (Short-term)
 
 ### Community 744 - "Community 744"
-Cohesion: 0.50
-Nodes (4): 14. Evaluation Metrics and Benchmarking Framework, A/B Testing Framework, Quality Score Dashboard, Universal Agent Metrics
+Cohesion: 0.67
+Nodes (3): 14. Technology Risk Assessment, Highest Priority Risks to Mitigate First, Risk Matrix
 
 ### Community 745 - "Community 745"
 Cohesion: 0.50
@@ -4064,10 +4056,6 @@ Nodes (4): 2.3.1 US Port Statistics (MARAD / Army Corps), 2.3.2 Port Congestion 
 Cohesion: 0.50
 Nodes (4): 3-Year Revenue Mix Evolution, Year 2 (M19–M30), Year 2 & Year 3 Outlook, Year 3 (M31–M42)
 
-### Community 786 - "Community 786"
-Cohesion: 0.50
-Nodes (4): Cost Model by User Count, HTS Tariff Data Infrastructure, Infrastructure as % of Revenue, Infrastructure Cost Scaling
-
 ### Community 787 - "Community 787"
 Cohesion: 0.50
 Nodes (4): Executive Summary, Four Revenue Pillars, Key Financial Highlights (18-Month), Why This Model Works
@@ -4099,14 +4087,6 @@ Nodes (4): Application Structure, Key Architectural Decisions, Stack, Technical 
 ### Community 794 - "Community 794"
 Cohesion: 0.50
 Nodes (4): Data Freshness Strategy, Data Pipeline Design, Data Sources and Ingestion, Pipeline Architecture
-
-### Community 795 - "Community 795"
-Cohesion: 0.50
-Nodes (4): 11. Technical Debt & Infrastructure Considerations, Current Technical Debt (Phase 0), Infrastructure Roadmap, Scaling Assumptions
-
-### Community 796 - "Community 796"
-Cohesion: 0.50
-Nodes (4): 1. Vision & North Star, North Star Metric, Secondary Metrics, Vision Statement
 
 ### Community 797 - "Community 797"
 Cohesion: 0.50
@@ -4211,10 +4191,6 @@ Nodes (4): 2.3.1 US Port Statistics (MARAD / Army Corps), 2.3.2 Port Congestion 
 ### Community 822 - "Community 822"
 Cohesion: 0.50
 Nodes (4): 3-Year Revenue Mix Evolution, Year 2 (M19–M30), Year 2 & Year 3 Outlook, Year 3 (M31–M42)
-
-### Community 823 - "Community 823"
-Cohesion: 0.50
-Nodes (4): Base Scenario, Conservative Scenario (70% of Base Revenue, 110% of Base Costs), Optimistic Scenario (140% of Base Revenue, 95% of Base Costs), Revenue Projections (M1–M18)
 
 ### Community 824 - "Community 824"
 Cohesion: 0.50
@@ -4368,10 +4344,6 @@ Nodes (3): FTZZone, GET(), loadData()
 Cohesion: 0.67
 Nodes (3): 13. Infrastructure Requirements, Compute, External APIs
 
-### Community 870 - "Community 870"
-Cohesion: 0.67
-Nodes (3): 14. Cost Estimation Summary, Development Cost by Agent, ROI Framing
-
 ### Community 871 - "Community 871"
 Cohesion: 0.67
 Nodes (3): 15. Development Timeline, Phase-by-Phase Agent Rollout, Sprint Structure (Phase 3 implementation)
@@ -4400,10 +4372,6 @@ Nodes (3): 7.1 Terminal49, 7.2 Vizion API, 7. Container Tracking APIs
 Cohesion: 0.67
 Nodes (3): 9.1 Freightos Baltic Exchange (FBX), 9.2 Xeneta Ocean Rates, 9. Freight Rate Indices
 
-### Community 881 - "Community 881"
-Cohesion: 0.67
-Nodes (3): 5. Mapping & Route Visualization Validation, deck.gl Performance Test — 500+ Simultaneous Routes, searoute-js Performance Test
-
 ### Community 882 - "Community 882"
 Cohesion: 0.67
 Nodes (3): 4. Ideal Customer Profile (ICP), Primary ICP: SE Asia Consumer Goods Importer, Secondary ICP: Independent Freight Broker (NVOCC/OTI)
@@ -4425,24 +4393,24 @@ Cohesion: 0.67
 Nodes (3): 5. Mapping & Route Visualization Validation, deck.gl Performance Test — 500+ Simultaneous Routes, searoute-js Performance Test
 
 ## Knowledge Gaps
-- **6295 isolated node(s):** `mode`, `depth`, `enabled`, `plan_level`, `task_level` (+6290 more)
+- **6301 isolated node(s):** `mode`, `depth`, `enabled`, `plan_level`, `task_level` (+6296 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **24 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **27 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `columns` connect `Community 51` to `Community 648`, `Community 649`, `Community 652`, `Community 653`, `Community 654`, `Community 89`, `Community 282`?**
+- **Why does `public.email_verifications` connect `Community 278` to `Community 89`, `Community 279`?**
+  _High betweenness centrality (0.001) - this node is a cross-community bridge._
+- **Why does `columns` connect `Community 51` to `Community 486`, `Community 648`, `Community 649`, `Community 620`, `Community 652`, `Community 653`, `Community 654`, `Community 625`, `Community 626`, `Community 89`, `Community 282`, `Community 284`?**
+  _High betweenness centrality (0.001) - this node is a cross-community bridge._
+- **Why does `VercelV0Chat()` connect `Community 158` to `Community 200`, `Community 118`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
 - **What connects `mode`, `depth`, `enabled` to the rest of the system?**
-  _6295 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _6301 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.09084556254367575 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1411764705882353 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.04072398190045249 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.04025974025974026 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.04081632653061224 - nodes in this community are weakly interconnected._
-- **Should `Community 3` be split into smaller, more focused modules?**
-  _Cohesion score 0.041666666666666664 - nodes in this community are weakly interconnected._
-- **Should `Community 4` be split into smaller, more focused modules?**
-  _Cohesion score 0.041666666666666664 - nodes in this community are weakly interconnected._
