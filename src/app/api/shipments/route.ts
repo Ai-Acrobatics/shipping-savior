@@ -120,6 +120,19 @@ export async function POST(request: NextRequest) {
     bolDocumentId,
   } = body as Record<string, unknown>;
 
+  const parseDate = (value: unknown, field: string): Date | null | { error: string } => {
+    if (!value) return null;
+    const d = new Date(value as string);
+    return isNaN(d.getTime()) ? { error: `Invalid date for ${field}` } : d;
+  };
+  const etdDate = parseDate(etd, "etd");
+  const etaDate = parseDate(eta, "eta");
+  for (const d of [etdDate, etaDate]) {
+    if (d && "error" in d) {
+      return NextResponse.json({ error: d.error }, { status: 400 });
+    }
+  }
+
   const safeStatus = (VALID_STATUSES as readonly string[]).includes(status as string)
     ? (status as (typeof VALID_STATUSES)[number])
     : "in_transit";
@@ -138,8 +151,8 @@ export async function POST(request: NextRequest) {
         voyageNumber: typeof voyageNumber === "string" ? voyageNumber : null,
         pol: typeof pol === "string" ? pol : null,
         pod: typeof pod === "string" ? pod : null,
-        etd: etd ? new Date(etd as string) : null,
-        eta: eta ? new Date(eta as string) : null,
+        etd: etdDate as Date | null,
+        eta: etaDate as Date | null,
         carrier: typeof carrier === "string" ? carrier : null,
         shipper: typeof shipper === "string" ? shipper : null,
         consignee: typeof consignee === "string" ? consignee : null,

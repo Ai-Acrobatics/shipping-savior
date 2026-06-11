@@ -128,6 +128,34 @@ describe('POST /api/shipments', () => {
     expect(inserted.source).toBe('csv_import');
   });
 
+  it('returns 400 on an invalid etd/eta date instead of 500', async () => {
+    (auth as any).mockResolvedValue(SESSION);
+    const res = await POST(
+      new NextRequest('http://test/api/shipments', {
+        method: 'POST',
+        body: JSON.stringify({ carrier: 'MSC', etd: 'not-a-date' }),
+      })
+    );
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toMatch(/etd/i);
+    expect(db.insert).not.toHaveBeenCalled();
+  });
+
+  it('accepts valid ISO dates', async () => {
+    (auth as any).mockResolvedValue(SESSION);
+    const values = mockInsertChain({ id: 's-d' });
+    const res = await POST(
+      new NextRequest('http://test/api/shipments', {
+        method: 'POST',
+        body: JSON.stringify({ carrier: 'MSC', etd: '2026-07-01', eta: '2026-07-21T10:00:00Z' }),
+      })
+    );
+    expect(res.status).toBe(201);
+    const inserted = values.mock.calls[0][0];
+    expect(inserted.etd).toBeInstanceOf(Date);
+    expect(inserted.eta).toBeInstanceOf(Date);
+  });
+
   it('returns 400 on malformed JSON', async () => {
     (auth as any).mockResolvedValue(SESSION);
     const res = await POST(

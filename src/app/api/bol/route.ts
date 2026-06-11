@@ -75,6 +75,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const MAX_FILE_BYTES = 25 * 1024 * 1024; // 25MB cap per product spec (F-105)
+  if (file.size > MAX_FILE_BYTES) {
+    return NextResponse.json(
+      { error: "File too large. Maximum size is 25MB." },
+      { status: 413 }
+    );
+  }
+
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
@@ -107,10 +115,15 @@ export async function POST(request: NextRequest) {
       fileName: file.name,
     });
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Unknown error";
+    // Provider/config details stay in server logs — never in the client response.
+    console.error("BOL extraction failed:", err);
     return NextResponse.json(
-      { error: `OCR processing failed: ${msg}`, blobUrl },
-      { status: 500 }
+      {
+        error:
+          "Document processing is temporarily unavailable. Your file was received — please try again shortly or contact support.",
+        blobUrl,
+      },
+      { status: 502 }
     );
   }
 
