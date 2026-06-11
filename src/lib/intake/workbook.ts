@@ -55,6 +55,18 @@ export interface WorkbookParseResult {
   rows: ParsedShipmentRow[];
   sheetsParsed: string[];
   sheetsSkipped: { sheet: string; reason: string }[];
+  /** rows dropped because they repeated a (booking, container) pair — merged-cell artifacts */
+  duplicateRowsDropped: number;
+}
+
+/**
+ * Identity of a shipment line on the board. A booking can legitimately span
+ * several containers (one row each) — e.g. RICFJP621700 has 4 containers —
+ * but vertically-merged cells make exceljs repeat the same record on
+ * consecutive rows, so (booking, container) is the real unique key.
+ */
+export function rowKey(reference: string, containerNumber: string | null): string {
+  return `${reference.trim()}::${(containerNumber ?? "").trim().toUpperCase()}`;
 }
 
 // Canonical field -> header aliases (normalized: lowercase, single-spaced,
@@ -153,6 +165,8 @@ export async function parseWorkbook(
   const rows: ParsedShipmentRow[] = [];
   const sheetsParsed: string[] = [];
   const sheetsSkipped: { sheet: string; reason: string }[] = [];
+  const seenKeys = new Map<string, number>(); // rowKey -> index into rows
+  let duplicateRowsDropped = 0;
 
   wb.eachSheet((ws) => {
     // Build header -> column index map from row 1.
@@ -207,7 +221,7 @@ export async function parseWorkbook(
       if (!etd) reviewIssues.push("missing/unparseable departure date");
       if (!eta) reviewIssues.push("missing/unparseable ETA");
 
-      rows.push({
+      const parsedRow: ParsedShipmentRow = {
         reference: booking,
         pol: str(row, "pol"),
         pod: str(row, "pod"),
@@ -238,10 +252,24 @@ export async function parseWorkbook(
           rawCartons,
         },
         reviewIssues,
-      });
+      };
+
+      // Vertically-merged cells repeat a record on consecutive rows; keep the
+      // cleaner copy of any (booking, container) pair.
+      const key = rowKey(parsedRow.reference, parsedRow.containerNumber);
+      const existingIdx = seenKeys.get(key);
+      if (existingIdx !== undefined) {
+        duplicateRowsDropped++;
+        if (rows[existingIdx].reviewIssues.length > parsedRow.reviewIssues.length) {
+          rows[existingIdx] = parsedRow;
+        }
+        continue;
+      }
+      seenKeys.set(key, rows.length);
+      rows.push(parsedRow);
     }
   });
 
   void fileName;
-  return { rows, sheetsParsed, sheetsSkipped };
+  return { rows, sheetsParsed, sheetsSkipped, duplicateRowsDropped };
 }

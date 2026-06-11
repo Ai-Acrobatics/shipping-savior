@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { shipments } from "@/lib/db/schema";
-import { parseWorkbook } from "@/lib/intake/workbook";
+import { parseWorkbook, rowKey } from "@/lib/intake/workbook";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -76,14 +76,16 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Existing booking references for this org → skip duplicates on re-upload.
+  // Existing (booking, container) pairs for this org → skip duplicates on
+  // re-upload. A booking may span several containers (one shipment row each),
+  // so reference alone is not the identity.
   const existing = await db.query.shipments.findMany({
-    columns: { reference: true },
+    columns: { reference: true, containerNumber: true },
     where: (s, { eq, and, isNotNull }) => and(eq(s.orgId, orgId), isNotNull(s.reference)),
   });
-  const seen = new Set(existing.map((s) => s.reference));
+  const seen = new Set(existing.map((s) => rowKey(s.reference!, s.containerNumber)));
 
-  const toInsert = parsed.rows.filter((r) => !seen.has(r.reference));
+  const toInsert = parsed.rows.filter((r) => !seen.has(rowKey(r.reference, r.containerNumber)));
   const duplicates = parsed.rows.length - toInsert.length;
 
   if (toInsert.length > 0) {
@@ -130,5 +132,6 @@ export async function POST(request: NextRequest) {
     cleanRows: toInsert.length - needsReview.length,
     sheetsParsed: parsed.sheetsParsed,
     sheetsSkipped: parsed.sheetsSkipped,
+    mergedCellRowsDropped: parsed.duplicateRowsDropped,
   });
 }

@@ -63,6 +63,26 @@ async function buildFixture(): Promise<Buffer> {
     "18200", "900 CTNS Apples / Manzanas",
   ]);
 
+  // Merged-cell artifact: the same (booking, container) repeated on the next
+  // row — must collapse to one record. Plus a genuine multi-container booking
+  // (same booking, different containers) — must stay as two records.
+  w43.addRow([
+    "ANACAPA", "BN61723", "Hueneme", "Caldera", "Apples", "-0.5 Vents Closed",
+    "Chiquita", "CHIQUITA TRADER 314N", new Date("2025-10-23T03:00:00Z"), "K",
+    "Naumes", "41410", "4601", "10/20/2025 12:00", new Date("2025-10-20T15:00:00Z"),
+    new Date("2025-11-01T11:00:00Z"), "X20251020000001", "SEGU1111111", "S-1",
+    "18200", "900 CTNS Apples / Manzanas",
+  ]);
+  for (const cont of ["ONEU9127292", "CXRU1222409"]) {
+    w43.addRow([
+      "KINGSCO DRAY", "RICFJP621700", "Hueneme", "Yokohama", "Grapes", "0.0 Vents Closed",
+      "ONE", "ONE COLUMBA 042E", new Date("2025-10-24T03:00:00Z"), "C",
+      "Sunview", "8560000", "4700", "10/21/2025 12:00", new Date("2025-10-21T15:00:00Z"),
+      new Date("2025-11-12T11:00:00Z"), "X20251021000002", cont, "S-2",
+      "14288", "1500 CTNS GRAPES / Uvas",
+    ]);
+  }
+
   // A non-week sheet without a Booking column should be skipped, not crash.
   const notes = wb.addWorksheet("Notes");
   notes.addRow(["Random", "Stuff"]);
@@ -80,7 +100,14 @@ describe("parseWorkbook", () => {
   it("parses records from all weekly sheets and skips non-week sheets", () => {
     expect(result.sheetsParsed).toEqual(["Week 41", "Week 43"]);
     expect(result.sheetsSkipped).toEqual([{ sheet: "Notes", reason: "no Booking column in row 1" }]);
-    expect(result.rows).toHaveLength(4);
+    expect(result.rows).toHaveLength(6);
+  });
+
+  it("collapses merged-cell duplicates but keeps multi-container bookings", () => {
+    expect(result.duplicateRowsDropped).toBe(1); // repeated BN61723/SEGU1111111
+    expect(result.rows.filter((r) => r.reference === "BN61723")).toHaveLength(1);
+    const multi = result.rows.filter((r) => r.reference === "RICFJP621700");
+    expect(multi.map((r) => r.containerNumber).sort()).toEqual(["CXRU1222409", "ONEU9127292"]);
   });
 
   it("maps the standard layout, including comma-formatted kg weight", () => {
