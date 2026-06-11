@@ -993,6 +993,10 @@ export default function Home() {
           </div>
           <div className="pt-8 border-t border-ocean-50 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-navy-600">
             <div>© 2026 Shipping Savior · Julian Bradley × Blake Harwell</div>
+            <div className="flex items-center gap-4">
+              <Link href="/privacy" className="hover:text-ocean-600">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-ocean-600">Terms of Service</Link>
+            </div>
           </div>
         </div>
       </footer>
