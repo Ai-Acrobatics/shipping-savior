@@ -129,6 +129,8 @@ function ConfidenceBadge({ score }: { score: number | null | undefined }) {
 
 export default function ShipmentsPage() {
   const [shipmentsList, setShipmentsList] = useState<Shipment[]>([]);
+  const [totalShipments, setTotalShipments] = useState(0);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -165,16 +167,20 @@ export default function ShipmentsPage() {
 
   const [saving, setSaving] = useState(false);
 
-  const fetchShipments = useCallback(async () => {
+  const fetchShipments = useCallback(async (offset = 0) => {
+    if (offset > 0) setLoadingMore(true);
     try {
-      const res = await fetch("/api/shipments");
+      const res = await fetch(`/api/shipments?limit=50&offset=${offset}`);
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
-      setShipmentsList(data.shipments || []);
+      const rows: Shipment[] = data.shipments || [];
+      setShipmentsList((prev) => (offset > 0 ? [...prev, ...rows] : rows));
+      setTotalShipments(data.pagination?.total ?? rows.length);
     } catch {
       setError("Failed to load shipments");
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   }, []);
 
@@ -363,7 +369,7 @@ export default function ShipmentsPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {[
-          { label: "Total Shipments", value: shipmentsList.length, icon: Package, color: "text-ocean-600" },
+          { label: "Total Shipments", value: totalShipments || shipmentsList.length, icon: Package, color: "text-ocean-600" },
           { label: "In Transit", value: inTransit, icon: Ship, color: "text-sky-600" },
           { label: "Arrived", value: arrived, icon: CheckCircle2, color: "text-emerald-600" },
           { label: "Delayed", value: delayed, icon: AlertTriangle, color: delayed > 0 ? "text-red-600" : "text-navy-400" },
@@ -801,6 +807,18 @@ export default function ShipmentsPage() {
               </tbody>
             </table>
           </div>
+          {shipmentsList.length < totalShipments && (
+            <div className="border-t border-navy-100 p-3 text-center">
+              <button
+                onClick={() => fetchShipments(shipmentsList.length)}
+                disabled={loadingMore}
+                className="inline-flex items-center gap-2 rounded-xl border border-navy-200 px-4 py-2 text-sm font-medium text-navy-700 transition-colors hover:border-ocean-400 hover:bg-ocean-50 hover:text-ocean-700 disabled:opacity-50"
+              >
+                {loadingMore && <Loader2 className="h-4 w-4 animate-spin" />}
+                Load more ({shipmentsList.length} of {totalShipments})
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
