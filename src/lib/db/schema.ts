@@ -383,6 +383,7 @@ export const shipmentSourceEnum = pgEnum('shipment_source', [
   'manual',
   'bol_ocr',
   'csv_import',
+  'workbook_import',
 ]);
 
 // ── Shipments ─────────────────────────────────────────
@@ -420,6 +421,12 @@ export const shipments = pgTable('shipments', {
   source: shipmentSourceEnum('source').notNull().default('manual'),
   rawBolText: text('raw_bol_text'),
   bolDocumentId: uuid('bol_document_id'),
+  // Reefer-export workbook fields with no dedicated column (AI-10777): type of
+  // service, customer code, cross-dock appointment, temperature/vents, PU#/PO#,
+  // reefer + document cutoffs, AES #, seal #, week label, source file, and
+  // parser review flags. jsonb so Blake's board can evolve without a migration
+  // per column.
+  importMeta: jsonb('import_meta'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
