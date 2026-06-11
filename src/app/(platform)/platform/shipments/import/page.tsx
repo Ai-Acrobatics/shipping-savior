@@ -36,6 +36,15 @@ interface ImportResult {
 
 type Status = "idle" | "previewing" | "preview-ready" | "importing" | "imported" | "error";
 
+interface WorkbookImportResult {
+  imported: number;
+  duplicatesSkipped: number;
+  cleanRows: number;
+  needsReview: { reference: string; week: string; row: number; issues: string[] }[];
+  sheetsParsed: string[];
+  sheetsSkipped: { sheet: string; reason: string }[];
+}
+
 const PREVIEW_COLUMNS = [
   "reference",
   "origin_port",
@@ -57,14 +66,17 @@ export default function ShipmentsImportPage() {
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<DryRunResult | null>(null);
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
+  const [workbookResult, setWorkbookResult] = useState<WorkbookImportResult | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = useCallback((f: File) => {
     setError(null);
     setPreview(null);
     setImportResult(null);
-    if (!f.name.toLowerCase().endsWith(".csv")) {
-      setError("Please upload a CSV file (.csv extension required)");
+    setWorkbookResult(null);
+    const name = f.name.toLowerCase();
+    if (!name.endsWith(".csv") && !name.endsWith(".xlsx")) {
+      setError("Please upload a CSV (.csv) or Excel workbook (.xlsx)");
       return;
     }
     if (f.size > 10 * 1024 * 1024) {
@@ -74,6 +86,33 @@ export default function ShipmentsImportPage() {
     setFile(f);
     setStatus("idle");
   }, []);
+
+  const isWorkbook = !!file && file.name.toLowerCase().endsWith(".xlsx");
+
+  const importWorkbook = async () => {
+    if (!file) return;
+    setStatus("importing");
+    setError(null);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      const res = await fetch("/api/shipments/import-workbook", {
+        method: "POST",
+        body: form,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Failed to import workbook");
+        setStatus("error");
+        return;
+      }
+      setWorkbookResult(data as WorkbookImportResult);
+      setStatus("imported");
+    } catch (e) {
+      setError(`Network error: ${(e as Error).message}`);
+      setStatus("error");
+    }
+  };
 
   const onDrop = useCallback(
     (e: React.DragEvent) => {
@@ -139,6 +178,7 @@ export default function ShipmentsImportPage() {
     setFile(null);
     setPreview(null);
     setImportResult(null);
+    setWorkbookResult(null);
     setStatus("idle");
     setError(null);
     if (inputRef.current) inputRef.current.value = "";
@@ -171,6 +211,67 @@ export default function ShipmentsImportPage() {
             Download CSV Template
           </a>
         </div>
+
+        {/* Workbook imported state */}
+        {status === "imported" && workbookResult && (
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 space-y-4">
+            <div className="flex items-start gap-4">
+              <CheckCircle2 className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="text-base font-semibold text-emerald-900">
+                  {workbookResult.imported} shipments imported from{" "}
+                  {workbookResult.sheetsParsed.length} weekly sheets
+                </h3>
+                <p className="text-sm text-emerald-700 mt-1">
+                  {workbookResult.cleanRows} clean ·{" "}
+                  {workbookResult.needsReview.length} need review
+                  {workbookResult.duplicatesSkipped > 0 &&
+                    ` · ${workbookResult.duplicatesSkipped} duplicates skipped`}
+                </p>
+                <div className="flex gap-3 mt-4">
+                  <Link
+                    href="/platform/shipments"
+                    className="text-sm bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+                  >
+                    View Shipments
+                  </Link>
+                  <button
+                    onClick={reset}
+                    className="text-sm border border-emerald-300 hover:bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg transition-colors font-medium"
+                  >
+                    Import another file
+                  </button>
+                </div>
+              </div>
+            </div>
+            {workbookResult.needsReview.length > 0 && (
+              <div className="bg-white border border-amber-200 rounded-xl overflow-hidden">
+                <div className="px-4 py-2.5 bg-amber-50 text-xs font-semibold uppercase tracking-wider text-amber-800">
+                  Review queue — imported with missing data
+                </div>
+                <div className="max-h-64 overflow-y-auto">
+                  <table className="w-full text-sm">
+                    <tbody>
+                      {workbookResult.needsReview.map((r) => (
+                        <tr key={`${r.week}-${r.row}`} className="border-t border-navy-100">
+                          <td className="px-4 py-2 font-mono text-xs text-navy-800 whitespace-nowrap">
+                            {r.reference}
+                          </td>
+                          <td className="px-4 py-2 text-xs text-navy-500 whitespace-nowrap">
+                            {r.week} · row {r.row}
+                          </td>
+                          <td className="px-4 py-2 text-xs text-amber-700">
+                            {r.issues.join("; ")}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Imported success state */}
         {status === "imported" && importResult && (
@@ -218,15 +319,17 @@ export default function ShipmentsImportPage() {
           >
             <Upload className="w-12 h-12 text-navy-400 mx-auto mb-4" />
             <h3 className="text-base font-semibold text-navy-900 mb-2">
-              Drag & drop your CSV here
+              Drag & drop your CSV or weekly Excel workbook here
             </h3>
             <p className="text-sm text-navy-500 mb-4">
-              or click to browse. Max 10 MB.
+              or click to browse. Max 10 MB. Excel workbooks with one sheet per
+              week (Booking, Carrier, Vessel, CONT #, Reefer Cutoff…) are
+              parsed automatically.
             </p>
             <input
               ref={inputRef}
               type="file"
-              accept=".csv,text/csv"
+              accept=".csv,text/csv,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
               className="hidden"
               onChange={(e) => {
                 const f = e.target.files?.[0];
@@ -267,13 +370,29 @@ export default function ShipmentsImportPage() {
               </button>
             </div>
 
-            {status === "idle" && (
+            {status === "idle" && !isWorkbook && (
               <button
                 onClick={previewCsv}
                 className="mt-4 w-full bg-ocean-600 hover:bg-ocean-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
               >
                 Preview Import
               </button>
+            )}
+
+            {status === "idle" && isWorkbook && (
+              <button
+                onClick={importWorkbook}
+                className="mt-4 w-full bg-ocean-600 hover:bg-ocean-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+              >
+                Import Weekly Workbook
+              </button>
+            )}
+
+            {status === "importing" && isWorkbook && (
+              <div className="mt-4 flex items-center justify-center gap-2 text-sm text-navy-600">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Parsing weekly sheets…
+              </div>
             )}
 
             {status === "previewing" && (
