@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import Link from "next/link";
 import {
+  ClipboardCheck,
   Package,
   Upload,
   Loader2,
@@ -340,14 +342,23 @@ export default function ShipmentsPage() {
             label="Bulk loading shipments? Read the CSV import walkthrough."
           />
         </div>
-        <button
-          data-tour-step="3"
-          onClick={() => { setUploadMode(true); setExtracted(null); setError(null); }}
-          className="inline-flex items-center gap-2 rounded-xl bg-ocean-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-ocean-600"
-        >
-          <Upload className="h-4 w-4" />
-          Upload Bill of Lading
-        </button>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/platform/shipments/review"
+            className="inline-flex items-center gap-2 rounded-xl border border-navy-200 px-4 py-2.5 text-sm font-medium text-navy-700 transition-colors hover:border-ocean-400 hover:bg-ocean-50 hover:text-ocean-700"
+          >
+            <ClipboardCheck className="h-4 w-4" />
+            Review queue
+          </Link>
+          <button
+            data-tour-step="3"
+            onClick={() => { setUploadMode(true); setExtracted(null); setError(null); }}
+            className="inline-flex items-center gap-2 rounded-xl bg-ocean-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-ocean-600"
+          >
+            <Upload className="h-4 w-4" />
+            Upload Bill of Lading
+          </button>
+        </div>
       </div>
 
       {/* Notifications */}
