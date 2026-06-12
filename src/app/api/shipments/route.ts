@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { shipments, bolDocuments, shipmentStatusEnum, shipmentSourceEnum } from "@/lib/db/schema";
-import { desc, eq, and, count, type SQL } from "drizzle-orm";
+import { desc, eq, and, count, sql, type SQL } from "drizzle-orm";
 
 const VALID_STATUSES = shipmentStatusEnum.enumValues;
 const VALID_SOURCES = shipmentSourceEnum.enumValues;
@@ -11,7 +11,8 @@ const DEFAULT_LIMIT = 50;
 const MAX_LIMIT = 200;
 
 // GET /api/shipments — list the authenticated org's shipments with linked BOL blob URL.
-// Supports ?status=, ?limit= (default 50, max 200), ?offset= for server-side pagination.
+// Supports ?status=, ?limit= (default 50, max 200), ?offset= for server-side pagination,
+// and ?needsReview=1 to return only rows whose importMeta.reviewIssues is non-empty (AI-10777).
 export async function GET(request: NextRequest) {
   const session = await auth();
   if (!session) {
@@ -32,6 +33,12 @@ export async function GET(request: NextRequest) {
     if (statusFilter && (VALID_STATUSES as readonly string[]).includes(statusFilter)) {
       conditions.push(eq(shipments.status, statusFilter as (typeof VALID_STATUSES)[number]));
     }
+    if (searchParams.get("needsReview") === "1") {
+      // Only workbook rows still carrying parser review flags.
+      conditions.push(
+        sql`coalesce(jsonb_array_length(${shipments.importMeta}->'reviewIssues'), 0) > 0`
+      );
+    }
     const where = and(...conditions);
 
     const [rows, [{ total }]] = await Promise.all([
@@ -39,6 +46,7 @@ export async function GET(request: NextRequest) {
         .select({
           id: shipments.id,
           orgId: shipments.orgId,
+          reference: shipments.reference,
           containerNumber: shipments.containerNumber,
           vesselName: shipments.vesselName,
           voyageNumber: shipments.voyageNumber,
@@ -55,6 +63,7 @@ export async function GET(request: NextRequest) {
           quantity: shipments.quantity,
           status: shipments.status,
           source: shipments.source,
+          importMeta: shipments.importMeta,
           bolDocumentId: shipments.bolDocumentId,
           bolBlobUrl: bolDocuments.blobUrl,
           bolFileName: bolDocuments.fileName,
