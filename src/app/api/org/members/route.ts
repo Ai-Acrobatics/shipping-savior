@@ -2,10 +2,13 @@ import { NextResponse } from 'next/server';
 import { requireRole, isAuthError, type AuthContext } from '@/lib/auth/rbac';
 import { getOrgMembers, removeOrgMember, countOrgOwners } from '@/lib/db/queries/org';
 import { writeAuditLog } from '@/lib/auth/audit';
+import { getOrgPlan, getOrgLimits, getCurrentUsage } from '@/lib/billing/limits';
 
 /**
  * GET /api/org/members
- * List all members of the authenticated user's organization.
+ * List all members of the authenticated user's organization, plus seat usage
+ * (`seats: { used, limit, plan }`) for the team settings UI (AI-5582).
+ * `used` counts active members + pending invites; `limit: -1` means unlimited.
  * Any role can view members.
  */
 export async function GET() {
@@ -15,7 +18,13 @@ export async function GET() {
 
   try {
     const members = await getOrgMembers(orgId);
-    return NextResponse.json({ members });
+    const plan = await getOrgPlan(orgId);
+    const limit = getOrgLimits(plan).users;
+    const used = await getCurrentUsage(orgId, 'users');
+    return NextResponse.json({
+      members,
+      seats: { used, limit: limit === Infinity ? -1 : limit, plan },
+    });
   } catch (error) {
     console.error('[org/members] Failed to list members:', error);
     return NextResponse.json(
