@@ -104,6 +104,21 @@ export async function removeOrgMember(orgId: string, userId: string) {
     .returning();
 }
 
+/** Update a member's role (org-scoped) */
+export async function updateOrgMemberRole(
+  orgId: string,
+  userId: string,
+  role: 'owner' | 'admin' | 'member' | 'viewer'
+) {
+  return db
+    .update(orgMembers)
+    .set({ role })
+    .where(
+      and(eq(orgMembers.orgId, orgId), eq(orgMembers.userId, userId))
+    )
+    .returning();
+}
+
 /** Count how many owners an org has */
 export async function countOrgOwners(orgId: string) {
   const owners = await db
