@@ -996,6 +996,7 @@ export default function Home() {
             <div className="flex items-center gap-4">
               <Link href="/privacy" className="hover:text-ocean-600">Privacy Policy</Link>
               <Link href="/terms" className="hover:text-ocean-600">Terms of Service</Link>
+              <Link href="/dpa" className="hover:text-ocean-600">DPA</Link>
             </div>
           </div>
         </div>

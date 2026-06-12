@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import ServiceWorkerProvider from "@/components/providers/ServiceWorkerProvider";
 import SessionProvider from "@/components/providers/SessionProvider";
 import AnalyticsProvider from "@/components/providers/AnalyticsProvider";
+import CookieConsent from "@/components/CookieConsent";
 import ChatAssistant from "@/components/ChatAssistant";
 import "./globals.css";
 
@@ -65,6 +66,7 @@ export default function RootLayout({
       >
         <SessionProvider>{children}</SessionProvider>
         <AnalyticsProvider />
+        <CookieConsent />
         <ChatAssistant />
         <ServiceWorkerProvider />
       </body>
