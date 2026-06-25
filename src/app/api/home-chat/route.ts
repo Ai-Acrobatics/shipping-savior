@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { classifyAiError, logAiError } from "@/lib/ai/errors";
 
 /**
  * /api/home-chat — Public homepage chat endpoint.
@@ -124,10 +125,13 @@ export async function POST(request: NextRequest) {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "done" })}\n\n`));
         controller.close();
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Stream failed";
+        // AI-8506: classify provider errors so the homepage chat shows a
+        // user-safe message (not the raw "credit balance is too low" string).
+        const classified = classifyAiError(err);
+        logAiError("home-chat", classified);
         controller.enqueue(
           encoder.encode(
-            `data: ${JSON.stringify({ type: "error", error: message })}\n\n`
+            `data: ${JSON.stringify({ type: "error", error: classified.userMessage, code: classified.code })}\n\n`
           )
         );
         controller.close();
