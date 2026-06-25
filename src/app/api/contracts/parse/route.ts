@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { contracts, contractLanes } from "@/lib/db/schema";
 import { extractWithFallback } from "@/lib/ai/providers";
+import { classifyAiError, logAiError } from "@/lib/ai/errors";
 import { enforceLimit, LimitExceededError } from "@/lib/billing/limits";
 import { limitExceededResponse } from "@/lib/billing/respond";
 
@@ -83,10 +84,17 @@ export async function POST(request: NextRequest) {
       fileName: file.name,
     });
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Unknown error";
+    // AI-8506: classify provider errors (e.g. zero Anthropic credit balance)
+    // into user-safe responses instead of leaking the raw SDK string.
+    const classified = classifyAiError(err);
+    logAiError("contracts/parse", classified);
     return NextResponse.json(
-      { error: `Contract parsing failed: ${msg}` },
-      { status: 500 }
+      {
+        error: classified.userMessage,
+        code: classified.code,
+        retryable: classified.retryable,
+      },
+      { status: classified.status }
     );
   }
 

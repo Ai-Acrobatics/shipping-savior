@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { classifyAiError, logAiError } from '@/lib/ai/errors';
 import * as fs from 'fs';
 import * as path from 'path';
 import Fuse from 'fuse.js';
@@ -697,11 +698,18 @@ export async function POST(request: NextRequest) {
       JSON.stringify({ error: 'Too many tool iterations' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
-  } catch (err: any) {
-    console.error('AI Chat error:', err);
+  } catch (err: unknown) {
+    // AI-8506: surface a user-safe message for billing/credit/rate-limit
+    // failures instead of the raw Anthropic SDK error.
+    const classified = classifyAiError(err);
+    logAiError('chat', classified);
     return new Response(
-      JSON.stringify({ error: err.message || 'An error occurred' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({
+        error: classified.userMessage,
+        code: classified.code,
+        retryable: classified.retryable,
+      }),
+      { status: classified.status, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }
