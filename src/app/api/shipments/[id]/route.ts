@@ -7,6 +7,12 @@ export const dynamic = "force-dynamic";
 
 // GET /api/shipments/[id] — fetch a single shipment with its linked BOL blob.
 // MVP: no auth required, consistent with GET /api/shipments (list).
+//
+// NOTE: selects only the BOL-flavored columns that exist in the production
+// shipments table. The CSV-import columns (reference, origin_port, progress,
+// current_location, ...) are declared in schema.ts / migration 0000 but were
+// never applied to the production database (migration drift), so selecting them
+// here would throw "column does not exist". See AI-8055.
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -18,15 +24,6 @@ export async function GET(
       .select({
         id: shipments.id,
         orgId: shipments.orgId,
-        reference: shipments.reference,
-        originPort: shipments.originPort,
-        destPort: shipments.destPort,
-        containerCount: shipments.containerCount,
-        containerType: shipments.containerType,
-        cargoType: shipments.cargoType,
-        valueUsd: shipments.valueUsd,
-        progress: shipments.progress,
-        currentLocation: shipments.currentLocation,
         containerNumber: shipments.containerNumber,
         vesselName: shipments.vesselName,
         voyageNumber: shipments.voyageNumber,
