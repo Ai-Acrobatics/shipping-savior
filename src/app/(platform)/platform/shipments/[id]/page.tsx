@@ -5,6 +5,11 @@
  * the visual timeline (ShipmentTimeline) plus a details grid and BOL link.
  * Auth is handled by the (platform) layout. force-dynamic so we never query the
  * DB at build time.
+ *
+ * NOTE: selects only the BOL-flavored columns that exist in the production
+ * shipments table — the CSV-import columns are declared in schema.ts but were
+ * never applied to prod (migration drift). The timeline derives gracefully from
+ * pol/pod + etd/eta + status. See AI-8055.
  */
 
 import Link from "next/link";
@@ -46,15 +51,6 @@ async function loadShipment(id: string) {
     const [row] = await db
       .select({
         id: shipments.id,
-        reference: shipments.reference,
-        originPort: shipments.originPort,
-        destPort: shipments.destPort,
-        containerCount: shipments.containerCount,
-        containerType: shipments.containerType,
-        cargoType: shipments.cargoType,
-        valueUsd: shipments.valueUsd,
-        progress: shipments.progress,
-        currentLocation: shipments.currentLocation,
         containerNumber: shipments.containerNumber,
         vesselName: shipments.vesselName,
         voyageNumber: shipments.voyageNumber,
@@ -94,18 +90,18 @@ export default async function ShipmentDetailPage({
   if (!shipment) notFound();
 
   const statusCfg = STATUS_CONFIG[shipment.status] || STATUS_CONFIG.pending;
-  const origin = shipment.pol || shipment.originPort || "Origin";
-  const dest = shipment.pod || shipment.destPort || "Destination";
+  const origin = shipment.pol || "Origin";
+  const dest = shipment.pod || "Destination";
 
   const details: Array<{ label: string; value: string; icon: typeof Ship }> = [
     { label: "Carrier", value: fmt(shipment.carrier), icon: Ship },
     { label: "Vessel", value: fmt(shipment.vesselName), icon: Ship },
     { label: "Voyage", value: fmt(shipment.voyageNumber), icon: Ship },
     { label: "Container", value: fmt(shipment.containerNumber), icon: Boxes },
-    { label: "Container Type", value: fmt(shipment.containerType), icon: Boxes },
-    { label: "Cargo", value: fmt(shipment.cargoType || shipment.goodsDescription), icon: Package },
+    { label: "Cargo", value: fmt(shipment.goodsDescription), icon: Package },
     { label: "Shipper", value: fmt(shipment.shipper), icon: Building2 },
     { label: "Consignee", value: fmt(shipment.consignee), icon: Building2 },
+    { label: "Notify Party", value: fmt(shipment.notifyParty), icon: Building2 },
     { label: "Weight (kg)", value: fmt(shipment.weightKg), icon: Weight },
     { label: "Quantity", value: fmt(shipment.quantity), icon: Boxes },
     { label: "ETD", value: fmt(shipment.etd), icon: MapPin },
@@ -127,7 +123,7 @@ export default async function ShipmentDetailPage({
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="font-mono text-xs font-semibold text-navy-400">
-              {shipment.reference || shipment.containerNumber || shipment.id.slice(0, 8)}
+              {shipment.containerNumber || shipment.id.slice(0, 8)}
             </p>
             <h1 className="mt-1 flex items-center gap-2 text-xl font-bold text-navy-900">
               <MapPin className="h-5 w-5 text-ocean-500" />
