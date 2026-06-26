@@ -9,6 +9,10 @@ import { ArrowRight, Loader2 } from "lucide-react";
  * Two actions, both POST to API routes that return { url } for redirect:
  *   - Manage Subscription → /api/billing/portal
  *   - Upgrade to Premium  → /api/billing/checkout (with priceId)
+ *
+ * AI-9859: never surface internal config (env var names, raw Stripe error
+ * strings) to the customer. The server returns customer-safe copy for 5xx; we
+ * pass that through and fall back to a generic message for everything else.
  */
 
 interface BillingActionsProps {
@@ -16,6 +20,22 @@ interface BillingActionsProps {
   hasActiveSubscription: boolean;
   /** Stripe price ID for the Premium plan, from STRIPE_PRICE_PREMIUM_MONTHLY. Empty string if not configured. */
   premiumPriceId: string;
+}
+
+const ACTION_FALLBACK_MESSAGE =
+  "Something went wrong. Please try again, or contact support if it keeps happening.";
+
+/**
+ * Pick customer-safe copy for a failed billing response. Trust server 5xx copy
+ * (already customer-safe), pass through any other clean message, but never show
+ * an internal string mentioning env vars / price IDs (AI-9859).
+ */
+function customerSafeError(status: number, serverError?: string): string {
+  if (status >= 500 && serverError) return serverError;
+  if (serverError && !/STRIPE_|price[_ ]?id|priceId|env/i.test(serverError)) {
+    return serverError;
+  }
+  return ACTION_FALLBACK_MESSAGE;
 }
 
 export default function BillingActions({
@@ -33,7 +53,8 @@ export default function BillingActions({
     });
     const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
     if (!res.ok || !data.url) {
-      throw new Error(data.error ?? `Request failed (${res.status})`);
+      // Throw a customer-safe message — callers render it verbatim.
+      throw new Error(customerSafeError(res.status, data.error));
     }
     window.location.assign(data.url);
   }
@@ -44,22 +65,24 @@ export default function BillingActions({
     try {
       await postToBilling("/api/billing/portal");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Portal session failed");
+      setError(e instanceof Error ? e.message : ACTION_FALLBACK_MESSAGE);
       setLoading(null);
     }
   }
 
   async function startCheckout() {
-    if (!premiumPriceId) {
-      setError("Premium price ID is not configured. Set STRIPE_PRICE_PREMIUM_MONTHLY.");
-      return;
-    }
     setError(null);
     setLoading("upgrade");
     try {
-      await postToBilling("/api/billing/checkout", { priceId: premiumPriceId });
+      // Send the slug as a fallback so the server can resolve the price from env
+      // even when the page didn't receive a configured premiumPriceId. The server
+      // returns a customer-safe 503 if billing isn't configured (AI-9859).
+      await postToBilling("/api/billing/checkout", {
+        priceId: premiumPriceId || "PREMIUM_MONTHLY",
+        plan: "premium",
+      });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Checkout failed");
+      setError(e instanceof Error ? e.message : ACTION_FALLBACK_MESSAGE);
       setLoading(null);
     }
   }
@@ -84,7 +107,7 @@ export default function BillingActions({
         <button
           type="button"
           onClick={startCheckout}
-          disabled={loading !== null || !premiumPriceId}
+          disabled={loading !== null}
           className="inline-flex items-center gap-2 bg-gradient-to-r from-ocean-500 to-indigo-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading === "upgrade" ? (

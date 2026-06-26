@@ -3,12 +3,18 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { organizations, users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import { stripe } from '@/lib/stripe/server';
+import {
+  stripe,
+  isStripeConfigured,
+  resolvePriceId,
+  BILLING_UNAVAILABLE_MESSAGE,
+  CHECKOUT_FAILED_MESSAGE,
+} from '@/lib/stripe/server';
 
 /**
  * POST /api/billing/checkout (AI-8777)
  *
- * Body: { priceId: string }
+ * Body: { priceId?: string; plan?: string }
  *
  * Creates (or reuses) a Stripe Customer for the caller's organization, then
  * creates a Checkout Session in `subscription` mode and returns the hosted URL.
@@ -17,11 +23,27 @@ import { stripe } from '@/lib/stripe/server';
  * success and /pricing on cancel. The actual subscription state is written to the
  * DB by the webhook handler (/api/billing/webhook), not here — this route is
  * pure intent capture.
+ *
+ * AI-9859: never surface internal config (env var names, raw Stripe error
+ * strings) to the customer. When Stripe isn't configured or a Stripe call fails,
+ * we log the detail server-side and return a calm, customer-safe message with the
+ * right status so the UI can render "billing unavailable / contact support"
+ * instead of a confusing developer error after the customer thinks they paid.
  */
 export async function POST(request: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Billing not wired up (missing STRIPE_SECRET_KEY / price IDs). Short-circuit
+  // with a customer-safe 503 rather than calling Stripe with a placeholder key.
+  if (!isStripeConfigured()) {
+    // eslint-disable-next-line no-console
+    console.error(
+      '[billing/checkout] Stripe is not configured (STRIPE_SECRET_KEY missing or placeholder) — returning 503.'
+    );
+    return NextResponse.json({ error: BILLING_UNAVAILABLE_MESSAGE }, { status: 503 });
   }
 
   let body: { priceId?: string; plan?: string };
@@ -33,17 +55,15 @@ export async function POST(request: NextRequest) {
 
   // Accept either a literal Stripe price ID OR a plan slug (preferred for browser
   // callers — keeps the price ID out of public env vars). Map slug → env price.
-  let priceId = body.priceId?.trim();
-  if (!priceId || priceId === 'PREMIUM_MONTHLY' || body.plan === 'premium') {
-    priceId = process.env.STRIPE_PRICE_PREMIUM_MONTHLY;
-  } else if (priceId === 'ENTERPRISE_MONTHLY' || body.plan === 'enterprise') {
-    priceId = process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY;
-  }
+  const priceId = resolvePriceId({ priceId: body.priceId, plan: body.plan });
   if (!priceId) {
-    return NextResponse.json(
-      { error: 'No priceId — set STRIPE_PRICE_PREMIUM_MONTHLY (or pass priceId).' },
-      { status: 400 }
+    // The plan's price ID env var is unset. This is a server misconfiguration,
+    // not something the customer did — log the detail, show a safe message.
+    // eslint-disable-next-line no-console
+    console.error(
+      '[billing/checkout] No price ID resolved — set STRIPE_PRICE_PREMIUM_MONTHLY / STRIPE_PRICE_ENTERPRISE_MONTHLY in env.'
     );
+    return NextResponse.json({ error: BILLING_UNAVAILABLE_MESSAGE }, { status: 503 });
   }
 
   const orgId = session.user.orgId;
@@ -117,17 +137,16 @@ export async function POST(request: NextRequest) {
     });
 
     if (!checkout.url) {
-      return NextResponse.json(
-        { error: 'Stripe did not return a checkout URL' },
-        { status: 502 }
-      );
+      // eslint-disable-next-line no-console
+      console.error('[billing/checkout] Stripe did not return a checkout URL.');
+      return NextResponse.json({ error: CHECKOUT_FAILED_MESSAGE }, { status: 502 });
     }
 
     return NextResponse.json({ url: checkout.url });
   } catch (error) {
+    // Log the real Stripe error for the team; show the customer a safe message.
     // eslint-disable-next-line no-console
     console.error('[billing/checkout] Stripe error:', error);
-    const message = error instanceof Error ? error.message : 'Checkout failed';
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: CHECKOUT_FAILED_MESSAGE }, { status: 500 });
   }
 }
