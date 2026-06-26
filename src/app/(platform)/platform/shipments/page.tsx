@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useState, useEffect, useCallback, useRef } from "react";
 import {
   Package,
@@ -745,6 +747,7 @@ export default function ShipmentsPage() {
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Source</th>
                   <th className="px-4 py-3">BOL</th>
+                  <th className="px-4 py-3">Track</th>
                 </tr>
               </thead>
               <tbody>
@@ -795,6 +798,15 @@ export default function ShipmentsPage() {
                       ) : (
                         <span className="text-xs text-navy-300">--</span>
                       )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <Link
+                        href={`/platform/shipments/${s.id}`}
+                        className="inline-flex items-center gap-1 rounded-lg bg-ocean-50 px-2 py-0.5 text-xs font-medium text-ocean-700 hover:bg-ocean-100"
+                      >
+                        <Ship className="h-3 w-3" />
+                        Track
+                      </Link>
                     </td>
                   </tr>
                 ))}
