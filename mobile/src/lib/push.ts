@@ -7,6 +7,17 @@ import { api } from './api';
 
 const PUSH_TOKEN_KEY = 'ss.push.token';
 
+// Show alerts even when the app is foregrounded — a cutoff alarm must never
+// be silently swallowed because the user happens to have the app open.
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
 // Registers this device for shipment/cutoff alert pushes. Safe to call on
 // every login: the server upserts on the token. Silently no-ops on
 // simulators, Expo Go, or when the user denies permission.

@@ -35,6 +35,10 @@ export async function expectNoSeriousViolations(page: Page): Promise<void> {
   // intermediate state. Without this, axe sees `opacity: 0` elements as
   // transparent and reports false-positive contrast failures against the
   // page root background.
+  // Emulate prefers-reduced-motion so framer-motion (MotionConfig
+  // reducedMotion="user" in the root layout) renders entrance states at
+  // full opacity instead of the mid-fade frame axe would misread.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.waitForLoadState('networkidle');
   // Disable CSS animations + transitions so axe samples a stable frame.
   // Animated gradients + framer-motion entrance produce intermittent
@@ -51,7 +55,10 @@ export async function expectNoSeriousViolations(page: Page): Promise<void> {
       }
     `,
   });
-  await page.waitForTimeout(500);
+  // Outlast the longest JS-driven entrance (homepage dashboard mock:
+  // 1.1s delay + 0.8s duration). Reduced-motion skips it, but belt and
+  // suspenders for any element that opts out of MotionConfig.
+  await page.waitForTimeout(2200);
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa'])
     .analyze();

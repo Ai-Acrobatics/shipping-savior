@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import * as Notifications from 'expo-notifications';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, View } from 'react-native';
 import { AuthProvider, useAuth } from '@/lib/auth-context';
@@ -14,6 +15,20 @@ function RootNavigator() {
   useEffect(() => {
     if (!loading) SplashScreen.hideAsync();
   }, [loading]);
+
+  // Tapping a push (e.g. a cutoff alarm) deep-links into the shipment.
+  useEffect(() => {
+    if (!user) return;
+    const sub = Notifications.addNotificationResponseReceivedListener((response) => {
+      const data = response.notification.request.content.data as {
+        shipmentId?: string;
+      };
+      if (data?.shipmentId) {
+        router.push({ pathname: '/shipment/[id]', params: { id: data.shipmentId } });
+      }
+    });
+    return () => sub.remove();
+  }, [user]);
 
   if (loading) {
     return (
