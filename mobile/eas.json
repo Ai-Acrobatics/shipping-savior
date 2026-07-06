@@ -17,6 +17,16 @@
         "EXPO_PUBLIC_API_URL": "https://shipping-savior.vercel.app"
       }
     },
+    "simulator": {
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://shipping-savior.vercel.app",
+        "EXPO_PUBLIC_DEMO_EMAIL": "demo@shippingsavior.app",
+        "EXPO_PUBLIC_DEMO_PASSWORD": "DemoPass2026!"
+      }
+    },
     "production": {
       "autoIncrement": true,
       "credentialsSource": "local",

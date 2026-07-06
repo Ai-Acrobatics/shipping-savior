@@ -30,6 +30,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // On launch: restore the stored user, then validate the token against the
   // server. An invalid/expired token drops back to the login screen.
+  //
+  // Demo/simulator builds: if EXPO_PUBLIC_DEMO_EMAIL is set and there's no
+  // stored session, auto-authenticate so the app lands already logged in.
+  // This env is only defined in the "simulator" build profile — never in
+  // preview/production — so real users always see the login screen.
   useEffect(() => {
     (async () => {
       try {
@@ -43,11 +48,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             await clearSession();
             setUser(null);
           }
+          return;
+        }
+
+        const demoEmail = process.env.EXPO_PUBLIC_DEMO_EMAIL;
+        const demoPassword = process.env.EXPO_PUBLIC_DEMO_PASSWORD;
+        if (demoEmail && demoPassword) {
+          try {
+            await login(demoEmail, demoPassword);
+          } catch {
+            // fall through to the login screen if the demo creds fail
+          }
         }
       } finally {
         setLoading(false);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
