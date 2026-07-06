@@ -12,6 +12,7 @@ import { db } from '@/lib/db';
 import { calculations, bolDocuments, contracts, organizations, orgMembers, invites } from '@/lib/db/schema';
 import { eq, and, gte, count, isNull, gt } from 'drizzle-orm';
 import type { Plan } from '@/lib/db/schema';
+import { isBillingPlaceholder } from './placeholder';
 
 export type LimitedResource = 'users' | 'calculations' | 'bolUploads' | 'contractUploads';
 
@@ -149,6 +150,9 @@ export class LimitExceededError extends Error {
  *   await db.insert(calculations).values(...);
  */
 export async function enforceLimit(orgId: string, resource: LimitedResource): Promise<void> {
+  // Placeholder mode (pre-Stripe launch): no caps, everything testable.
+  if (isBillingPlaceholder()) return;
+
   const plan = await getOrgPlan(orgId);
   const limits = getOrgLimits(plan);
   const limit = limits[resource];

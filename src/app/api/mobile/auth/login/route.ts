@@ -9,6 +9,26 @@ import { sessionCookieName, MOBILE_SESSION_MAX_AGE } from '@/lib/auth/mobile';
 
 const SESSION_MAX_AGE = MOBILE_SESSION_MAX_AGE;
 
+// ── Rate limiting (same in-memory pattern as /api/ai/chat) ──────────────────
+// 10 attempts per IP per 5 minutes — generous for real users, hostile to
+// credential stuffing. Serverless instances each hold their own map, which is
+// fine: the goal is slowing bulk attempts, not perfect global accounting.
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_MAX = 10;
+const RATE_LIMIT_WINDOW_MS = 5 * 60_000;
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT_MAX) return false;
+  entry.count++;
+  return true;
+}
+
 // POST /api/mobile/auth/login — credentials login for the native mobile app.
 // Returns a NextAuth-compatible session JWT that the client must send on every
 // request as `Cookie: <cookieName>=<token>`. Mirrors the Credentials provider
@@ -19,6 +39,15 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: 'Server auth is not configured' },
       { status: 500 }
+    );
+  }
+
+  const ip =
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+  if (!checkRateLimit(ip)) {
+    return NextResponse.json(
+      { error: 'Too many login attempts. Try again in a few minutes.' },
+      { status: 429 }
     );
   }
 

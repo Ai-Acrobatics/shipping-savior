@@ -12,6 +12,7 @@ import {
   type ShelfLifeResult,
   type RiskLevel,
 } from "@/lib/calculators/shelf-life";
+import SaveCalculationButton from "@/components/platform/SaveCalculationButton";
 
 const riskBadge: Record<RiskLevel, string> = {
   low: "bg-green-50 border-green-200 text-green-700",
@@ -347,7 +348,23 @@ export default function ShelfLifePage() {
               )}
             </div>
 
-            {/* TODO(AI-10777): add shelf_life to calculatorTypeEnum + wire save */}
+            {result && (
+              <div className="mt-4 flex justify-end">
+                <SaveCalculationButton
+                  calculatorType="shelf_life"
+                  getInputs={() => ({
+                    ...baseInputs,
+                    transitDays,
+                    routeATransitDays,
+                    routeBTransitDays,
+                  })}
+                  getOutputs={() => ({
+                    result,
+                    comparison,
+                  })}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

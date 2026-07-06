@@ -14,6 +14,7 @@ const VALID_TYPES: CalculatorType[] = [
   "pf_npf_comparison",
   "container_utilization",
   "tariff_scenario",
+  "shelf_life",
 ];
 
 // GET /api/calculations — list all calculations for the user's org

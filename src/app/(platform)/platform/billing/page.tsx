@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { CheckCircle2, AlertTriangle, CreditCard, Gauge } from "lucide-react";
 import BillingActions from "./BillingActions";
 import { getAllUsage, resourceLabel } from "@/lib/billing/usage";
+import { isBillingPlaceholder } from "@/lib/billing/placeholder";
 
 /**
  * /platform/billing (AI-8777)
@@ -101,6 +102,22 @@ export default async function BillingPage({
           Manage your Shipping Savior subscription.
         </p>
       </header>
+
+      {isBillingPlaceholder() && (
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-amber-300">
+              Billing placeholder mode
+            </p>
+            <p className="text-xs text-amber-200/80 mt-0.5">
+              Stripe isn&apos;t connected yet — all platform features are open
+              and usage limits are not enforced while we test. Upgrading and
+              the customer portal are disabled until launch.
+            </p>
+          </div>
+        </div>
+      )}
 
       {justSucceeded && (
         <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 flex items-start gap-3">

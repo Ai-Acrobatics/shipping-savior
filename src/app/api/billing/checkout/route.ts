@@ -4,6 +4,10 @@ import { db } from '@/lib/db';
 import { organizations, users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { stripe } from '@/lib/stripe/server';
+import {
+  isBillingPlaceholder,
+  BILLING_PLACEHOLDER_MESSAGE,
+} from '@/lib/billing/placeholder';
 
 /**
  * POST /api/billing/checkout (AI-8777)
@@ -22,6 +26,14 @@ export async function POST(request: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Pre-launch placeholder mode: don't attempt a Stripe call with fake keys.
+  if (isBillingPlaceholder()) {
+    return NextResponse.json(
+      { error: BILLING_PLACEHOLDER_MESSAGE, placeholder: true },
+      { status: 503 }
+    );
   }
 
   let body: { priceId?: string; plan?: string };

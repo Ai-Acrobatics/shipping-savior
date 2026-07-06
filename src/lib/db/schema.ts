@@ -29,6 +29,7 @@ export const calculatorTypeEnum = pgEnum('calculator_type', [
   'pf_npf_comparison',
   'container_utilization',
   'tariff_scenario',
+  'shelf_life',
 ]);
 
 export const auditActionEnum = pgEnum('audit_action', [
