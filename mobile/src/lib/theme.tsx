@@ -1,5 +1,13 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useColorScheme } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
 // ── Palette ───────────────────────────────────────────────
 // Restrained, premium palette. One sophisticated accent, layered neutral
@@ -17,13 +25,12 @@ export interface Palette {
   textMuted: string;
   textFaint: string;
   accent: string;
-  accentSoft: string; // low-alpha accent for fills
+  accentSoft: string;
   accentText: string;
   success: string;
   warning: string;
   danger: string;
   info: string;
-  // shadow used for elevated cards (light mode only; dark relies on borders)
   shadowOpacity: number;
 }
 
@@ -58,7 +65,7 @@ const dark: Palette = {
   borderStrong: '#2E3745',
   text: '#F4F6FA',
   textMuted: '#9BA6B7',
-  textFaint: '#63708',
+  textFaint: '#637084',
   accent: '#5B8DEF',
   accentSoft: 'rgba(91,141,239,0.16)',
   accentText: '#0B0E14',
@@ -69,22 +76,51 @@ const dark: Palette = {
   shadowOpacity: 0,
 };
 
-// fix a truncated token safely
-dark.textFaint = '#637084';
+export type ThemeMode = 'system' | 'light' | 'dark';
+const MODE_KEY = 'ss.theme.mode';
 
-const ThemeContext = createContext<Palette>(dark);
+interface ThemeCtx extends Palette {
+  mode: ThemeMode;
+  setMode: (m: ThemeMode) => void;
+}
+
+const ThemeContext = createContext<ThemeCtx>({ ...dark, mode: 'system', setMode: () => {} });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const scheme = useColorScheme();
-  const palette = useMemo(() => (scheme === 'light' ? light : dark), [scheme]);
-  return <ThemeContext.Provider value={palette}>{children}</ThemeContext.Provider>;
+  const system = useColorScheme();
+  const [mode, setModeState] = useState<ThemeMode>('system');
+
+  useEffect(() => {
+    SecureStore.getItemAsync(MODE_KEY)
+      .then((v) => {
+        if (v === 'light' || v === 'dark' || v === 'system') setModeState(v);
+      })
+      .catch(() => {});
+  }, []);
+
+  const setMode = useCallback((m: ThemeMode) => {
+    setModeState(m);
+    SecureStore.setItemAsync(MODE_KEY, m).catch(() => {});
+  }, []);
+
+  const value = useMemo<ThemeCtx>(() => {
+    const resolved = mode === 'system' ? (system === 'light' ? 'light' : 'dark') : mode;
+    const palette = resolved === 'light' ? light : dark;
+    return { ...palette, mode, setMode };
+  }, [mode, system, setMode]);
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme(): Palette {
   return useContext(ThemeContext);
 }
 
-// Status → color, resolved against the active palette.
+export function useThemeMode(): { mode: ThemeMode; setMode: (m: ThemeMode) => void } {
+  const { mode, setMode } = useContext(ThemeContext);
+  return { mode, setMode };
+}
+
 export function statusColor(status: string, c: Palette): string {
   switch (status) {
     case 'delivered':
@@ -98,7 +134,7 @@ export function statusColor(status: string, c: Palette): string {
     case 'cancelled':
       return c.textFaint;
     default:
-      return c.accent; // in_transit and anything else
+      return c.accent;
   }
 }
 
