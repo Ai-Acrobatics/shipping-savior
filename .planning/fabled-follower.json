@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "generated": "2026-07-06",
+  "generated_by": "claude-fable-5",
+  "target_model": "claude-sonnet (any Sonnet-class executor)",
+  "doc": "FABLED-FOLLOWER.md",
+  "repo": {
+    "path": "/home/dev/shipping-savior",
+    "product": "Shipping Savior — logistics platform: BOL OCR, shipment tracking, calculators, workbook intake, Stripe billing; web + native mobile",
+    "stack": ["Next.js 14.2 + React 18 + TS", "Drizzle ORM + Neon Postgres", "NextAuth v5 JWT sessions", "Expo SDK 57 (/mobile) + Capacitor shells", "Claude->Gemini->Kimi OCR fallback", "Vitest(150)+Playwright", "Vercel deploy"],
+    "branch": "AI-10777-platform-hardening-mobile",
+    "head": "d5b4881",
+    "linear": ["AI-10777"],
+    "remote": "https://github.com/Ai-Acrobatics/shipping-savior.git",
+    "push_creds": false,
+    "export_path_pattern": "git bundle create /tmp/shipping-savior-<branch>-<date>.bundle <branch>"
+  },
+  "invariants": [
+    "Mobile auth reuses web session cookie (cookieName contract: __Secure-authjs.session-token prod / authjs.session-token dev) so all ~48 auth()-gated routes work unchanged — never retrofit per-route Bearer tokens",
+    "BOL uploads capped at 25MB, loaded in memory — do not raise without streaming parse",
+    "Prod migrations 0004 (workbook enum) + 0005 (push_tokens) are UNAPPLIED — runtime will crash on push-token insert until Julian migrates",
+    "AUTH_URL in Vercel prod contains a trailing newline (OAuth callback breakage) — Julian ops fix",
+    "Stripe env vars/products/webhook not configured — revenue blocked, Julian ops"
+  ],
+  "session_boot_sequence": [
+    {"step": 1, "tool": "Bash", "cmd": "cd /home/dev/shipping-savior && git status && git log --oneline -5"},
+    {"step": 2, "tool": "Read", "path": "docs/PRODUCTION-GAP-ANALYSIS.md", "note": "authoritative blocker list"},
+    {"step": 3, "tool": "Read", "path": ".planning/agent-progress.json", "expect": "prior checkpoint or absent"},
+    {"step": 4, "tool": "Bash", "cmd": "npm run typecheck && npm run test:run", "expect": "green baseline; if red before changes: stop, escalate"}
+  ],
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Rate-limit mobile login + validate Expo push token format",
+      "priority": 1,
+      "files": ["src/app/api/mobile/auth/login/route.ts", "src/app/api/mobile/devices/route.ts", "src/lib/auth/mobile.ts"],
+      "steps": [
+        {"tool": "Bash", "cmd": "grep -rn 'rate' src/lib/ --include='*.ts' | head", "note": "reuse existing util before inventing"},
+        {"action": "per-IP+email sliding-window limit on login"},
+        {"action": "reject push tokens not matching /^Expo(nent)?PushToken\\[[\\w-]+\\]$/ with 400"}
+      ],
+      "verification": ["Vitest: 6th rapid login -> 429; malformed token -> 400; valid -> 200", "npm run test:run green"]
+    },
+    {
+      "id": "T2",
+      "title": "POST /api/mobile/auth/refresh endpoint",
+      "priority": 2,
+      "files": ["src/app/api/mobile/auth/", "src/lib/auth/mobile.ts"],
+      "steps": [
+        {"action": "validate current unexpired token -> issue fresh JWT via same AUTH_SECRET path as login; audit-log channel:'mobile'"}
+      ],
+      "verification": ["valid token -> new token with later expiry; expired/garbage -> 401; cookie-name contract unchanged"]
+    },
+    {
+      "id": "T3",
+      "title": "Build real mobile screens: login -> shipments dashboard -> BOL camera scan",
+      "priority": 3,
+      "files": ["mobile/src/app/index.tsx", "mobile/src/app/_layout.tsx", "mobile/src/app/ (new screens)"],
+      "steps": [
+        {"action": "login screen -> POST /api/mobile/auth/login -> store token in expo-secure-store -> attach as session cookie header on all requests"},
+        {"action": "shipments list + detail views"},
+        {"action": "expo-image-picker/camera -> POST /api/bol"}
+      ],
+      "verification": ["cd mobile && npx expo start --web renders screens", "auth flow works against local npm run dev (eas.json dev profile -> localhost:3000)"],
+      "guardrails": ["token travels as cookie header, NOT Bearer"]
+    },
+    {
+      "id": "T4",
+      "title": "OCR provider-fallback observability",
+      "priority": 4,
+      "files": ["src/lib/ai/providers.ts"],
+      "focus_lines": "258-290 extractWithFallback",
+      "steps": [
+        {"action": "log each provider failure (provider, error class, latency) to model_comparison_logs + Sentry context; expose winning provider in result"}
+      ],
+      "verification": ["unit test: first provider fails -> log record present + fallback succeeds"]
+    },
+    {
+      "id": "T5",
+      "title": "One-command Julian ops runbook (dry-run scripts, DO NOT execute on prod)",
+      "priority": 5,
+      "deliverables": [
+        "scripts/prod-migrate-check.sh (pending migrations + post-migrate verification SQL for push_tokens table)",
+        "AUTH_URL fix instructions using printf (no trailing newline)",
+        "Stripe checklist: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY, STRIPE_PRICE_PREMIUM_MONTHLY, STRIPE_PRICE_ENTERPRISE_MONTHLY; products (Premium $499/mo); webhook https://shipping-savior.vercel.app/api/billing/webhook"
+      ],
+      "verification": ["scripts dry-run by default; mutation gated behind CONFIRM=PROD"]
+    },
+    {
+      "id": "T6",
+      "title": "Export git bundle + session report",
+      "priority": 6,
+      "steps": [
+        {"tool": "Bash", "cmd": "git bundle create /tmp/shipping-savior-AI-10777-$(date +%Y%m%d).bundle AI-10777-platform-hardening-mobile"}
+      ],
+      "verification": ["bundle path included in session report"]
+    }
+  ],
+  "tool_protocol": {
+    "typecheck": "npm run typecheck",
+    "test": "npm run test:run",
+    "e2e": "npm run e2e (after npm run e2e:install once)",
+    "dev": "npm run dev",
+    "db_local_only": "npm run db:migrate",
+    "mobile": "cd mobile && npx expo start --web",
+    "commit_format": "feat(mobile-api)|fix(auth): AI-10777 <what>"
+  },
+  "hard_stops": [
+    "running db:migrate/db:push against production Neon (Julian-only, after backup)",
+    "adding remotes/tokens/credential helpers to work around missing push creds — bundle instead",
+    "per-route Bearer-token retrofit (breaks the cookie reuse design)",
+    "logging/committing secrets (AUTH_SECRET, provider keys, Neon URLs)",
+    "raising 25MB BOL cap without streaming parse",
+    "stubbing fake Stripe keys to force checkout green",
+    "third retry of an approach that failed twice"
+  ],
+  "escalation": {
+    "channel": "iMessage session report to +16195090699 per fleet SOP",
+    "handoff": "HANDOFF.md per .fleet-config/templates/HANDOFF-TEMPLATE.md at 60+ tool calls",
+    "progress_file": ".planning/agent-progress.json"
+  },
+  "reference_docs": [
+    "docs/PRODUCTION-GAP-ANALYSIS.md",
+    "docs/MOBILE-APP-READINESS.md",
+    ".planning/DEPLOYMENT-RUNBOOK.md",
+    ".planning/TECHNICAL-ARCHITECTURE.md",
+    ".planning/STATE.md"
+  ]
+}

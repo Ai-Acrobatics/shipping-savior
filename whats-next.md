@@ -1,33 +1,34 @@
 # What's Next — Shipping Savior
 
-> **Last updated**: 2026-06-11 (AI-10777 session)
-> **Status**: 🟢 v1.0 commercial platform on main; hardening + mobile readiness on `AI-10777-platform-hardening-mobile`
+> **Last updated**: 2026-07-06 (mobile + gap-analysis session)
+> **Status**: 🟢 v1.0 web code-complete + native Expo app built; launch is ops-gated
 > **Priority**: P1
+> **Authoritative launch plan**: `docs/PRODUCTION-GAP-ANALYSIS.md`
 
 ## Current State
 
-- **main (`6b0bf2d`, 2026-05-15)**: marketing site + demo, 6 calculators with persistence, NextAuth v5 (credentials + Google/GitHub OAuth, email verify, password reset, invites, RBAC), Stripe billing with tier metering, BOL OCR + contract parsing (Claude Sonnet 4 → Gemini 2.5 Pro → Kimi K2 fallback), AI chat with 8 logistics tools, Sentry + PostHog, CI green (typecheck + vitest + Playwright).
-- **Branch `AI-10777-platform-hardening-mobile`** (this session):
-  - `/api/shipments` auth-gated + org-scoped + paginated (closes 2026-05-31 audit blocker #3); 6 new unit tests (40 total).
-  - Installable PWA: manifest, branded icons, service worker with offline page, apple-icon, viewport/theme metadata.
-  - Capacitor iOS/Android scaffolding + `docs/MOBILE-APP-READINESS.md` (TestFlight / App Store / Play Store runbook).
-  - Shipments table Load More pagination UI.
-  - Graphify knowledge graph committed (`graphify-out/`, 8,855 nodes).
+- **Branch `AI-10777-platform-hardening-mobile`** (ahead of main, needs push/merge):
+  - Everything from 2026-06-11/12 sessions: workbook intake → review queue → weekly load board (the "lost work", rebuilt), cold-chain shelf-life calculator, team management + invite emails, GDPR (cookie consent, export/delete, DPA), `/api/shipments` hardening, PWA, Capacitor scaffolds.
+  - **2026-07-06:** mobile token auth (`/api/mobile/auth/login|session`, NextAuth-JWT-compatible — all existing routes work for native clients), `push_tokens` table (migration **0005**) + device registration API, and a **full native Expo app in `mobile/`** (iOS + Android, one codebase): shipments + reefer/cutoff detail, camera → BOL OCR, AI logistics assistant, landed-cost calculator, push registration, micro-interactions throughout. `docs/PRODUCTION-GAP-ANALYSIS.md` = consolidated web/iOS/Android launch plan + world-class gap diff vs the 2026-04-07 meeting.
+- Web: typecheck clean, 150/150 unit tests green. Mobile: `tsc` clean, not yet device-tested.
 
-## ⚠️ Lost work — needs decision
+## Immediate (ops, Julian — ~half a day, see gap doc Part 5)
 
-The AI-10401/10403/10404 scope (AI assistant route planner, Terminal49 webhook + DCSA mapper, workbook intake + review queue, cross-dock board) is **not in this repo on any branch** — it was local uncommitted work on another machine (see 2026-05-31 production-readiness audit). Either locate that checkout or re-scope/rebuild. Linear states for those issues overstate reality.
+1. Import the git bundle (`obsidian-vault/Projects/Shipping Savior/artifacts/`), push branch, merge PR.
+2. Prod DB backup → `npm run db:migrate` (0004 + 0005 pending).
+3. Vercel: fix `AUTH_URL` trailing `\n`; add 5 Stripe vars + `BLOB_READ_WRITE_TOKEN`; Stripe dashboard: products + webhook.
+4. Deploy prod, smoke test → **web is live**.
+5. Apple Developer ($99, JV entity) + Play Console ($25) → `eas build --platform all` (cloud — no Mac needed) → TestFlight / Play internal.
 
-## Immediate (ops, mostly Julian)
+## Next build milestones (Blake-ROI order, gap doc Part 6)
 
-- Push `AI-10777-platform-hardening-mobile` + open PR (no GitHub credentials on the VPS; bundle in `obsidian-vault/Projects/Shipping Savior/artifacts/`).
-- Vercel envs still missing: `OPENROUTER_API_KEY`, `BLOB_READ_WRITE_TOKEN`, `STRIPE_SECRET_KEY`, `TERMINAL49_WEBHOOK_SECRET`; Stripe products + webhook not created in dashboard.
-- Apply Supabase migrations after backup (audit listed 0004/0005 pending on the lost checkout — main has only 0000–0003).
-- Apple Developer account ($99/yr, recommend JV entity) + Play Console ($25) for native apps; iOS build needs a Mac (see `docs/MOBILE-APP-READINESS.md`).
+1. Cutoff alarm rail + Expo Push sender (tokens already being collected).
+2. Load board CSV/xlsx export + AES filing tracker.
+3. Shelf-life save fix (`shelf_life` enum); port-finder/carrier-comparison real-data wiring.
+4. Terminal49 webhook + DCSA events → demurrage meter, vessel map, watchdog agent.
+5. Backhaul finder v1; Jones Act + multi-modal markers.
+6. Mobile v1.1: offline cache, review-queue screen, biometric unlock, push deep links, login rate limit.
 
-## Next build milestones
+## Agent onboarding
 
-1. Rebuild/recover workbook intake → review queue → load board (Blake's refrigerated-export MVP per audit).
-2. Terminal49 webhook receiver + DCSA-normalized events (AI-10404 scope).
-3. Native v1.1: push notifications (shipment delay/tariff alerts), camera → BOL OCR.
-4. Idempotency constraints for source files/shipments; audit events for intake/parsing failures.
+Read `FABLED-FOLLOWER.md` (executor playbook) + `.planning/AGENT-PROCESS-NOTES-2026-07-06.md` (reasoning trace) before touching this repo.

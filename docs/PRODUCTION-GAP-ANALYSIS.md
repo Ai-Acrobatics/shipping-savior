@@ -152,3 +152,69 @@ Expo SDK (expo-router, TypeScript), targets iOS + Android from one codebase:
   - Cutoff alarm rail + push sender (first real notification use case)
   - Terminal49 webhook + DCSA events
 ```
+
+---
+
+## Part 6 — World-class gap diff (2026-04-07 meeting commitments vs. today)
+
+Sources: `docs/MEETING-TRANSCRIPT-2026-04-07-BLAKE.md`, `docs/BLAKE-CALL-ANALYSIS-2026-04-07.md`, `docs/AI-AGENTS-PLAN.md`, `docs/WORLD-CLASS-ROADMAP.md`. Blake's bar: *"a product where all of the tools that we have actually work the way that they're intended to work."*
+
+Legend: ✅ shipped · 🟡 partial · ❌ missing
+
+### Tier 0 — demo-blocking (Blake's operational wedge)
+
+| Commitment | Status | Notes |
+|---|---|---|
+| Workbook import → review queue → weekly load board | ✅ | Shipped on this branch (was the "lost work", rebuilt) |
+| Load board CSV/PDF export | ❌ | Ops handoff artifact — partners expect an emailable .xlsx |
+| Cutoff alarm rail (reefer + doc cutoff, <24h alerts) | ❌ | **#1 field pain point.** Data is captured (importMeta) and mobile push tokens are now collected — needs the alert engine + Expo Push sender |
+| AES filing tracker (TBD → filed → accepted, ACE links) | ❌ | 64/204 real rows were missing AES# — the biggest review-queue gap |
+| Cross-dock appointment board (Port Hueneme / ANACAPA / KINGSCO) | 🟡 | Appointment data captured + shown per-shipment (web + mobile detail); no calendar/lane board view yet |
+| Shelf-life calculator + temp/vent presets | 🟡 | Calculator shipped; save broken (enum), presets pending |
+| Container tracking (Terminal49, DCSA events) | ❌ | AI-10404 scope, never recovered — the "live visibility" pitch foundation |
+
+### AI vision (the "thought and logic" — 7-agent architecture from AI-AGENTS-PLAN)
+
+| Agent | Status | Notes |
+|---|---|---|
+| Agent 4 — Document processing (BOL OCR) | ✅ | 3-provider fallback (Claude→Gemini→Kimi), confidence scoring; **now also on mobile via camera** |
+| AI chat with logistics tools (HTS, duty, ports, routes, FTZ, specs) | ✅ | `/api/ai/chat`; **now also the mobile Assistant tab** |
+| Agent 5 — Route optimization (multi-modal, cost/speed/risk) | 🟡 | `/api/routes/compare` exists; no constraint-driven recommendation engine, no rail/air legs |
+| Agent 1 — Rate negotiation (FBX benchmarks, counter-offers) | ❌ | Needs FBX data ingest first — without a market baseline, recommendations are liability |
+| Agent 6 — Backhaul finder (30–50% below market) | ❌ | Blake's highest-ROI wedge ($1.5–6K/container); he does this manually today |
+| Agent 2 — FTZ optimizer (PF/NPF election, inverted tariff) | 🟡 | FTZ calculator is read-only; no recommendation agent |
+| Agent 3 — Compliance monitor (OFAC, §301, UFLPA, HTS→agency) | ❌ | Tier 2 moat; urgent given the tariff environment |
+| Agent 7 — Customer success / anomaly watchdog | ❌ | Requires event stream (Terminal49) first |
+| HTS classification agent (description → GRI-ranked codes) | ❌ | Feeds FTZ inverted-tariff detection |
+
+### Field-ops mobile (this session unblocked the rail)
+
+| Capability | Status | Notes |
+|---|---|---|
+| Native app, both stores, token auth | ✅ | Built this session (`mobile/`) |
+| Camera → BOL OCR at the port | ✅ | Scan tab |
+| Cutoff/appointment data in hand | ✅ | Shipment detail surfaces importMeta |
+| Push notifications (delivery rail) | 🟡 | Registration + storage shipped; **sender** pending (pairs with cutoff alarms) |
+| Offline load-board cache | ❌ | Ports have dead zones — cache last-fetched shipments locally |
+| Biometric unlock | ❌ | `expo-local-authentication`, small lift |
+| Demurrage/detention countdown | ❌ | Needs Terminal49 arrival events |
+
+### Platform commitments
+
+| Commitment | Status | Notes |
+|---|---|---|
+| Jones Act lanes (Matson/Pasha, AK/HI/PR, "no customs import") | ❌ | Blake explicitly: *"we need to signify Jones Act vs non-Jones Act carriers"* |
+| Multi-modal markers (ocean/rail/air/drayage) | ❌ | CMA CGM rail-to-SLC example can't be represented |
+| Tiered pricing (Free/Premium/Enterprise "Cadillac") | ✅ | Pricing page + tier metering shipped; Stripe config is the blocker |
+| Per-user bundles (1 → 8 → 20+ logins) | 🟡 | Team management + invites shipped; seat-count billing not modeled |
+| NVOCC white-label customer portal (N/K/C/H/J tenants) | ❌ | The 10,000-NVOCC TAM story from the investor pitch |
+| Vessel map (MapLibre + AIS) | ❌ | Visibility pitch visual |
+
+### Recommended build order after launch (highest Blake-ROI first)
+
+1. **Cutoff alarm rail + push sender** — data ✅, tokens ✅, only the engine is missing; instantly makes the mobile app indispensable.
+2. **Load board export + AES tracker** — completes the Excel-replacement wedge.
+3. **Terminal49 events** — unlocks demurrage meter, watchdog agent, vessel map.
+4. **Backhaul finder v1** — automate what Blake does manually; the single best ROI demo in his own words.
+5. **Jones Act + multi-modal markers** — small data-model lift, big credibility with Blake's lanes.
+6. **FBX ingest → rate negotiation agent** — then the "planning tool" from the meeting (*"who has the best transit times, best reliability"*) becomes real.
