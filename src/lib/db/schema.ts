@@ -500,3 +500,32 @@ export type ShipmentStatus = (typeof shipmentStatusEnum.enumValues)[number];
 export type ShipmentSource = (typeof shipmentSourceEnum.enumValues)[number];
 export type BolDocument = typeof bolDocuments.$inferSelect;
 export type NewBolDocument = typeof bolDocuments.$inferInsert;
+
+// ── Mobile Push Tokens ────────────────────────────────
+//
+// Expo push tokens registered by the native mobile app (mobile/). One row per
+// device token; re-registration bumps lastSeenAt. Tokens are org-scoped so
+// shipment/cutoff alerts can fan out per organization.
+
+export const pushTokens = pgTable(
+  'push_tokens',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    orgId: uuid('org_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    token: text('token').notNull(),
+    platform: varchar('platform', { length: 16 }).notNull(), // 'ios' | 'android'
+    deviceName: varchar('device_name', { length: 200 }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    tokenIdx: uniqueIndex('push_tokens_token_idx').on(table.token),
+  })
+);
+
+export type PushToken = typeof pushTokens.$inferSelect;
