@@ -17,11 +17,11 @@
 | 1.8 | CI green (typecheck + vitest 214/214). NOTE: Playwright e2e job has been failing on main since ≤6/26 (pre-existing; PRs #52–57 merged over it) | 🤖 | ✅ unit · e2e = 1.11 |
 | 1.9 | Merge PR #58 → main (`d14c1dc`, 2026-07-06) | 🤖 | ✅ |
 | 1.10 | Production deploy + smoke test — 15/15 route checks + mobile-auth e2e (register → token login → authed API → push token) green on prod | 🤖 | ✅ |
-| 1.11 | Fix the pre-existing Playwright e2e CI failure | 🤖 | ⬜ follow-up |
+| 1.11 | Fix the pre-existing Playwright e2e CI failure — root cause was framer-motion mid-fade frames misread by axe; fixed via MotionConfig reducedMotion="user" + reduced-motion emulation in the a11y helper (PR #59) | 🤖 | ✅ |
 | 1.12 | Custom domain (e.g. shippingsavior.com) → Vercel + update `AUTH_URL`/OAuth redirect URIs | 👤 | ⬜ |
-| 1.13 | Verify Google OAuth client is a **Web** client (login with Google on prod once deployed; if Google rejects redirect_uri, mint a new Web client and update `GOOGLE_CLIENT_ID/SECRET`) | 👤/🤖 | ⬜ |
+| 1.13 | Verify Google OAuth client is a **Web** client — verified 7/6: authorize URL with prod redirect_uri reaches the Google sign-in page (no redirect_uri_mismatch) | 🤖 | ✅ |
 | 1.14 | Resend: verify a real sending domain, set `EMAIL_FROM`, then flip `REQUIRE_EMAIL_VERIFICATION=true` | 👤 | ⬜ |
-| 1.15 | `BLOB_READ_WRITE_TOKEN`: create a Vercel Blob store (dashboard → Storage) so BOL PDFs persist | 👤/🤖 | ⬜ |
+| 1.15 | `BLOB_READ_WRITE_TOKEN`: Blob store `shipping-savior-bol` created + linked, token in all envs (7/6) | 🤖 | ✅ |
 
 ### Swapping Stripe placeholders for the real thing (when ready to charge)
 1. Stripe dashboard: create products — Premium $499/mo, Enterprise (TBD) → copy the two price IDs.
@@ -57,7 +57,7 @@
 
 ## Phase 4 — Post-launch build order (Blake-ROI, from PRODUCTION-GAP-ANALYSIS Part 6)
 
-1. ⬜ Cutoff alarm engine + Expo Push sender (`push_tokens` collecting since this deploy)
+1. ✅ Cutoff alarm engine + Expo Push sender — hourly cron `/api/cron/cutoff-alerts`, org fanout, dedupe, token pruning, mobile deep links (PR #59)
 2. ⬜ Load board CSV/xlsx export + AES filing tracker
 3. ⬜ Terminal49 webhook + DCSA events → demurrage meter, vessel map
 4. ⬜ Backhaul finder v1 · Jones Act + multi-modal markers
