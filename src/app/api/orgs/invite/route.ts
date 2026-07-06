@@ -3,7 +3,8 @@ import crypto from 'crypto';
 import { auth } from '@/lib/auth';
 import { requirePermission, outranks, type OrgRoleType } from '@/lib/auth/permissions';
 import { writeAuditLog } from '@/lib/auth/audit';
-import { getOrgMembership, getActiveInviteByEmail, getExistingMemberByEmail } from '@/lib/db/queries/org';
+import { sendEmail, renderOrgInviteEmail, getAppBaseUrl } from '@/lib/auth/email';
+import { getOrgMembership, getActiveInviteByEmail, getExistingMemberByEmail, getOrgById } from '@/lib/db/queries/org';
 import { db } from '@/lib/db';
 import { invites } from '@/lib/db/schema';
 import { enforceLimit, LimitExceededError } from '@/lib/billing/limits';
@@ -111,11 +112,35 @@ export async function POST(request: Request) {
       ipAddress: request.headers.get('x-forwarded-for') ?? undefined,
     });
 
-    // 11. Build invite URL
-    const baseUrl = process.env.NEXT_PUBLIC_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000';
-    const inviteUrl = `${baseUrl}/invite/${token}`;
+    // 11. Build invite URL (NEXT_PUBLIC_APP_URL || AUTH_URL, same base the auth emails use)
+    const inviteUrl = `${getAppBaseUrl()}/invite/${token}`;
 
-    return NextResponse.json({ inviteUrl, expiresAt: expiresAt.toISOString() }, { status: 201 });
+    // 12. Send the invite email (AI-5581). Email failure must NOT fail invite
+    // creation — the invite link is still returned for manual sharing.
+    let emailSent = false;
+    try {
+      const org = await getOrgById(orgId);
+      const inviterName = session.user.name || session.user.email || 'A teammate';
+      const { subject, html, text } = renderOrgInviteEmail({
+        orgName: org?.name ?? 'your organization',
+        inviterName,
+        role,
+        inviteUrl,
+        expiresInDays: 7,
+      });
+      const result = await sendEmail({ to: normalizedEmail, subject, html, text });
+      emailSent = result.ok;
+      if (!result.ok) {
+        console.error('[invite] Invite email not sent:', result.error ?? (result.skipped ? 'skipped (no RESEND_API_KEY)' : 'unknown'));
+      }
+    } catch (emailError) {
+      console.error('[invite] Failed to send invite email:', emailError);
+    }
+
+    return NextResponse.json(
+      { inviteUrl, expiresAt: expiresAt.toISOString(), emailSent },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('[invite] Failed to create invite:', error);
     return NextResponse.json({ error: 'Failed to create invite' }, { status: 500 });

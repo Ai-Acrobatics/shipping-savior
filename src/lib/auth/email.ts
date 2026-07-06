@@ -146,6 +146,38 @@ export function renderPasswordResetEmail(args: {
   return { subject, html, text };
 }
 
+/** Minimal HTML escaping for user-controlled strings interpolated into templates. */
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+export function renderOrgInviteEmail(args: {
+  orgName: string;
+  inviterName: string;
+  role: string;
+  inviteUrl: string;
+  expiresInDays: number;
+}): { subject: string; html: string; text: string } {
+  const subject = `You've been invited to ${args.orgName} on Shipping Savior`;
+  const safeOrg = escapeHtml(args.orgName);
+  const safeInviter = escapeHtml(args.inviterName);
+  const safeRole = escapeHtml(args.role);
+  const html = baseTemplate({
+    preview: `${args.inviterName} invited you to join ${args.orgName} on ShippingSavior`,
+    heading: `Join ${safeOrg} on ShippingSavior`,
+    body: `<p><strong>${safeInviter}</strong> has invited you to join <strong>${safeOrg}</strong> on ShippingSavior as a <strong>${safeRole}</strong>.</p><p>Click the button below to accept the invitation and get started.</p>`,
+    cta: { url: args.inviteUrl, label: 'Accept invite' },
+    footerNote: `This invite expires in ${args.expiresInDays} days. If you weren't expecting this invitation, you can safely ignore this email.`,
+  });
+  const text = `${args.inviterName} has invited you to join ${args.orgName} on ShippingSavior as a ${args.role}.\n\nAccept the invite:\n${args.inviteUrl}\n\nThis invite expires in ${args.expiresInDays} days. If you weren't expecting this invitation, you can safely ignore this email.`;
+  return { subject, html, text };
+}
+
 export function renderEmailVerificationEmail(args: {
   verifyUrl: string;
   expiresInHours: number;

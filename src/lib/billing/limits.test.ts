@@ -78,6 +78,10 @@ describe('getOrgLimits', () => {
 describe('enforceLimit', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // The test env has no Stripe key, which reads as billing-placeholder mode
+    // (enforceLimit becomes a no-op). Force real enforcement here — these
+    // tests verify the enforcement logic itself.
+    vi.stubEnv('BILLING_PLACEHOLDER', 'false');
   });
 
   it('short-circuits without a usage query when the cap is Infinity (premium calculations)', async () => {

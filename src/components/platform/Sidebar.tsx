@@ -25,6 +25,7 @@ import {
   Activity,
   Bell,
   LayoutDashboard,
+  LayoutGrid,
   Upload,
   Settings as SettingsIcon,
   Sparkles,
@@ -95,6 +96,7 @@ const navSections: NavSection[] = [
     items: [
       { label: "Dashboard", href: "/platform", icon: LayoutDashboard },
       { label: "Shipments", href: "/platform/shipments", icon: Package },
+      { label: "Load Board", href: "/platform/load-board", icon: LayoutGrid },
       { label: "BOL Upload", href: "/platform/shipments/import", icon: Upload },
       { label: "History", href: "/platform/history", icon: Clock },
       { label: "Billing", href: "/platform/billing", icon: CreditCard },

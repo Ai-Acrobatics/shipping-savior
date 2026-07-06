@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
-
 import { useState, useEffect, useCallback, useRef } from "react";
+import Link from "next/link";
 import {
+  ClipboardCheck,
   Package,
   Upload,
   Loader2,
@@ -71,7 +71,7 @@ interface Shipment {
   weightKg: number | null;
   quantity: number | null;
   status: "in_transit" | "arrived" | "delayed" | "pending";
-  source: "manual" | "bol_ocr";
+  source: "manual" | "bol_ocr" | "csv_import" | "workbook_import";
   bolBlobUrl?: string | null;
   bolFileName?: string | null;
   createdAt: string;
@@ -131,6 +131,8 @@ function ConfidenceBadge({ score }: { score: number | null | undefined }) {
 
 export default function ShipmentsPage() {
   const [shipmentsList, setShipmentsList] = useState<Shipment[]>([]);
+  const [totalShipments, setTotalShipments] = useState(0);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -167,16 +169,20 @@ export default function ShipmentsPage() {
 
   const [saving, setSaving] = useState(false);
 
-  const fetchShipments = useCallback(async () => {
+  const fetchShipments = useCallback(async (offset = 0) => {
+    if (offset > 0) setLoadingMore(true);
     try {
-      const res = await fetch("/api/shipments");
+      const res = await fetch(`/api/shipments?limit=50&offset=${offset}`);
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
-      setShipmentsList(data.shipments || []);
+      const rows: Shipment[] = data.shipments || [];
+      setShipmentsList((prev) => (offset > 0 ? [...prev, ...rows] : rows));
+      setTotalShipments(data.pagination?.total ?? rows.length);
     } catch {
       setError("Failed to load shipments");
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   }, []);
 
@@ -336,14 +342,23 @@ export default function ShipmentsPage() {
             label="Bulk loading shipments? Read the CSV import walkthrough."
           />
         </div>
-        <button
-          data-tour-step="3"
-          onClick={() => { setUploadMode(true); setExtracted(null); setError(null); }}
-          className="inline-flex items-center gap-2 rounded-xl bg-ocean-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-ocean-600"
-        >
-          <Upload className="h-4 w-4" />
-          Upload Bill of Lading
-        </button>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/platform/shipments/review"
+            className="inline-flex items-center gap-2 rounded-xl border border-navy-200 px-4 py-2.5 text-sm font-medium text-navy-700 transition-colors hover:border-ocean-400 hover:bg-ocean-50 hover:text-ocean-700"
+          >
+            <ClipboardCheck className="h-4 w-4" />
+            Review queue
+          </Link>
+          <button
+            data-tour-step="3"
+            onClick={() => { setUploadMode(true); setExtracted(null); setError(null); }}
+            className="inline-flex items-center gap-2 rounded-xl bg-ocean-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-ocean-600"
+          >
+            <Upload className="h-4 w-4" />
+            Upload Bill of Lading
+          </button>
+        </div>
       </div>
 
       {/* Notifications */}
@@ -365,7 +380,7 @@ export default function ShipmentsPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {[
-          { label: "Total Shipments", value: shipmentsList.length, icon: Package, color: "text-ocean-600" },
+          { label: "Total Shipments", value: totalShipments || shipmentsList.length, icon: Package, color: "text-ocean-600" },
           { label: "In Transit", value: inTransit, icon: Ship, color: "text-sky-600" },
           { label: "Arrived", value: arrived, icon: CheckCircle2, color: "text-emerald-600" },
           { label: "Delayed", value: delayed, icon: AlertTriangle, color: delayed > 0 ? "text-red-600" : "text-navy-400" },
@@ -778,9 +793,17 @@ export default function ShipmentsPage() {
                       <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                         s.source === "bol_ocr"
                           ? "bg-violet-100 text-violet-700"
-                          : "bg-navy-100 text-navy-600"
+                          : s.source === "workbook_import"
+                            ? "bg-sky-100 text-sky-700"
+                            : "bg-navy-100 text-navy-600"
                       }`}>
-                        {s.source === "bol_ocr" ? "AI / OCR" : "Manual"}
+                        {s.source === "bol_ocr"
+                          ? "AI / OCR"
+                          : s.source === "workbook_import"
+                            ? "Workbook"
+                            : s.source === "csv_import"
+                              ? "CSV"
+                              : "Manual"}
                       </span>
                     </td>
                     <td className="px-4 py-3">
@@ -813,6 +836,18 @@ export default function ShipmentsPage() {
               </tbody>
             </table>
           </div>
+          {shipmentsList.length < totalShipments && (
+            <div className="border-t border-navy-100 p-3 text-center">
+              <button
+                onClick={() => fetchShipments(shipmentsList.length)}
+                disabled={loadingMore}
+                className="inline-flex items-center gap-2 rounded-xl border border-navy-200 px-4 py-2 text-sm font-medium text-navy-700 transition-colors hover:border-ocean-400 hover:bg-ocean-50 hover:text-ocean-700 disabled:opacity-50"
+              >
+                {loadingMore && <Loader2 className="h-4 w-4 animate-spin" />}
+                Load more ({shipmentsList.length} of {totalShipments})
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

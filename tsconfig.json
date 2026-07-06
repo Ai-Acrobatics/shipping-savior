@@ -38,6 +38,7 @@
   "exclude": [
     "node_modules",
     "scripts",
+    "mobile",
     "src/components/dashboard-old",
     "src/lib/data-old",
     "src/app/api-old"

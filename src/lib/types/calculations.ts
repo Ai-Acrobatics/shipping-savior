@@ -10,7 +10,8 @@ export type CalculatorType =
   | 'ftz_savings'
   | 'pf_npf_comparison'
   | 'container_utilization'
-  | 'tariff_scenario';
+  | 'tariff_scenario'
+  | 'shelf_life';
 
 // ─── Input shapes per calculator type ─────────────────────────
 
@@ -119,6 +120,7 @@ export const CALCULATOR_TYPE_LABELS: Record<CalculatorType, string> = {
   pf_npf_comparison: 'PF vs NPF',
   container_utilization: 'Container Utilization',
   tariff_scenario: 'Tariff Scenario',
+  shelf_life: 'Shelf Life',
 };
 
 // ─── Calculator type to route map ─────────────────────────────
@@ -130,6 +132,7 @@ export const CALCULATOR_ROUTES: Record<CalculatorType, string> = {
   pf_npf_comparison: '/platform/calculators/pf-npf',
   container_utilization: '/platform/calculators/container',
   tariff_scenario: '/platform/calculators/tariff-scenario',
+  shelf_life: '/platform/calculators/shelf-life',
 };
 
 // ─── Badge colors per calculator type ─────────────────────────
@@ -141,4 +144,5 @@ export const CALCULATOR_TYPE_COLORS: Record<CalculatorType, { bg: string; text: 
   pf_npf_comparison: { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200' },
   container_utilization: { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200' },
   tariff_scenario: { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200' },
+  shelf_life: { bg: 'bg-cyan-50', text: 'text-cyan-700', border: 'border-cyan-200' },
 };

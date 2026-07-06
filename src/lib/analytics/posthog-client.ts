@@ -3,8 +3,10 @@
  *
  * - No-op when NEXT_PUBLIC_POSTHOG_KEY is unset (so dev / non-analytics envs stay quiet).
  * - Cookie-consent-gated: PostHog is NOT initialized until the user accepts
- *   `localStorage.ss_cookie_consent === 'all'`. The compliance worker (W6) wires the
- *   banner that sets this key.
+ *   `localStorage['ss-cookie-consent'] === 'all'`. The CookieConsent banner
+ *   (src/components/CookieConsent.tsx) writes this key and dispatches the
+ *   `ss-consent-changed` event. The legacy `ss_cookie_consent` key is still
+ *   honored for sessions that consented before the banner shipped.
  *
  * Public API:
  *   - `initPostHogIfConsented()` — call once when consent is granted (or on page load if already granted)
@@ -30,7 +32,11 @@ let initInFlight: Promise<PostHog | null> | null = null;
 function hasConsent(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    return window.localStorage.getItem("ss_cookie_consent") === "all";
+    return (
+      window.localStorage.getItem("ss-cookie-consent") === "all" ||
+      // legacy key from before the CookieConsent banner shipped
+      window.localStorage.getItem("ss_cookie_consent") === "all"
+    );
   } catch {
     return false;
   }

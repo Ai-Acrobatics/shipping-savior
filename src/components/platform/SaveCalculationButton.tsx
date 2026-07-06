@@ -37,6 +37,7 @@ export default function SaveCalculationButton({
       pf_npf_comparison: "PF vs NPF",
       container_utilization: "Container Util",
       tariff_scenario: "Tariff Scenario",
+      shelf_life: "Shelf Life",
     };
     return `${labels[calculatorType]} - ${date}`;
   }, [calculatorType, defaultName]);

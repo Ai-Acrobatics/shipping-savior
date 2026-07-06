@@ -1,0 +1,1 @@
+ALTER TYPE "public"."calculator_type" ADD VALUE 'shelf_life';

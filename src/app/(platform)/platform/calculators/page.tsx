@@ -6,6 +6,7 @@ import {
   Scale,
   Box,
   FileText,
+  Snowflake,
   ArrowRight,
 } from "lucide-react";
 import HelpHint from "@/components/ui/HelpHint";
@@ -52,6 +53,13 @@ const calculators = [
     icon: FileText,
     href: "/platform/calculators/tariff-scenario",
     color: "cargo",
+  },
+  {
+    title: "Cold-Chain Shelf Life",
+    description: "Model remaining shelf life for refrigerated produce and quantify the lift from faster transit routes.",
+    icon: Snowflake,
+    href: "/platform/calculators/shelf-life",
+    color: "ocean",
   },
 ];
 

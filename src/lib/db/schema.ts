@@ -29,6 +29,7 @@ export const calculatorTypeEnum = pgEnum('calculator_type', [
   'pf_npf_comparison',
   'container_utilization',
   'tariff_scenario',
+  'shelf_life',
 ]);
 
 export const auditActionEnum = pgEnum('audit_action', [
@@ -383,6 +384,7 @@ export const shipmentSourceEnum = pgEnum('shipment_source', [
   'manual',
   'bol_ocr',
   'csv_import',
+  'workbook_import',
 ]);
 
 // ── Shipments ─────────────────────────────────────────
@@ -420,6 +422,12 @@ export const shipments = pgTable('shipments', {
   source: shipmentSourceEnum('source').notNull().default('manual'),
   rawBolText: text('raw_bol_text'),
   bolDocumentId: uuid('bol_document_id'),
+  // Reefer-export workbook fields with no dedicated column (AI-10777): type of
+  // service, customer code, cross-dock appointment, temperature/vents, PU#/PO#,
+  // reefer + document cutoffs, AES #, seal #, week label, source file, and
+  // parser review flags. jsonb so Blake's board can evolve without a migration
+  // per column.
+  importMeta: jsonb('import_meta'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
@@ -493,3 +501,32 @@ export type ShipmentStatus = (typeof shipmentStatusEnum.enumValues)[number];
 export type ShipmentSource = (typeof shipmentSourceEnum.enumValues)[number];
 export type BolDocument = typeof bolDocuments.$inferSelect;
 export type NewBolDocument = typeof bolDocuments.$inferInsert;
+
+// ── Mobile Push Tokens ────────────────────────────────
+//
+// Expo push tokens registered by the native mobile app (mobile/). One row per
+// device token; re-registration bumps lastSeenAt. Tokens are org-scoped so
+// shipment/cutoff alerts can fan out per organization.
+
+export const pushTokens = pgTable(
+  'push_tokens',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    orgId: uuid('org_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    token: text('token').notNull(),
+    platform: varchar('platform', { length: 16 }).notNull(), // 'ios' | 'android'
+    deviceName: varchar('device_name', { length: 200 }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    tokenIdx: uniqueIndex('push_tokens_token_idx').on(table.token),
+  })
+);
+
+export type PushToken = typeof pushTokens.$inferSelect;
