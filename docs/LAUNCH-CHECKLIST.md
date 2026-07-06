@@ -35,8 +35,8 @@
 |---|------|-------|--------|
 | 2.1 | Expo app built (`mobile/`, SDK 57, `com.shippingsavior.app`) | 🤖 | ✅ |
 | 2.2 | EAS project linked: [@julianai/shipping-savior](https://expo.dev/accounts/julianai/projects/shipping-savior) (`351f2cbc…`) — push tokens now work | 🤖 | ✅ |
-| 2.3 | **Apple Developer Program** ($99/yr) — decide owning entity (recommend JV) | 👤 | ⬜ **gate** |
-| 2.4 | `eas credentials -p ios` — sign in with the Apple account once; EAS manages certs/profiles + APNs key | 👤 (then 🤖) | ⬜ |
+| 2.3 | **Apple Developer Program** — VERIFIED 7/6: active Individual account (team `5H49774YPG` "Julian Bradley", ASC team 31611266) with a distribution cert already stored on EAS (Better Together shipped TestFlight #26 through it this week). Caveats: shows as "Julian Bradley" not the JV; ASC returned REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED today (accept in ASC → Agreements if free-app submit hits it) | 🤖 verified | ✅ |
+| 2.4 | iOS signing: dist cert already on EAS (team 5H49774YPG). `eas build` auto-registers `com.shippingsavior.app` + provisioning profile (may ask for Apple login once for the new bundle ID). APNs key: add via `eas credentials -p ios` for push | 🤖/👤 | 🟡 mostly done |
 | 2.5 | `eas build -p ios --profile production` (cloud — **no Mac needed**) | 🤖 | ⬜ |
 | 2.6 | App Store Connect: app record "Shipping Savior", category Business, privacy policy `https://shipping-savior.vercel.app/privacy`, App Privacy questionnaire (collects email, name, PostHog usage data) | 👤 | ⬜ |
 | 2.7 | Screenshots (6.7" + 6.1" iPhone; 13" iPad if iPad enabled) — capture from simulator/TestFlight | 🤖/👤 | ⬜ |
@@ -65,6 +65,6 @@
 
 ## Hard gates summary (the only things money/identity block)
 
-- **Apple Developer account** ($99) → unlocks 2.4–2.8 (iOS on phones)
+- ~~Apple Developer account~~ ✅ EXISTS (verified 7/6) — iOS is now only gated by the EAS build-credit decision
 - **Play Console account** ($25) + **EAS build credits decision** → unlocks 3.3–3.7 (Android on phones)
 - Everything else is agent-executable from the VPS.
