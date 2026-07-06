@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import ServiceWorkerProvider from "@/components/providers/ServiceWorkerProvider";
+import MotionProvider from "@/components/providers/MotionProvider";
 import SessionProvider from "@/components/providers/SessionProvider";
 import AnalyticsProvider from "@/components/providers/AnalyticsProvider";
 import CookieConsent from "@/components/CookieConsent";
@@ -64,7 +65,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans bg-white text-navy-900`}
       >
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <MotionProvider>{children}</MotionProvider>
+        </SessionProvider>
         <AnalyticsProvider />
         <CookieConsent />
         <ChatAssistant />

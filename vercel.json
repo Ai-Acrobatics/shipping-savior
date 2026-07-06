@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/cutoff-alerts",
+      "schedule": "0 * * * *"
+    }
+  ]
+}
