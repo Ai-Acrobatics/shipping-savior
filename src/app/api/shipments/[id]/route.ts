@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { shipments, shipmentStatusEnum } from "@/lib/db/schema";
+import { shipments, bolDocuments, shipmentStatusEnum } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 const VALID_STATUSES = shipmentStatusEnum.enumValues;
@@ -42,7 +42,19 @@ export async function GET(
     if (!shipment || shipment.orgId !== session.user.orgId) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
-    return NextResponse.json({ shipment });
+    // Attach the linked BOL blob (parity with GET /api/shipments list rows).
+    let bolBlobUrl: string | null = null;
+    let bolFileName: string | null = null;
+    if (shipment.bolDocumentId) {
+      const [doc] = await db
+        .select({ blobUrl: bolDocuments.blobUrl, fileName: bolDocuments.fileName })
+        .from(bolDocuments)
+        .where(eq(bolDocuments.id, shipment.bolDocumentId))
+        .limit(1);
+      bolBlobUrl = doc?.blobUrl ?? null;
+      bolFileName = doc?.fileName ?? null;
+    }
+    return NextResponse.json({ shipment: { ...shipment, bolBlobUrl, bolFileName } });
   } catch (error) {
     console.error("Failed to fetch shipment:", error);
     return NextResponse.json({ error: "Failed to fetch shipment" }, { status: 500 });

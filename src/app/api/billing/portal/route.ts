@@ -3,11 +3,12 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { organizations } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import { stripe } from '@/lib/stripe/server';
 import {
-  isBillingPlaceholder,
-  BILLING_PLACEHOLDER_MESSAGE,
-} from '@/lib/billing/placeholder';
+  stripe,
+  isStripeConfigured,
+  BILLING_UNAVAILABLE_MESSAGE,
+  PORTAL_FAILED_MESSAGE,
+} from '@/lib/stripe/server';
 
 /**
  * POST /api/billing/portal (AI-8777)
@@ -16,7 +17,8 @@ import {
  * organization. Caller redirects via window.location.assign(url).
  *
  * 401 if not signed in. 400 if the org has never had a Stripe customer
- * created (i.e., never went through checkout). 500 on Stripe error.
+ * created (i.e., never went through checkout). 503 if billing isn't configured.
+ * 500 on Stripe error. Customer-safe error copy only (AI-9859).
  */
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -24,12 +26,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Pre-launch placeholder mode: don't attempt a Stripe call with fake keys.
-  if (isBillingPlaceholder()) {
-    return NextResponse.json(
-      { error: BILLING_PLACEHOLDER_MESSAGE, placeholder: true },
-      { status: 503 }
+  if (!isStripeConfigured()) {
+    // eslint-disable-next-line no-console
+    console.error(
+      '[billing/portal] Stripe is not configured (STRIPE_SECRET_KEY missing or placeholder) — returning 503.'
     );
+    return NextResponse.json({ error: BILLING_UNAVAILABLE_MESSAGE }, { status: 503 });
   }
 
   const orgId = session.user.orgId;
@@ -69,7 +71,6 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('[billing/portal] Stripe error:', error);
-    const message = error instanceof Error ? error.message : 'Portal session failed';
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: PORTAL_FAILED_MESSAGE }, { status: 500 });
   }
 }

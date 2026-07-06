@@ -18,6 +18,7 @@ import TariffAlertCard from "@/components/platform/TariffAlertCard";
 import OnboardingWizard from "@/components/platform/OnboardingWizard";
 import HelpHint from "@/components/ui/HelpHint";
 import ScenarioBanner from "@/components/demo/ScenarioBanner";
+import CommandSearch from "@/components/platform/CommandSearch";
 
 // AI-8729: KPI cards now carry a trend delta vs. last month.
 // Mock values flagged with mock=true so the data layer can swap them in.
@@ -59,16 +60,27 @@ export default async function DashboardPage() {
         <ScenarioBanner />
       </Suspense>
 
-      {/* Welcome */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-navy-900">
-            Welcome back, {userName}
+      {/* AI-8053 — "Tell us what you're looking to do" hero search.
+          Blake's #1 ask: one plain-English bar that routes to the right tool.
+          Designed grandmother-simple — type what you want, hit enter. */}
+      <section className="rounded-3xl bg-gradient-to-br from-navy-900 via-navy-900 to-ocean-900 px-6 py-10 sm:px-10 sm:py-12 shadow-card">
+        <div className="max-w-3xl mx-auto text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
+            Hi {userName} — what do you want to do today?
           </h1>
-          <p className="text-navy-500 mt-1">
-            Your logistics command center. Run calculations, analyze routes, and optimize costs.
+          <p className="text-ocean-200/90 mt-2 text-sm sm:text-base">
+            Type it in plain English. We&apos;ll take you straight to the right tool.
+          </p>
+          <div className="mt-6">
+            <CommandSearch />
+          </div>
+          <p className="text-ocean-300/70 text-xs mt-3">
+            Try: “track my container”, “what does it cost to import”, “best route to Rotterdam”
           </p>
         </div>
+      </section>
+
+      <div className="flex items-center justify-end">
         <HelpHint
           articleSlug="importing-shipments-csv"
           label="Getting started? Read the import walkthrough."

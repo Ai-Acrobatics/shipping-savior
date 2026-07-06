@@ -10,6 +10,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { db } from "@/lib/db";
 import { modelComparisonLogs } from "@/lib/db/schema";
+import { classifyAiError } from "@/lib/ai/errors";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -285,8 +286,14 @@ export async function extractWithFallback(
     }
   }
 
-  // All providers failed
-  const lastError = attempts.at(-1)?.error ?? "All AI providers failed";
+  // All providers failed. Prefer surfacing a billing/credit error if any
+  // provider hit one (AI-8506) — that's the true root cause, not the
+  // "KEY not configured" message a fallback provider throws when unset.
+  const creditAttempt = attempts.find(
+    (a) => a.error && classifyAiError(new Error(a.error)).kind === "credit_exhausted"
+  );
+  const lastError =
+    creditAttempt?.error ?? attempts.at(-1)?.error ?? "All AI providers failed";
   throw new Error(lastError);
 }
 

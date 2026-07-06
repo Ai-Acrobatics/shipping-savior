@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { bolDocuments } from "@/lib/db/schema";
+import { bolDocuments, shipments } from "@/lib/db/schema";
+import { eq, desc, sql } from "drizzle-orm";
 import { extractWithFallback } from "@/lib/ai/providers";
+import { normalizeBolToShipments } from "@/lib/shipments/bol-normalize";
 import { enforceLimit, LimitExceededError } from "@/lib/billing/limits";
 import { limitExceededResponse } from "@/lib/billing/respond";
 
@@ -172,6 +174,34 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // ── 5. Promote extracted data into container-level shipments ───────────
+  // This is the "pipeline" step: the document-shaped extraction becomes
+  // row-shaped shipment records (one per container number) that populate the
+  // client's profile / dashboard. Skipped with ?createShipments=false for
+  // preview-only extractions.
+  const createShipments = formData.get("createShipments") !== "false";
+  let createdShipments: Array<{ id: string; containerNumber: string | null }> = [];
+  if (createShipments) {
+    try {
+      const rows = normalizeBolToShipments(extracted, {
+        orgId,
+        bolDocumentId,
+        rawBolText: aiResult.text,
+      });
+      if (rows.length > 0) {
+        const inserted = await db
+          .insert(shipments)
+          .values(rows)
+          .returning({ id: shipments.id, containerNumber: shipments.containerNumber });
+        createdShipments = inserted;
+      }
+    } catch (err) {
+      // Don't fail the whole extraction if the promotion step errors — the
+      // raw extraction + bol_documents row are still returned/persisted.
+      console.error("Failed to promote BOL to shipments:", err);
+    }
+  }
+
   return NextResponse.json({
     success: true,
     provider: aiResult.provider,
@@ -184,5 +214,51 @@ export async function POST(request: NextRequest) {
     fileType,
     blobUrl,
     bolDocumentId,
+    createdShipments,
+    shipmentCount: createdShipments.length,
   });
+}
+
+// GET /api/bol — list the org's processed BOL documents (most recent first),
+// each annotated with how many shipment rows it produced. Powers the OCR
+// history / audit surface in the dashboard.
+export async function GET(request: NextRequest) {
+  const session = await auth();
+  if (!session?.user?.orgId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const orgId = session.user.orgId;
+
+  const url = new URL(request.url);
+  const limitParam = parseInt(url.searchParams.get("limit") ?? "50", 10);
+  const limit = Number.isFinite(limitParam) ? Math.min(Math.max(limitParam, 1), 200) : 50;
+
+  try {
+    const rows = await db
+      .select({
+        id: bolDocuments.id,
+        fileName: bolDocuments.fileName,
+        fileType: bolDocuments.fileType,
+        fileSizeBytes: bolDocuments.fileSizeBytes,
+        blobUrl: bolDocuments.blobUrl,
+        extractedJson: bolDocuments.extractedJson,
+        confidenceJson: bolDocuments.confidenceJson,
+        createdAt: bolDocuments.createdAt,
+        shipmentCount: sql<number>`count(${shipments.id})`.mapWith(Number),
+      })
+      .from(bolDocuments)
+      .leftJoin(shipments, eq(shipments.bolDocumentId, bolDocuments.id))
+      .where(eq(bolDocuments.orgId, orgId))
+      .groupBy(bolDocuments.id)
+      .orderBy(desc(bolDocuments.createdAt))
+      .limit(limit);
+
+    return NextResponse.json({ documents: rows, count: rows.length });
+  } catch (error) {
+    console.error("Failed to list BOL documents:", error);
+    return NextResponse.json(
+      { error: "Failed to list BOL documents" },
+      { status: 500 }
+    );
+  }
 }
