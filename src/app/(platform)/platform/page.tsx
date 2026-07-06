@@ -63,7 +63,7 @@ export default async function DashboardPage() {
       {/* AI-8053 — "Tell us what you're looking to do" hero search.
           Blake's #1 ask: one plain-English bar that routes to the right tool.
           Designed grandmother-simple — type what you want, hit enter. */}
-      <section className="rounded-3xl bg-gradient-to-br from-navy-900 via-navy-900 to-ocean-900 px-6 py-10 sm:px-10 sm:py-12 shadow-card">
+      <section className="rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#0f172a] to-ocean-900 px-6 py-10 sm:px-10 sm:py-12 shadow-card">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-2xl sm:text-3xl font-bold text-white">
             Hi {userName} — what do you want to do today?

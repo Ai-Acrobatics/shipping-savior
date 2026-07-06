@@ -49,7 +49,7 @@ export default async function BillingPage({
   if (!orgId) {
     return (
       <div className="max-w-3xl mx-auto p-6">
-        <h1 className="text-2xl font-bold text-white mb-4">Billing</h1>
+        <h1 className="text-2xl font-bold text-navy-900 mb-4">Billing</h1>
         <p className="text-navy-400">
           No organization is associated with your account. Contact support.
         </p>
@@ -66,7 +66,7 @@ export default async function BillingPage({
   if (!org) {
     return (
       <div className="max-w-3xl mx-auto p-6">
-        <h1 className="text-2xl font-bold text-white mb-4">Billing</h1>
+        <h1 className="text-2xl font-bold text-navy-900 mb-4">Billing</h1>
         <p className="text-navy-400">Organization not found.</p>
       </div>
     );
@@ -97,7 +97,7 @@ export default async function BillingPage({
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-6">
       <header>
-        <h1 className="text-3xl font-bold text-white">Billing</h1>
+        <h1 className="text-3xl font-bold text-navy-900">Billing</h1>
         <p className="text-navy-400 mt-1">
           Manage your Shipping Savior subscription.
         </p>
@@ -135,7 +135,7 @@ export default async function BillingPage({
       )}
 
       {/* Current plan card */}
-      <div className="rounded-2xl border border-navy-800 bg-[#0d1230]/80 p-6">
+      <div className="rounded-2xl border border-navy-200 bg-white p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 rounded-lg bg-ocean-500/20 flex items-center justify-center">
             <CreditCard className="w-5 h-5 text-ocean-400" />
@@ -144,7 +144,7 @@ export default async function BillingPage({
             <p className="text-xs uppercase tracking-wider text-navy-500 font-semibold">
               Current plan
             </p>
-            <p className="text-xl font-bold text-white">{planLabel}</p>
+            <p className="text-xl font-bold text-navy-900">{planLabel}</p>
           </div>
         </div>
 
@@ -153,7 +153,7 @@ export default async function BillingPage({
             <dt className="text-xs uppercase tracking-wider text-navy-500 mb-0.5">
               Status
             </dt>
-            <dd className="text-sm text-white">
+            <dd className="text-sm text-navy-900">
               {statusLabel ?? <span className="text-navy-400">No subscription</span>}
               {org.subscriptionStatus === "past_due" && (
                 <AlertTriangle className="w-4 h-4 text-amber-400 inline-block ml-2 align-text-bottom" />
@@ -164,7 +164,7 @@ export default async function BillingPage({
             <dt className="text-xs uppercase tracking-wider text-navy-500 mb-0.5">
               {org.subscriptionStatus === "canceled" ? "Ended" : "Renews"}
             </dt>
-            <dd className="text-sm text-white">
+            <dd className="text-sm text-navy-900">
               {periodEnd ?? <span className="text-navy-400">—</span>}
             </dd>
           </div>
@@ -177,7 +177,7 @@ export default async function BillingPage({
       </div>
 
       {/* This month's usage card (AI-8778) */}
-      <div className="rounded-2xl border border-navy-800 bg-[#0d1230]/80 p-6">
+      <div className="rounded-2xl border border-navy-200 bg-white p-6">
         <div className="flex items-center gap-3 mb-5">
           <div className="w-10 h-10 rounded-lg bg-emerald-500/15 flex items-center justify-center">
             <Gauge className="w-5 h-5 text-emerald-400" />
@@ -186,7 +186,7 @@ export default async function BillingPage({
             <p className="text-xs uppercase tracking-wider text-navy-500 font-semibold">
               This month&apos;s usage
             </p>
-            <p className="text-base font-semibold text-white">Resource consumption</p>
+            <p className="text-base font-semibold text-navy-900">Resource consumption</p>
           </div>
         </div>
 
@@ -205,11 +205,11 @@ export default async function BillingPage({
             return (
               <li key={u.resource}>
                 <div className="flex items-baseline justify-between mb-1.5">
-                  <span className="text-sm font-medium text-navy-200 capitalize">{label}</span>
+                  <span className="text-sm font-medium text-navy-800 capitalize">{label}</span>
                   <span className="text-xs text-navy-400 tabular-nums">{display}</span>
                 </div>
                 {!u.unlimited && (
-                  <div className="h-1.5 w-full rounded-full bg-navy-800 overflow-hidden">
+                  <div className="h-1.5 w-full rounded-full bg-navy-200 overflow-hidden">
                     <div
                       className={`h-full ${barColor} transition-all duration-500`}
                       style={{ width: `${u.pctUsed}%` }}
@@ -229,8 +229,8 @@ export default async function BillingPage({
       </div>
 
       {/* Plan reference card */}
-      <div className="rounded-2xl border border-navy-800 bg-[#0d1230]/40 p-6">
-        <h2 className="text-sm font-semibold text-navy-200 mb-2">Need to compare plans?</h2>
+      <div className="rounded-2xl border border-navy-200 bg-navy-50 p-6">
+        <h2 className="text-sm font-semibold text-navy-800 mb-2">Need to compare plans?</h2>
         <p className="text-sm text-navy-400 mb-3">
           See the full feature breakdown on the public pricing page.
         </p>

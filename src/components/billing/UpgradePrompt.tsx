@@ -128,14 +128,14 @@ export default function UpgradePrompt({
       onClick={onDismiss}
     >
       <div
-        className="relative w-full max-w-md rounded-2xl border border-navy-700 bg-[#0d1230] shadow-2xl p-6"
+        className="relative w-full max-w-md rounded-2xl border border-navy-200 bg-white shadow-2xl p-6"
         onClick={(e) => e.stopPropagation()}
       >
         {onDismiss && (
           <button
             type="button"
             onClick={onDismiss}
-            className="absolute top-3 right-3 p-1.5 rounded-lg text-navy-400 hover:bg-navy-800 hover:text-white transition-colors"
+            className="absolute top-3 right-3 p-1.5 rounded-lg text-navy-500 hover:bg-navy-100 hover:text-navy-900 transition-colors"
             aria-label="Dismiss"
           >
             <X className="w-4 h-4" />
@@ -150,14 +150,14 @@ export default function UpgradePrompt({
             <p className="text-xs uppercase tracking-wider text-amber-400/80 font-semibold">
               {planLabel} plan limit reached
             </p>
-            <h3 className="text-lg font-bold text-white">
+            <h3 className="text-lg font-bold text-navy-900">
               You&apos;ve used {used} of {limitDisplay} monthly {label}
             </h3>
           </div>
         </div>
 
-        <p className="text-sm text-navy-300 mb-5">
-          Upgrade to <span className="font-semibold text-white">{next.name}</span> for {next.pitch}.
+        <p className="text-sm text-navy-600 mb-5">
+          Upgrade to <span className="font-semibold text-navy-900">{next.name}</span> for {next.pitch}.
         </p>
 
         <div className="flex items-center gap-2">
@@ -171,7 +171,7 @@ export default function UpgradePrompt({
             <button
               type="button"
               onClick={onDismiss}
-              className="px-4 py-2.5 rounded-lg text-sm font-medium text-navy-300 hover:bg-navy-800 transition-colors"
+              className="px-4 py-2.5 rounded-lg text-sm font-medium text-navy-600 hover:bg-navy-100 transition-colors"
             >
               Not now
             </button>

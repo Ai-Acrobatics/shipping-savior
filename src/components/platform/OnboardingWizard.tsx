@@ -135,7 +135,7 @@ export default function OnboardingWizard({ initialName }: { initialName?: string
   const greeting = initialName ? `Welcome, ${initialName}.` : "Welcome to Shipping Savior.";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="px-6 py-5 border-b border-navy-100 flex items-center justify-between">

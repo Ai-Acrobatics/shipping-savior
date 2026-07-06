@@ -148,20 +148,20 @@ export default function Sidebar({ collapsed, onToggle, user, planTier = "free" }
 
   return (
     <aside
-      className={`hidden lg:flex flex-col h-screen sticky top-0 bg-white dark:bg-[#030d1a] border-r border-navy-200 dark:border-navy-800 transition-all duration-300 ${
+      className={`hidden lg:flex flex-col h-screen sticky top-0 bg-white border-r border-navy-200 transition-all duration-300 ${
         collapsed ? "w-[68px]" : "w-[240px]"
       }`}
     >
       {/* Logo */}
       <Link
         href="/platform"
-        className="flex items-center gap-3 px-4 h-16 border-b border-navy-200 dark:border-navy-800 shrink-0"
+        className="flex items-center gap-3 px-4 h-16 border-b border-navy-200 shrink-0"
       >
         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-ocean-500 to-ocean-700 flex items-center justify-center shrink-0">
           <Ship className="w-5 h-5 text-white" />
         </div>
         {!collapsed && (
-          <span className="text-navy-900 dark:text-white font-semibold text-sm whitespace-nowrap">
+          <span className="text-navy-900 font-semibold text-sm whitespace-nowrap">
             Shipping Savior
           </span>
         )}
@@ -176,7 +176,7 @@ export default function Sidebar({ collapsed, onToggle, user, planTier = "free" }
               key={section.title}
               className={
                 sIdx > 0
-                  ? "mt-4 pt-4 border-t border-navy-200 dark:border-navy-200 dark:border-navy-800/60"
+                  ? "mt-4 pt-4 border-t border-navy-200/60"
                   : ""
               }
             >
@@ -214,7 +214,7 @@ export default function Sidebar({ collapsed, onToggle, user, planTier = "free" }
                                 ? "bg-ocean-500/15 text-ocean-400 border-l-2 border-ocean-500"
                                 : active && hasChildren
                                 ? "text-ocean-400"
-                                : "text-navy-500 dark:text-navy-400 hover:bg-navy-100 dark:hover:bg-navy-800/50 hover:text-navy-900 dark:hover:text-navy-200"
+                                : "text-navy-500 hover:bg-navy-100 hover:text-navy-900"
                             }`}
                             title={collapsed ? item.label : undefined}
                           >
@@ -225,7 +225,7 @@ export default function Sidebar({ collapsed, onToggle, user, planTier = "free" }
                             <button
                               type="button"
                               onClick={() => toggleExpanded(item.href)}
-                              className="p-1 text-navy-500 hover:text-navy-800 dark:hover:text-navy-300 transition-colors rounded"
+                              className="p-1 text-navy-500 hover:text-navy-800 transition-colors rounded"
                               aria-label={expanded ? "Collapse" : "Expand"}
                             >
                               <ChevronDown
@@ -239,7 +239,7 @@ export default function Sidebar({ collapsed, onToggle, user, planTier = "free" }
 
                         {/* Children (sub-items) */}
                         {hasChildren && !collapsed && expanded && (
-                          <div className="ml-4 pl-3 border-l border-navy-200 dark:border-navy-800 space-y-0.5 mt-0.5">
+                          <div className="ml-4 pl-3 border-l border-navy-200 space-y-0.5 mt-0.5">
                             {item.children!.map((child) => {
                               const ChildIcon = child.icon;
                               const childActive =
@@ -252,7 +252,7 @@ export default function Sidebar({ collapsed, onToggle, user, planTier = "free" }
                                   className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
                                     childActive
                                       ? "bg-ocean-500/10 text-ocean-400"
-                                      : "text-navy-500 hover:bg-navy-100 dark:hover:bg-navy-800/40 hover:text-navy-800 dark:hover:text-navy-300"
+                                      : "text-navy-500 hover:bg-navy-100 hover:text-navy-800"
                                   }`}
                                 >
                                   <ChildIcon className="w-3.5 h-3.5 shrink-0" />
@@ -277,7 +277,7 @@ export default function Sidebar({ collapsed, onToggle, user, planTier = "free" }
 
       {/* Tier badge (AI-8778) */}
       {!collapsed && (
-        <div className="px-3 pb-3 border-t border-navy-200 dark:border-navy-800 pt-3">
+        <div className="px-3 pb-3 border-t border-navy-200 pt-3">
           <Link
             href="/platform/billing"
             title="Manage plan →"
@@ -290,7 +290,7 @@ export default function Sidebar({ collapsed, onToggle, user, planTier = "free" }
         </div>
       )}
       {collapsed && (
-        <div className="flex justify-center pb-3 border-t border-navy-200 dark:border-navy-800 pt-3">
+        <div className="flex justify-center pb-3 border-t border-navy-200 pt-3">
           <Link
             href="/platform/billing"
             title={`${planTier.toUpperCase()} plan — manage`}
@@ -310,7 +310,7 @@ export default function Sidebar({ collapsed, onToggle, user, planTier = "free" }
       <button
         type="button"
         onClick={onToggle}
-        className="flex items-center justify-center h-12 border-t border-navy-200 dark:border-navy-800 text-navy-400 hover:text-navy-800 dark:hover:text-navy-200 hover:bg-navy-100 dark:hover:bg-navy-800/50 transition-colors shrink-0"
+        className="flex items-center justify-center h-12 border-t border-navy-200 text-navy-500 hover:text-navy-900 hover:bg-navy-100 transition-colors shrink-0"
         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
         {collapsed ? (

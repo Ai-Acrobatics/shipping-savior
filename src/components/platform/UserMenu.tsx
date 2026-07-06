@@ -42,10 +42,10 @@ export default function UserMenu({ user, collapsed }: UserMenuProps) {
   };
 
   return (
-    <div ref={menuRef} className="relative px-2 py-3 border-t border-navy-800">
+    <div ref={menuRef} className="relative px-2 py-3 border-t border-navy-200">
       <button
         onClick={() => setOpen(!open)}
-        className={`flex items-center gap-3 w-full rounded-lg px-2 py-2 hover:bg-navy-800/50 transition-colors ${
+        className={`flex items-center gap-3 w-full rounded-lg px-2 py-2 hover:bg-navy-100 transition-colors ${
           collapsed ? "justify-center" : ""
         }`}
       >
@@ -66,7 +66,7 @@ export default function UserMenu({ user, collapsed }: UserMenuProps) {
 
         {!collapsed && (
           <div className="flex-1 text-left min-w-0">
-            <p className="text-sm font-medium text-navy-200 truncate">
+            <p className="text-sm font-medium text-navy-800 truncate">
               {user.name}
             </p>
             <p className="text-xs text-navy-500 truncate">{user.email}</p>
@@ -77,18 +77,18 @@ export default function UserMenu({ user, collapsed }: UserMenuProps) {
       {/* Dropdown */}
       {open && (
         <div
-          className={`absolute z-50 bg-[#0a1929] border border-navy-700 rounded-lg shadow-xl py-1 min-w-[200px] ${
+          className={`absolute z-50 bg-white border border-navy-200 rounded-lg shadow-xl py-1 min-w-[200px] ${
             collapsed ? "left-[68px] bottom-2" : "left-2 bottom-full mb-1"
           }`}
         >
-          <div className="px-3 py-2 border-b border-navy-700">
-            <p className="text-sm font-medium text-navy-200">{user.name}</p>
+          <div className="px-3 py-2 border-b border-navy-200">
+            <p className="text-sm font-medium text-navy-800">{user.name}</p>
             <p className="text-xs text-navy-500">{user.email}</p>
           </div>
           <Link
             href="/platform/settings"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-navy-300 hover:bg-navy-800/50 hover:text-navy-100 transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-sm text-navy-700 hover:bg-navy-100 hover:text-navy-900 transition-colors"
           >
             <User className="w-4 h-4" />
             Profile
@@ -96,7 +96,7 @@ export default function UserMenu({ user, collapsed }: UserMenuProps) {
           <Link
             href="/platform/settings"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-navy-300 hover:bg-navy-800/50 hover:text-navy-100 transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-sm text-navy-700 hover:bg-navy-100 hover:text-navy-900 transition-colors"
           >
             <Settings className="w-4 h-4" />
             Settings

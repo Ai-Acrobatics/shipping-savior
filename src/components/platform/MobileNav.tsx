@@ -137,9 +137,9 @@ export default function MobileNav({ user }: MobileNavProps) {
           />
 
           {/* Sidebar Panel */}
-          <div className="relative w-[280px] h-full bg-[#030d1a] flex flex-col animate-slide-in-left">
+          <div className="relative w-[280px] h-full bg-white flex flex-col animate-slide-in-left">
             {/* Header */}
-            <div className="flex items-center justify-between px-4 h-16 border-b border-navy-800 shrink-0">
+            <div className="flex items-center justify-between px-4 h-16 border-b border-navy-200 shrink-0">
               <Link
                 href="/platform"
                 onClick={() => setOpen(false)}
@@ -148,14 +148,14 @@ export default function MobileNav({ user }: MobileNavProps) {
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-ocean-500 to-ocean-700 flex items-center justify-center">
                   <Ship className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-white font-semibold text-sm">
+                <span className="text-navy-900 font-semibold text-sm">
                   ShippingSavior
                 </span>
               </Link>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="p-1 text-navy-400 hover:text-navy-200 transition-colors"
+                className="p-1 text-navy-400 hover:text-navy-800 transition-colors"
                 aria-label="Close navigation"
               >
                 <X className="w-5 h-5" />
@@ -168,7 +168,7 @@ export default function MobileNav({ user }: MobileNavProps) {
                 <div
                   key={section.title}
                   className={
-                    sIdx > 0 ? "mt-4 pt-4 border-t border-navy-800/60" : ""
+                    sIdx > 0 ? "mt-4 pt-4 border-t border-navy-200/60" : ""
                   }
                 >
                   <p className="px-3 mb-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-ocean-500/80">
@@ -186,7 +186,7 @@ export default function MobileNav({ user }: MobileNavProps) {
                           className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                             active
                               ? "bg-ocean-500/15 text-ocean-400"
-                              : "text-navy-400 hover:bg-navy-800/50 hover:text-navy-200"
+                              : "text-navy-400 hover:bg-navy-100 hover:text-navy-800"
                           }`}
                         >
                           <Icon className="w-5 h-5 shrink-0" />
@@ -200,7 +200,7 @@ export default function MobileNav({ user }: MobileNavProps) {
             </nav>
 
             {/* User Info */}
-            <div className="px-4 py-4 border-t border-navy-800 space-y-3">
+            <div className="px-4 py-4 border-t border-navy-200 space-y-3">
               <div className="flex items-center gap-3">
                 {user.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -217,7 +217,7 @@ export default function MobileNav({ user }: MobileNavProps) {
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-navy-200 truncate">
+                  <p className="text-sm font-medium text-navy-800 truncate">
                     {user.name}
                   </p>
                   <p className="text-xs text-navy-500 truncate">{user.email}</p>

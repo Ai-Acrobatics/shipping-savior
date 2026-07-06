@@ -5,7 +5,44 @@
 :root {
   --background: #ffffff;
   --foreground: #0f172a;
+
+  /* navy scale (light) — equals the original hex values exactly */
+  --navy-50: 248 250 252;
+  --navy-100: 241 245 249;
+  --navy-200: 226 232 240;
+  --navy-300: 203 213 225;
+  --navy-400: 148 163 184;
+  --navy-500: 100 116 139;
+  --navy-600: 71 85 105;
+  --navy-700: 51 65 85;
+  --navy-800: 30 41 59;
+  --navy-900: 15 23 42;
+  --navy-950: 2 6 23;
 }
+
+/* Platform dark mode: invert the navy scale within the platform subtree (.pf)
+   only, so light surfaces go dark and dark text goes light — all navy-*
+   usages adapt with no class changes. Marketing pages (outside .pf) keep the
+   light :root values even when <html> has the dark class. */
+html.dark .pf {
+  --navy-50: 12 16 25;
+  --navy-100: 20 25 35;
+  --navy-200: 36 43 56;
+  --navy-300: 51 62 79;
+  --navy-400: 120 133 152;
+  --navy-500: 152 164 182;
+  --navy-600: 182 192 208;
+  --navy-700: 205 213 226;
+  --navy-800: 226 232 240;
+  --navy-900: 244 246 250;
+  --navy-950: 255 255 255;
+}
+
+/* Literal white surfaces used in the platform become dark panels in dark mode. */
+html.dark .pf .bg-white { background-color: rgb(16 21 31); }
+html.dark .pf [class~="bg-white/95"],
+html.dark .pf [class~="bg-white/90"],
+html.dark .pf [class~="bg-white/80"] { background-color: rgb(16 21 31 / 0.92); }
 
 body {
   color: var(--foreground);

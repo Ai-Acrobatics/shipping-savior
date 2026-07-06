@@ -13,17 +13,20 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         navy: {
-          50: "#f8fafc",
-          100: "#f1f5f9",
-          200: "#e2e8f0",
-          300: "#cbd5e1",
-          400: "#94a3b8",
-          500: "#64748b",
-          600: "#475569",
-          700: "#334155",
-          800: "#1e293b",
-          900: "#0f172a",
-          950: "#020617",
+          // CSS-variable driven so the platform can invert the scale in dark
+          // mode without touching class names. Default (:root) values equal the
+          // original hex, so the marketing site is pixel-identical. See globals.css.
+          50: "rgb(var(--navy-50) / <alpha-value>)",
+          100: "rgb(var(--navy-100) / <alpha-value>)",
+          200: "rgb(var(--navy-200) / <alpha-value>)",
+          300: "rgb(var(--navy-300) / <alpha-value>)",
+          400: "rgb(var(--navy-400) / <alpha-value>)",
+          500: "rgb(var(--navy-500) / <alpha-value>)",
+          600: "rgb(var(--navy-600) / <alpha-value>)",
+          700: "rgb(var(--navy-700) / <alpha-value>)",
+          800: "rgb(var(--navy-800) / <alpha-value>)",
+          900: "rgb(var(--navy-900) / <alpha-value>)",
+          950: "rgb(var(--navy-950) / <alpha-value>)",
         },
         ocean: {
           50: "#eef6ff",
