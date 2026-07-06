@@ -5,6 +5,7 @@ import Sidebar from "@/components/platform/Sidebar";
 import UserMenu from "@/components/platform/UserMenu";
 import MobileNav from "@/components/platform/MobileNav";
 import { UpgradePromptHost } from "@/components/billing/UpgradePrompt";
+import ThemeToggle from "@/components/ThemeToggle";
 import { Bell } from "lucide-react";
 
 const SIDEBAR_KEY = "shipping-savior-sidebar-collapsed";
@@ -39,7 +40,7 @@ export default function PlatformShell({ user, planTier, children }: PlatformShel
   };
 
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-white dark:bg-[#080b1a] flex">
       {/* Desktop Sidebar — visibility handled inside Sidebar component (hidden lg:flex) */}
       <Sidebar
         collapsed={collapsed}
@@ -51,15 +52,16 @@ export default function PlatformShell({ user, planTier, children }: PlatformShel
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar */}
-        <header className="sticky top-0 z-30 bg-white border-b border-navy-200 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+        <header className="sticky top-0 z-30 bg-white dark:bg-[#0b0f1d] border-b border-navy-200 dark:border-navy-800 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <MobileNav user={user} />
           </div>
 
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             {/* Notification Bell (placeholder) */}
             <button
-              className="p-2 text-navy-400 hover:text-navy-600 hover:bg-navy-100 rounded-lg transition-colors relative"
+              className="p-2 text-navy-400 hover:text-navy-600 hover:bg-navy-100 dark:hover:bg-navy-800 dark:hover:text-navy-200 rounded-lg transition-colors relative"
               aria-label="Notifications"
             >
               <Bell className="w-5 h-5" />

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import ServiceWorkerProvider from "@/components/providers/ServiceWorkerProvider";
 import MotionProvider from "@/components/providers/MotionProvider";
+import ThemeProvider from "@/components/providers/ThemeProvider";
 import SessionProvider from "@/components/providers/SessionProvider";
 import AnalyticsProvider from "@/components/providers/AnalyticsProvider";
 import CookieConsent from "@/components/CookieConsent";
@@ -61,17 +62,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans bg-white text-navy-900`}
       >
-        <SessionProvider>
-          <MotionProvider>{children}</MotionProvider>
-        </SessionProvider>
-        <AnalyticsProvider />
-        <CookieConsent />
-        <ChatAssistant />
-        <ServiceWorkerProvider />
+        <ThemeProvider>
+          <SessionProvider>
+            <MotionProvider>{children}</MotionProvider>
+          </SessionProvider>
+          <AnalyticsProvider />
+          <CookieConsent />
+          <ChatAssistant />
+          <ServiceWorkerProvider />
+        </ThemeProvider>
       </body>
     </html>
   );
