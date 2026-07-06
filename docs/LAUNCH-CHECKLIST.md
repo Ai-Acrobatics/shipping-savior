@@ -14,9 +14,9 @@
 | 1.5 | **Heal prod schema drift**: 10 missing migration-0000 columns added to `shipments` (reference, origin/dest_port, container_count/type, cargo_type, value_usd, progress, current_location, user_id) — removes the AI-8055 workaround class | 🤖 | ✅ |
 | 1.6 | Vercel env: `AUTH_URL` re-set clean; 5 Stripe placeholder vars + `BILLING_PLACEHOLDER=true` added | 🤖 | ✅ |
 | 1.7 | Billing placeholder mode in code (open limits, safe 503s, billing-page banner) — **everything testable without Stripe** | 🤖 | ✅ |
-| 1.8 | CI green (typecheck + vitest 214/214). NOTE: Playwright e2e job has been failing on main since ≤6/26 (pre-existing; PRs #52–57 merged over it) | 🤖 | ⏳ |
-| 1.9 | Merge PR #58 → main | 🤖 | ⏳ |
-| 1.10 | Production deploy + smoke test (login, register, shipments, BOL upload, workbook import, billing banner, PWA manifest) | 🤖 | ⏳ |
+| 1.8 | CI green (typecheck + vitest 214/214). NOTE: Playwright e2e job has been failing on main since ≤6/26 (pre-existing; PRs #52–57 merged over it) | 🤖 | ✅ unit · e2e = 1.11 |
+| 1.9 | Merge PR #58 → main (`d14c1dc`, 2026-07-06) | 🤖 | ✅ |
+| 1.10 | Production deploy + smoke test — 15/15 route checks + mobile-auth e2e (register → token login → authed API → push token) green on prod | 🤖 | ✅ |
 | 1.11 | Fix the pre-existing Playwright e2e CI failure | 🤖 | ⬜ follow-up |
 | 1.12 | Custom domain (e.g. shippingsavior.com) → Vercel + update `AUTH_URL`/OAuth redirect URIs | 👤 | ⬜ |
 | 1.13 | Verify Google OAuth client is a **Web** client (login with Google on prod once deployed; if Google rejects redirect_uri, mint a new Web client and update `GOOGLE_CLIENT_ID/SECRET`) | 👤/🤖 | ⬜ |
