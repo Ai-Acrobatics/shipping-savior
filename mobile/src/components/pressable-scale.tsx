@@ -6,6 +6,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { PRESS_SCALE, PRESS_SPRING } from '@/lib/motion';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -15,12 +16,12 @@ interface Props extends PressableProps {
   scaleTo?: number;
 }
 
-// Core micro-interaction primitive: springy scale-down on press with a light
-// haptic tick. Used for every tappable card and button in the app.
+// Refined press feedback: a barely-perceptible, critically-damped scale (no
+// rebound) plus an optional whisper-light haptic. Premium, not springy.
 export function PressableScale({
   style,
   haptic = true,
-  scaleTo = 0.97,
+  scaleTo = PRESS_SCALE,
   onPressIn,
   onPressOut,
   onPress,
@@ -36,16 +37,16 @@ export function PressableScale({
     <AnimatedPressable
       style={[animatedStyle, style]}
       onPressIn={(e) => {
-        scale.value = withSpring(scaleTo, { damping: 20, stiffness: 400 });
+        scale.value = withSpring(scaleTo, PRESS_SPRING);
         onPressIn?.(e);
       }}
       onPressOut={(e) => {
-        scale.value = withSpring(1, { damping: 20, stiffness: 400 });
+        scale.value = withSpring(1, PRESS_SPRING);
         onPressOut?.(e);
       }}
       onPress={(e) => {
         if (haptic) {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+          Haptics.selectionAsync().catch(() => {});
         }
         onPress?.(e);
       }}

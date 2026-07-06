@@ -10,9 +10,10 @@ import {
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { API_URL } from '@/lib/config';
-import { Colors } from '@/constants/colors';
+import { useTheme } from '@/lib/theme';
+import { enter, fade } from '@/lib/motion';
 import { PressableScale } from '@/components/pressable-scale';
 
 interface ChatMessage {
@@ -20,10 +21,6 @@ interface ChatMessage {
   content: string;
 }
 
-// The assistant is backed by /api/ai/chat — Claude with the platform's
-// logistics tools (HTS search, duty rates, port lookup, route comparison,
-// container specs, FTZ zones). It answers as SSE; RN fetch has no native
-// streaming, so we read the full body and join the chunks.
 async function askAssistant(messages: ChatMessage[]): Promise<string> {
   const res = await fetch(`${API_URL}/api/ai/chat`, {
     method: 'POST',
@@ -40,20 +37,16 @@ async function askAssistant(messages: ChatMessage[]): Promise<string> {
       throw new Error(`Request failed (${res.status})`);
     }
   }
-  // SSE payload: lines of `data: {"type":"text","content":"..."}`
   if (text.includes('data:')) {
     const chunks: string[] = [];
     for (const line of text.split('\n')) {
       const trimmed = line.trim();
       if (!trimmed.startsWith('data:')) continue;
       try {
-        const evt = JSON.parse(trimmed.slice(5).trim()) as {
-          type?: string;
-          content?: string;
-        };
+        const evt = JSON.parse(trimmed.slice(5).trim()) as { type?: string; content?: string };
         if (evt.type === 'text' && evt.content) chunks.push(evt.content);
       } catch {
-        // skip malformed frames
+        /* skip */
       }
     }
     if (chunks.length) return chunks.join('');
@@ -69,6 +62,7 @@ const SUGGESTIONS = [
 ];
 
 export default function AssistantScreen() {
+  const c = useTheme();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
@@ -78,7 +72,7 @@ export default function AssistantScreen() {
     async (text: string) => {
       const content = text.trim();
       if (!content || busy) return;
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+      Haptics.selectionAsync().catch(() => {});
       const next: ChatMessage[] = [...messages, { role: 'user', content }];
       setMessages(next);
       setInput('');
@@ -86,14 +80,10 @@ export default function AssistantScreen() {
       try {
         const reply = await askAssistant(next);
         setMessages([...next, { role: 'assistant', content: reply }]);
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
       } catch (e) {
         setMessages([
           ...next,
-          {
-            role: 'assistant',
-            content: `⚠️ ${e instanceof Error ? e.message : 'Something went wrong. Try again.'}`,
-          },
+          { role: 'assistant', content: `⚠ ${e instanceof Error ? e.message : 'Something went wrong. Try again.'}` },
         ]);
       } finally {
         setBusy(false);
@@ -105,76 +95,83 @@ export default function AssistantScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={{ flex: 1, backgroundColor: c.bg }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
     >
       {messages.length === 0 ? (
-        <View style={styles.emptyWrap}>
-          <Animated.View entering={FadeInDown.springify().damping(18)}>
-            <Text style={styles.emptyTitle}>Logistics copilot</Text>
-            <Text style={styles.emptySub}>
-              Duty rates, HTS codes, route comparisons, container specs, FTZ
-              zones — ask anything about your freight.
+        <View style={{ flex: 1, justifyContent: 'center', padding: 24 }}>
+          <Animated.View entering={enter} style={{ alignItems: 'center' }}>
+            <View style={[styles.orb, { backgroundColor: c.accentSoft }]}>
+              <Ionicons name="chatbubble-ellipses" size={26} color={c.accent} />
+            </View>
+            <Text style={{ color: c.text, fontSize: 22, fontWeight: '800', textAlign: 'center', marginTop: 14 }}>
+              Logistics copilot
+            </Text>
+            <Text style={{ color: c.textMuted, fontSize: 14.5, textAlign: 'center', marginTop: 8, lineHeight: 21 }}>
+              Duty rates, HTS codes, route comparisons, container specs, FTZ zones — ask anything about your freight.
             </Text>
           </Animated.View>
-          <View style={styles.suggestions}>
-            {SUGGESTIONS.map((s, i) => (
-              <Animated.View key={s} entering={FadeInUp.delay(100 + i * 70).springify().damping(18)}>
-                <PressableScale style={styles.suggestion} onPress={() => send(s)}>
-                  <Text style={styles.suggestionText}>{s}</Text>
-                </PressableScale>
-              </Animated.View>
+          <Animated.View entering={fade} style={{ marginTop: 26, gap: 10 }}>
+            {SUGGESTIONS.map((s) => (
+              <PressableScale
+                key={s}
+                style={{ backgroundColor: c.bgElevated, borderColor: c.border, borderWidth: StyleSheet.hairlineWidth, borderRadius: 13, paddingHorizontal: 16, paddingVertical: 13 }}
+                onPress={() => send(s)}
+              >
+                <Text style={{ color: c.text, fontSize: 14.5 }}>{s}</Text>
+              </PressableScale>
             ))}
-          </View>
+          </Animated.View>
         </View>
       ) : (
         <FlatList
           ref={listRef}
           data={messages}
           keyExtractor={(_, i) => `${i}`}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={{ padding: 16, gap: 10 }}
           onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: true })}
           renderItem={({ item }) => (
             <Animated.View
-              entering={FadeInDown.springify().damping(18)}
+              entering={fade}
               style={[
                 styles.bubble,
-                item.role === 'user' ? styles.userBubble : styles.assistantBubble,
+                item.role === 'user'
+                  ? { backgroundColor: c.accent, alignSelf: 'flex-end', borderBottomRightRadius: 4 }
+                  : { backgroundColor: c.bgElevated, borderColor: c.border, borderWidth: StyleSheet.hairlineWidth, alignSelf: 'flex-start', borderBottomLeftRadius: 4 },
               ]}
             >
-              <Text style={styles.bubbleText}>{item.content}</Text>
+              <Text style={{ color: item.role === 'user' ? c.accentText : c.text, fontSize: 15, lineHeight: 22 }}>
+                {item.content}
+              </Text>
             </Animated.View>
           )}
           ListFooterComponent={
             busy ? (
-              <Animated.View
-                entering={FadeInDown.springify()}
-                style={[styles.bubble, styles.assistantBubble]}
-              >
-                <Text style={styles.thinking}>Thinking…</Text>
+              <Animated.View entering={fade} style={[styles.bubble, { backgroundColor: c.bgElevated, borderColor: c.border, borderWidth: StyleSheet.hairlineWidth, alignSelf: 'flex-start' }]}>
+                <Text style={{ color: c.textMuted, fontStyle: 'italic' }}>Thinking…</Text>
               </Animated.View>
             ) : null
           }
         />
       )}
 
-      <View style={styles.inputBar}>
+      <View style={[styles.inputBar, { borderTopColor: c.border, backgroundColor: c.bg }]}>
         <TextInput
-          style={styles.input}
+          style={{ flex: 1, backgroundColor: c.bgElevated, borderColor: c.border, borderWidth: StyleSheet.hairlineWidth, borderRadius: 14, paddingHorizontal: 14, paddingTop: 11, paddingBottom: 11, color: c.text, fontSize: 15, maxHeight: 120 }}
           value={input}
           onChangeText={setInput}
           placeholder="Ask about rates, routes, HTS codes…"
-          placeholderTextColor={Colors.textFaint}
+          placeholderTextColor={c.textFaint}
           multiline
           editable={!busy}
         />
         <PressableScale
-          style={{ ...styles.sendBtn, opacity: input.trim() && !busy ? 1 : 0.4 }}
+          style={{ backgroundColor: c.accent, width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', opacity: input.trim() && !busy ? 1 : 0.4 }}
           onPress={() => send(input)}
           disabled={!input.trim() || busy}
         >
-          <Ionicons name="arrow-up" size={20} color="#fff" />
+          <Ionicons name="arrow-up" size={20} color={c.accentText} />
         </PressableScale>
       </View>
     </KeyboardAvoidingView>
@@ -182,80 +179,7 @@ export default function AssistantScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.bg },
-  emptyWrap: { flex: 1, justifyContent: 'center', padding: 24 },
-  emptyTitle: {
-    color: Colors.text,
-    fontSize: 24,
-    fontWeight: '800',
-    textAlign: 'center',
-  },
-  emptySub: {
-    color: Colors.textMuted,
-    fontSize: 14.5,
-    textAlign: 'center',
-    marginTop: 8,
-    lineHeight: 21,
-  },
-  suggestions: { marginTop: 28, gap: 10 },
-  suggestion: {
-    backgroundColor: Colors.bgElevated,
-    borderColor: Colors.border,
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 13,
-  },
-  suggestionText: { color: Colors.text, fontSize: 14.5 },
-  list: { padding: 16, gap: 10 },
-  bubble: {
-    borderRadius: 16,
-    paddingHorizontal: 15,
-    paddingVertical: 11,
-    maxWidth: '86%',
-  },
-  userBubble: {
-    backgroundColor: Colors.accentDark,
-    alignSelf: 'flex-end',
-    borderBottomRightRadius: 4,
-  },
-  assistantBubble: {
-    backgroundColor: Colors.bgElevated,
-    borderColor: Colors.border,
-    borderWidth: 1,
-    alignSelf: 'flex-start',
-    borderBottomLeftRadius: 4,
-  },
-  bubbleText: { color: Colors.text, fontSize: 15, lineHeight: 22 },
-  thinking: { color: Colors.textMuted, fontStyle: 'italic' },
-  inputBar: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 10,
-    padding: 12,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: Colors.border,
-    backgroundColor: Colors.bg,
-  },
-  input: {
-    flex: 1,
-    backgroundColor: Colors.bgElevated,
-    borderColor: Colors.border,
-    borderWidth: 1,
-    borderRadius: 14,
-    paddingHorizontal: 14,
-    paddingTop: 11,
-    paddingBottom: 11,
-    color: Colors.text,
-    fontSize: 15,
-    maxHeight: 120,
-  },
-  sendBtn: {
-    backgroundColor: Colors.accent,
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  orb: { width: 60, height: 60, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
+  bubble: { borderRadius: 16, paddingHorizontal: 15, paddingVertical: 11, maxWidth: '86%' },
+  inputBar: { flexDirection: 'row', alignItems: 'flex-end', gap: 10, padding: 12, borderTopWidth: StyleSheet.hairlineWidth },
 });

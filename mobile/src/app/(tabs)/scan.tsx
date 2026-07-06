@@ -1,21 +1,17 @@
-import React, { useState } from 'react';
-import {
-  ActivityIndicator,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React, { useRef, useState } from 'react';
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { Ionicons } from '@expo/vector-icons';
+import Animated from 'react-native-reanimated';
 import { api, apiUpload } from '@/lib/api';
 import type { BolResponse, Shipment } from '@/lib/types';
-import { Colors } from '@/constants/colors';
-import { Button } from '@/components/ui';
+import { useTheme } from '@/lib/theme';
+import { enter, fade, listEnter } from '@/lib/motion';
+import { Button, cardStyle } from '@/components/ui';
 import { ConfidenceBar } from '@/components/confidence-bar';
+import { PressableScale } from '@/components/pressable-scale';
 
 const FIELD_LABELS: Array<{ key: keyof NonNullable<BolResponse['extracted']>; label: string }> = [
   { key: 'container_numbers', label: 'Containers' },
@@ -33,19 +29,81 @@ const FIELD_LABELS: Array<{ key: keyof NonNullable<BolResponse['extracted']>; la
   { key: 'quantity', label: 'Quantity' },
 ];
 
+const STEPS = ['Uploading document', 'Reading with AI', 'Structuring fields'];
+
+// Icon-forward capture button.
+function CaptureButton({
+  icon,
+  label,
+  sub,
+  primary,
+  onPress,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  sub: string;
+  primary?: boolean;
+  onPress: () => void;
+}) {
+  const c = useTheme();
+  return (
+    <PressableScale
+      style={{
+        ...cardStyle(c),
+        flex: 1,
+        padding: 16,
+        alignItems: 'center',
+        gap: 8,
+        backgroundColor: primary ? c.accent : c.card,
+        borderColor: primary ? c.accent : c.border,
+      }}
+      onPress={onPress}
+    >
+      <View
+        style={{
+          width: 44,
+          height: 44,
+          borderRadius: 13,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: primary ? 'rgba(255,255,255,0.18)' : c.accentSoft,
+        }}
+      >
+        <Ionicons name={icon} size={23} color={primary ? c.accentText : c.accent} />
+      </View>
+      <Text style={{ fontSize: 15, fontWeight: '700', color: primary ? c.accentText : c.text }}>{label}</Text>
+      <Text
+        style={{ fontSize: 11.5, textAlign: 'center', color: primary ? 'rgba(255,255,255,0.8)' : c.textFaint }}
+      >
+        {sub}
+      </Text>
+    </PressableScale>
+  );
+}
+
 export default function ScanScreen() {
+  const c = useTheme();
   const [imageUri, setImageUri] = useState<string | null>(null);
-  const [processing, setProcessing] = useState(false);
+  const [step, setStep] = useState<number>(-1); // -1 idle, 0..2 processing, 3 done
   const [result, setResult] = useState<BolResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const stepTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const runSteps = () => {
+    setStep(0);
+    stepTimer.current = setInterval(() => {
+      setStep((s) => (s < STEPS.length - 1 ? s + 1 : s));
+    }, 1400);
+  };
+  const stopSteps = () => {
+    if (stepTimer.current) clearInterval(stepTimer.current);
+    stepTimer.current = null;
+  };
 
   const pick = async (source: 'camera' | 'library') => {
     setError(null);
-    const opts: ImagePicker.ImagePickerOptions = {
-      mediaTypes: ['images'],
-      quality: 0.8,
-    };
+    const opts: ImagePicker.ImagePickerOptions = { mediaTypes: ['images'], quality: 0.8 };
     const res =
       source === 'camera'
         ? await ImagePicker.launchCameraAsync(opts)
@@ -55,27 +113,29 @@ export default function ScanScreen() {
     const asset = res.assets[0];
     setImageUri(asset.uri);
     setResult(null);
-    setProcessing(true);
+    runSteps();
     try {
       const formData = new FormData();
-      // React Native FormData file part: {uri, name, type}.
       formData.append('file', {
         uri: asset.uri,
         name: asset.fileName ?? 'bol.jpg',
         type: asset.mimeType ?? 'image/jpeg',
       } as unknown as Blob);
       const data = await apiUpload<BolResponse>('/api/bol', formData);
+      stopSteps();
       if (data.error && !data.extracted) {
         setError(data.error);
+        setStep(-1);
       } else {
         setResult(data);
+        setStep(3);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
       }
     } catch (e) {
+      stopSteps();
+      setStep(-1);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {});
       setError(e instanceof Error ? e.message : 'Extraction failed');
-    } finally {
-      setProcessing(false);
     }
   };
 
@@ -108,6 +168,7 @@ export default function ScanScreen() {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
       setResult(null);
       setImageUri(null);
+      setStep(-1);
       router.push({ pathname: '/shipment/[id]', params: { id: res.shipment.id } });
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to save shipment');
@@ -116,45 +177,60 @@ export default function ScanScreen() {
     }
   };
 
+  const processing = step >= 0 && step < 3;
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Animated.View entering={FadeInDown.springify().damping(18)}>
-        <Text style={styles.heading}>Snap a Bill of Lading</Text>
-        <Text style={styles.sub}>
-          AI extracts containers, vessel, ports, dates and parties — then saves it
-          straight to your shipment board.
+    <ScrollView style={{ flex: 1, backgroundColor: c.bg }} contentContainerStyle={{ padding: 16, paddingBottom: 48 }}>
+      <Animated.View entering={enter}>
+        <Text style={{ color: c.text, fontSize: 23, fontWeight: '800', letterSpacing: 0.2 }}>Scan a Bill of Lading</Text>
+        <Text style={{ color: c.textMuted, fontSize: 14, marginTop: 6, lineHeight: 20 }}>
+          Capture a BOL and the AI extracts containers, vessel, ports, dates and parties — then saves it to your board.
         </Text>
-        <View style={styles.actions}>
-          <View style={styles.actionBtn}>
-            <Button title="📷  Camera" onPress={() => pick('camera')} />
-          </View>
-          <View style={styles.actionBtn}>
-            <Button title="🖼  Library" variant="secondary" onPress={() => pick('library')} />
-          </View>
+        <View style={{ flexDirection: 'row', gap: 12, marginTop: 18 }}>
+          <CaptureButton icon="camera" label="Take photo" sub="Snap the BOL at the terminal" primary onPress={() => pick('camera')} />
+          <CaptureButton icon="images" label="From library" sub="Pick an existing scan" onPress={() => pick('library')} />
         </View>
       </Animated.View>
 
       {imageUri && (
-        <Animated.View entering={FadeInUp.springify().damping(18)} style={styles.previewWrap}>
-          <Image source={{ uri: imageUri }} style={styles.preview} resizeMode="cover" />
-          {processing && (
-            <View style={styles.processingOverlay}>
-              <ActivityIndicator color={Colors.accent} size="large" />
-              <Text style={styles.processingText}>Extracting with AI…</Text>
-            </View>
-          )}
+        <Animated.View entering={fade} style={{ marginTop: 18, borderRadius: 16, overflow: 'hidden', borderWidth: StyleSheet.hairlineWidth, borderColor: c.border }}>
+          <Image source={{ uri: imageUri }} style={{ width: '100%', height: 200, backgroundColor: c.bgElevated }} resizeMode="cover" />
         </Animated.View>
       )}
 
-      {error && <Text style={styles.error}>{error}</Text>}
+      {/* Stepped processing — shows what the AI is doing */}
+      {processing && (
+        <Animated.View entering={fade} style={{ ...cardStyle(c), padding: 16, marginTop: 14 }}>
+          {STEPS.map((label, i) => {
+            const done = i < step;
+            const active = i === step;
+            return (
+              <View key={label} style={styles.stepRow}>
+                <View style={{ width: 22, alignItems: 'center' }}>
+                  {done ? (
+                    <Ionicons name="checkmark-circle" size={19} color={c.success} />
+                  ) : active ? (
+                    <ActivityIndicator size="small" color={c.accent} />
+                  ) : (
+                    <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: c.border }} />
+                  )}
+                </View>
+                <Text style={{ color: done ? c.textMuted : active ? c.text : c.textFaint, fontSize: 14.5, fontWeight: active ? '700' : '500' }}>
+                  {label}
+                </Text>
+              </View>
+            );
+          })}
+        </Animated.View>
+      )}
 
-      {result?.extracted && (
-        <Animated.View entering={FadeInUp.springify().damping(18)} style={styles.resultCard}>
+      {error && <Text style={{ color: c.danger, marginTop: 14, fontSize: 14 }}>{error}</Text>}
+
+      {result?.extracted && step === 3 && (
+        <Animated.View entering={fade} style={{ ...cardStyle(c), padding: 16, marginTop: 16 }}>
           <View style={styles.resultHeader}>
-            <Text style={styles.resultTitle}>Extracted fields</Text>
-            {result.provider ? (
-              <Text style={styles.provider}>{result.provider}</Text>
-            ) : null}
+            <Text style={{ color: c.text, fontSize: 16, fontWeight: '800' }}>Extracted fields</Text>
+            {result.provider ? <Text style={{ color: c.textFaint, fontSize: 12 }}>{result.provider}</Text> : null}
           </View>
           {FIELD_LABELS.map(({ key, label }, i) => {
             const raw = result.extracted?.[key];
@@ -162,14 +238,10 @@ export default function ScanScreen() {
             const value = Array.isArray(raw) ? raw.join(', ') : `${raw}`;
             const confidence = result.confidence?.[key] ?? 0;
             return (
-              <Animated.View
-                key={key}
-                entering={FadeInDown.delay(i * 35).springify().damping(18)}
-                style={styles.fieldRow}
-              >
-                <View style={styles.fieldTop}>
-                  <Text style={styles.fieldLabel}>{label}</Text>
-                  <Text style={styles.fieldValue} numberOfLines={2}>
+              <Animated.View key={key} entering={listEnter(i)} style={{ paddingVertical: 8, gap: 6 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 14 }}>
+                  <Text style={{ color: c.textMuted, fontSize: 13.5 }}>{label}</Text>
+                  <Text style={{ color: c.text, fontSize: 13.5, fontWeight: '600', flexShrink: 1, textAlign: 'right' }} numberOfLines={2}>
                     {value}
                   </Text>
                 </View>
@@ -178,7 +250,7 @@ export default function ScanScreen() {
             );
           })}
           <View style={{ marginTop: 16 }}>
-            <Button title="Save as shipment" onPress={saveShipment} loading={saving} />
+            <Button title="Save as shipment" onPress={saveShipment} loading={saving} icon={<Ionicons name="add-circle-outline" size={18} color={c.accentText} />} />
           </View>
         </Animated.View>
       )}
@@ -187,57 +259,6 @@ export default function ScanScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.bg },
-  content: { padding: 16, paddingBottom: 48 },
-  heading: { color: Colors.text, fontSize: 22, fontWeight: '800' },
-  sub: { color: Colors.textMuted, fontSize: 14, marginTop: 6, lineHeight: 20 },
-  actions: { flexDirection: 'row', gap: 10, marginTop: 16 },
-  actionBtn: { flex: 1 },
-  previewWrap: {
-    marginTop: 18,
-    borderRadius: 14,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  preview: { width: '100%', height: 220, backgroundColor: Colors.bgElevated },
-  processingOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(15,23,42,0.75)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  processingText: { color: Colors.text, fontWeight: '600' },
-  error: { color: Colors.danger, marginTop: 14, fontSize: 14 },
-  resultCard: {
-    marginTop: 18,
-    backgroundColor: Colors.card,
-    borderColor: Colors.border,
-    borderWidth: 1,
-    borderRadius: 14,
-    padding: 16,
-  },
-  resultHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  resultTitle: { color: Colors.text, fontSize: 16, fontWeight: '800' },
-  provider: { color: Colors.textFaint, fontSize: 12 },
-  fieldRow: { paddingVertical: 8, gap: 6 },
-  fieldTop: { flexDirection: 'row', justifyContent: 'space-between', gap: 14 },
-  fieldLabel: { color: Colors.textMuted, fontSize: 13.5 },
-  fieldValue: {
-    color: Colors.text,
-    fontSize: 13.5,
-    fontWeight: '600',
-    flexShrink: 1,
-    textAlign: 'right',
-  },
+  stepRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 7 },
+  resultHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
 });

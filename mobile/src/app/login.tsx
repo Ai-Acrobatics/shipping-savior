@@ -7,15 +7,18 @@ import {
   Text,
   View,
 } from 'react-native';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useAuth } from '@/lib/auth-context';
+import { useTheme } from '@/lib/theme';
+import { enter, fade } from '@/lib/motion';
 import { Button, Field } from '@/components/ui';
-import { Colors } from '@/constants/colors';
 import { API_URL } from '@/lib/config';
 
 export default function LoginScreen() {
   const { login } = useAuth();
+  const c = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -41,41 +44,30 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.flex}
+      style={{ flex: 1, backgroundColor: c.bg }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
-        contentContainerStyle={styles.container}
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 28, backgroundColor: c.bg }}
         keyboardShouldPersistTaps="handled"
       >
-        <Animated.View entering={FadeInDown.duration(500).springify()}>
-          <Text style={styles.logo}>⚓</Text>
-          <Text style={styles.title}>Shipping Savior</Text>
-          <Text style={styles.subtitle}>
+        <Animated.View entering={enter}>
+          <View style={[styles.logoBadge, { backgroundColor: c.accentSoft }]}>
+            <Ionicons name="boat" size={30} color={c.accent} />
+          </View>
+          <Text style={[styles.title, { color: c.text }]}>Shipping Savior</Text>
+          <Text style={[styles.subtitle, { color: c.textMuted }]}>
             Freight intelligence in your pocket
           </Text>
         </Animated.View>
 
-        <Animated.View entering={FadeInUp.delay(150).duration(500).springify()} style={styles.form}>
-          <Field
-            label="Email"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="you@company.com"
-            keyboardType="email-address"
-          />
-          <Field
-            label="Password"
-            value={password}
-            onChangeText={setPassword}
-            placeholder="••••••••"
-            secureTextEntry
-          />
-          {error ? <Text style={styles.error}>{error}</Text> : null}
+        <Animated.View entering={fade} style={{ gap: 2 }}>
+          <Field label="Email" value={email} onChangeText={setEmail} placeholder="you@company.com" keyboardType="email-address" />
+          <Field label="Password" value={password} onChangeText={setPassword} placeholder="••••••••" secureTextEntry />
+          {error ? <Text style={{ color: c.danger, marginBottom: 12, fontSize: 14 }}>{error}</Text> : null}
           <Button title="Sign in" onPress={submit} loading={busy} />
-          <Text style={styles.hint}>
-            No account yet? Register on the web at{' '}
-            {API_URL.replace(/^https?:\/\//, '')}
+          <Text style={[styles.hint, { color: c.textFaint }]}>
+            No account yet? Register on the web at {API_URL.replace(/^https?:\/\//, '')}
           </Text>
         </Animated.View>
       </ScrollView>
@@ -84,33 +76,16 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: Colors.bg },
-  container: {
-    flexGrow: 1,
+  logoBadge: {
+    width: 68,
+    height: 68,
+    borderRadius: 20,
+    alignItems: 'center',
     justifyContent: 'center',
-    padding: 28,
-    backgroundColor: Colors.bg,
+    alignSelf: 'center',
+    marginBottom: 18,
   },
-  logo: { fontSize: 44, textAlign: 'center', marginBottom: 12 },
-  title: {
-    color: Colors.text,
-    fontSize: 30,
-    fontWeight: '800',
-    textAlign: 'center',
-  },
-  subtitle: {
-    color: Colors.textMuted,
-    fontSize: 15,
-    textAlign: 'center',
-    marginTop: 6,
-    marginBottom: 36,
-  },
-  form: { gap: 4 },
-  error: { color: Colors.danger, marginBottom: 12, fontSize: 14 },
-  hint: {
-    color: Colors.textFaint,
-    fontSize: 13,
-    textAlign: 'center',
-    marginTop: 18,
-  },
+  title: { fontSize: 30, fontWeight: '800', textAlign: 'center', letterSpacing: 0.2 },
+  subtitle: { fontSize: 15, textAlign: 'center', marginTop: 6, marginBottom: 36 },
+  hint: { fontSize: 13, textAlign: 'center', marginTop: 18, lineHeight: 19 },
 });

@@ -1,106 +1,65 @@
 import React from 'react';
 import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/lib/auth-context';
 import { API_URL } from '@/lib/config';
-import { Colors } from '@/constants/colors';
-import { Button, Row } from '@/components/ui';
+import { useTheme } from '@/lib/theme';
+import { enter, fade } from '@/lib/motion';
+import { Button, Row, cardStyle } from '@/components/ui';
 import { PressableScale } from '@/components/pressable-scale';
 
-const WEB_LINKS: Array<{ label: string; path: string }> = [
-  { label: 'Shipment board & workbook import', path: '/platform/shipments' },
-  { label: 'Review queue', path: '/platform/shipments/review' },
-  { label: 'Rate contracts', path: '/platform/contracts' },
-  { label: 'All calculators', path: '/platform/calculators' },
-  { label: 'Billing & plan', path: '/platform/billing' },
-  { label: 'Team & settings', path: '/platform/settings' },
+const WEB_LINKS: Array<{ label: string; path: string; icon: keyof typeof Ionicons.glyphMap }> = [
+  { label: 'Shipment board & workbook import', path: '/platform/shipments', icon: 'cube-outline' },
+  { label: 'Review queue', path: '/platform/shipments/review', icon: 'checkmark-done-outline' },
+  { label: 'Rate contracts', path: '/platform/contracts', icon: 'document-text-outline' },
+  { label: 'All calculators', path: '/platform/calculators', icon: 'calculator-outline' },
+  { label: 'Billing & plan', path: '/platform/billing', icon: 'card-outline' },
+  { label: 'Team & settings', path: '/platform/settings', icon: 'people-outline' },
 ];
 
 export default function AccountScreen() {
   const { user, logout } = useAuth();
+  const c = useTheme();
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Animated.View entering={FadeInDown.springify().damping(18)} style={styles.card}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>
+    <ScrollView style={{ flex: 1, backgroundColor: c.bg }} contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 48 }}>
+      <Animated.View entering={enter} style={{ ...cardStyle(c), padding: 18, alignItems: 'center' }}>
+        <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: c.accent, alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
+          <Text style={{ color: c.accentText, fontSize: 25, fontWeight: '800' }}>
             {(user?.name ?? user?.email ?? '?').charAt(0).toUpperCase()}
           </Text>
         </View>
-        <Text style={styles.name}>{user?.name ?? 'Account'}</Text>
-        <Text style={styles.email}>{user?.email}</Text>
-        <View style={{ marginTop: 10 }}>
+        <Text style={{ color: c.text, fontSize: 19, fontWeight: '800' }}>{user?.name ?? 'Account'}</Text>
+        <Text style={{ color: c.textMuted, fontSize: 14, marginTop: 2 }}>{user?.email}</Text>
+        <View style={{ width: '100%', marginTop: 10 }}>
           <Row label="Role" value={user?.role} />
         </View>
       </Animated.View>
 
-      <Animated.View entering={FadeInDown.delay(80).springify().damping(18)} style={styles.card}>
-        <Text style={styles.sectionTitle}>Full platform (web)</Text>
+      <Animated.View entering={fade} style={{ ...cardStyle(c), padding: 6, paddingHorizontal: 16 }}>
+        <Text style={{ color: c.textMuted, fontSize: 12.5, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.6, marginTop: 12, marginBottom: 4 }}>
+          Full platform (web)
+        </Text>
         {WEB_LINKS.map((link) => (
           <PressableScale
             key={link.path}
-            style={styles.linkRow}
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 13, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: c.border }}
             onPress={() => Linking.openURL(`${API_URL}${link.path}`)}
           >
-            <Text style={styles.linkText}>{link.label}</Text>
-            <Text style={styles.linkArrow}>↗</Text>
+            <Ionicons name={link.icon} size={19} color={c.accent} />
+            <Text style={{ color: c.text, fontSize: 15, flex: 1 }}>{link.label}</Text>
+            <Ionicons name="open-outline" size={16} color={c.textFaint} />
           </PressableScale>
         ))}
       </Animated.View>
 
-      <Animated.View entering={FadeInDown.delay(160).springify().damping(18)}>
+      <Animated.View entering={fade}>
         <Button title="Sign out" variant="danger" onPress={logout} />
-        <Text style={styles.version}>Shipping Savior mobile · v1.0.0</Text>
+        <Text style={{ color: c.textFaint, fontSize: 12.5, textAlign: 'center', marginTop: 16 }}>
+          Shipping Savior · v1.0.0
+        </Text>
       </Animated.View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.bg },
-  content: { padding: 16, gap: 14, paddingBottom: 48 },
-  card: {
-    backgroundColor: Colors.card,
-    borderColor: Colors.border,
-    borderWidth: 1,
-    borderRadius: 14,
-    padding: 18,
-  },
-  avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: Colors.accent,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    marginBottom: 10,
-  },
-  avatarText: { color: '#fff', fontSize: 24, fontWeight: '800' },
-  name: { color: Colors.text, fontSize: 19, fontWeight: '800', textAlign: 'center' },
-  email: { color: Colors.textMuted, fontSize: 14, textAlign: 'center', marginTop: 2 },
-  sectionTitle: {
-    color: Colors.textMuted,
-    fontSize: 13,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: 0.6,
-    marginBottom: 6,
-  },
-  linkRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 13,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.border,
-  },
-  linkText: { color: Colors.text, fontSize: 15 },
-  linkArrow: { color: Colors.accent, fontSize: 15, fontWeight: '700' },
-  version: {
-    color: Colors.textFaint,
-    fontSize: 12.5,
-    textAlign: 'center',
-    marginTop: 16,
-  },
-});

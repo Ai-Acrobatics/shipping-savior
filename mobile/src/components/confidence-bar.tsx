@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -7,41 +7,28 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import { Colors } from '@/constants/colors';
+import { useTheme } from '@/lib/theme';
 
-// Animated confidence meter for OCR results — fills to the score with a color
-// ramp (red < 0.5 <= amber < 0.8 <= green).
-export function ConfidenceBar({ value, delay = 150 }: { value: number; delay?: number }) {
+// Confidence meter for OCR results — a quiet fill with a color ramp
+// (danger < 0.5 <= warning < 0.8 <= success).
+export function ConfidenceBar({ value, delay = 120 }: { value: number; delay?: number }) {
+  const c = useTheme();
   const width = useSharedValue(0);
   const clamped = Math.max(0, Math.min(1, value));
 
   useEffect(() => {
     width.value = withDelay(
       delay,
-      withTiming(clamped, { duration: 600, easing: Easing.out(Easing.cubic) })
+      withTiming(clamped, { duration: 480, easing: Easing.out(Easing.cubic) })
     );
   }, [clamped, delay, width]);
 
-  const fill = useAnimatedStyle(() => ({
-    width: `${width.value * 100}%`,
-  }));
-
-  const color =
-    clamped >= 0.8 ? Colors.success : clamped >= 0.5 ? Colors.warning : Colors.danger;
+  const fill = useAnimatedStyle(() => ({ width: `${width.value * 100}%` }));
+  const color = clamped >= 0.8 ? c.success : clamped >= 0.5 ? c.warning : c.danger;
 
   return (
-    <View style={styles.track}>
-      <Animated.View style={[styles.fill, { backgroundColor: color }, fill]} />
+    <View style={{ height: 3, borderRadius: 2, backgroundColor: c.border, overflow: 'hidden' }}>
+      <Animated.View style={[{ height: '100%', borderRadius: 2, backgroundColor: color }, fill]} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  track: {
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: Colors.border,
-    overflow: 'hidden',
-  },
-  fill: { height: '100%', borderRadius: 2 },
-});
