@@ -13,7 +13,8 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "Shipping Savior uses the camera to scan Bills of Lading so shipment data can be extracted automatically.",
-        "NSPhotoLibraryUsageDescription": "Shipping Savior lets you pick a Bill of Lading photo or PDF scan from your library for data extraction."
+        "NSPhotoLibraryUsageDescription": "Shipping Savior lets you pick a Bill of Lading photo or PDF scan from your library for data extraction.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {

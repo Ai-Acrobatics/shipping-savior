@@ -19,12 +19,21 @@
     },
     "production": {
       "autoIncrement": true,
+      "credentialsSource": "local",
       "env": {
         "EXPO_PUBLIC_API_URL": "https://shipping-savior.vercel.app"
       }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "ascAppId": "6788124179",
+        "appleTeamId": "5H49774YPG",
+        "ascApiKeyPath": "./creds/AuthKey_5K7FWB63D2.p8",
+        "ascApiKeyId": "5K7FWB63D2",
+        "ascApiKeyIssuerId": "daa9f9f7-8934-4b76-8db8-58d2fd1314e2"
+      }
+    }
   }
 }
