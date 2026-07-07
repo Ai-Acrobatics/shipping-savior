@@ -530,3 +530,130 @@ export const pushTokens = pgTable(
 );
 
 export type PushToken = typeof pushTokens.$inferSelect;
+
+// ── DCSA/Container Tracking ─────────────────────────
+//
+// AI-12010 — Terminal49 live container tracking + DCSA events.
+// DCSA (Digital Container Shipping Association) event types map to the
+// industry-standard event taxonomy used by carriers and visibility platforms.
+
+export const dcsaEventTypeEnum = pgEnum('dcsa_event_type', [
+  'ARRIVAL',
+  'DEPARTURE',
+  'LOAD',
+  'DISCHARGE',
+  'GATE_IN',
+  'GATE_OUT',
+  'CUSTOMS_HOLD',
+  'CUSTOMS_RELEASE',
+  'INSPECTION',
+  'PICKUP',
+  'DELIVERY',
+  'ESTIMATED_ARRIVAL',
+  'ESTIMATED_DEPARTURE',
+  'OTHER',
+]);
+
+export const dcsaEventSourceEnum = pgEnum('dcsa_event_source', [
+  'terminal49',
+  'manual',
+  'carrier_api',
+]);
+
+// ── Terminal49 Raw Webhooks ───────────────────────────
+//
+// Raw inbound payloads from Terminal49's webhook API. Stored for audit and
+// re-processing. Each payload can contain multiple events referencing one or
+// more containers/shipments.
+
+export const terminal49Webhooks = pgTable('terminal49_webhooks', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  // Terminal49's webhook ID for idempotency
+  t49EventId: varchar('t49_event_id', { length: 100 }),
+  // Webhook type from Terminal49 (e.g. 'tracking.created', 'tracking.updated')
+  t49EventType: varchar('t49_event_type', { length: 100 }),
+  // Raw JSON payload exactly as received
+  rawPayload: jsonb('raw_payload').notNull(),
+  // Processing status
+  processed: boolean('processed').notNull().default(false),
+  processedAt: timestamp('processed_at', { withTimezone: true }),
+  errorMessage: text('error_message'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+// ── Shipment Events ───────────────────────────────────
+//
+// Individual tracking events normalized to DCSA format. Each event is a
+// discrete occurrence in a shipment's lifecycle. Events are linked to a
+// shipment (by shipment_id or container_number), normalized from Terminal49
+// or entered manually.
+
+export const shipmentEvents = pgTable(
+  'shipment_events',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    shipmentId: uuid('shipment_id').references(() => shipments.id, { onDelete: 'cascade' }),
+    // Container identifier (e.g. MSCU1234567) — the primary key in Terminal49
+    containerNumber: varchar('container_number', { length: 20 }).notNull(),
+    // DCSA event type
+    eventType: dcsaEventTypeEnum('event_type').notNull(),
+    // Source of the event
+    source: dcsaEventSourceEnum('source').notNull().default('terminal49'),
+    // Source event ID for dedup
+    sourceEventId: varchar('source_event_id', { length: 100 }),
+    // Timestamp when the event occurred (carrier-reported)
+    eventTime: timestamp('event_time', { withTimezone: true }),
+    // Location (port code or free-text)
+    location: varchar('location', { length: 300 }),
+    locationCode: varchar('location_code', { length: 10 }),
+    // ETA at time of this event (for tracking changes)
+    etaAtEvent: timestamp('eta_at_event', { withTimezone: true }),
+    // Event-specific metadata (vessel name, voyage, facility, etc.)
+    metadata: jsonb('metadata'),
+    // Human-readable description
+    description: text('description'),
+    // Link to raw webhook that produced this event
+    webhookId: uuid('webhook_id').references(() => terminal49Webhooks.id, { onDelete: 'set null' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    // Prevent duplicate events from the same source
+    sourceEventIdx: uniqueIndex('shipment_events_source_event_idx').on(table.sourceEventId),
+    // Index by container for fast lookups
+    containerIdx: uniqueIndex('shipment_events_container_idx').on(table.containerNumber, table.eventTime),
+  }),
+);
+
+// ── ETA Change Alerts ─────────────────────────────────
+//
+// Detected ETA changes calculated from shipment_events. Each row records a
+// meaningful ETA deviation that may trigger push/email notifications.
+
+export const etaChangeAlerts = pgTable('eta_change_alerts', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  shipmentId: uuid('shipment_id')
+    .notNull()
+    .references(() => shipments.id, { onDelete: 'cascade' }),
+  containerNumber: varchar('container_number', { length: 20 }).notNull(),
+  previousEta: timestamp('previous_eta', { withTimezone: true }),
+  newEta: timestamp('new_eta', { withTimezone: true }),
+  // Delay in hours (positive = delayed, negative = early)
+  delayHours: integer('delay_hours'),
+  eventId: uuid('event_id').references(() => shipmentEvents.id, { onDelete: 'set null' }),
+  acknowledged: boolean('acknowledged').notNull().default(false),
+  acknowledgedAt: timestamp('acknowledged_at', { withTimezone: true }),
+  notified: boolean('notified').notNull().default(false),
+  notifiedAt: timestamp('notified_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+// ── Tracking Type Exports ─────────────────────────────
+
+export type Terminal49Webhook = typeof terminal49Webhooks.$inferSelect;
+export type NewTerminal49Webhook = typeof terminal49Webhooks.$inferInsert;
+export type ShipmentEvent = typeof shipmentEvents.$inferSelect;
+export type NewShipmentEvent = typeof shipmentEvents.$inferInsert;
+export type EtaChangeAlert = typeof etaChangeAlerts.$inferSelect;
+export type NewEtaChangeAlert = typeof etaChangeAlerts.$inferInsert;
+export type DcsaEventType = (typeof dcsaEventTypeEnum.enumValues)[number];
+export type DcsaEventSource = (typeof dcsaEventSourceEnum.enumValues)[number];
