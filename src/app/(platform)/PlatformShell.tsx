@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import Sidebar from "@/components/platform/Sidebar";
 import UserMenu from "@/components/platform/UserMenu";
 import MobileNav from "@/components/platform/MobileNav";
@@ -59,13 +60,16 @@ export default function PlatformShell({ user, planTier, children }: PlatformShel
 
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            {/* Notification Bell (placeholder) */}
-            <button
+            {/* Alerts — routes to the review queue (items needing attention).
+                Real-time push alerts land on the mobile app. */}
+            <Link
+              href="/platform/shipments/review"
               className="p-2 text-navy-400 hover:text-navy-600 hover:bg-navy-100 rounded-lg transition-colors relative"
-              aria-label="Notifications"
+              aria-label="Items needing review"
+              title="Items needing review"
             >
               <Bell className="w-5 h-5" />
-            </button>
+            </Link>
 
             {/* User Avatar (desktop top bar) */}
             <div className="hidden lg:block">

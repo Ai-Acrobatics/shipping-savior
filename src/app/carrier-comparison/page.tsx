@@ -249,24 +249,88 @@ export default function CarrierComparisonPage() {
     return fuse.search(destSearch).map((r) => r.item).slice(0, 8);
   }, [destSearch, fuse, ports]);
 
-  // Handle search
+  // Handle search — live schedules + reliability, grouped per carrier.
   async function handleCompare() {
     if (!origin || !destination) return;
     setLoading(true);
     setResults(null);
 
-    // TODO: Replace with real API calls:
-    // 1. const schedules = await fetch(`/api/schedules/search?origin=${origin}&destination=${destination}`).then(r => r.json());
-    // 2. const reliability = await fetch(`/api/carriers/reliability`).then(r => r.json());
-    // 3. const carrierPorts = await fetch(`/api/carriers/ports?port1=${origin}&port2=${destination}`).then(r => r.json());
+    const grade = (p: number): CarrierResult["reliabilityGrade"] =>
+      p >= 90 ? "A" : p >= 80 ? "B" : p >= 70 ? "C" : p >= 60 ? "D" : "F";
+    const routeKey = `${origin}-${destination}`.toUpperCase();
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    try {
+      const [schedRes, relRes] = await Promise.all([
+        fetch(
+          `/api/schedules/search?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&limit=80`
+        ).then((r) => r.json()),
+        fetch(`/api/carriers/reliability`).then((r) => r.json()),
+      ]);
 
-    const routeKey = `${origin}-${destination}`;
-    const mockResults = MOCK_CARRIERS[routeKey] || MOCK_CARRIERS["CNQIN-USLAX"];
-    setResults(mockResults);
-    setLoading(false);
+      type Sched = {
+        carrier: string;
+        carrierCode: string;
+        alliance?: string;
+        vesselName?: string;
+        serviceName?: string;
+        departureDate: string;
+        arrivalDate?: string;
+        transitDays?: number;
+      };
+      type Rel = { carrierCode: string; route?: string; onTimePercent: number; averageDelayDays?: number };
+
+      const schedules: Sched[] = schedRes?.results ?? [];
+      const reliability: Rel[] = relRes?.results ?? [];
+
+      const relByCode = new Map<string, Rel[]>();
+      for (const r of reliability) {
+        const arr = relByCode.get(r.carrierCode) ?? [];
+        arr.push(r);
+        relByCode.set(r.carrierCode, arr);
+      }
+
+      const byCarrier = new Map<string, Sched[]>();
+      for (const s of schedules) {
+        const arr = byCarrier.get(s.carrierCode) ?? [];
+        arr.push(s);
+        byCarrier.set(s.carrierCode, arr);
+      }
+
+      const mapped: CarrierResult[] = [];
+      for (const [code, list] of byCarrier) {
+        const transits = list.map((s) => s.transitDays ?? 0).filter((n) => n > 0);
+        const rels = relByCode.get(code) ?? [];
+        const rel = rels.find((r) => (r.route ?? "").toUpperCase() === routeKey) ?? rels[0];
+        const pct = Math.round(rel?.onTimePercent ?? 0);
+        mapped.push({
+          carrier: list[0].carrier,
+          carrierCode: code,
+          alliance: list[0].alliance ?? "—",
+          transitMin: transits.length ? Math.min(...transits) : 0,
+          transitMax: transits.length ? Math.max(...transits) : 0,
+          reliabilityPercent: pct,
+          reliabilityGrade: grade(pct),
+          avgDelayDays: rel?.averageDelayDays ?? 0,
+          upcomingSailings: [...list]
+            .sort((a, b) => a.departureDate.localeCompare(b.departureDate))
+            .slice(0, 3)
+            .map((s) => ({
+              vessel: s.vesselName ?? s.serviceName ?? "—",
+              departure: s.departureDate,
+              arrival: s.arrivalDate ?? "",
+              transitDays: s.transitDays ?? 0,
+            })),
+        });
+      }
+
+      // Fall back to reference data only when the live feed has no sailings for
+      // this lane, so a known demo route never comes up empty.
+      setResults(mapped.length ? mapped : MOCK_CARRIERS[routeKey] ?? []);
+    } catch {
+      setResults(MOCK_CARRIERS[routeKey] ?? []);
+    } finally {
+      setLoading(false);
+    }
   }
 
   // Sort results

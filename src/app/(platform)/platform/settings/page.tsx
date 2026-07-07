@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { User, Building2, Users, Lock, ChevronRight } from 'lucide-react';
 import { getOrgById, getOrgMembers, getOrgMembership } from '@/lib/db/queries/org';
+import InlineNameEditor from '@/components/platform/InlineNameEditor';
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -52,17 +53,7 @@ export default async function SettingsPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-navy-700 mb-1">
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={user.name ?? ''}
-                readOnly
-                className="w-full px-3 py-2 border border-navy-200 rounded-lg text-sm bg-navy-50 text-navy-600"
-              />
-            </div>
+            <InlineNameEditor label="Full Name" initial={user.name ?? ''} endpoint="/api/account" />
             <div>
               <label className="block text-sm font-medium text-navy-700 mb-1">
                 Email
@@ -73,16 +64,9 @@ export default async function SettingsPage() {
                 readOnly
                 className="w-full px-3 py-2 border border-navy-200 rounded-lg text-sm bg-navy-50 text-navy-600"
               />
+              <p className="text-xs text-navy-400 mt-1">Email can&apos;t be changed here.</p>
             </div>
           </div>
-
-          <button
-            disabled
-            className="px-4 py-2 text-sm font-medium text-navy-400 bg-navy-100 rounded-lg cursor-not-allowed"
-            title="Coming soon"
-          >
-            Edit Profile
-          </button>
         </div>
       </section>
 
@@ -94,17 +78,19 @@ export default async function SettingsPage() {
         </div>
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-navy-700 mb-1">
-                Organization Name
-              </label>
-              <input
-                type="text"
-                value={org?.name ?? 'No organization'}
-                readOnly
-                className="w-full px-3 py-2 border border-navy-200 rounded-lg text-sm bg-navy-50 text-navy-600"
+            {org ? (
+              <InlineNameEditor
+                label="Organization Name"
+                initial={org.name}
+                endpoint="/api/org"
+                canEdit={isOwner}
               />
-            </div>
+            ) : (
+              <div>
+                <label className="block text-sm font-medium text-navy-700 mb-1">Organization Name</label>
+                <input type="text" value="No organization" readOnly className="w-full px-3 py-2 border border-navy-200 rounded-lg text-sm bg-navy-50 text-navy-600" />
+              </div>
+            )}
             <div>
               <label className="block text-sm font-medium text-navy-700 mb-1">
                 Plan
@@ -138,15 +124,8 @@ export default async function SettingsPage() {
               </span>
             </div>
           </div>
-
           {isOwner ? (
-            <button
-              disabled
-              className="px-4 py-2 text-sm font-medium text-navy-400 bg-navy-100 rounded-lg cursor-not-allowed"
-              title="Coming soon"
-            >
-              Edit Organization
-            </button>
+            <p className="text-xs text-navy-400">Click the pencil next to the organization name to rename it.</p>
           ) : null}
         </div>
       </section>
