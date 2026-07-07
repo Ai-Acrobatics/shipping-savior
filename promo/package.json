@@ -1,0 +1,24 @@
+{
+  "name": "shipping-savior-promo",
+  "version": "1.0.0",
+  "description": "Remotion promo animations for Shipping Savior (media producer)",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio",
+    "render:sting": "remotion render LogoSting out/logo-sting.mp4",
+    "render:teaser": "remotion render SocialTeaser out/social-teaser.mp4",
+    "render:demo": "remotion render SquareDemo out/square-demo.mp4",
+    "render:hero": "remotion render HeroLoop out/hero-loop.mp4",
+    "render:all": "npm run render:sting && npm run render:teaser && npm run render:demo && npm run render:hero"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.290",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "remotion": "4.0.290"
+  },
+  "devDependencies": {
+    "@types/react": "19.0.0",
+    "typescript": "5.6.3"
+  }
+}
