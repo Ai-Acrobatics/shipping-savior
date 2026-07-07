@@ -6,13 +6,14 @@ import { usePathname } from "next/navigation";
 import {
   Ship, LayoutDashboard, MapPin, BarChart3, PiggyBank,
   Bell, Activity, ChevronLeft, ChevronRight, RefreshCw,
-  Menu, X, Settings, Monitor, TrendingUp, Database,
+  Menu, X, Settings, Monitor, TrendingUp, Database, Truck,
 } from "lucide-react";
 import { notifications as notifData } from "@/lib/data/dashboard";
 
 const sidebarLinks = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Tracking", href: "/dashboard/tracking", icon: MapPin },
+  { label: "Cross-Dock", href: "/dashboard/cross-dock", icon: Truck },
   { label: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
   { label: "Monitoring", href: "/dashboard/monitoring", icon: Monitor },
   { label: "Data Pipeline", href: "/dashboard/data-pipeline", icon: Database },

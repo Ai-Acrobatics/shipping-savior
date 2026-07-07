@@ -197,6 +197,7 @@ export const organizationsRelations = relations(organizations, ({ many }) => ({
   invites: many(invites),
   contracts: many(contracts),
   shipments: many(shipments),
+  crossDockAppointments: many(crossDockAppointments),
 }));
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -493,3 +494,74 @@ export type ShipmentStatus = (typeof shipmentStatusEnum.enumValues)[number];
 export type ShipmentSource = (typeof shipmentSourceEnum.enumValues)[number];
 export type BolDocument = typeof bolDocuments.$inferSelect;
 export type NewBolDocument = typeof bolDocuments.$inferInsert;
+
+// ── Cross-Dock Appointment Enums ──────────────────────
+
+export const crossDockLocationEnum = pgEnum('cross_dock_location', [
+  'port_hueneme',
+  'anacapa',
+  'kingsco',
+]);
+
+export const appointmentStatusEnum = pgEnum('appointment_status', [
+  'scheduled',
+  'checked_in',
+  'in_progress',
+  'completed',
+  'cancelled',
+  'no_show',
+]);
+
+// ── Cross-Dock Appointments ────────────────────────────
+//
+// Calendar/lane view of cross-dock appointments at Port Hueneme,
+// ANACAPA, and KINGSCO facilities. The Hall Pass / Wainimi business
+// happens at cross-dock — this is the scheduling layer.
+
+export const crossDockAppointments = pgTable('cross_dock_appointments', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  orgId: uuid('org_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  location: crossDockLocationEnum('location').notNull(),
+  appointmentDate: timestamp('appointment_date', { withTimezone: true }).notNull(),
+  timeSlot: varchar('time_slot', { length: 50 }).notNull(),  // e.g. '08:00-10:00'
+  carrier: varchar('carrier', { length: 100 }).notNull(),
+  vesselName: varchar('vessel_name', { length: 200 }),
+  voyageNumber: varchar('voyage_number', { length: 100 }),
+  containerCount: integer('container_count').default(1),
+  containerNumbers: jsonb('container_numbers').$type<string[]>(),  // array of container IDs
+  reference: varchar('reference', { length: 100 }),  // booking/order ref
+  status: appointmentStatusEnum('status').notNull().default('scheduled'),
+  notes: text('notes'),
+  shipmentId: uuid('shipment_id').references(() => shipments.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+// ── Cross-Dock Relations ───────────────────────────────
+
+export const crossDockAppointmentsRelations = relations(crossDockAppointments, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [crossDockAppointments.orgId],
+    references: [organizations.id],
+  }),
+  user: one(users, {
+    fields: [crossDockAppointments.userId],
+    references: [users.id],
+  }),
+  shipment: one(shipments, {
+    fields: [crossDockAppointments.shipmentId],
+    references: [shipments.id],
+  }),
+}));
+
+// ── Cross-Dock Type Exports ────────────────────────────
+
+export type CrossDockAppointment = typeof crossDockAppointments.$inferSelect;
+export type NewCrossDockAppointment = typeof crossDockAppointments.$inferInsert;
+export type CrossDockLocation = (typeof crossDockLocationEnum.enumValues)[number];
+export type AppointmentStatus = (typeof appointmentStatusEnum.enumValues)[number];

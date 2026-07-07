@@ -29,6 +29,13 @@
       "when": 1777788397264,
       "tag": "0003_add_is_demo_to_organizations",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777795200000,
+      "tag": "0004_cross_dock_appointments",
+      "breakpoints": true
     }
   ]
 }
