@@ -353,6 +353,10 @@ export const shipments = pgTable('shipments', {
   source: shipmentSourceEnum('source').notNull().default('manual'),
   rawBolText: text('raw_bol_text'),
   bolDocumentId: uuid('bol_document_id'),
+  // ── AES Filing (AI-12006) ──
+  aesStatus: varchar('aes_status', { length: 20 }).default('tbd'),
+  aesNumber: varchar('aes_number', { length: 50 }),
+  aceDeepLink: text('ace_deep_link'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });

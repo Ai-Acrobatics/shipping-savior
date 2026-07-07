@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import Link from "next/link";
 import {
   Package,
   Upload,
@@ -72,6 +73,9 @@ interface Shipment {
   source: "manual" | "bol_ocr";
   bolBlobUrl?: string | null;
   bolFileName?: string | null;
+  aesStatus?: string | null;
+  aesNumber?: string | null;
+  aceDeepLink?: string | null;
   createdAt: string;
 }
 
@@ -91,6 +95,35 @@ function statusBadge(status: Shipment["status"]) {
       {label}
     </span>
   );
+}
+
+// AES filing status badge (AI-12006)
+function aesBadge(aesStatus: string | null | undefined) {
+  if (!aesStatus || aesStatus === "tbd") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-700">
+        <Clock className="h-3 w-3" />
+        TBD
+      </span>
+    );
+  }
+  if (aesStatus === "filed") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border border-sky-200 bg-sky-50 px-2 py-0.5 text-xs font-semibold text-sky-700">
+        <FileText className="h-3 w-3" />
+        Filed
+      </span>
+    );
+  }
+  if (aesStatus === "accepted") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+        <CheckCircle2 className="h-3 w-3" />
+        Accepted
+      </span>
+    );
+  }
+  return null;
 }
 
 function formatDate(d: string | null | undefined): string {
@@ -742,6 +775,7 @@ export default function ShipmentsPage() {
                   <th className="px-4 py-3">Vessel</th>
                   <th className="px-4 py-3">ETA</th>
                   <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">AES</th>
                   <th className="px-4 py-3">Source</th>
                   <th className="px-4 py-3">BOL</th>
                 </tr>
@@ -750,9 +784,12 @@ export default function ShipmentsPage() {
                 {shipmentsList.map((s) => (
                   <tr key={s.id} className="border-b border-navy-100 last:border-0 hover:bg-navy-50/30 transition-colors">
                     <td className="px-4 py-3">
-                      <span className="font-mono text-xs font-semibold text-navy-800">
+                      <Link
+                        href={`/platform/shipments/${s.id}`}
+                        className="font-mono text-xs font-semibold text-ocean-600 hover:text-ocean-800 hover:underline"
+                      >
                         {s.containerNumber || "--"}
-                      </span>
+                      </Link>
                     </td>
                     <td className="px-4 py-3">
                       {s.pol || s.pod ? (
@@ -770,6 +807,7 @@ export default function ShipmentsPage() {
                     <td className="px-4 py-3 text-navy-600">{s.vesselName || "--"}</td>
                     <td className="px-4 py-3 text-navy-600">{formatDate(s.eta)}</td>
                     <td className="px-4 py-3">{statusBadge(s.status)}</td>
+                    <td className="px-4 py-3">{aesBadge(s.aesStatus)}</td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                         s.source === "bol_ocr"

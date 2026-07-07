@@ -29,6 +29,9 @@ export async function GET() {
         bolDocumentId: shipments.bolDocumentId,
         bolBlobUrl: bolDocuments.blobUrl,
         bolFileName: bolDocuments.fileName,
+        aesStatus: shipments.aesStatus,
+        aesNumber: shipments.aesNumber,
+        aceDeepLink: shipments.aceDeepLink,
         createdAt: shipments.createdAt,
         updatedAt: shipments.updatedAt,
       })
