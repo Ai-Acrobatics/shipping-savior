@@ -16,6 +16,7 @@ import {
   MapPin,
   ChevronDown,
   FileText,
+  Download,
 } from "lucide-react";
 import HelpHint from "@/components/ui/HelpHint";
 
@@ -167,7 +168,29 @@ export default function ShipmentsPage() {
     status: "in_transit" as Shipment["status"],
   });
 
+  const [exporting, setExporting] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const handleExportCSV = async () => {
+    setExporting(true);
+    try {
+      const res = await fetch("/api/shipments/export?format=csv");
+      if (!res.ok) throw new Error("Export failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `shipping-savior-load-board-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Export failed");
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const fetchShipments = useCallback(async (offset = 0) => {
     if (offset > 0) setLoadingMore(true);
@@ -358,6 +381,20 @@ export default function ShipmentsPage() {
             <Upload className="h-4 w-4" />
             Upload Bill of Lading
           </button>
+          {shipmentsList.length > 0 && (
+            <button
+              onClick={handleExportCSV}
+              disabled={exporting}
+              className="inline-flex items-center gap-2 rounded-xl border border-navy-200 bg-white px-4 py-2.5 text-sm font-semibold text-navy-700 shadow-sm transition-colors hover:border-ocean-400 hover:text-ocean-600 disabled:opacity-50"
+            >
+              {exporting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              Export CSV
+            </button>
+          )}
         </div>
       </div>
 
