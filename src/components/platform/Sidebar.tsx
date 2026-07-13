@@ -22,13 +22,11 @@ import {
   BookOpen,
   Compass,
   Map,
-  Activity,
   Bell,
   LayoutDashboard,
   LayoutGrid,
   Upload,
   Settings as SettingsIcon,
-  Sparkles,
   CreditCard,
 } from "lucide-react";
 import UserMenu from "./UserMenu";
@@ -72,23 +70,24 @@ const navSections: NavSection[] = [
         ],
       },
       { label: "Knowledge Base", href: "/knowledge-base", icon: BookOpen },
-      { label: "Onboarding", href: "/platform/settings", icon: Sparkles },
     ],
   },
   {
     title: "Find",
     items: [
+      // AI-12732: "Carrier Reliability" was a duplicate link to the same page —
+      // both items lit up together. One entry until reliability gets its own route.
       { label: "Carrier Discovery", href: "/carrier-comparison", icon: Compass },
-      { label: "Carrier Reliability", href: "/carrier-comparison", icon: Activity },
       { label: "Routes", href: "/routes", icon: Map },
     ],
   },
   {
     title: "Price",
     items: [
+      // AI-12732: dropped the duplicate "Landed Cost Calculator" entry — it
+      // already lives under Plan → Calculators.
       { label: "Contracts", href: "/platform/contracts", icon: FileText },
       { label: "Tariff Alerts", href: "/platform/contracts", icon: Bell },
-      { label: "Landed Cost Calculator", href: "/platform/calculators/landed-cost", icon: DollarSign },
     ],
   },
   {
