@@ -2,10 +2,10 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from "react";
+import { count, desc, eq, and } from "drizzle-orm";
 import {
   Calculator,
   DollarSign,
-  MapPin,
   Users,
   ArrowRight,
   BarChart3,
@@ -13,21 +13,21 @@ import {
   Scale,
   Box,
   FileText,
+  Ship,
+  ScanLine,
+  Clock,
 } from "lucide-react";
+import { db } from "@/lib/db";
+import { calculations, orgMembers, shipments } from "@/lib/db/schema";
+import { CALCULATOR_TYPE_LABELS } from "@/lib/types/calculations";
+import type { CalculatorType } from "@/lib/types/calculations";
 import TariffAlertCard from "@/components/platform/TariffAlertCard";
 import OnboardingWizard from "@/components/platform/OnboardingWizard";
 import HelpHint from "@/components/ui/HelpHint";
 import ScenarioBanner from "@/components/demo/ScenarioBanner";
 import CommandSearch from "@/components/platform/CommandSearch";
-
-// AI-8729: KPI cards now carry a trend delta vs. last month.
-// Mock values flagged with mock=true so the data layer can swap them in.
-const stats = [
-  { label: "Total Calculations", value: "0", icon: Calculator, color: "ocean", delta: "+0%", deltaPositive: true, mock: true },
-  { label: "Savings Identified", value: "$0", icon: DollarSign, color: "cargo", delta: "+0%", deltaPositive: true, mock: true },
-  { label: "Active Routes", value: "0", icon: MapPin, color: "indigo", delta: "+0%", deltaPositive: true, mock: true },
-  { label: "Team Members", value: "1", icon: Users, color: "ocean", delta: "+1 this mo.", deltaPositive: true, mock: true },
-];
+import StatCard from "@/components/ui/stat-card";
+import EmptyState from "@/components/ui/empty-state";
 
 const quickActions = [
   { label: "Landed Cost", href: "/platform/calculators/landed-cost", icon: DollarSign },
@@ -38,17 +38,80 @@ const quickActions = [
   { label: "Tariff Scenario", href: "/platform/calculators/tariff-scenario", icon: FileText },
 ];
 
-const iconColors: Record<string, string> = {
-  ocean: "from-ocean-500 to-ocean-700",
-  cargo: "from-cargo-500 to-cargo-700",
-  indigo: "from-indigo-500 to-indigo-700",
-};
+function relativeTime(date: Date): string {
+  const diffMs = Date.now() - date.getTime();
+  const mins = Math.floor(diffMs / 60_000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
 
 export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
   const userName = session.user.name?.split(" ")[0] ?? "there";
+  const orgId = session.user.orgId;
+
+  // Real org-scoped counts (AI-12732 — replaced the hardcoded mock zeros).
+  const [calcCount, shipmentCount, activeShipments, memberCount, recentCalcs] =
+    orgId
+      ? await Promise.all([
+          db.select({ n: count() }).from(calculations).where(eq(calculations.orgId, orgId)),
+          db.select({ n: count() }).from(shipments).where(eq(shipments.orgId, orgId)),
+          db
+            .select({ n: count() })
+            .from(shipments)
+            .where(and(eq(shipments.orgId, orgId), eq(shipments.status, "in_transit"))),
+          db.select({ n: count() }).from(orgMembers).where(eq(orgMembers.orgId, orgId)),
+          db
+            .select({
+              id: calculations.id,
+              name: calculations.name,
+              calculatorType: calculations.calculatorType,
+              createdAt: calculations.createdAt,
+            })
+            .from(calculations)
+            .where(eq(calculations.orgId, orgId))
+            .orderBy(desc(calculations.createdAt))
+            .limit(5),
+        ])
+      : [[{ n: 0 }], [{ n: 0 }], [{ n: 0 }], [{ n: 0 }], []];
+
+  const stats = [
+    {
+      label: "Saved Calculations",
+      value: calcCount[0]?.n ?? 0,
+      icon: Calculator,
+      tone: "ocean" as const,
+      footer: { label: "View history", href: "/platform/history" },
+    },
+    {
+      label: "Shipments Tracked",
+      value: shipmentCount[0]?.n ?? 0,
+      icon: Ship,
+      tone: "ocean" as const,
+      footer: { label: "Open tracker", href: "/platform/shipments" },
+    },
+    {
+      label: "In Transit",
+      value: activeShipments[0]?.n ?? 0,
+      icon: Clock,
+      tone: "amber" as const,
+      footer: { label: "Load board", href: "/platform/load-board" },
+    },
+    {
+      label: "Team Members",
+      value: memberCount[0]?.n ?? 0,
+      icon: Users,
+      tone: "default" as const,
+      footer: { label: "Manage team", href: "/platform/settings/members" },
+    },
+  ];
 
   return (
     <div className="space-y-8">
@@ -87,49 +150,26 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {/* Stat Cards */}
+      {/* Stat Cards — real counts */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <div
-              key={stat.label}
-              className="bg-white border border-navy-200 rounded-xl p-5 shadow-soft hover:shadow-card transition-shadow"
-              data-trend-mock={stat.mock ? "true" : undefined}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-navy-500">{stat.label}</p>
-                  <p className="text-2xl font-bold text-navy-900 mt-1">
-                    {stat.value}
-                  </p>
-                </div>
-                <div
-                  className={`w-10 h-10 rounded-lg bg-gradient-to-br ${
-                    iconColors[stat.color]
-                  } flex items-center justify-center`}
-                >
-                  <Icon className="w-5 h-5 text-white" />
-                </div>
-              </div>
-              <p
-                className={`mt-2 text-xs font-medium ${
-                  stat.deltaPositive ? "text-emerald-600" : "text-red-600"
-                }`}
-              >
-                {stat.delta} vs last month
-              </p>
-            </div>
-          );
-        })}
+        {stats.map((stat) => (
+          <StatCard key={stat.label} {...stat} />
+        ))}
       </div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions — scan-first (Blake: "just scan your bill of lading") */}
       <div>
-        <h2 className="text-lg font-semibold text-navy-900 mb-4">
-          Quick Actions
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <h2 className="text-lg font-semibold text-navy-900 mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+          <Link
+            href="/platform/shipments?scan=1"
+            className="flex flex-col items-center gap-2 rounded-xl bg-ocean-600 p-4 text-white shadow-sm transition-all hover:bg-ocean-700 hover:shadow-card group"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/15 transition-colors group-hover:bg-white/25">
+              <ScanLine className="h-5 w-5" />
+            </div>
+            <span className="text-center text-xs font-semibold">Scan a BOL</span>
+          </Link>
           {quickActions.map((action) => {
             const Icon = action.icon;
             return (
@@ -155,25 +195,45 @@ export default async function DashboardPage() {
         <TariffAlertCard />
       </div>
 
-      {/* Recent Activity */}
+      {/* Recent Activity — real latest calculations */}
       <div>
-        <h2 className="text-lg font-semibold text-navy-900 mb-4">
-          Recent Activity
-        </h2>
-        <div className="bg-white border border-navy-200 rounded-xl p-8 text-center">
-          <Calculator className="w-12 h-12 text-navy-300 mx-auto mb-3" />
-          <p className="text-navy-500 font-medium">No calculations yet</p>
-          <p className="text-navy-400 text-sm mt-1">
-            Try a calculator to get started.
-          </p>
-          <Link
-            href="/platform/calculators"
-            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-gradient-to-r from-ocean-600 to-indigo-500 text-white text-sm font-medium rounded-lg hover:from-ocean-700 hover:to-indigo-600 transition-all"
-          >
-            Open Calculators
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
+        <h2 className="text-lg font-semibold text-navy-900 mb-4">Recent Activity</h2>
+        {recentCalcs.length === 0 ? (
+          <div className="bg-white border border-navy-200 rounded-xl">
+            <EmptyState
+              title="No calculations yet"
+              description="Run any calculator and save the result — your recent work will show up here."
+              action={{ label: "Open Calculators", href: "/platform/calculators" }}
+            />
+          </div>
+        ) : (
+          <div className="bg-white border border-navy-200 rounded-xl divide-y divide-navy-100 overflow-hidden">
+            {recentCalcs.map((c) => (
+              <Link
+                key={c.id}
+                href="/platform/history"
+                className="flex items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-navy-50"
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ocean-50">
+                    <Calculator className="h-4 w-4 text-ocean-600" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-navy-900">{c.name}</p>
+                    <p className="text-xs text-navy-400">
+                      {CALCULATOR_TYPE_LABELS[c.calculatorType as CalculatorType] ??
+                        c.calculatorType}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex shrink-0 items-center gap-2 text-xs text-navy-400">
+                  {relativeTime(c.createdAt)}
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

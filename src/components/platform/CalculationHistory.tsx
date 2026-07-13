@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight, Trash2, Pencil, Check, X, Clock } from "lucide-react";
+import { ArrowUpRight, Trash2, Pencil, Check, X } from "lucide-react";
+import EmptyState from "@/components/ui/empty-state";
 import type { SavedCalculation, CalculatorType } from "@/lib/types/calculations";
 import {
   CALCULATOR_TYPE_LABELS,
@@ -102,16 +103,12 @@ export default function CalculationHistory({
   // Empty state
   if (calculations.length === 0) {
     return (
-      <div className="bg-white border border-navy-200 rounded-xl p-12 text-center">
-        <div className="w-16 h-16 rounded-full bg-navy-100 flex items-center justify-center mx-auto mb-4">
-          <Clock className="w-8 h-8 text-navy-400" />
-        </div>
-        <h3 className="text-lg font-semibold text-navy-900 mb-2">
-          No saved calculations yet
-        </h3>
-        <p className="text-navy-500 text-sm max-w-md mx-auto">
-          Use any calculator and click Save to store your results here.
-        </p>
+      <div className="bg-white border border-navy-200 rounded-xl">
+        <EmptyState
+          title="No saved calculations yet"
+          description="Run any calculator and click Save — your saved work lands here, ready to reload or share."
+          action={{ label: "Open Calculators", href: "/platform/calculators" }}
+        />
       </div>
     );
   }

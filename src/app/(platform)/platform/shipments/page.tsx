@@ -14,11 +14,14 @@ import {
   Clock,
   Ship,
   MapPin,
-  ChevronDown,
   FileText,
   Download,
+  ArrowRight,
 } from "lucide-react";
 import HelpHint from "@/components/ui/HelpHint";
+import StatCard from "@/components/ui/stat-card";
+import EmptyState from "@/components/ui/empty-state";
+import Select from "@/components/ui/select";
 
 // ── Types ──────────────────────────────────────────────
 
@@ -137,6 +140,9 @@ export default function ShipmentsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  // Bridge from "saved" to the shipment profile (AI-12732) — the scan flow
+  // should end on the shipment, not on a toast.
+  const [lastSavedId, setLastSavedId] = useState<string | null>(null);
 
   // Upload state
   const [uploadMode, setUploadMode] = useState(false);
@@ -212,6 +218,14 @@ export default function ShipmentsPage() {
   useEffect(() => {
     fetchShipments();
   }, [fetchShipments]);
+
+  // Deep link from the dashboard "Scan a BOL" quick action (AI-12732).
+  // window.location instead of useSearchParams — no Suspense boundary needed.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("scan") === "1") {
+      setUploadMode(true);
+    }
+  }, []);
 
   // Populate form from extracted BOL
   useEffect(() => {
@@ -307,12 +321,13 @@ export default function ShipmentsPage() {
         }),
       });
 
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         throw new Error(data.error || "Failed to save");
       }
 
-      setSuccess("Shipment saved successfully");
+      setSuccess("Shipment saved");
+      setLastSavedId(data.shipment?.id ?? null);
       setUploadMode(false);
       setExtracted(null);
       setConfidence(null);
@@ -337,7 +352,10 @@ export default function ShipmentsPage() {
         status: "in_transit",
       });
       fetchShipments();
-      setTimeout(() => setSuccess(null), 4000);
+      setTimeout(() => {
+        setSuccess(null);
+        setLastSavedId(null);
+      }, 8000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save");
     } finally {
@@ -409,31 +427,26 @@ export default function ShipmentsPage() {
       )}
       {success && (
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 flex items-center gap-2">
-          <CheckCircle2 className="h-4 w-4" />
-          {success}
+          <CheckCircle2 className="h-4 w-4 shrink-0" />
+          <span>{success}</span>
+          {lastSavedId && (
+            <Link
+              href={`/platform/shipments/${lastSavedId}`}
+              className="ml-auto inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1 text-xs font-semibold text-white transition-colors hover:bg-emerald-700"
+            >
+              View shipment
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          )}
         </div>
       )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {[
-          { label: "Total Shipments", value: totalShipments || shipmentsList.length, icon: Package, color: "text-ocean-600" },
-          { label: "In Transit", value: inTransit, icon: Ship, color: "text-sky-600" },
-          { label: "Arrived", value: arrived, icon: CheckCircle2, color: "text-emerald-600" },
-          { label: "Delayed", value: delayed, icon: AlertTriangle, color: delayed > 0 ? "text-red-600" : "text-navy-400" },
-        ].map((s) => (
-          <div key={s.label} className="card rounded-2xl p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-navy-50">
-                <s.icon className={`h-5 w-5 ${s.color}`} />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-navy-900">{s.value}</p>
-                <p className="text-xs text-navy-500">{s.label}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+        <StatCard label="Total Shipments" value={totalShipments || shipmentsList.length} icon={Package} tone="ocean" />
+        <StatCard label="In Transit" value={inTransit} icon={Ship} tone="ocean" />
+        <StatCard label="Arrived" value={arrived} icon={CheckCircle2} tone="emerald" />
+        <StatCard label="Delayed" value={delayed} icon={AlertTriangle} tone={delayed > 0 ? "red" : "default"} />
       </div>
 
       {/* Upload Zone + Review Form */}
@@ -713,19 +726,15 @@ export default function ShipmentsPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-navy-600 mb-1">Status</label>
-                  <div className="relative">
-                    <select
-                      className="input-light appearance-none pr-8"
-                      value={form.status}
-                      onChange={(e) => setForm({ ...form, status: e.target.value as Shipment["status"] })}
-                    >
-                      <option value="in_transit">In Transit</option>
-                      <option value="arrived">Arrived</option>
-                      <option value="delayed">Delayed</option>
-                      <option value="pending">Pending</option>
-                    </select>
-                    <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-400" />
-                  </div>
+                  <Select
+                    value={form.status}
+                    onChange={(e) => setForm({ ...form, status: e.target.value as Shipment["status"] })}
+                  >
+                    <option value="in_transit">In Transit</option>
+                    <option value="arrived">Arrived</option>
+                    <option value="delayed">Delayed</option>
+                    <option value="pending">Pending</option>
+                  </Select>
                 </div>
               </div>
 
@@ -771,19 +780,13 @@ export default function ShipmentsPage() {
           <Loader2 className="h-8 w-8 animate-spin text-ocean-500" />
         </div>
       ) : shipmentsList.length === 0 ? (
-        <div className="card rounded-2xl p-12 text-center">
-          <Package className="mx-auto h-12 w-12 text-navy-300" />
-          <h3 className="mt-4 text-lg font-semibold text-navy-900">No shipments yet</h3>
-          <p className="mt-1 text-sm text-navy-500">
-            Upload your first Bill of Lading to start tracking your containers
-          </p>
-          <button
-            onClick={() => setUploadMode(true)}
-            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-ocean-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-ocean-600"
-          >
-            <Upload className="h-4 w-4" />
-            Upload Bill of Lading
-          </button>
+        <div className="card rounded-2xl">
+          <EmptyState
+            title="No shipments yet"
+            description="Scan or upload your first Bill of Lading — we'll extract the details and start tracking the container for you."
+            action={{ label: "Upload Bill of Lading", onClick: () => setUploadMode(true) }}
+            secondary={{ label: "Or import a weekly workbook", href: "/platform/shipments/import" }}
+          />
         </div>
       ) : (
         <div className="card rounded-2xl overflow-hidden">

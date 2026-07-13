@@ -69,13 +69,16 @@ export default function InlineNameEditor({
               : "border-navy-200 bg-navy-50 text-navy-600"
           }`}
         />
+        {/* AI-12732: explicit labeled buttons — the bare pencil icon tested
+            as invisible; Clerk-style "Edit / Save / Cancel" reads instantly. */}
         {canEdit && !editing && (
           <button
             onClick={() => setEditing(true)}
-            className="shrink-0 p-2 rounded-lg text-navy-500 hover:text-ocean-600 hover:bg-navy-100 transition-colors"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-navy-200 px-3 py-2 text-xs font-semibold text-navy-600 transition-colors hover:border-ocean-400 hover:text-ocean-600"
             aria-label={`Edit ${label}`}
           >
-            <Pencil className="w-4 h-4" />
+            <Pencil className="w-3.5 h-3.5" />
+            Edit
           </button>
         )}
         {editing && (
@@ -83,10 +86,11 @@ export default function InlineNameEditor({
             <button
               onClick={save}
               disabled={saving}
-              className="shrink-0 p-2 rounded-lg text-white bg-ocean-600 hover:bg-ocean-500 disabled:opacity-50 transition-colors"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-ocean-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-ocean-500 disabled:opacity-50"
               aria-label="Save"
             >
-              <Check className="w-4 h-4" />
+              <Check className="w-3.5 h-3.5" />
+              Save
             </button>
             <button
               onClick={() => {
@@ -94,10 +98,11 @@ export default function InlineNameEditor({
                 setEditing(false);
                 setError(null);
               }}
-              className="shrink-0 p-2 rounded-lg text-navy-500 hover:bg-navy-100 transition-colors"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-navy-500 transition-colors hover:bg-navy-100"
               aria-label="Cancel"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
+              Cancel
             </button>
           </>
         )}
