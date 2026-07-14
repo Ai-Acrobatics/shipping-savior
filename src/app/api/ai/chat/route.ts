@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { classifyAiError, logAiError } from '@/lib/ai/errors';
+import { runChatWithFallback } from '@/lib/ai/chat-providers';
 import * as fs from 'fs';
 import * as path from 'path';
 import Fuse from 'fuse.js';
@@ -565,11 +566,16 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Check API key
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
+  // AI-12777: at least one chat provider key must exist; the fallback chain
+  // in chat-providers.ts picks whichever is funded at runtime.
+  if (
+    !process.env.OPENROUTER_API_KEY &&
+    !process.env.GEMINI_API_KEY &&
+    !process.env.ANTHROPIC_API_KEY &&
+    !process.env.KIMI_API_KEY
+  ) {
     return new Response(
-      JSON.stringify({ error: 'Chat unavailable — API key not configured.' }),
+      JSON.stringify({ error: 'Chat unavailable — no AI provider configured.' }),
       { status: 503, headers: { 'Content-Type': 'application/json' } }
     );
   }
@@ -591,114 +597,56 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const client = new Anthropic({ apiKey });
-
-  // Build the messages for Claude
-  const claudeMessages: Anthropic.MessageParam[] = body.messages.map(m => ({
-    role: m.role as 'user' | 'assistant',
-    content: m.content,
-  }));
-
   try {
-    // Tool-use loop: keep calling Claude until we get a final text response
-    let currentMessages = [...claudeMessages];
-    const toolSteps: Array<{ tool: string; input: any; result: any }> = [];
-    let maxIterations = 5;
+    // AI-12777: provider-fallback tool loop (openrouter → gemini → claude → kimi)
+    const { text: textContent, toolSteps } = await runChatWithFallback({
+      system: SYSTEM_PROMPT,
+      messages: body.messages.map(m => ({
+        role: m.role as 'user' | 'assistant',
+        content: m.content,
+      })),
+      tools,
+      executeTool,
+      maxIterations: 5,
+      maxTokens: 2048,
+    });
 
-    while (maxIterations > 0) {
-      maxIterations--;
-
-      const response = await client.messages.create({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2048,
-        system: SYSTEM_PROMPT,
-        tools,
-        messages: currentMessages,
-      });
-
-      // Check if there are tool calls
-      const toolUseBlocks = response.content.filter(
-        (b): b is Anthropic.ContentBlock & { type: 'tool_use' } => b.type === 'tool_use'
-      );
-
-      if (toolUseBlocks.length === 0) {
-        // Final text response — extract text and stream it back
-        const textContent = response.content
-          .filter((b): b is Anthropic.TextBlock => b.type === 'text')
-          .map(b => b.text)
-          .join('');
-
-        // Return as SSE stream for progressive rendering
-        const encoder = new TextEncoder();
-        const stream = new ReadableStream({
-          start(controller) {
-            // First send tool steps if any
-            if (toolSteps.length > 0) {
-              controller.enqueue(
-                encoder.encode(`data: ${JSON.stringify({ type: 'tool_steps', steps: toolSteps })}\n\n`)
-              );
-            }
-
-            // Stream the text in chunks for typing effect
-            const chunkSize = 12;
-            let i = 0;
-            const sendChunk = () => {
-              if (i < textContent.length) {
-                const chunk = textContent.slice(i, i + chunkSize);
-                controller.enqueue(
-                  encoder.encode(`data: ${JSON.stringify({ type: 'text', content: chunk })}\n\n`)
-                );
-                i += chunkSize;
-                // Use setTimeout equivalent via recursive queueing
-                sendChunk();
-              } else {
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`));
-                controller.close();
-              }
-            };
+    // Return as SSE stream for progressive rendering (same shape as before)
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      start(controller) {
+        if (toolSteps.length > 0) {
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify({ type: 'tool_steps', steps: toolSteps })}\n\n`)
+          );
+        }
+        const chunkSize = 12;
+        let i = 0;
+        const sendChunk = () => {
+          if (i < textContent.length) {
+            const chunk = textContent.slice(i, i + chunkSize);
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify({ type: 'text', content: chunk })}\n\n`)
+            );
+            i += chunkSize;
             sendChunk();
-          },
-        });
+          } else {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`));
+            controller.close();
+          }
+        };
+        sendChunk();
+      },
+    });
 
-        return new Response(stream, {
-          headers: {
-            'Content-Type': 'text/event-stream',
-            'Cache-Control': 'no-cache',
-            Connection: 'keep-alive',
-          },
-        });
-      }
-
-      // Execute tool calls
-      const toolResults: Anthropic.ToolResultBlockParam[] = [];
-      for (const toolBlock of toolUseBlocks) {
-        const result = executeTool(toolBlock.name, toolBlock.input as Record<string, any>);
-        toolSteps.push({
-          tool: toolBlock.name,
-          input: toolBlock.input,
-          result,
-        });
-        toolResults.push({
-          type: 'tool_result',
-          tool_use_id: toolBlock.id,
-          content: JSON.stringify(result),
-        });
-      }
-
-      // Add assistant response and tool results to messages
-      currentMessages = [
-        ...currentMessages,
-        { role: 'assistant' as const, content: response.content },
-        { role: 'user' as const, content: toolResults },
-      ];
-    }
-
-    // If we exhausted iterations, return what we have
-    return new Response(
-      JSON.stringify({ error: 'Too many tool iterations' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
-  } catch (err: unknown) {
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive',
+      },
+    });
+  } catch (err: unknown) {  } catch (err: unknown) {
     // AI-8506: surface a user-safe message for billing/credit/rate-limit
     // failures instead of the raw Anthropic SDK error.
     const classified = classifyAiError(err);

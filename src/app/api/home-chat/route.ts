@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
 import { classifyAiError, logAiError } from "@/lib/ai/errors";
+import { runChatWithFallback } from "@/lib/ai/chat-providers";
 
 /**
  * /api/home-chat — Public homepage chat endpoint.
@@ -31,9 +31,6 @@ function checkRateLimit(ip: string): boolean {
 // ─── System prompt (per AI-8775 spec) ───────────────────────────────────────
 const SYSTEM_PROMPT = `You are the Shipping Savior AI assistant. Help users with international shipping questions: carrier selection, FTZ savings, landed cost estimation, BOL extraction, route optimization. Keep replies under 3 sentences. If they ask about pricing/signup, guide to /pricing.`;
 
-// ─── Model selection (spec: claude-haiku-4-5-20251001 for cost) ─────────────
-const MODEL = "claude-haiku-4-5-20251001";
-
 interface HomeChatBody {
   message?: string;
   messages?: Array<{ role: "user" | "assistant"; content: string }>;
@@ -53,11 +50,15 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Require API key
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
+  // AI-12777: any funded provider key will do — the fallback chain picks it.
+  if (
+    !process.env.OPENROUTER_API_KEY &&
+    !process.env.GEMINI_API_KEY &&
+    !process.env.ANTHROPIC_API_KEY &&
+    !process.env.KIMI_API_KEY
+  ) {
     return new Response(
-      JSON.stringify({ error: "Chat unavailable - API key not configured." }),
+      JSON.stringify({ error: "Chat unavailable - no AI provider configured." }),
       { status: 503, headers: { "Content-Type": "application/json" } }
     );
   }
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let messages: Anthropic.MessageParam[];
+  let messages: Array<{ role: "user" | "assistant"; content: string }>;
 
   if (Array.isArray(body.messages) && body.messages.length > 0) {
     messages = body.messages
@@ -95,31 +96,28 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const client = new Anthropic({ apiKey });
-
-  // Stream response back as SSE so the chat UI can render progressively
+  // Stream response back as SSE so the chat UI can render progressively.
+  // AI-12777: replies come from the provider-fallback chain (no tools here —
+  // the homepage chat is intentionally minimal); chunked for the typing effect.
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
       try {
-        const response = await client.messages.stream({
-          model: MODEL,
-          max_tokens: 512,
+        const { text } = await runChatWithFallback({
           system: SYSTEM_PROMPT,
           messages,
+          tools: [],
+          executeTool: () => ({}),
+          maxTokens: 512,
         });
 
-        for await (const event of response) {
-          if (
-            event.type === "content_block_delta" &&
-            event.delta.type === "text_delta"
-          ) {
-            controller.enqueue(
-              encoder.encode(
-                `data: ${JSON.stringify({ type: "text", content: event.delta.text })}\n\n`
-              )
-            );
-          }
+        const chunkSize = 16;
+        for (let i = 0; i < text.length; i += chunkSize) {
+          controller.enqueue(
+            encoder.encode(
+              `data: ${JSON.stringify({ type: "text", content: text.slice(i, i + chunkSize) })}\n\n`
+            )
+          );
         }
 
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "done" })}\n\n`));
