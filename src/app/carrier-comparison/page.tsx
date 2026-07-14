@@ -453,7 +453,7 @@ export default function CarrierComparisonPage() {
                       onFocus={() => setShowOriginDropdown(true)}
                       onBlur={() => setTimeout(() => setShowOriginDropdown(false), 200)}
                       placeholder="Search ports..."
-                      className="input-light pl-10"
+                      className="input-light !pl-10"
                     />
                   </div>
                   {showOriginDropdown && originResults.length > 0 && (
@@ -493,7 +493,7 @@ export default function CarrierComparisonPage() {
                       onFocus={() => setShowDestDropdown(true)}
                       onBlur={() => setTimeout(() => setShowDestDropdown(false), 200)}
                       placeholder="Search ports..."
-                      className="input-light pl-10"
+                      className="input-light !pl-10"
                     />
                   </div>
                   {showDestDropdown && destResults.length > 0 && (
