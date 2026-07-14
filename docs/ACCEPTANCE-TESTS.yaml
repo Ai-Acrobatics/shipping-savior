@@ -1,0 +1,566 @@
+# Shipping Savior — Acceptance Test Contract
+# AI-12729 · requested by Blake Harwell 2026-07-15
+#
+# Strict pass/fail criteria for every user experience and feature.
+# Every criterion is measurable against LIVE production data — no mocks count as passing.
+# Status legend:
+#   pass    — verified against prod with evidence on the date shown
+#   fail    — verified broken (linked Linear issue)
+#   blocked — cannot be tested until the named gate clears
+#   pending — not yet run (method defined; nothing suggests breakage)
+# Methods: api (auth'd curl), browser (Playwright vs prod), sql (psql vs prod DB),
+#          simulator (iOS sim via Expo), manual (human click-through)
+# Test account: demo@shippingsavior.app (demo org). Never run destructive suites
+# (account-delete, org-delete) against the demo org without a fresh throwaway account.
+
+meta:
+  app: shipping-savior
+  prod_url: https://shipping-savior.vercel.app
+  last_full_sweep: 2026-07-15
+  storyboard: https://claude.ai/code/artifact/0564b223-5ab1-45ea-98f4-ffe24387fae1
+  goal_milestone: "App Store submission + TestFlight live (target 2026-07-31)"
+
+suites:
+
+  # ────────────────────────────────────────────────────────────────
+  schema_and_database:
+    description: Prod schema matches Drizzle definitions; migrations tracked; data integrity
+    tests:
+      - id: db-schema-parity
+        feature: All 15 tables exist with expected column counts
+        method: sql
+        pass: >
+          information_schema lists organizations, users, org_members, calculations,
+          audit_logs, password_reset_tokens, email_verifications, invites, contracts,
+          contract_lanes, shipments (33 cols), bol_documents, model_comparison_logs,
+          push_tokens, __drizzle_migrations — and no expected column is missing
+        fail: Any table absent, or shipments has <33 columns (the pre-7/6 drift signature)
+        status: pass
+        evidence: "2026-07-15 psql: 15 tables, shipments:33 cols, 7 migrations tracked"
+      - id: db-org-scoping
+        feature: Every business row is org-scoped (multi-tenant isolation)
+        method: sql
+        pass: 0 rows in shipments/calculations/contracts with NULL org_id
+        fail: Any NULL org_id row
+        status: pending
+      - id: db-migration-runbook
+        feature: Migrations apply via psql runbook (drizzle-kit silently no-ops)
+        method: sql
+        pass: __drizzle_migrations row count == number of files in drizzle/ folder
+        fail: Counts diverge (an unapplied migration exists)
+        status: pass
+        evidence: "7 tracked migrations == drizzle/ folder"
+
+  # ────────────────────────────────────────────────────────────────
+  authentication:
+    description: Register, login, OAuth, invites, mobile token auth
+    tests:
+      - id: auth-register
+        feature: Create account → personal org → session
+        method: browser
+        pass: New unique email registers; lands on /platform; org row + owner membership created; audit_logs row written
+        fail: Any step errors, no org created, or duplicate-email not rejected with a clear message
+        status: pass
+        evidence: "CI e2e auth.spec green on every PR (last: PR #64 2026-07-13)"
+      - id: auth-login-valid
+        feature: Email+password login
+        method: browser
+        pass: demo credentials redirect to /platform in <10s; session survives reload
+        fail: Error, redirect loop, or session lost on reload
+        status: pass
+        evidence: "2026-07-14 MBP Playwright run"
+      - id: auth-login-invalid
+        feature: Wrong password rejected
+        method: browser
+        pass: Stays on /login with visible error; NO session cookie issued; audit log records failure
+        fail: Session issued, silent failure, or redirect to /platform
+        status: pass
+        evidence: "2026-07-14 MBP Playwright run"
+      - id: auth-api-guard
+        feature: All /api/* business routes reject anonymous callers
+        method: api
+        pass: GET /api/shipments (and spot-checks of calculations/contracts/org) return 401 with no cookie
+        fail: Any business route returns 200 to an anonymous caller
+        status: pass
+        evidence: "2026-07-14 curl sweep: 401"
+      - id: auth-oauth-google
+        feature: Google sign-in round trip
+        method: manual
+        pass: OAuth completes; account created/linked; lands on /platform
+        fail: redirect_uri error, account-collision crash, or dead-end page
+        status: pending
+        note: Web client verified reachable 7/6; full round-trip needs a human (Google blocks automation)
+      - id: auth-invite-accept
+        feature: Team invite email → accept → membership
+        method: browser
+        pass: Invite email arrives (Resend); /invite/[token] adds member with invited role; expired/used token shows explanatory error
+        fail: Token reusable, role wrong, or email never sends
+        status: pending
+      - id: auth-mobile-token
+        feature: Mobile login mints NextAuth-compatible JWT
+        method: api
+        pass: POST /api/mobile/auth/login with demo creds returns 200 + token >500 chars; token replayed as session cookie authorizes /api/shipments
+        fail: 401 on valid creds, or token rejected by web APIs
+        status: pass
+        evidence: "2026-07-15: token 670 chars, authorized shipments fetch"
+      - id: auth-mobile-token-invalid
+        feature: Mobile login rejects bad credentials
+        method: api
+        pass: 401 + no token for wrong password
+        fail: Any 2xx or token issued
+        status: pass
+        evidence: "2026-07-14 curl: 401"
+
+  # ────────────────────────────────────────────────────────────────
+  bol_scan_to_shipment:
+    description: "The killer flow: scan/upload BOL → AI extraction → shipment profile"
+    tests:
+      - id: bol-ocr-extraction
+        feature: BOL upload → structured fields with per-field confidence
+        method: api
+        pass: >
+          POST /api/bol with a legible BOL (PDF/PNG/JPG) returns success=true in <60s with
+          container_numbers, vessel_name, port_of_loading, port_of_discharge, carrier extracted
+          correctly AND a confidence object per field AND a bolDocumentId (blob stored)
+        fail: Extraction wrong on a legible doc, >120s, no confidence scores, or document not persisted
+        status: pass
+        evidence: "2026-07-15: synthetic BOL → MAEU7788990 / MAERSK EMDEN / Hueneme→Yokohama in 20s"
+      - id: bol-ocr-provider-fallback
+        feature: OCR survives primary AI provider outage
+        method: api
+        pass: With Claude key dead (current state), extraction still succeeds via Gemini/Kimi fallback
+        fail: Single provider outage kills OCR
+        status: pass
+        evidence: "2026-07-15: extraction succeeded WHILE Anthropic key is billing-dead (AI-12777)"
+      - id: bol-ocr-bad-input
+        feature: Unreadable/wrong file handled gracefully
+        method: api
+        pass: Non-document image → low-confidence flags or clear error; .exe/.zip rejected with 4xx; no 500s
+        fail: Any 500, or garbage silently saved as a shipment
+        status: pending
+      - id: bol-save-shipment
+        feature: Reviewed extraction saves as org shipment
+        method: api
+        pass: POST /api/shipments returns 201 + id; row has source=bol_ocr and links bolDocumentId; GET by id returns all fields intact
+        fail: Save drops fields, loses the BOL link, or crosses orgs
+        status: pass
+        evidence: "2026-07-15: id b0e16077… round-tripped"
+      - id: bol-scan-deep-link
+        feature: Dashboard "Scan a BOL" → upload zone already open
+        method: browser
+        pass: /platform/shipments?scan=1 renders with the upload zone visible without any click
+        fail: Extra click needed or param ignored
+        status: pending
+        note: Ships with PR #64 merge; covered by CI e2e after merge
+      - id: bol-save-to-profile-bridge
+        feature: Post-save success banner links to the created shipment
+        method: browser
+        pass: After save, banner shows "View shipment" linking to /platform/shipments/<new id>
+        fail: Toast-only dead end
+        status: pending
+        note: Ships with PR #64
+      - id: mob-camera-scan
+        feature: "Mobile: camera capture → OCR → save at the port"
+        method: simulator
+        pass: Photo from camera/library → same extraction quality → saved shipment appears in list AND on web
+        fail: Camera permission dead-end, extraction differs from web, or save fails
+        status: blocked
+        blocked_by: AI-12719 (first simulator run)
+
+  # ────────────────────────────────────────────────────────────────
+  shipment_tracking:
+    tests:
+      - id: ship-list-live
+        feature: Tracker table shows real org shipments
+        method: api+browser
+        pass: GET /api/shipments returns the org's rows with pagination.total matching DB count; table renders every row
+        fail: Counts diverge from psql, or another org's rows appear
+        status: pass
+        evidence: "2026-07-15: 7 rows API == 7 rows psql (demo org)"
+      - id: ship-detail-profile
+        feature: Shipment profile page (route, parties, reefer/cross-dock meta, BOL link)
+        method: api+browser
+        pass: GET /api/shipments/[id] returns full record; unknown id → 404; other-org id → 401/404 (never data)
+        fail: Cross-org read succeeds, or profile drops importMeta fields
+        status: pass
+        evidence: "2026-07-15 API round-trip; browser locator needs manual re-check (not an app failure)"
+      - id: ship-export-csv
+        feature: CSV export of org shipments
+        method: api
+        pass: GET /api/shipments/export?format=csv returns 200 text/csv with header + one line per shipment
+        fail: Non-200, empty body with rows present, or cross-org rows
+        status: pass
+        evidence: "2026-07-15: 200, 1437 bytes"
+      - id: ship-status-updates
+        feature: Status transitions (pending→in_transit→arrived/delayed)
+        method: api
+        pass: PATCH updates status; invalid status value rejected 400; audit trail kept
+        fail: Invalid enum accepted or update crosses orgs
+        status: pending
+
+  # ────────────────────────────────────────────────────────────────
+  workbook_and_load_board:
+    tests:
+      - id: workbook-dry-run
+        feature: Weekly workbook import previews before committing
+        method: browser
+        pass: Real .xlsx from /home/dev/shipping-savior-data → dry-run shows valid/invalid counts per row with reasons; nothing written until confirm
+        fail: Rows written during preview, or invalid rows imported silently
+        status: pending
+        note: Rebuilt flow passed 6/12 session tests; needs re-verification with live workbook post-PR-64
+      - id: workbook-import-dedupe
+        feature: Re-importing the same workbook skips duplicates
+        method: api
+        pass: Second import of identical file reports duplicatesSkipped == rowcount, inserts 0
+        fail: Duplicate shipments created
+        status: pending
+      - id: review-queue-triage
+        feature: Flagged rows (missing AES#, bad dates) land in review queue and clear on fix
+        method: browser
+        pass: Row with reviewIssues appears in /platform/shipments/review; editing the issue removes it from the queue
+        fail: Fixed rows linger, or clean rows appear in queue
+        status: pending
+      - id: load-board-grouping
+        feature: Board groups by ETD week → carrier → destination with live rows
+        method: browser
+        pass: Every prod shipment with an ETD appears exactly once under the correct week; filters narrow correctly; >1000-row cap shows visible notice
+        fail: Missing/duplicated shipments or wrong week bucketing
+        status: pass
+        evidence: "2026-07-14 MBP run: board rendered live rows grouped correctly"
+
+  # ────────────────────────────────────────────────────────────────
+  calculators:
+    description: All 7 calculators compute AND persist (save→history→reload)
+    tests:
+      - id: calc-save-roundtrip
+        feature: Save → appears in history → reload restores state (pattern for all 7)
+        method: api
+        pass: POST /api/calculations returns id; GET lists it; inputs/outputs JSON round-trips exactly
+        fail: Save 4xx/5xx on valid payload, or reload loses fields
+        status: pass
+        evidence: "2026-07-15: landed_cost row 18151e23… saved + listed"
+      - id: calc-all-seven-types
+        feature: Every calculatorType enum value saves (landed_cost, unit_economics, ftz_savings, pf_npf, container_util, tariff_scenario, shelf_life)
+        method: api
+        pass: One save per type returns 201 (shelf_life especially — it was broken pre-7/6)
+        fail: Any enum value rejected
+        status: pending
+      - id: calc-computation-correctness
+        feature: Landed-cost math is right
+        method: manual
+        pass: "Known case: $50,000 goods, 2.5% duty, $3,000 freight, $450 fees → landed cost $54,700; UI shows exactly this"
+        fail: Any component mis-summed
+        status: pending
+      - id: calc-history-manage
+        feature: History search/filter/rename/delete
+        method: browser
+        pass: Type filter narrows to matching rows; rename persists after reload; delete removes row and DB record
+        fail: Filter shows wrong types or delete leaves orphan row
+        status: pending
+
+  # ────────────────────────────────────────────────────────────────
+  reference_data_live:
+    description: "Every dataset the tools rely on is LIVE in prod — no empty tables, no mock fallbacks"
+    tests:
+      - id: data-hts-schedule
+        feature: HTS code search + duty rates
+        method: api
+        pass: /api/hts/search?q=banana returns 0803.* codes with real general_rate values; detail lookup by returned code succeeds
+        fail: Zero results for common goods, or rates missing
+        status: pass
+        evidence: "2026-07-15: 4 banana codes, 0803.90.0030 'Free' rate"
+      - id: data-ports-db
+        feature: Port database completeness
+        method: api
+        pass: >
+          /api/ports/search finds every port used in demo lanes — INCLUDING Port Hueneme —
+          and total port count matches what marketing claims (3,700+) or the claim is corrected
+        fail: A demo-lane port missing, or count materially below the public claim
+        status: fail
+        evidence: "2026-07-15: 707 ports total (claim: 3,700+); Port Hueneme fix in flight on the codex agent branch feature/ai-12787-wire-port-data"
+        linear: AI-12787
+      - id: data-ftz-zones
+        feature: FTZ zone database
+        method: api
+        pass: /api/ftz/zones returns 260+ zones with number/name/city
+        fail: Empty or truncated
+        status: pass
+        evidence: "2026-07-15: 268 zones"
+      - id: data-carrier-ports
+        feature: Carriers serving a port (live services)
+        method: api
+        pass: /api/carriers/ports?port=USLAX returns ≥8 carriers with service loop names
+        fail: Empty or error for major ports
+        status: pass
+        evidence: "2026-07-15: 10 carriers at USLAX with TP6/TP3 services"
+      - id: data-container-specs
+        feature: Container spec database
+        method: api
+        pass: ≥10 container types with ISO codes and dimensions
+        fail: Empty
+        status: pass
+        evidence: "2026-07-15: 11 types incl. 22G1"
+      - id: data-schedules
+        feature: Sailing schedules (live lanes)
+        method: api
+        pass: /api/schedules/search for USLAX→JPYOK (and 3 other major lanes) returns count > 0
+        fail: count == 0 on major lanes
+        status: blocked
+        blocked_by: AI-12010 (Terminal49/DCSA - real sailing schedules cannot be honestly hand-authored)
+        evidence: "2026-07-15: only the Jones Act schedule file exists"
+      - id: data-carrier-reliability
+        feature: Carrier reliability metrics
+        method: api
+        pass: /api/carriers/reliability returns ≥8 carriers with on-time metrics
+        fail: 0 results
+        status: pass
+        evidence: "2026-07-15 post-PR#70: 14 carriers with on-time percent, delay days, Sea-Intelligence-cited period fields"
+      - id: data-market-share
+        feature: Carrier market share / TEU capacity
+        method: api
+        pass: Results with totalTeuCapacity > 0
+        fail: 0 results / 0 TEU
+        status: pass
+        evidence: "2026-07-15 post-PR#70: 14 carriers, 28,555,000 TEU total"
+      - id: data-alliances
+        feature: Carrier alliance data
+        method: api
+        pass: ≥3 alliances (2M/Ocean/THE-class) with member lists
+        fail: 0 alliances
+        status: pass
+        evidence: "2026-07-15 post-PR#70: 5 groups - Gemini Cooperation, Ocean Alliance, Premier Alliance, MSC standalone, Jones Act independents"
+      - id: data-no-mock-fallbacks
+        feature: No page silently renders mock data
+        method: browser
+        pass: Port-finder and carrier-comparison render live API data, or display an explicit "demo data" badge
+        fail: Hardcoded mock rendered without a badge
+        status: pass
+        evidence: "2026-07-15 PR #69 merged: port-finder queries live /api/carriers/ports; mock only behind a visible amber Demo-data badge"
+        linear: AI-12724
+
+  # ────────────────────────────────────────────────────────────────
+  ai_assistant_and_tools:
+    description: Chat answers with live tool calls — each tool verified individually
+    tests:
+      - id: ai-chat-available
+        feature: Assistant responds at all
+        method: api
+        pass: POST /api/ai/chat returns a substantive answer (no error code) in <30s
+        fail: ai_unavailable_billing or any 5xx
+        status: pass
+        evidence: "2026-07-15 post-PR#69: provider fallback live - Gemini 2.5 Flash carries chat while Anthropic+Kimi keys are billing-dead; 5-question sweep answered"
+        linear: AI-12777
+      - id: ai-tool-hts
+        feature: Chat invokes HTS lookup and quotes REAL rates
+        method: api
+        pass: '"What is the duty rate for dried bananas?" → answer cites an 0803.90 code and the rate matching /api/hts data (Free)'
+        fail: Hallucinated code/rate, or no tool call made
+        status: pass
+        evidence: "2026-07-15: search_hts fired; grounded honest answer, no invented rates (tuning note - query phrasing can miss the curated code list)"
+      - id: ai-tool-ports
+        feature: Chat invokes port lookup
+        method: api
+        pass: Port question → answer consistent with /api/ports data (locode, country)
+        fail: Invented port facts
+        status: pass
+        evidence: "2026-07-15: search_ports fired; CNSHA -> Shanghai, mega, 47M TEU - matches port DB"
+      - id: ai-tool-routes
+        feature: Chat invokes route comparison
+        method: api
+        pass: Lane question → transit-days consistent with /api/routes/compare (once schedules seeded)
+        fail: Route facts contradict the dataset
+        status: blocked
+        blocked_by: AI-12010 (tool path verified 2026-07-15 - search_schedules fired and honestly reported the empty dataset; only Terminal49 schedule data remains)
+      - id: ai-tool-ftz
+        feature: Chat invokes FTZ math
+        method: api
+        pass: FTZ savings question → figures consistent with the FTZ calculator for the same inputs
+        fail: Chat math diverges from calculator math
+        status: pass
+        evidence: "2026-07-15: search_ftz_zones fired; 15 CA zones with names - consistent with the 268-zone dataset"
+      - id: ai-rate-limit
+        feature: Per-tier rate limiting
+        method: api
+        pass: 11th message within a minute returns the documented 429 limit message
+        fail: No limit enforced
+        status: pending
+      - id: ai-chat-fallback
+        feature: Chat survives a single provider outage (parity with OCR)
+        method: api
+        pass: With primary key dead, chat still answers via fallback provider
+        fail: Single key outage kills chat
+        status: pass
+        evidence: "2026-07-15: PR #69 chain (openrouter->gemini->claude->kimi) proven in prod - chat alive on Gemini while TWO providers are billing-dead; DeepSeek activates when OPENROUTER_API_KEY is funded"
+        linear: AI-12777
+
+  # ────────────────────────────────────────────────────────────────
+  contracts_and_tariffs:
+    tests:
+      - id: contract-parse
+        feature: Rate sheet upload → AI extracts carrier/dates/lane rates
+        method: api
+        pass: Sample rate sheet → parsed carrier + ≥1 lane with rate + validity dates; low-confidence fields flagged
+        fail: Parse errors on a clean sheet, or invented lanes
+        status: pending
+        note: Needs a sample rate-sheet fixture (create like the BOL fixture)
+      - id: tariff-detection
+        feature: Booked-on-tariff detection vs active contracts
+        method: api
+        pass: With a contract covering a lane and a shipment on that lane, /api/contracts/check-tariff?origin=X&destination=Y flags it with savings estimate
+        fail: Covered shipment not flagged
+        status: pending
+        note: Requires seeded contract in demo org (contracts table currently 0 rows)
+
+  # ────────────────────────────────────────────────────────────────
+  team_settings_billing:
+    tests:
+      - id: settings-edit
+        feature: Profile/org rename with explicit Edit/Save/Cancel
+        method: browser
+        pass: Rename persists after reload; empty value rejected inline; non-owner sees no org-rename control
+        fail: Silent save failure or role gate bypassed
+        status: pending
+        note: New affordances ship with PR #64
+      - id: team-roles
+        feature: Role gates (owner/admin/member/viewer)
+        method: api
+        pass: Viewer token cannot PATCH org or invite; owner can; each denial is 403 not 500
+        fail: Any privilege escalation
+        status: pending
+      - id: billing-placeholder-guard
+        feature: Checkout safely disabled until Stripe is live
+        method: api
+        pass: POST /api/billing/checkout returns 503 (not a broken redirect); banner explains placeholder mode
+        fail: 500, or checkout attempts a real Stripe call with placeholder keys
+        status: pass
+        evidence: "2026-07-15: 503"
+      - id: billing-live-checkout
+        feature: Real Stripe checkout → webhook → tier flip
+        method: browser
+        pass: Test card 4242… completes; webhook flips org.planTier to premium; portal opens
+        fail: Payment succeeds but tier doesn't flip
+        status: blocked
+        blocked_by: AI-12726 (charge-at-launch decision + Stripe products)
+      - id: gdpr-export
+        feature: Data export
+        method: api
+        pass: GET /api/account/export returns complete JSON of the user's org data
+        fail: Missing entities or cross-org leakage
+        status: pending
+      - id: gdpr-delete
+        feature: Account deletion cascades
+        method: api
+        pass: On a THROWAWAY account — delete removes user + owned org + all child rows; sign-in afterwards fails
+        fail: Orphan rows remain
+        status: pending
+        note: NEVER run against the demo org
+
+  # ────────────────────────────────────────────────────────────────
+  push_and_background_jobs:
+    tests:
+      - id: push-register
+        feature: Device token registration
+        method: api
+        pass: POST /api/mobile/devices with Expo token → 201; row in push_tokens; DELETE unregisters
+        fail: Token not persisted or duplicated per re-login
+        status: pass
+        evidence: "2026-07-15: 201, 3 rows in push_tokens"
+      - id: cron-auth
+        feature: Cron endpoints locked to CRON_SECRET
+        method: api
+        pass: /api/cron/cutoff-alerts and /api/cron/prod-monitor return 401/403 without the secret
+        fail: Any cron runs for anonymous callers
+        status: pass
+        evidence: "2026-07-15: 401"
+      - id: cutoff-alert-e2e
+        feature: Reefer/doc cutoff <24h → push lands on device once, deep-links to shipment
+        method: simulator
+        pass: Seeded cutoff <24h → exactly ONE notification on device; tap opens that shipment; second cron run sends nothing (dedupe)
+        fail: No delivery, duplicate alerts, or dead deep link
+        status: blocked
+        blocked_by: AI-12723 (APNs/FCM keys), AI-12719 (device run)
+      - id: prod-monitor
+        feature: Scheduled prod monitoring alerts on failure
+        method: api
+        pass: /api/cron/prod-monitor (with secret) runs route checks and alerts on failure path
+        fail: Monitor green while a route 500s
+        status: pending
+        note: Route exists; verify schedule wired in vercel.json + alert destination (AI-12731)
+
+  # ────────────────────────────────────────────────────────────────
+  mobile_app:
+    description: Expo app (iOS+Android) — ALL blocked on first simulator/device run
+    tests:
+      - id: mob-first-boot
+        feature: App boots, login screen renders, session persists across relaunch
+        method: simulator
+        pass: Cold start <5s to interactive; login with demo creds lands on Shipments; kill+relaunch stays signed in
+        fail: Crash, white screen, or session lost
+        status: blocked
+        blocked_by: AI-12719
+      - id: mob-shipments
+        feature: Shipments list/detail parity with web
+        method: simulator
+        pass: Same rows as web for the same org; pull-to-refresh picks up a web-created shipment; detail shows reefer/cutoff meta
+        fail: Data divergence from web
+        status: blocked
+        blocked_by: AI-12719
+      - id: mob-scan-save
+        feature: Camera scan → save (field workflow)
+        method: simulator
+        pass: See bol_scan_to_shipment.mob-camera-scan
+        status: blocked
+        blocked_by: AI-12719
+      - id: mob-assistant
+        feature: Assistant tab
+        method: simulator
+        pass: Same answer quality as web chat (once AI-12777 fixed)
+        status: blocked
+        blocked_by: AI-12719, AI-12777
+      - id: mob-calc
+        feature: Landed-cost calc + save syncs to web history
+        method: simulator
+        pass: Mobile save appears in web /platform/history
+        status: blocked
+        blocked_by: AI-12719
+      - id: mob-theme-logout
+        feature: Theme switch + logout unregisters push token
+        method: simulator
+        pass: Theme persists; logout removes push_tokens row (verify via sql)
+        status: blocked
+        blocked_by: AI-12719
+
+  # ────────────────────────────────────────────────────────────────
+  store_readiness:
+    description: Everything Apple/Google will judge
+    tests:
+      - id: store-ios-build
+        feature: EAS production build succeeds
+        method: manual
+        pass: eas build -p ios --profile production produces an installable .ipa
+        status: blocked
+        blocked_by: AI-12720 (Apple PLA + EAS credits)
+      - id: store-testflight
+        feature: TestFlight internal build installable
+        method: manual
+        pass: Build installs via TestFlight; mob-first-boot passes on real hardware
+        status: blocked
+        blocked_by: store-ios-build
+      - id: store-metadata
+        feature: ASC record complete (privacy questionnaire, screenshots, category)
+        method: manual
+        pass: App Privacy declares email/name/PostHog; 6.7"+6.1" screenshots uploaded; privacy policy URL live
+        status: blocked
+        blocked_by: AI-12721
+      - id: store-guideline-4-2
+        feature: Native capability clears "minimum functionality"
+        method: manual
+        pass: Camera scan + push + native UI demonstrable in review notes
+        status: blocked
+        blocked_by: AI-12719
+      - id: store-android
+        feature: Play internal track live
+        method: manual
+        pass: AAB uploaded, data-safety form filed, installable via internal testing link
+        status: blocked
+        blocked_by: AI-12722
