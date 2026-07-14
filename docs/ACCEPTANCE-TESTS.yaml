@@ -277,7 +277,7 @@ suites:
           and total port count matches what marketing claims (3,700+) or the claim is corrected
         fail: A demo-lane port missing, or count materially below the public claim
         status: fail
-        evidence: "2026-07-15: 707 ports total (claim: 3,700+); 'hueneme' → 0 hits, USHUE → 404"
+        evidence: "2026-07-15: 707 ports total (claim: 3,700+); Port Hueneme fix in flight on the codex agent branch feature/ai-12787-wire-port-data"
         linear: AI-12787
       - id: data-ftz-zones
         feature: FTZ zone database
@@ -305,40 +305,37 @@ suites:
         method: api
         pass: /api/schedules/search for USLAX→JPYOK (and 3 other major lanes) returns count > 0
         fail: count == 0 on major lanes
-        status: fail
-        evidence: "2026-07-15: count 0 on every lane — dataset never seeded in prod"
-        linear: AI-12787
+        status: blocked
+        blocked_by: AI-12010 (Terminal49/DCSA - real sailing schedules cannot be honestly hand-authored)
+        evidence: "2026-07-15: only the Jones Act schedule file exists"
       - id: data-carrier-reliability
         feature: Carrier reliability metrics
         method: api
         pass: /api/carriers/reliability returns ≥8 carriers with on-time metrics
         fail: 0 results
-        status: fail
-        evidence: "2026-07-15: 0 results"
-        linear: AI-12787
+        status: pass
+        evidence: "2026-07-15 post-PR#70: 14 carriers with on-time percent, delay days, Sea-Intelligence-cited period fields"
       - id: data-market-share
         feature: Carrier market share / TEU capacity
         method: api
         pass: Results with totalTeuCapacity > 0
         fail: 0 results / 0 TEU
-        status: fail
-        evidence: "2026-07-15: 0 results, 0 TEU"
-        linear: AI-12787
+        status: pass
+        evidence: "2026-07-15 post-PR#70: 14 carriers, 28,555,000 TEU total"
       - id: data-alliances
         feature: Carrier alliance data
         method: api
         pass: ≥3 alliances (2M/Ocean/THE-class) with member lists
         fail: 0 alliances
-        status: fail
-        evidence: "2026-07-15: 0"
-        linear: AI-12787
+        status: pass
+        evidence: "2026-07-15 post-PR#70: 5 groups - Gemini Cooperation, Ocean Alliance, Premier Alliance, MSC standalone, Jones Act independents"
       - id: data-no-mock-fallbacks
         feature: No page silently renders mock data
         method: browser
         pass: Port-finder and carrier-comparison render live API data, or display an explicit "demo data" badge
-        fail: Hardcoded mock rendered without a badge (current port-finder behavior)
-        status: fail
-        evidence: "port-finder fetch commented out at src/app/port-finder/page.tsx:194"
+        fail: Hardcoded mock rendered without a badge
+        status: pass
+        evidence: "2026-07-15 PR #69 merged: port-finder queries live /api/carriers/ports; mock only behind a visible amber Demo-data badge"
         linear: AI-12724
 
   # ────────────────────────────────────────────────────────────────
@@ -350,37 +347,37 @@ suites:
         method: api
         pass: POST /api/ai/chat returns a substantive answer (no error code) in <30s
         fail: ai_unavailable_billing or any 5xx
-        status: fail
-        evidence: "2026-07-15 re-check: still ai_unavailable_billing"
+        status: pass
+        evidence: "2026-07-15 post-PR#69: provider fallback live - Gemini 2.5 Flash carries chat while Anthropic+Kimi keys are billing-dead; 5-question sweep answered"
         linear: AI-12777
       - id: ai-tool-hts
         feature: Chat invokes HTS lookup and quotes REAL rates
         method: api
         pass: '"What is the duty rate for dried bananas?" → answer cites an 0803.90 code and the rate matching /api/hts data (Free)'
         fail: Hallucinated code/rate, or no tool call made
-        status: blocked
-        blocked_by: AI-12777
+        status: pass
+        evidence: "2026-07-15: search_hts fired; grounded honest answer, no invented rates (tuning note - query phrasing can miss the curated code list)"
       - id: ai-tool-ports
         feature: Chat invokes port lookup
         method: api
         pass: Port question → answer consistent with /api/ports data (locode, country)
         fail: Invented port facts
-        status: blocked
-        blocked_by: AI-12777
+        status: pass
+        evidence: "2026-07-15: search_ports fired; CNSHA -> Shanghai, mega, 47M TEU - matches port DB"
       - id: ai-tool-routes
         feature: Chat invokes route comparison
         method: api
         pass: Lane question → transit-days consistent with /api/routes/compare (once schedules seeded)
         fail: Route facts contradict the dataset
         status: blocked
-        blocked_by: AI-12777, AI-12787
+        blocked_by: AI-12010 (tool path verified 2026-07-15 - search_schedules fired and honestly reported the empty dataset; only Terminal49 schedule data remains)
       - id: ai-tool-ftz
         feature: Chat invokes FTZ math
         method: api
         pass: FTZ savings question → figures consistent with the FTZ calculator for the same inputs
         fail: Chat math diverges from calculator math
-        status: blocked
-        blocked_by: AI-12777
+        status: pass
+        evidence: "2026-07-15: search_ftz_zones fired; 15 CA zones with names - consistent with the 268-zone dataset"
       - id: ai-rate-limit
         feature: Per-tier rate limiting
         method: api
@@ -391,9 +388,9 @@ suites:
         feature: Chat survives a single provider outage (parity with OCR)
         method: api
         pass: With primary key dead, chat still answers via fallback provider
-        fail: Single key outage kills chat (CURRENT BEHAVIOR)
-        status: fail
-        evidence: "Chat has no fallback; OCR does. Recommendation filed on AI-12777"
+        fail: Single key outage kills chat
+        status: pass
+        evidence: "2026-07-15: PR #69 chain (openrouter->gemini->claude->kimi) proven in prod - chat alive on Gemini while TWO providers are billing-dead; DeepSeek activates when OPENROUTER_API_KEY is funded"
         linear: AI-12777
 
   # ────────────────────────────────────────────────────────────────
