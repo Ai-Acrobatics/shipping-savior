@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/cutoff-alerts",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/prod-monitor",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
