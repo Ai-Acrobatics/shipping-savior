@@ -498,6 +498,7 @@ suites:
         fail: Crash, white screen, or session lost
         status: blocked
         blocked_by: AI-12719
+        evidence: "2026-07-15 partial: deps install + Metro iOS bundle green (1,782 modules, 0 errors) on the MacBook Air; visual run blocked by an Expo Go install race with the bt-app-test-loop that owns the shared simulators — finishing runbook on AI-12719"
       - id: mob-shipments
         feature: Shipments list/detail parity with web
         method: simulator
