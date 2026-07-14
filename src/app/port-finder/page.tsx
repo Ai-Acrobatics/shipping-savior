@@ -29,10 +29,12 @@ interface Port {
 interface CarrierInfo {
   name: string;
   code: string;
-  alliance: string;
+  alliance?: string; // Made optional as it's not from /api/carriers/ports
   transitDays?: number;
   reliabilityGrade?: "A" | "B" | "C" | "D" | "F";
   reliabilityPercent?: number;
+  servicesAtPort1?: string[];
+  servicesAtPort2?: string[];
 }
 
 /* ─────────── MOCK DATA ─────────── */
@@ -131,6 +133,7 @@ export default function PortFinderPage() {
   const [showDrop2, setShowDrop2] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [usedDemoData, setUsedDemoData] = useState(false);
 
   // Results
   const [port1Carriers, setPort1Carriers] = useState<CarrierInfo[]>([]);
@@ -185,17 +188,41 @@ export default function PortFinderPage() {
     setShowDrop2(false);
   }
 
+  // Known alliance memberships — the live carrier-ports dataset doesn't carry
+  // alliance yet, and the UI groups by it.
+  const ALLIANCE_BY_CODE: Record<string, string> = {
+    MAEU: "2M", MSCU: "2M",
+    CMDU: "Ocean Alliance", COSU: "Ocean Alliance", EGLV: "Ocean Alliance", OOLU: "Ocean Alliance",
+    HLCU: "THE Alliance", ONEY: "THE Alliance", YMLU: "THE Alliance", HMMU: "THE Alliance",
+    ZIMU: "Independent", WHLC: "Independent", MATS: "Independent", PASH: "Independent",
+  };
+
+  function toCarrierInfo(c: { name: string; code: string }): CarrierInfo {
+    return { name: c.name, code: c.code, alliance: ALLIANCE_BY_CODE[c.code] ?? "Independent" };
+  }
+
   async function handleSearch() {
     if (!port1 || !port2) return;
     setLoading(true);
     setSearched(false);
+    setUsedDemoData(false);
 
-    // TODO: Replace with real API call:
-    // const data = await fetch(`/api/carriers/ports?port1=${port1.locode}&port2=${port2.locode}`).then(r => r.json());
-    await new Promise((resolve) => setTimeout(resolve, 700));
-
-    setPort1Carriers(MOCK_PORT_CARRIERS[port1.locode] || MOCK_PORT_CARRIERS["CNQIN"]);
-    setPort2Carriers(MOCK_PORT_CARRIERS[port2.locode] || MOCK_PORT_CARRIERS["USLAX"]);
+    // AI-12724: live carrier-ports data first; the labelled demo dataset only
+    // when a port isn't covered by the live dataset yet.
+    try {
+      const [r1, r2] = await Promise.all([
+        fetch(`/api/carriers/ports?port=${encodeURIComponent(port1.locode)}`),
+        fetch(`/api/carriers/ports?port=${encodeURIComponent(port2.locode)}`),
+      ]);
+      if (!r1.ok || !r2.ok) throw new Error("port not in live dataset");
+      const [d1, d2] = await Promise.all([r1.json(), r2.json()]);
+      setPort1Carriers((d1.carriers ?? []).map(toCarrierInfo));
+      setPort2Carriers((d2.carriers ?? []).map(toCarrierInfo));
+    } catch {
+      setPort1Carriers(MOCK_PORT_CARRIERS[port1.locode] || MOCK_PORT_CARRIERS["CNQIN"]);
+      setPort2Carriers(MOCK_PORT_CARRIERS[port2.locode] || MOCK_PORT_CARRIERS["USLAX"]);
+      setUsedDemoData(true);
+    }
     setSearched(true);
     setLoading(false);
   }
@@ -276,7 +303,7 @@ export default function PortFinderPage() {
                       onFocus={() => setShowDrop1(true)}
                       onBlur={() => setTimeout(() => setShowDrop1(false), 200)}
                       placeholder="Search port name or code..."
-                      className="input-light pl-10"
+                      className="input-light !pl-10"
                     />
                   </div>
                   {showDrop1 && results1.length > 0 && (
@@ -317,7 +344,7 @@ export default function PortFinderPage() {
                       onFocus={() => setShowDrop2(true)}
                       onBlur={() => setTimeout(() => setShowDrop2(false), 200)}
                       placeholder="Search port name or code..."
-                      className="input-light pl-10"
+                      className="input-light !pl-10"
                     />
                   </div>
                   {showDrop2 && results2.length > 0 && (
@@ -372,6 +399,12 @@ export default function PortFinderPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
+                {usedDemoData && (
+                  <div className="mb-6 flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-800">
+                    <span className="inline-flex rounded-full bg-amber-200 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">Demo data</span>
+                    One of these ports isn&apos;t in our live carrier dataset yet — showing representative sample data.
+                  </div>
+                )}
                 {/* Port Info Cards */}
                 {port1 && port2 && (
                   <AnimatedSection stagger className="grid md:grid-cols-2 gap-4 mb-10">
