@@ -175,6 +175,7 @@ export default function ShipmentsPage() {
   });
 
   const [exporting, setExporting] = useState(false);
+  const [exportingXLSX, setExportingXLSX] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const handleExportCSV = async () => {
@@ -195,6 +196,27 @@ export default function ShipmentsPage() {
       setError(err instanceof Error ? err.message : "Export failed");
     } finally {
       setExporting(false);
+    }
+  };
+
+  const handleExportXLSX = async () => {
+    setExportingXLSX(true);
+    try {
+      const res = await fetch("/api/shipments/export?format=xlsx");
+      if (!res.ok) throw new Error("XLSX export failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `load-board-week-${new Date().toISOString().slice(0, 10)}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "XLSX export failed");
+    } finally {
+      setExportingXLSX(false);
     }
   };
 
@@ -400,18 +422,32 @@ export default function ShipmentsPage() {
             Upload Bill of Lading
           </button>
           {shipmentsList.length > 0 && (
-            <button
-              onClick={handleExportCSV}
-              disabled={exporting}
-              className="inline-flex items-center gap-2 rounded-xl border border-navy-200 bg-white px-4 py-2.5 text-sm font-semibold text-navy-700 shadow-sm transition-colors hover:border-ocean-400 hover:text-ocean-600 disabled:opacity-50"
-            >
-              {exporting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Download className="h-4 w-4" />
-              )}
-              Export CSV
-            </button>
+            <>
+              <button
+                onClick={handleExportXLSX}
+                disabled={exportingXLSX}
+                className="inline-flex items-center gap-2 rounded-xl border border-navy-200 bg-white px-4 py-2.5 text-sm font-semibold text-navy-700 shadow-sm transition-colors hover:border-ocean-400 hover:text-ocean-600 disabled:opacity-50"
+              >
+                {exportingXLSX ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                Export XLSX
+              </button>
+              <button
+                onClick={handleExportCSV}
+                disabled={exporting}
+                className="inline-flex items-center gap-2 rounded-xl border border-navy-200 bg-white px-4 py-2.5 text-sm font-semibold text-navy-700 shadow-sm transition-colors hover:border-ocean-400 hover:text-ocean-600 disabled:opacity-50"
+              >
+                {exporting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                Export CSV
+              </button>
+            </>
           )}
         </div>
       </div>

@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { shipments, bolDocuments } from "@/lib/db/schema";
 import { desc, eq } from "drizzle-orm";
+import ExcelJS from "exceljs";
 
-// GET /api/shipments/export?format=csv
-// Exports the weekly load board (all shipments) as a CSV file for ops handoff.
+// GET /api/shipments/export?format=csv|xlsx
+// Exports the weekly load board (all shipments) as CSV or styled XLSX.
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const format = searchParams.get("format") || "csv";
@@ -44,11 +45,12 @@ export async function GET(request: NextRequest) {
       .leftJoin(bolDocuments, eq(shipments.bolDocumentId, bolDocuments.id))
       .orderBy(desc(shipments.createdAt));
 
-    if (format === "csv") {
-      return csvResponse(rows);
+    if (format === "xlsx") {
+      return await xlsxResponse(rows);
     }
 
-    return NextResponse.json({ shipments: rows });
+    // Default: CSV
+    return csvResponse(rows);
   } catch (error) {
     console.error("Failed to export shipments:", error);
     return NextResponse.json(
@@ -200,4 +202,178 @@ function csvResponse(rows: ShipmentRow[]): NextResponse {
       "Content-Disposition": `attachment; filename="${filename}"`,
     },
   });
+}
+
+// ── XLSX helpers ───────────────────────────────────────
+
+/** Compute the ISO week number for a date. */
+function isoWeek(d: Date): number {
+  const tmp = new Date(d.getTime());
+  tmp.setUTCHours(0, 0, 0, 0);
+  // Thursday in current week decides the year.
+  tmp.setUTCDate(tmp.getUTCDate() + 3 - ((tmp.getUTCDay() + 6) % 7));
+  const week1 = new Date(tmp.getUTCFullYear(), 0, 4);
+  return 1 + Math.round(
+    ((tmp.getTime() - week1.getTime()) / 86400000 - 3 + ((week1.getUTCDay() + 6) % 7)) / 7,
+  );
+}
+
+const XLSX_HEADERS = [
+  { header: "Container Number", key: "containerNumber", width: 20 },
+  { header: "Reference", key: "reference", width: 16 },
+  { header: "Vessel Name", key: "vesselName", width: 22 },
+  { header: "Voyage", key: "voyageNumber", width: 10 },
+  { header: "Origin (POL)", key: "pol", width: 18 },
+  { header: "Destination (POD)", key: "pod", width: 18 },
+  { header: "ETD", key: "etd", width: 14 },
+  { header: "ETA", key: "eta", width: 14 },
+  { header: "Carrier", key: "carrier", width: 16 },
+  { header: "Shipper", key: "shipper", width: 20 },
+  { header: "Consignee", key: "consignee", width: 20 },
+  { header: "Goods Description", key: "goodsDescription", width: 30 },
+  { header: "Weight (kg)", key: "weightKg", width: 12 },
+  { header: "Qty", key: "quantity", width: 8 },
+  { header: "Container Type", key: "containerType", width: 14 },
+  { header: "Cargo Type", key: "cargoType", width: 14 },
+  { header: "Container Count", key: "containerCount", width: 10 },
+  { header: "Value (USD)", key: "valueUsd", width: 14 },
+  { header: "Status", key: "status", width: 14 },
+  { header: "Current Location", key: "currentLocation", width: 20 },
+  { header: "BOL File", key: "bolFileName", width: 20 },
+];
+
+/** Navy-inspired theme colours. */
+const THEME = {
+  headerFill: { type: "pattern", pattern: "solid", fgColor: { argb: "FF1E3A5F" } } as const,
+  headerFont: { bold: true, color: { argb: "FFFFFFFF" }, size: 11, name: "Calibri" },
+  altRowFill: { type: "pattern", pattern: "solid", fgColor: { argb: "FFF0F4F8" } } as const,
+  border: {
+    top: { style: "thin", color: { argb: "FFCBD5E1" } },
+    left: { style: "thin", color: { argb: "FFCBD5E1" } },
+    bottom: { style: "thin", color: { argb: "FFCBD5E1" } },
+    right: { style: "thin", color: { argb: "FFCBD5E1" } },
+  } as const,
+  sectionFill: { type: "pattern", pattern: "solid", fgColor: { argb: "FFD4E2F0" } } as const,
+  sectionFont: { bold: true, color: { argb: "FF1E3A5F" }, size: 12, name: "Calibri" },
+};
+
+async function xlsxResponse(rows: ShipmentRow[]): Promise<NextResponse> {
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet("Load Board");
+
+  // ── Column widths ──
+  ws.columns = XLSX_HEADERS.map((h) => ({ header: h.header, key: h.key, width: h.width }));
+
+  // ── Group shipments by ISO week ──
+  // Use ETD as the week anchor; fall back to createdAt if ETD is null.
+  const groups = new Map<number, ShipmentRow[]>();
+  for (const row of rows) {
+    const anchor = row.etd ?? row.createdAt;
+    const week = isoWeek(new Date(anchor));
+    if (!groups.has(week)) groups.set(week, []);
+    groups.get(week)!.push(row);
+  }
+
+  // Sort weeks ascending
+  const sortedWeeks = Array.from(groups.keys()).sort((a, b) => a - b);
+
+  let rowIndex = 1;
+
+  for (const week of sortedWeeks) {
+    const weekRows = groups.get(week)!;
+
+    // ── Section header ──
+    const sectionCell = ws.getCell(rowIndex, 1);
+    sectionCell.value = `Week ${week} — ${weekRows.length} shipment(s)`;
+    sectionCell.font = THEME.sectionFont;
+    sectionCell.fill = THEME.sectionFill;
+    // Merge across all columns for the section header
+    ws.mergeCells(rowIndex, 1, rowIndex, XLSX_HEADERS.length);
+    rowIndex++;
+
+    // ── Column headers ──
+    const headerRow = ws.getRow(rowIndex);
+    for (let c = 0; c < XLSX_HEADERS.length; c++) {
+      const cell = headerRow.getCell(c + 1);
+      cell.value = XLSX_HEADERS[c].header;
+      cell.font = THEME.headerFont;
+      cell.fill = THEME.headerFill;
+      cell.border = THEME.border;
+      cell.alignment = { vertical: "middle", wrapText: true };
+    }
+    headerRow.height = 28;
+    rowIndex++;
+
+    // ── Data rows ──
+    for (let i = 0; i < weekRows.length; i++) {
+      const row = weekRows[i];
+      const xlRow = ws.getRow(rowIndex);
+
+      const values = [
+        row.containerNumber,
+        row.reference,
+        row.vesselName,
+        row.voyageNumber,
+        row.pol ?? row.originPort,
+        row.pod ?? row.destPort,
+        row.etd ? formatExcelDate(row.etd) : null,
+        row.eta ? formatExcelDate(row.eta) : null,
+        row.carrier,
+        row.shipper,
+        row.consignee,
+        row.goodsDescription,
+        row.weightKg,
+        row.quantity,
+        row.containerType,
+        row.cargoType,
+        row.containerCount,
+        row.valueUsd,
+        STATUS_LABELS[row.status] ?? row.status,
+        row.currentLocation,
+        row.bolFileName,
+      ];
+
+      for (let c = 0; c < values.length; c++) {
+        const cell = xlRow.getCell(c + 1);
+        cell.value = values[c];
+        cell.border = THEME.border;
+        cell.alignment = { vertical: "middle", wrapText: true };
+
+        // Alternate row shading
+        if (i % 2 === 1) {
+          cell.fill = THEME.altRowFill;
+        }
+      }
+
+      rowIndex++;
+    }
+
+    // Blank row between groups
+    rowIndex++;
+  }
+
+  // ── Freeze header area ──
+  ws.views = [{ state: "frozen", ySplit: 1, activeCell: "A2" }];
+
+  // ── Week number for filename ──
+  const currentWeek = sortedWeeks.length > 0 ? sortedWeeks[sortedWeeks.length - 1] : isoWeek(new Date());
+  const filename = `load-board-week-${String(currentWeek).padStart(2, "0")}.xlsx`;
+
+  // ── Write to buffer ──
+  const buf = (await wb.xlsx.writeBuffer()) as Buffer;
+
+  return new NextResponse(buf, {
+    headers: {
+      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "Content-Disposition": `attachment; filename="${filename}"`,
+    },
+  });
+}
+
+function formatExcelDate(d: Date): string {
+  try {
+    return d.toISOString().slice(0, 10);
+  } catch {
+    return String(d);
+  }
 }
