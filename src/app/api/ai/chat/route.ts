@@ -646,7 +646,7 @@ export async function POST(request: NextRequest) {
         Connection: 'keep-alive',
       },
     });
-  } catch (err: unknown) {  } catch (err: unknown) {
+  } catch (err: unknown) {
     // AI-8506: surface a user-safe message for billing/credit/rate-limit
     // failures instead of the raw Anthropic SDK error.
     const classified = classifyAiError(err);
