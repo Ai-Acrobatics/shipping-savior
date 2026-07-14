@@ -1,0 +1,16 @@
+[
+  { "carrier": "MSC Mediterranean Shipping", "carrierCode": "MSCU", "globalMarketSharePercent": 20.2, "teuCapacity": 6500000, "vesselCount": 900, "alliance": "Independent", "headquarters": "Geneva, Switzerland" },
+  { "carrier": "Maersk", "carrierCode": "MAEU", "globalMarketSharePercent": 14.3, "teuCapacity": 4600000, "vesselCount": 700, "alliance": "Gemini Cooperation", "headquarters": "Copenhagen, Denmark" },
+  { "carrier": "CMA CGM", "carrierCode": "CMDU", "globalMarketSharePercent": 12.8, "teuCapacity": 4100000, "vesselCount": 650, "alliance": "Ocean Alliance", "headquarters": "Marseille, France" },
+  { "carrier": "COSCO SHIPPING", "carrierCode": "COSU", "globalMarketSharePercent": 10.7, "teuCapacity": 3400000, "vesselCount": 500, "alliance": "Ocean Alliance", "headquarters": "Shanghai, China" },
+  { "carrier": "Hapag-Lloyd", "carrierCode": "HLCU", "globalMarketSharePercent": 7.5, "teuCapacity": 2400000, "vesselCount": 290, "alliance": "Gemini Cooperation", "headquarters": "Hamburg, Germany" },
+  { "carrier": "Ocean Network Express (ONE)", "carrierCode": "ONEY", "globalMarketSharePercent": 6.3, "teuCapacity": 2000000, "vesselCount": 240, "alliance": "Premier Alliance", "headquarters": "Singapore" },
+  { "carrier": "Evergreen", "carrierCode": "EGLV", "globalMarketSharePercent": 5.3, "teuCapacity": 1700000, "vesselCount": 220, "alliance": "Ocean Alliance", "headquarters": "Taoyuan, Taiwan" },
+  { "carrier": "HMM", "carrierCode": "HDMU", "globalMarketSharePercent": 2.8, "teuCapacity": 900000, "vesselCount": 80, "alliance": "Premier Alliance", "headquarters": "Seoul, South Korea" },
+  { "carrier": "OOCL", "carrierCode": "OOLU", "globalMarketSharePercent": 2.8, "teuCapacity": 900000, "vesselCount": 110, "alliance": "Ocean Alliance", "headquarters": "Hong Kong" },
+  { "carrier": "ZIM", "carrierCode": "ZIMU", "globalMarketSharePercent": 2.3, "teuCapacity": 750000, "vesselCount": 130, "alliance": "Independent", "headquarters": "Haifa, Israel" },
+  { "carrier": "Yang Ming", "carrierCode": "YMLU", "globalMarketSharePercent": 2.2, "teuCapacity": 710000, "vesselCount": 90, "alliance": "Premier Alliance", "headquarters": "Keelung, Taiwan" },
+  { "carrier": "Wan Hai Lines", "carrierCode": "WHLC", "globalMarketSharePercent": 1.6, "teuCapacity": 500000, "vesselCount": 120, "alliance": "Independent", "headquarters": "Taipei, Taiwan" },
+  { "carrier": "Matson", "carrierCode": "MATS", "globalMarketSharePercent": 0.2, "teuCapacity": 65000, "vesselCount": 25, "alliance": "Independent (Jones Act)", "headquarters": "Honolulu, USA" },
+  { "carrier": "Pasha Hawaii", "carrierCode": "PASH", "globalMarketSharePercent": 0.1, "teuCapacity": 30000, "vesselCount": 8, "alliance": "Independent (Jones Act)", "headquarters": "Honolulu, USA" }
+]

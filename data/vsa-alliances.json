@@ -1,0 +1,60 @@
+[
+  {
+    "id": "gemini-cooperation",
+    "name": "Gemini Cooperation",
+    "members": [
+      { "carrierCode": "MAEU", "carrierName": "Maersk", "teuCapacity": 4600000, "marketSharePercent": 14.3 },
+      { "carrierCode": "HLCU", "carrierName": "Hapag-Lloyd", "teuCapacity": 2400000, "marketSharePercent": 7.5 }
+    ],
+    "routes": ["Asia-Europe", "Transpacific", "Transatlantic", "Middle East-India"],
+    "effectiveDate": "2025-02-01",
+    "notes": "Hub-and-spoke network targeting 90% schedule reliability; replaced 2M after the Maersk/MSC split."
+  },
+  {
+    "id": "ocean-alliance",
+    "name": "Ocean Alliance",
+    "members": [
+      { "carrierCode": "CMDU", "carrierName": "CMA CGM", "teuCapacity": 4100000, "marketSharePercent": 12.8 },
+      { "carrierCode": "COSU", "carrierName": "COSCO SHIPPING", "teuCapacity": 3400000, "marketSharePercent": 10.7 },
+      { "carrierCode": "OOLU", "carrierName": "OOCL", "teuCapacity": 900000, "marketSharePercent": 2.8 },
+      { "carrierCode": "EGLV", "carrierName": "Evergreen", "teuCapacity": 1700000, "marketSharePercent": 5.3 }
+    ],
+    "routes": ["Asia-Europe", "Transpacific", "Asia-Mediterranean", "Transatlantic"],
+    "effectiveDate": "2017-04-01",
+    "notes": "Extended through 2032 (signed 2024); the largest east-west alliance by capacity."
+  },
+  {
+    "id": "premier-alliance",
+    "name": "Premier Alliance",
+    "members": [
+      { "carrierCode": "ONEY", "carrierName": "Ocean Network Express (ONE)", "teuCapacity": 2000000, "marketSharePercent": 6.3 },
+      { "carrierCode": "HDMU", "carrierName": "HMM", "teuCapacity": 900000, "marketSharePercent": 2.8 },
+      { "carrierCode": "YMLU", "carrierName": "Yang Ming", "teuCapacity": 710000, "marketSharePercent": 2.2 }
+    ],
+    "routes": ["Asia-Europe", "Transpacific", "Asia-Mediterranean"],
+    "effectiveDate": "2025-02-01",
+    "notes": "Successor to THE Alliance after Hapag-Lloyd left for Gemini; slot exchange with MSC on Asia-Europe."
+  },
+  {
+    "id": "msc-standalone",
+    "name": "MSC (independent network)",
+    "members": [
+      { "carrierCode": "MSCU", "carrierName": "MSC Mediterranean Shipping", "teuCapacity": 6500000, "marketSharePercent": 20.2 }
+    ],
+    "routes": ["Asia-Europe", "Transpacific", "Transatlantic", "Africa", "Latin America"],
+    "effectiveDate": "2025-02-01",
+    "notes": "World's largest carrier; operates standalone since the 2M wind-down, with selective slot swaps (Premier Alliance on Asia-Europe)."
+  },
+  {
+    "id": "independents",
+    "name": "Major independents",
+    "members": [
+      { "carrierCode": "ZIMU", "carrierName": "ZIM", "teuCapacity": 750000, "marketSharePercent": 2.3 },
+      { "carrierCode": "WHLC", "carrierName": "Wan Hai Lines", "teuCapacity": 500000, "marketSharePercent": 1.6 },
+      { "carrierCode": "MATS", "carrierName": "Matson (Jones Act)", "teuCapacity": 65000, "marketSharePercent": 0.2 },
+      { "carrierCode": "PASH", "carrierName": "Pasha Hawaii (Jones Act)", "teuCapacity": 30000, "marketSharePercent": 0.1 }
+    ],
+    "routes": ["Intra-Asia", "Transpacific", "US domestic (Jones Act: Hawaii, Alaska, Guam)"],
+    "notes": "Carriers operating outside the three east-west alliances; includes the Jones Act carriers Shipping Savior flags for domestic US lanes."
+  }
+]
