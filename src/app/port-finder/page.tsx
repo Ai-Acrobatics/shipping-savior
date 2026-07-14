@@ -29,12 +29,10 @@ interface Port {
 interface CarrierInfo {
   name: string;
   code: string;
-  alliance?: string; // Made optional as it's not from /api/carriers/ports
+  alliance: string;
   transitDays?: number;
   reliabilityGrade?: "A" | "B" | "C" | "D" | "F";
   reliabilityPercent?: number;
-  servicesAtPort1?: string[];
-  servicesAtPort2?: string[];
 }
 
 /* ─────────── MOCK DATA ─────────── */
