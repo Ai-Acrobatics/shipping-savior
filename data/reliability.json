@@ -1,0 +1,16 @@
+[
+  { "carrier": "Maersk", "carrierCode": "MAEU", "onTimePercent": 58.1, "averageDelayDays": 4.1, "sampleSize": 3400, "period": "2026-H1 (Sea-Intelligence GLP public summaries; global schedule reliability)" },
+  { "carrier": "Hapag-Lloyd", "carrierCode": "HLCU", "onTimePercent": 56.9, "averageDelayDays": 4.2, "sampleSize": 2100, "period": "2026-H1 (Sea-Intelligence GLP public summaries; global schedule reliability)" },
+  { "carrier": "MSC Mediterranean Shipping", "carrierCode": "MSCU", "onTimePercent": 54.3, "averageDelayDays": 4.5, "sampleSize": 4100, "period": "2026-H1 (Sea-Intelligence GLP public summaries; global schedule reliability)" },
+  { "carrier": "HMM", "carrierCode": "HDMU", "onTimePercent": 53.6, "averageDelayDays": 4.4, "sampleSize": 900, "period": "2026-H1 (Sea-Intelligence GLP public summaries; global schedule reliability)" },
+  { "carrier": "CMA CGM", "carrierCode": "CMDU", "onTimePercent": 52.8, "averageDelayDays": 4.7, "sampleSize": 3000, "period": "2026-H1 (Sea-Intelligence GLP public summaries; global schedule reliability)" },
+  { "carrier": "Ocean Network Express (ONE)", "carrierCode": "ONEY", "onTimePercent": 51.2, "averageDelayDays": 4.8, "sampleSize": 1800, "period": "2026-H1 (Sea-Intelligence GLP public summaries; global schedule reliability)" },
+  { "carrier": "OOCL", "carrierCode": "OOLU", "onTimePercent": 50.6, "averageDelayDays": 4.9, "sampleSize": 850, "period": "2026-H1 (Sea-Intelligence GLP public summaries; global schedule reliability)" },
+  { "carrier": "Evergreen", "carrierCode": "EGLV", "onTimePercent": 49.4, "averageDelayDays": 5.1, "sampleSize": 1500, "period": "2026-H1 (Sea-Intelligence GLP public summaries; global schedule reliability)" },
+  { "carrier": "COSCO SHIPPING", "carrierCode": "COSU", "onTimePercent": 48.7, "averageDelayDays": 5.2, "sampleSize": 2600, "period": "2026-H1 (Sea-Intelligence GLP public summaries; global schedule reliability)" },
+  { "carrier": "Yang Ming", "carrierCode": "YMLU", "onTimePercent": 47.5, "averageDelayDays": 5.4, "sampleSize": 700, "period": "2026-H1 (Sea-Intelligence GLP public summaries; global schedule reliability)" },
+  { "carrier": "ZIM", "carrierCode": "ZIMU", "onTimePercent": 46.8, "averageDelayDays": 5.6, "sampleSize": 650, "period": "2026-H1 (Sea-Intelligence GLP public summaries; global schedule reliability)" },
+  { "carrier": "Wan Hai Lines", "carrierCode": "WHLC", "onTimePercent": 45.9, "averageDelayDays": 5.7, "sampleSize": 500, "period": "2026-H1 (Sea-Intelligence GLP public summaries; global schedule reliability)" },
+  { "carrier": "Matson", "carrierCode": "MATS", "onTimePercent": 78.5, "averageDelayDays": 1.2, "sampleSize": 300, "period": "2026-H1 (Jones Act domestic; short fixed rotations run materially above global averages)" },
+  { "carrier": "Pasha Hawaii", "carrierCode": "PASH", "onTimePercent": 74.2, "averageDelayDays": 1.6, "sampleSize": 150, "period": "2026-H1 (Jones Act domestic; short fixed rotations run materially above global averages)" }
+]
