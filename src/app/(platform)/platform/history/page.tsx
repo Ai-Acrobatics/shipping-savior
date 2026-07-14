@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Filter } from "lucide-react";
+import Select from "@/components/ui/select";
 import CalculationHistory from "@/components/platform/CalculationHistory";
 import type { SavedCalculation, CalculatorType } from "@/lib/types/calculations";
 import {
@@ -111,10 +112,10 @@ export default function HistoryPage() {
         </div>
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-navy-400" />
-          <select
+          <Select
+            aria-label="Filter by calculator type"
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="px-3 py-2 border border-navy-200 rounded-lg text-sm text-navy-700 bg-white focus:outline-none focus:ring-2 focus:ring-ocean-500/30 focus:border-ocean-500"
           >
             <option value="all">All Types</option>
             {ALL_TYPES.map((type) => (
@@ -122,7 +123,7 @@ export default function HistoryPage() {
                 {CALCULATOR_TYPE_LABELS[type]}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       </div>
 

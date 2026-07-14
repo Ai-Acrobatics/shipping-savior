@@ -43,14 +43,16 @@ export default function CookieConsent() {
     setVisible(false);
   };
 
+  // Compact floating card, centered at the bottom (AI-12732): unlike the old
+  // full-width banner it never covers the platform sidebar or the chat button.
   return (
     <div
       role="dialog"
       aria-label="Cookie consent"
-      className="fixed inset-x-0 bottom-0 z-50 bg-navy-900 text-white px-6 py-4 shadow-[0_-4px_20px_rgba(2,6,23,0.35)]"
+      className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-xl rounded-2xl border border-white/10 bg-navy-950/95 px-5 py-4 text-white shadow-premium backdrop-blur-sm"
     >
-      <div className="mx-auto flex max-w-5xl flex-col items-start gap-4 sm:flex-row sm:items-center">
-        <p className="flex-1 text-sm leading-relaxed text-navy-100">
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+        <p className="flex-1 text-[13px] leading-relaxed text-navy-100">
           We use essential cookies to run Shipping Savior and, with your consent,
           analytics cookies to improve the product. See our{" "}
           <Link href="/privacy" className="text-ocean-300 underline hover:text-ocean-200">
@@ -58,18 +60,18 @@ export default function CookieConsent() {
           </Link>
           .
         </p>
-        <div className="flex shrink-0 items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
             onClick={() => choose("essential")}
-            className="rounded-md border border-white/30 px-4 py-2 text-sm text-white transition-colors hover:border-white/60 hover:bg-white/5"
+            className="rounded-lg border border-white/25 px-3 py-1.5 text-[13px] font-medium text-white transition-colors hover:border-white/50 hover:bg-white/5"
           >
             Essential only
           </button>
           <button
             type="button"
             onClick={() => choose("all")}
-            className="rounded-md bg-ocean-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-ocean-600"
+            className="rounded-lg bg-ocean-500 px-3.5 py-1.5 text-[13px] font-semibold text-white transition-colors hover:bg-ocean-600"
           >
             Accept all
           </button>

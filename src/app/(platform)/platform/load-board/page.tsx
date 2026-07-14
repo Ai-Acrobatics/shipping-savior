@@ -15,7 +15,6 @@ import {
   Anchor,
   ShieldCheck,
   PackageCheck,
-  ChevronDown,
   Warehouse,
   Snowflake,
 } from "lucide-react";
@@ -26,6 +25,8 @@ import {
   type LoadBoardShipment,
   type LoadBoardFilters,
 } from "@/lib/loadboard/group";
+import Select from "@/components/ui/select";
+import EmptyState from "@/components/ui/empty-state";
 
 // ── Constants ──────────────────────────────────────────
 
@@ -87,9 +88,17 @@ function Field({
         <Icon className="h-3 w-3 shrink-0" />
         {label}
       </p>
-      <p className="mt-0.5 truncate text-xs font-medium text-navy-700" title={value || undefined}>
-        {value || "--"}
-      </p>
+      {value ? (
+        <p className="mt-0.5 truncate text-xs font-medium text-navy-700" title={value}>
+          {value}
+        </p>
+      ) : (
+        // AI-12732: a quiet em-dash instead of a loud "--" — absent data
+        // shouldn't compete visually with real data.
+        <p className="mt-0.5 text-xs text-navy-300" aria-label={`${label} not set`}>
+          —
+        </p>
+      )}
     </div>
   );
 }
@@ -106,22 +115,19 @@ function FilterSelect({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="relative min-w-0 flex-1 sm:min-w-[150px] sm:flex-none">
-      <select
-        aria-label={label}
-        className="input-light w-full appearance-none pr-8 text-sm"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        <option value="">{label}: All</option>
-        {options.map((o) => (
-          <option key={o} value={o}>
-            {o}
-          </option>
-        ))}
-      </select>
-      <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-400" />
-    </div>
+    <Select
+      aria-label={label}
+      wrapperClassName="min-w-0 flex-1 sm:min-w-[150px] sm:flex-none"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    >
+      <option value="">{label}: All</option>
+      {options.map((o) => (
+        <option key={o} value={o}>
+          {o}
+        </option>
+      ))}
+    </Select>
   );
 }
 
@@ -240,24 +246,20 @@ export default function LoadBoardPage() {
           <Loader2 className="h-8 w-8 animate-spin text-ocean-500" />
         </div>
       ) : weeks.length === 0 ? (
-        <div className="card rounded-2xl p-12 text-center">
-          <LayoutGrid className="mx-auto h-12 w-12 text-navy-300" />
-          <h3 className="mt-4 text-lg font-semibold text-navy-900">
-            {hasFilters ? "No shipments match these filters" : "No shipments on the board"}
-          </h3>
-          <p className="mt-1 text-sm text-navy-500">
-            {hasFilters
-              ? "Try clearing one or more filters."
-              : "Import a weekly workbook to populate the load board."}
-          </p>
-          {hasFilters && (
-            <button
-              onClick={clearFilters}
-              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-ocean-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-ocean-600"
-            >
-              <X className="h-4 w-4" />
-              Clear filters
-            </button>
+        <div className="card rounded-2xl">
+          {hasFilters ? (
+            <EmptyState
+              title="No shipments match these filters"
+              description="Try clearing one or more filters to see the rest of the board."
+              action={{ label: "Clear filters", onClick: clearFilters }}
+            />
+          ) : (
+            <EmptyState
+              title="No shipments on the board"
+              description="Import a weekly workbook — every row lands here grouped by week, carrier and destination."
+              action={{ label: "Import workbook", href: "/platform/shipments/import" }}
+              secondary={{ label: "Or scan a single Bill of Lading", href: "/platform/shipments?scan=1" }}
+            />
           )}
         </div>
       ) : (

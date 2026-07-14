@@ -54,17 +54,12 @@ export default async function SettingsPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <InlineNameEditor label="Full Name" initial={user.name ?? ''} endpoint="/api/account" />
+            {/* AI-12732: fixed values render as text, not as disabled-looking
+                inputs — only editable things should look like form fields. */}
             <div>
-              <label className="block text-sm font-medium text-navy-700 mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                value={user.email ?? ''}
-                readOnly
-                className="w-full px-3 py-2 border border-navy-200 rounded-lg text-sm bg-navy-50 text-navy-600"
-              />
-              <p className="text-xs text-navy-400 mt-1">Email can&apos;t be changed here.</p>
+              <p className="block text-sm font-medium text-navy-700 mb-1">Email</p>
+              <p className="py-2 text-sm text-navy-900">{user.email}</p>
+              <p className="text-xs text-navy-400">Email can&apos;t be changed here.</p>
             </div>
           </div>
         </div>
@@ -92,15 +87,18 @@ export default async function SettingsPage() {
               </div>
             )}
             <div>
-              <label className="block text-sm font-medium text-navy-700 mb-1">
-                Plan
-              </label>
-              <input
-                type="text"
-                value={(org?.plan ?? 'free').charAt(0).toUpperCase() + (org?.plan ?? 'free').slice(1)}
-                readOnly
-                className="w-full px-3 py-2 border border-navy-200 rounded-lg text-sm bg-navy-50 text-navy-600"
-              />
+              <p className="block text-sm font-medium text-navy-700 mb-1">Plan</p>
+              <div className="flex items-center gap-3 py-2">
+                <span className="text-sm font-semibold capitalize text-navy-900">
+                  {org?.plan ?? 'free'}
+                </span>
+                <Link
+                  href="/platform/billing"
+                  className="text-xs font-medium text-ocean-600 hover:text-ocean-700"
+                >
+                  Manage plan →
+                </Link>
+              </div>
             </div>
           </div>
           <div>
@@ -124,9 +122,6 @@ export default async function SettingsPage() {
               </span>
             </div>
           </div>
-          {isOwner ? (
-            <p className="text-xs text-navy-400">Click the pencil next to the organization name to rename it.</p>
-          ) : null}
         </div>
       </section>
 
