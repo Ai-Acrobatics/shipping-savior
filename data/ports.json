@@ -9189,5 +9189,18 @@
     "annual_teu": 5000,
     "region": "North America",
     "timezone": "America/Chicago"
+  },
+  {
+    "locode": "USHNM",
+    "name": "Port Hueneme",
+    "country": "United States",
+    "country_code": "US",
+    "lat": 34.15,
+    "lng": -119.21,
+    "port_type": "seaport",
+    "size": "medium",
+    "annual_teu": 500000,
+    "region": "North America",
+    "timezone": "America/Los_Angeles"
   }
 ]

@@ -40,46 +40,7 @@ interface CarrierInfo {
 /* ─────────── MOCK DATA ─────────── */
 // TODO: Replace with real API call to /api/carriers/ports?port1=XXX&port2=YYY
 
-const MOCK_PORT_CARRIERS: Record<string, CarrierInfo[]> = {
-  CNQIN: [
-    { name: "Maersk", code: "MAEU", alliance: "2M", reliabilityGrade: "B", reliabilityPercent: 87 },
-    { name: "MSC", code: "MSCU", alliance: "2M", reliabilityGrade: "B", reliabilityPercent: 82 },
-    { name: "CMA CGM", code: "CMDU", alliance: "Ocean Alliance", reliabilityGrade: "A", reliabilityPercent: 91 },
-    { name: "COSCO", code: "COSU", alliance: "Ocean Alliance", reliabilityGrade: "C", reliabilityPercent: 78 },
-    { name: "Hapag-Lloyd", code: "HLCU", alliance: "THE Alliance", reliabilityGrade: "B", reliabilityPercent: 89 },
-    { name: "ONE", code: "ONEY", alliance: "THE Alliance", reliabilityGrade: "B", reliabilityPercent: 85 },
-    { name: "Evergreen", code: "EGLV", alliance: "Ocean Alliance", reliabilityGrade: "C", reliabilityPercent: 76 },
-    { name: "Yang Ming", code: "YMLU", alliance: "THE Alliance", reliabilityGrade: "C", reliabilityPercent: 74 },
-  ],
-  USLAX: [
-    { name: "Maersk", code: "MAEU", alliance: "2M", reliabilityGrade: "B", reliabilityPercent: 87 },
-    { name: "MSC", code: "MSCU", alliance: "2M", reliabilityGrade: "B", reliabilityPercent: 82 },
-    { name: "CMA CGM", code: "CMDU", alliance: "Ocean Alliance", reliabilityGrade: "A", reliabilityPercent: 91 },
-    { name: "COSCO", code: "COSU", alliance: "Ocean Alliance", reliabilityGrade: "C", reliabilityPercent: 78 },
-    { name: "Hapag-Lloyd", code: "HLCU", alliance: "THE Alliance", reliabilityGrade: "B", reliabilityPercent: 89 },
-    { name: "ONE", code: "ONEY", alliance: "THE Alliance", reliabilityGrade: "B", reliabilityPercent: 85 },
-    { name: "Evergreen", code: "EGLV", alliance: "Ocean Alliance", reliabilityGrade: "C", reliabilityPercent: 76 },
-    { name: "ZIM", code: "ZIMU", alliance: "Independent", reliabilityGrade: "C", reliabilityPercent: 73 },
-    { name: "HMM", code: "HMMU", alliance: "THE Alliance", reliabilityGrade: "B", reliabilityPercent: 80 },
-  ],
-  VNSGN: [
-    { name: "Maersk", code: "MAEU", alliance: "2M", reliabilityGrade: "B", reliabilityPercent: 87 },
-    { name: "MSC", code: "MSCU", alliance: "2M", reliabilityGrade: "B", reliabilityPercent: 82 },
-    { name: "CMA CGM", code: "CMDU", alliance: "Ocean Alliance", reliabilityGrade: "A", reliabilityPercent: 91 },
-    { name: "COSCO", code: "COSU", alliance: "Ocean Alliance", reliabilityGrade: "C", reliabilityPercent: 78 },
-    { name: "Hapag-Lloyd", code: "HLCU", alliance: "THE Alliance", reliabilityGrade: "B", reliabilityPercent: 89 },
-    { name: "Evergreen", code: "EGLV", alliance: "Ocean Alliance", reliabilityGrade: "C", reliabilityPercent: 76 },
-  ],
-  USNYC: [
-    { name: "Maersk", code: "MAEU", alliance: "2M", reliabilityGrade: "B", reliabilityPercent: 87 },
-    { name: "MSC", code: "MSCU", alliance: "2M", reliabilityGrade: "B", reliabilityPercent: 82 },
-    { name: "CMA CGM", code: "CMDU", alliance: "Ocean Alliance", reliabilityGrade: "A", reliabilityPercent: 91 },
-    { name: "Hapag-Lloyd", code: "HLCU", alliance: "THE Alliance", reliabilityGrade: "B", reliabilityPercent: 89 },
-    { name: "ONE", code: "ONEY", alliance: "THE Alliance", reliabilityGrade: "B", reliabilityPercent: 85 },
-    { name: "ZIM", code: "ZIMU", alliance: "Independent", reliabilityGrade: "C", reliabilityPercent: 73 },
-    { name: "HMM", code: "HMMU", alliance: "THE Alliance", reliabilityGrade: "B", reliabilityPercent: 80 },
-  ],
-};
+
 
 /* ─────────── HELPERS ─────────── */
 
@@ -207,23 +168,19 @@ export default function PortFinderPage() {
     setSearched(false);
     setUsedDemoData(false);
 
-    // AI-12724: live carrier-ports data first; the labelled demo dataset only
-    // when a port isn't covered by the live dataset yet.
-    try {
-      const [r1, r2] = await Promise.all([
-        fetch(`/api/carriers/ports?port=${encodeURIComponent(port1.locode)}`),
-        fetch(`/api/carriers/ports?port=${encodeURIComponent(port2.locode)}`),
-      ]);
-      if (!r1.ok || !r2.ok) throw new Error("port not in live dataset");
-      const [d1, d2] = await Promise.all([r1.json(), r2.json()]);
-      setPort1Carriers((d1.carriers ?? []).map(toCarrierInfo));
-      setPort2Carriers((d2.carriers ?? []).map(toCarrierInfo));
-    } catch {
-      setPort1Carriers(MOCK_PORT_CARRIERS[port1.locode] || MOCK_PORT_CARRIERS["CNQIN"]);
-      setPort2Carriers(MOCK_PORT_CARRIERS[port2.locode] || MOCK_PORT_CARRIERS["USLAX"]);
-      setUsedDemoData(true);
+    const response = await fetch(`/api/carriers/ports?port1=${port1.locode}&port2=${port2.locode}`);
+    const data = await response.json();
+
+    if (response.ok) {
+      setPort1Carriers(data.overlappingCarriers);
+      setPort2Carriers(data.overlappingCarriers);
+      setSearched(true);
+      setUsedDemoData(false); // Ensure demo data flag is false on success
+    } else {
+      console.error("Failed to fetch carrier data:", data.error);
+      // Optionally handle error state in UI, e.g., show a toast or alert
+      setUsedDemoData(true); // If API fails, fallback to show demo data message if applicable
     }
-    setSearched(true);
     setLoading(false);
   }
 
