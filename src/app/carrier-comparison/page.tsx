@@ -205,6 +205,7 @@ export default function CarrierComparisonPage() {
   const [showDestDropdown, setShowDestDropdown] = useState(false);
   const [results, setResults] = useState<CarrierResult[] | null>(null);
   const [loading, setLoading] = useState(false);
+  const [useDemoData, setUseDemoData] = useState(false);
   const [sortMode, setSortMode] = useState<SortMode>("fastest");
   const [expandedCarrier, setExpandedCarrier] = useState<string | null>(null);
 
@@ -325,9 +326,12 @@ export default function CarrierComparisonPage() {
 
       // Fall back to reference data only when the live feed has no sailings for
       // this lane, so a known demo route never comes up empty.
+      const usingFallback = !mapped.length && !!MOCK_CARRIERS[routeKey];
       setResults(mapped.length ? mapped : MOCK_CARRIERS[routeKey] ?? []);
+      setUseDemoData(usingFallback);
     } catch {
       setResults(MOCK_CARRIERS[routeKey] ?? []);
+      setUseDemoData(true);
     } finally {
       setLoading(false);
     }
@@ -537,6 +541,16 @@ export default function CarrierComparisonPage() {
             <div className="flex flex-col items-center justify-center py-20">
               <div className="w-12 h-12 rounded-full border-4 border-ocean-200 border-t-ocean-600 animate-spin" />
               <p className="text-navy-500 mt-4 text-sm">Searching carriers...</p>
+            </div>
+          )}
+
+          {/* Demo Data Badge */}
+          {useDemoData && !loading && (
+            <div className="flex items-center gap-2 mb-6 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <span className="text-amber-600 text-xs font-semibold uppercase tracking-wider px-2 py-0.5 bg-amber-100 rounded">Demo Data</span>
+              <span className="text-amber-700 text-sm">
+                Showing reference schedule data &mdash; live carrier API unavailable. Data may not reflect current sailings.
+              </span>
             </div>
           )}
 

@@ -190,14 +190,55 @@ export default function PortFinderPage() {
     setLoading(true);
     setSearched(false);
 
-    // TODO: Replace with real API call:
-    // const data = await fetch(`/api/carriers/ports?port1=${port1.locode}&port2=${port2.locode}`).then(r => r.json());
-    await new Promise((resolve) => setTimeout(resolve, 700));
+    // Static alliance/reliability enrichment for known carriers
+    const CARRIER_META: Record<string, { alliance: string; reliabilityGrade: 'A' | 'B' | 'C' | 'D' | 'F'; reliabilityPercent: number }> = {
+      MAEU: { alliance: '2M', reliabilityGrade: 'B', reliabilityPercent: 87 },
+      MSCU: { alliance: '2M', reliabilityGrade: 'B', reliabilityPercent: 82 },
+      CMDU: { alliance: 'Ocean Alliance', reliabilityGrade: 'A', reliabilityPercent: 91 },
+      COSU: { alliance: 'Ocean Alliance', reliabilityGrade: 'C', reliabilityPercent: 78 },
+      HLCU: { alliance: 'THE Alliance', reliabilityGrade: 'B', reliabilityPercent: 89 },
+      ONEY: { alliance: 'THE Alliance', reliabilityGrade: 'B', reliabilityPercent: 85 },
+      EGLV: { alliance: 'Ocean Alliance', reliabilityGrade: 'C', reliabilityPercent: 76 },
+      YMLU: { alliance: 'THE Alliance', reliabilityGrade: 'C', reliabilityPercent: 74 },
+      ZIMU: { alliance: 'Independent', reliabilityGrade: 'C', reliabilityPercent: 73 },
+      HMMU: { alliance: 'THE Alliance', reliabilityGrade: 'B', reliabilityPercent: 80 },
+      MATS: { alliance: 'Independent', reliabilityGrade: 'C', reliabilityPercent: 70 },
+    };
 
-    setPort1Carriers(MOCK_PORT_CARRIERS[port1.locode] || MOCK_PORT_CARRIERS["CNQIN"]);
-    setPort2Carriers(MOCK_PORT_CARRIERS[port2.locode] || MOCK_PORT_CARRIERS["USLAX"]);
-    setSearched(true);
-    setLoading(false);
+    function enrichCarrier(c: { name: string; code: string }): CarrierInfo {
+      const meta = CARRIER_META[c.code];
+      return {
+        name: c.name,
+        code: c.code,
+        alliance: meta?.alliance || 'Independent',
+        reliabilityGrade: meta?.reliabilityGrade || 'C',
+        reliabilityPercent: meta?.reliabilityPercent || 75,
+      };
+    }
+
+    try {
+      const [overlapRes, port1Res, port2Res] = await Promise.all([
+        fetch('/api/carriers/ports?port1=' + port1.locode + '&port2=' + port2.locode).then(r => r.ok ? r.json() : Promise.reject(new Error('overlap failed'))),
+        fetch('/api/carriers/ports?port=' + port1.locode).then(r => r.ok ? r.json() : Promise.reject(new Error('port1 failed'))),
+        fetch('/api/carriers/ports?port=' + port2.locode).then(r => r.ok ? r.json() : Promise.reject(new Error('port2 failed'))),
+      ]);
+
+      // Real data from API - build CarrierInfo arrays for both ports
+      const p1All: CarrierInfo[] = (port1Res.carriers || []).map(enrichCarrier);
+      const p2All: CarrierInfo[] = (port2Res.carriers || []).map(enrichCarrier);
+
+      setPort1Carriers(p1All);
+      setPort2Carriers(p2All);
+      setSearched(true);
+      setUseDemoData(false);
+    } catch {
+      // Fall back to mock data with demo badge
+      setPort1Carriers(MOCK_PORT_CARRIERS[port1.locode] || MOCK_PORT_CARRIERS['CNQIN']);
+      setPort2Carriers(MOCK_PORT_CARRIERS[port2.locode] || MOCK_PORT_CARRIERS['USLAX']);
+      setUseDemoData(true);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -265,7 +306,7 @@ export default function PortFinderPage() {
                     Port A
                   </label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ocean-500" />
+                    <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-ocean-500" />
                     <input
                       type="text"
                       value={port1Search}
@@ -276,7 +317,7 @@ export default function PortFinderPage() {
                       onFocus={() => setShowDrop1(true)}
                       onBlur={() => setTimeout(() => setShowDrop1(false), 200)}
                       placeholder="Search port name or code..."
-                      className="input-light pl-10"
+                      className="input-light pl-12"
                     />
                   </div>
                   {showDrop1 && results1.length > 0 && (
@@ -306,7 +347,7 @@ export default function PortFinderPage() {
                     Port B
                   </label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-500" />
+                    <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-500" />
                     <input
                       type="text"
                       value={port2Search}
@@ -317,7 +358,7 @@ export default function PortFinderPage() {
                       onFocus={() => setShowDrop2(true)}
                       onBlur={() => setTimeout(() => setShowDrop2(false), 200)}
                       placeholder="Search port name or code..."
-                      className="input-light pl-10"
+                      className="input-light pl-12"
                     />
                   </div>
                   {showDrop2 && results2.length > 0 && (
@@ -357,6 +398,16 @@ export default function PortFinderPage() {
       {/* ══════════ RESULTS ══════════ */}
       <section className="pb-24 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
+          {/* Demo Data Badge */}
+          {searched && useDemoData && !loading && (
+            <div className="flex items-center gap-2 mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <span className="text-amber-600 text-xs font-semibold uppercase tracking-wider px-2 py-0.5 bg-amber-100 rounded">Demo Data</span>
+              <span className="text-amber-700 text-sm">
+                Showing reference carrier data &mdash; real carrier API unavailable. Data may not reflect live carrier coverage.
+              </span>
+            </div>
+          )}
+
           {/* Loading */}
           {loading && (
             <div className="flex flex-col items-center justify-center py-20">
