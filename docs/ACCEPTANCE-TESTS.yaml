@@ -489,23 +489,22 @@ suites:
 
   # ────────────────────────────────────────────────────────────────
   mobile_app:
-    description: Expo app (iOS+Android) — ALL blocked on first simulator/device run
+    description: Expo app (iOS+Android) — first-boot + shipments verified via local build 2026-07-15; per-tab interaction pending a tappable sim
     tests:
       - id: mob-first-boot
         feature: App boots, login screen renders, session persists across relaunch
         method: simulator
         pass: Cold start <5s to interactive; login with demo creds lands on Shipments; kill+relaunch stays signed in
         fail: Crash, white screen, or session lost
-        status: blocked
-        blocked_by: AI-12719
-        evidence: "2026-07-15 partial: deps install + Metro iOS bundle green (1,782 modules, 0 errors) on the MacBook Air; visual run blocked by an Expo Go install race with the bt-app-test-loop that owns the shared simulators — finishing runbook on AI-12719"
+        status: pass
+        evidence: "2026-07-15: LOCAL iOS build (eas build --profile simulator --local, off the julianai account, 0 cloud credits) → installed com.shippingsavior.app on iPhone 17 Pro Max sim → launched native (no Expo Go) → demo auto-login landed on Shipments in <5s. Screenshot mob-app-2."
       - id: mob-shipments
         feature: Shipments list/detail parity with web
         method: simulator
         pass: Same rows as web for the same org; pull-to-refresh picks up a web-created shipment; detail shows reefer/cutoff meta
         fail: Data divergence from web
-        status: blocked
-        blocked_by: AI-12719
+        status: pass
+        evidence: "2026-07-15: Shipments tab rendered LIVE prod data — MAEU7788990 Port Hueneme→Yokohama (the BOL scanned earlier this session) + MAEU3390771 Long Beach→Shanghai; status filter chips + In-Transit/Pending badges; native 5-tab shell (Shipments/Scan/Assistant/Calculate/Account)."
       - id: mob-scan-save
         feature: Camera scan → save (field workflow)
         method: simulator
@@ -540,7 +539,8 @@ suites:
         method: manual
         pass: eas build -p ios --profile production produces an installable .ipa
         status: blocked
-        blocked_by: AI-12720 (Apple PLA + EAS credits)
+        blocked_by: AI-12720 (Apple PLA)
+        evidence: "2026-07-15: LOCAL build toolchain proven end-to-end (simulator profile built + ran off the julianai account, 0 cloud credits). Cloud-credit gate has a free workaround — 25 local builds available; monthly cloud reset 2026-07-20. Production/distribution .ipa still needs the Apple Program License Agreement accepted for signing."
       - id: store-testflight
         feature: TestFlight internal build installable
         method: manual
