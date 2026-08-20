@@ -4,7 +4,9 @@
  * Pins the contract: 401 without a session, 400 on a wrong/missing confirm
  * phrase, 409 for an owner who still has other members, and the sole-member
  * happy path purging the org graph inside a transaction with an audit entry
- * written first.
+ * written first. Also pins the AI-8780 rule that a live Stripe subscription is
+ * cancelled BEFORE the purge, and that a Stripe failure aborts the deletion
+ * rather than orphaning a billable subscription.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { NextRequest } from 'next/server';
@@ -18,6 +20,11 @@ vi.mock('@/lib/db', () => ({
     select: vi.fn(),
     transaction: vi.fn(),
   },
+}));
+
+vi.mock('@/lib/stripe/server', () => ({
+  stripe: { subscriptions: { cancel: vi.fn() } },
+  isStripeConfigured: vi.fn(() => true),
 }));
 
 import { auth } from '@/lib/auth';
@@ -34,6 +41,7 @@ import {
   bolDocuments,
   auditLogs,
 } from '@/lib/db/schema';
+import { stripe, isStripeConfigured } from '@/lib/stripe/server';
 import { POST } from './route';
 
 const SESSION = {
@@ -58,11 +66,21 @@ function selectChain(rows: unknown[]) {
   return chain;
 }
 
-/** Mock the pre-transaction queries: membership lookup then member count. */
-function mockMembership(role: string, totalMembers: number) {
+/**
+ * Mock the pre-transaction queries: membership lookup, member count, and — on
+ * the sole-member path only — the org's Stripe subscription id.
+ */
+function mockMembership(
+  role: string,
+  totalMembers: number,
+  subscriptionId: string | null = null
+) {
   (db.select as any)
     .mockReturnValueOnce(selectChain([{ orgId: 'org-1', userId: 'user-1', role }]))
     .mockReturnValueOnce(selectChain([{ total: totalMembers }]));
+  if (totalMembers <= 1) {
+    (db.select as any).mockReturnValueOnce(selectChain([{ subscriptionId }]));
+  }
 }
 
 /** Transaction mock: db.transaction(fn) → fn(mockTx). */
@@ -80,11 +98,20 @@ function mockTransaction(orgContractIds: { id: string }[] = []) {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  (isStripeConfigured as any).mockReturnValue(true);
+  (stripe.subscriptions.cancel as any).mockResolvedValue({ id: 'sub_1', status: 'canceled' });
 });
 
 describe('POST /api/account/delete', () => {
   it('returns 401 without a session', async () => {
     (auth as any).mockResolvedValue(null);
+    const res = await POST(req({ confirm: 'DELETE MY ACCOUNT' }));
+    expect(res.status).toBe(401);
+    expect(db.transaction).not.toHaveBeenCalled();
+  });
+
+  it('returns 401 for a session shell with no user', async () => {
+    (auth as any).mockResolvedValue({});
     const res = await POST(req({ confirm: 'DELETE MY ACCOUNT' }));
     expect(res.status).toBe(401);
     expect(db.transaction).not.toHaveBeenCalled();
@@ -146,6 +173,55 @@ describe('POST /api/account/delete', () => {
       organizations,
       users,
     ]);
+  });
+
+  it('cancels the Stripe subscription before purging the org', async () => {
+    (auth as any).mockResolvedValue(SESSION);
+    mockMembership('owner', 1, 'sub_live_1');
+    mockTransaction();
+
+    const res = await POST(req({ confirm: 'DELETE MY ACCOUNT' }));
+    expect(res.status).toBe(200);
+    expect(stripe.subscriptions.cancel).toHaveBeenCalledWith('sub_live_1');
+    // Cancellation has to precede the purge — afterwards we no longer know the id.
+    expect((stripe.subscriptions.cancel as any).mock.invocationCallOrder[0]).toBeLessThan(
+      (db.transaction as any).mock.invocationCallOrder[0]
+    );
+  });
+
+  it('aborts the deletion when Stripe cancellation fails', async () => {
+    (auth as any).mockResolvedValue(SESSION);
+    mockMembership('owner', 1, 'sub_live_1');
+    mockTransaction();
+    (stripe.subscriptions.cancel as any).mockRejectedValue(new Error('card_declined'));
+
+    const res = await POST(req({ confirm: 'DELETE MY ACCOUNT' }));
+    expect(res.status).toBe(502);
+    // Nothing was erased — the user can retry without having lost data.
+    expect(db.transaction).not.toHaveBeenCalled();
+  });
+
+  it('treats an already-cancelled Stripe subscription as success', async () => {
+    (auth as any).mockResolvedValue(SESSION);
+    mockMembership('owner', 1, 'sub_gone');
+    mockTransaction();
+    (stripe.subscriptions.cancel as any).mockRejectedValue(
+      Object.assign(new Error('No such subscription'), { code: 'resource_missing' })
+    );
+
+    const res = await POST(req({ confirm: 'DELETE MY ACCOUNT' }));
+    expect(res.status).toBe(200);
+    expect(db.transaction).toHaveBeenCalled();
+  });
+
+  it('does not call Stripe when the org has no subscription', async () => {
+    (auth as any).mockResolvedValue(SESSION);
+    mockMembership('owner', 1, null);
+    mockTransaction();
+
+    const res = await POST(req({ confirm: 'DELETE MY ACCOUNT' }));
+    expect(res.status).toBe(200);
+    expect(stripe.subscriptions.cancel).not.toHaveBeenCalled();
   });
 
   it('deletes only the membership and user rows for a non-owner member', async () => {

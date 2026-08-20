@@ -54,7 +54,7 @@ export default function TermsPage() {
             <p className="mt-2">
               Paid plans are billed by Stripe on a recurring subscription basis. Usage limits
               for each plan are described on the{" "}
-              <Link href="/pricing" className="text-ocean-600">pricing page</Link>. You can
+              <Link href="/pricing" className="text-ocean-600 underline">pricing page</Link>. You can
               cancel anytime from the billing portal; access continues through the end of the
               paid period. Fees are non-refundable except where required by law.
             </p>
@@ -66,7 +66,7 @@ export default function TermsPage() {
               You retain all rights to data and documents you upload. You grant us a limited
               license to process them to operate the Service (including AI extraction as
               described in the{" "}
-              <Link href="/privacy" className="text-ocean-600">Privacy Policy</Link>). We do
+              <Link href="/privacy" className="text-ocean-600 underline">Privacy Policy</Link>). We do
               not use your documents to train AI models.
             </p>
           </section>
@@ -117,7 +117,7 @@ export default function TermsPage() {
               We may update these Terms; material changes will be announced by email or in-app
               notice at least 14 days before taking effect. Continued use after the effective
               date constitutes acceptance. Questions:{" "}
-              <a href="mailto:legal@shippingsavior.com" className="text-ocean-600">
+              <a href="mailto:legal@shippingsavior.com" className="text-ocean-600 underline">
                 legal@shippingsavior.com
               </a>.
             </p>

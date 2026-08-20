@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Ship, ArrowLeft } from "lucide-react";
+import SiteFooter from "@/components/SiteFooter";
 
 export default function AuthLayout({
   children,
@@ -38,6 +39,7 @@ export default function AuthLayout({
           {children}
         </div>
       </div>
+      <SiteFooter className="bg-transparent" />
     </div>
   );
 }

@@ -530,3 +530,36 @@ export const pushTokens = pgTable(
 );
 
 export type PushToken = typeof pushTokens.$inferSelect;
+
+// ── Cookie Consent (AI-8780) ──────────────────────────
+//
+// GDPR/ePrivacy require that consent be demonstrable: a regulator asks "prove
+// this visitor agreed to analytics on this date". The banner keeps a client-side
+// copy for UX, but the audit record lives here. Rows are written for anonymous
+// visitors too (userId/orgId null), keyed by an opaque `visitorId` the browser
+// stores alongside the `cookie_consent` cookie, so a pre-signup consent can be
+// produced on request.
+//
+// This table is deliberately NOT purged on account deletion — an erasure request
+// does not erase the proof that consent was given, and the row carries no
+// content beyond the choice itself. It is covered by the audit retention policy
+// described on /security.
+
+export const consentChoiceEnum = pgEnum('consent_choice', ['all', 'essential']);
+
+export const cookieConsents = pgTable('cookie_consents', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  visitorId: varchar('visitor_id', { length: 64 }).notNull(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
+  orgId: uuid('org_id').references(() => organizations.id, { onDelete: 'set null' }),
+  choice: consentChoiceEnum('choice').notNull(),
+  // Consent text version the visitor actually saw — if the banner copy changes,
+  // bump CONSENT_POLICY_VERSION so old consents are distinguishable from new ones.
+  policyVersion: varchar('policy_version', { length: 32 }).notNull(),
+  ipAddress: varchar('ip_address', { length: 45 }),
+  userAgent: text('user_agent'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export type CookieConsent = typeof cookieConsents.$inferSelect;
+export type ConsentChoice = (typeof consentChoiceEnum.enumValues)[number];
