@@ -168,3 +168,108 @@ describe('formatCurrency', () => {
     expect(formatCurrency(2_500_000)).toBe('$2.5M');
   });
 });
+
+// ─── AI-12014: Jones Act / domestic-lane customs suppression ───
+//
+// A mainland -> Hawaii move is not an import. Charging it duty, MPF, HMF
+// and a broker fee is the exact bug Blake asked us to close: it makes a
+// Jones Act rate look like international freight.
+
+const jonesActInput: LandedCostInput = {
+  ...baselineInput,
+  countryOfOrigin: 'US',
+  originPort: 'USLAX',
+  destPort: 'USHNL',
+  carrier: 'Matson',
+};
+
+describe('calculateLandedCost — Jones Act domestic lanes (AI-12014)', () => {
+  it('classifies LA -> Honolulu as Jones Act with no customs entry', () => {
+    const result = calculateLandedCost(jonesActInput);
+
+    expect(result.customsEntryRequired).toBe(false);
+    expect(result.lane.isJonesActLane).toBe(true);
+    expect(result.lane.trade).toBe('hawaii');
+    expect(result.lane.carrierIsJonesActQualified).toBe(true);
+  });
+
+  it('zeroes duty, MPF, HMF and the broker fee on a domestic lane', () => {
+    const result = calculateLandedCost(jonesActInput);
+
+    expect(result.total.duty).toBe(0);
+    expect(result.total.mpf).toBe(0);
+    expect(result.total.hmf).toBe(0);
+    expect(result.total.customsBroker).toBe(0);
+    expect(result.perUnit.dutyMPF).toBe(0);
+    expect(result.perUnit.customsBroker).toBe(0);
+    expect(result.effectiveDutyRate).toBe(0);
+  });
+
+  it('drops the duty and broker lines from the breakdown entirely', () => {
+    const labels = calculateLandedCost(jonesActInput).breakdown.map((b) => b.label);
+
+    expect(labels).not.toContain('Duty');
+    expect(labels).not.toContain('MPF + HMF');
+    expect(labels).not.toContain('Customs Broker');
+    expect(labels).toContain('Ocean Freight');
+  });
+
+  it('lands cheaper than the same shipment treated as an import', () => {
+    const domestic = calculateLandedCost(jonesActInput);
+    const asImport = calculateLandedCost({ ...jonesActInput, destPort: 'USLAX', originPort: 'CNSHA' });
+
+    expect(domestic.perUnit.total).toBeLessThan(asImport.perUnit.total);
+  });
+
+  it('still reconciles per-unit total against the grand total', () => {
+    const result = calculateLandedCost(jonesActInput);
+    expect(result.total.grandTotal).toBeCloseTo(result.perUnit.total * jonesActInput.totalUnits, 4);
+  });
+
+  it('keeps freight, insurance and drayage — only customs costs are removed', () => {
+    const result = calculateLandedCost(jonesActInput);
+
+    expect(result.total.freight).toBe(jonesActInput.freightCostTotal);
+    expect(result.total.drayage).toBe(jonesActInput.drayageCost);
+    expect(result.total.insurance).toBeGreaterThan(0);
+  });
+
+  it('warns when a foreign-flag carrier is quoted on a Jones Act lane', () => {
+    const result = calculateLandedCost({ ...jonesActInput, carrier: 'Maersk' });
+
+    expect(result.lane.carrierIsJonesActQualified).toBe(false);
+    expect(result.lane.warnings.join(' ')).toMatch(/not a Jones Act qualified carrier/i);
+  });
+
+  it('still charges duty on a Guam lane — US soil, outside the customs territory', () => {
+    const result = calculateLandedCost({
+      ...jonesActInput,
+      originPort: 'GUDTM',
+      destPort: 'USLAX',
+    });
+
+    expect(result.lane.isJonesActLane).toBe(true);
+    expect(result.customsEntryRequired).toBe(true);
+    expect(result.total.mpf).toBeGreaterThan(0);
+    expect(result.total.customsBroker).toBe(jonesActInput.customsBrokerFee);
+  });
+
+  it('leaves an ordinary import untouched', () => {
+    const result = calculateLandedCost(baselineInput);
+
+    expect(result.customsEntryRequired).toBe(true);
+    expect(result.lane.isJonesActLane).toBe(false);
+    expect(result.total.mpf).toBeGreaterThan(0);
+    expect(result.total.customsBroker).toBe(baselineInput.customsBrokerFee);
+  });
+
+  it('honours domesticLaneOverride in both directions', () => {
+    const forcedDomestic = calculateLandedCost({ ...baselineInput, domesticLaneOverride: true });
+    expect(forcedDomestic.customsEntryRequired).toBe(false);
+    expect(forcedDomestic.total.duty).toBe(0);
+
+    const forcedImport = calculateLandedCost({ ...jonesActInput, domesticLaneOverride: false });
+    expect(forcedImport.customsEntryRequired).toBe(true);
+    expect(forcedImport.total.mpf).toBeGreaterThan(0);
+  });
+});

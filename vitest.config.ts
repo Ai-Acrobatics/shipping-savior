@@ -17,6 +17,12 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  // tsconfig sets `jsx: "preserve"` for Next's compiler, which leaves raw JSX
+  // for the test transformer to choke on. Compile it here instead so the
+  // jsdom env below can actually render components (AI-12014).
+  oxc: {
+    jsx: { runtime: 'automatic', importSource: 'react' },
+  },
   test: {
     environment: 'jsdom',
     globals: true,

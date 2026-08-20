@@ -14,6 +14,7 @@ import type {
   CostBreakdownItem,
 } from "@/lib/types";
 import { getEffectiveDutyRate } from "@/lib/data/hts-tariffs";
+import { classifyLane } from "@/lib/data/jones-act";
 
 // ─── US CBP Fee Constants (current as of 2024) ────────────
 export const MPF_RATE = 0.003464;    // Merchandise Processing Fee: 0.3464%
@@ -53,6 +54,10 @@ export function calculateLandedCost(input: LandedCostInput): LandedCostResult {
     useFTZ,
     ftzStorageMonths = 0,
     ftzStorageFeePerUnit = 0,
+    originPort,
+    destPort,
+    carrier,
+    domesticLaneOverride,
   } = input;
 
   // ─── Cargo Value (CIF basis for insurance) ─────────────
@@ -65,22 +70,42 @@ export function calculateLandedCost(input: LandedCostInput): LandedCostResult {
   const insuranceTotal = cifValue * (insuranceRate / 100);
   const insurancePerUnit = insuranceTotal / totalUnits;
 
+  // ─── Lane classification (AI-12014) ────────────────────
+  // A Jones Act move between two points inside the US customs territory
+  // (mainland <-> HI / AK / PR) is NOT an import. No CBP entry is filed,
+  // so duty, MPF, HMF and the customs broker fee are all inapplicable.
+  // Guam and the USVI are US soil but sit outside the customs territory,
+  // so they keep their entry costs — see `@/lib/data/jones-act`.
+  const lane = classifyLane({ originPort, destPort, carrier });
+  const customsEntryRequired = domesticLaneOverride === true
+    ? false
+    : domesticLaneOverride === false
+      ? true
+      : lane.customsEntryRequired;
+
   // ─── Duty ──────────────────────────────────────────────
   // Duty is assessed on the declared customs value (usually CIF in US)
   const customsValue = cargoValueTotal; // US uses FOB value for most HTS
-  const { effective: effectiveDutyRate } = getEffectiveDutyRate(htsCode, countryOfOrigin);
+  const { effective: tariffDutyRate } = getEffectiveDutyRate(htsCode, countryOfOrigin);
+  const effectiveDutyRate = customsEntryRequired ? tariffDutyRate : 0;
   const dutyTotal = customsValue * (effectiveDutyRate / 100);
   const dutyPerUnit = dutyTotal / totalUnits;
 
   // ─── MPF & HMF ─────────────────────────────────────────
-  let mpfTotal = customsValue * MPF_RATE;
-  mpfTotal = Math.max(MPF_MIN, Math.min(MPF_MAX, mpfTotal));
-  const hmfTotal = customsValue * HMF_RATE;
+  let mpfTotal = 0;
+  let hmfTotal = 0;
+  if (customsEntryRequired) {
+    mpfTotal = customsValue * MPF_RATE;
+    mpfTotal = Math.max(MPF_MIN, Math.min(MPF_MAX, mpfTotal));
+    hmfTotal = customsValue * HMF_RATE;
+  }
   const mpfPerUnit = mpfTotal / totalUnits;
   const hmfPerUnit = hmfTotal / totalUnits;
 
   // ─── Customs Broker ────────────────────────────────────
-  const customsBrokerPerUnit = customsBrokerFee / totalUnits;
+  // No entry to file means no broker to pay, whatever the caller passed in.
+  const effectiveCustomsBrokerFee = customsEntryRequired ? customsBrokerFee : 0;
+  const customsBrokerPerUnit = effectiveCustomsBrokerFee / totalUnits;
 
   // ─── Drayage ───────────────────────────────────────────
   const drayagePerUnit = drayageCost / totalUnits;
@@ -117,7 +142,7 @@ export function calculateLandedCost(input: LandedCostInput): LandedCostResult {
     { label: "Insurance",        amount: insuranceTotal,            perUnit: insurancePerUnit },
     { label: "Duty",             amount: dutyTotal,                 perUnit: dutyPerUnit },
     { label: "MPF + HMF",        amount: mpfTotal + hmfTotal,       perUnit: mpfPerUnit + hmfPerUnit },
-    { label: "Customs Broker",   amount: customsBrokerFee,          perUnit: customsBrokerPerUnit },
+    { label: "Customs Broker",   amount: effectiveCustomsBrokerFee, perUnit: customsBrokerPerUnit },
     { label: "Drayage",          amount: drayageCost,               perUnit: drayagePerUnit },
     { label: "Warehousing",      amount: warehousingPerUnit * totalUnits, perUnit: warehousingPerUnit },
     { label: "Fulfillment",      amount: fulfillmentPerUnit * totalUnits, perUnit: fulfillmentPerUnit },
@@ -150,14 +175,16 @@ export function calculateLandedCost(input: LandedCostInput): LandedCostResult {
       duty: dutyTotal,
       mpf: mpfTotal,
       hmf: hmfTotal,
-      customsBroker: customsBrokerFee,
+      customsBroker: effectiveCustomsBrokerFee,
       drayage: drayageCost,
       warehousing: warehousingPerUnit * totalUnits,
       fulfillment: fulfillmentPerUnit * totalUnits,
       ftzStorage: ftzStorageTotal,
       grandTotal,
     },
-    effectiveDutyRate: (dutyTotal / cargoValueTotal) * 100,
+    lane,
+    customsEntryRequired,
+    effectiveDutyRate: cargoValueTotal > 0 ? (dutyTotal / cargoValueTotal) * 100 : 0,
     dutyRate: effectiveDutyRate,
     mpfRate: MPF_RATE * 100,
     hmfRate: HMF_RATE * 100,
