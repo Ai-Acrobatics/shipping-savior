@@ -228,13 +228,22 @@ export default function ShipmentsImportPage() {
                   {workbookResult.duplicatesSkipped > 0 &&
                     ` · ${workbookResult.duplicatesSkipped} duplicates skipped`}
                 </p>
-                <div className="flex gap-3 mt-4">
+                <div className="flex flex-wrap gap-3 mt-4">
                   <Link
                     href="/platform/shipments"
                     className="text-sm bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
                   >
                     View Shipments
                   </Link>
+                  {/* AI-12009: write the cleaned board straight back to .xlsx */}
+                  <a
+                    href="/api/shipments/export-workbook"
+                    download
+                    className="inline-flex items-center gap-2 text-sm border border-emerald-300 hover:bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg transition-colors font-medium"
+                  >
+                    <Download className="w-4 h-4" />
+                    Download clean workbook
+                  </a>
                   <button
                     onClick={reset}
                     className="text-sm border border-emerald-300 hover:bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg transition-colors font-medium"

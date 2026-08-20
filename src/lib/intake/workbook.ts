@@ -192,8 +192,11 @@ export async function parseWorkbook(
     const cellVal = (row: ExcelJS.Row, field: string): ExcelJS.CellValue =>
       colFor[field] !== undefined ? row.getCell(colFor[field]).value : null;
 
-    // Row 1 = headers, row 2 = sub-headers; data starts at row 3.
-    for (let r = 3; r <= ws.rowCount; r++) {
+    // Row 1 = headers. Blake's hand-kept files put overflow sub-headers on
+    // row 2; clean write-backs (AI-12009) have no sub-header row at all. Scan
+    // from row 2 either way — a sub-header row carries no Booking value, so
+    // the blank-row guard below skips it without dropping a real record.
+    for (let r = 2; r <= ws.rowCount; r++) {
       const row = ws.getRow(r);
       const booking = str(row, "booking");
       if (!booking) continue; // spacer row
