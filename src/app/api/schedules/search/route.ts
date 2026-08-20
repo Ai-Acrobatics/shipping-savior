@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import * as fs from 'fs';
 import * as path from 'path';
 import type { ShippingSchedule } from '@/lib/types/schedules';
+import { classifyLane } from '@/lib/data/jones-act';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,6 +10,33 @@ interface ScheduleWithJonesAct extends ShippingSchedule {
   is_jones_act?: boolean;
   customs_required?: boolean;
   transport_mode?: string;
+  jones_act_trade?: string | null;
+  lane_label?: string;
+}
+
+/**
+ * Fill the Jones Act / customs flags from the lane classifier (AI-12014).
+ *
+ * The JSON feeds only hand-tag `data/schedules/jones-act.json`, which meant
+ * every other carrier's domestic sailings came back untagged and a
+ * `?jones_act=false` filter silently kept them. Deriving the flags from the
+ * port codes makes the filter correct for every schedule, and an explicit
+ * value in the data file still wins.
+ */
+function withLaneFlags(schedule: ScheduleWithJonesAct): ScheduleWithJonesAct {
+  const lane = classifyLane({
+    originPort: schedule.originPort,
+    destPort: schedule.destPort,
+    carrier: schedule.carrier ?? schedule.carrierCode,
+  });
+
+  return {
+    ...schedule,
+    is_jones_act: schedule.is_jones_act ?? lane.isJonesActLane,
+    customs_required: schedule.customs_required ?? lane.customsEntryRequired,
+    jones_act_trade: schedule.jones_act_trade ?? lane.trade,
+    lane_label: schedule.lane_label ?? lane.label,
+  };
 }
 
 let schedules: ScheduleWithJonesAct[] | null = null;
@@ -55,6 +83,7 @@ function loadSchedules(): ScheduleWithJonesAct[] {
     }
   }
 
+  schedules = schedules.map(withLaneFlags);
   return schedules;
 }
 

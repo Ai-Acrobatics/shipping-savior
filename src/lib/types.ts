@@ -5,6 +5,8 @@
 
 // ─── HTS / Tariff Types ────────────────────────────────────
 
+import type { LaneClassification } from "@/lib/types/lanes";
+
 export interface HTSCode {
   htsCode: string;          // e.g. "4202.92.30"
   description: string;
@@ -186,9 +188,23 @@ export interface LandedCostInput {
   useFTZ: boolean;
   ftzStorageMonths?: number;
   ftzStorageFeePerUnit?: number;
+
+  // Lane classification (AI-12014)
+  /** Carrier name / code, used to check Jones Act eligibility on domestic lanes. */
+  carrier?: string;
+  /**
+   * Escape hatch for lanes the port-code classifier cannot resolve.
+   * `true` forces "no customs entry", `false` forces an entry.
+   * Leave undefined to classify from `originPort` / `destPort`.
+   */
+  domesticLaneOverride?: boolean;
 }
 
 export interface LandedCostResult {
+  /** How this lane was classified for Jones Act + customs purposes. */
+  lane: LaneClassification;
+  /** Whether duty, MPF, HMF and broker fees were assessed at all. */
+  customsEntryRequired: boolean;
   perUnit: {
     fob: number;
     freight: number;

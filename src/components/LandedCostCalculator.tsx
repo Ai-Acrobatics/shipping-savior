@@ -5,6 +5,8 @@ import { DollarSign, Package, TrendingUp } from "lucide-react";
 import { calculateLandedCost } from "@/lib/calculators/landed-cost";
 import type { LandedCostInput } from "@/lib/types";
 import SaveCalculationButton from "@/components/platform/SaveCalculationButton";
+import JonesActBadge from "@/components/JonesActBadge";
+import { JONES_ACT_CARRIERS } from "@/lib/data/jones-act";
 import IncotermResponsibility from "@/components/platform/IncotermResponsibility";
 import { useLoadCalculation } from "@/lib/hooks/useLoadCalculation";
 
@@ -28,6 +30,7 @@ export default function LandedCostCalculator({ showSaveButton }: LandedCostCalcu
   const [drayageCost, setDrayageCost] = useState(800);
   const [warehousingPerUnit, setWarehousingPerUnit] = useState(0.02);
   const [fulfillmentPerUnit, setFulfillmentPerUnit] = useState(0.15);
+  const [carrier, setCarrier] = useState("");
   const [useFTZ, setUseFTZ] = useState(false);
   const [ftzStorageMonths, setFtzStorageMonths] = useState(3);
   const [ftzStorageFeePerUnit, setFtzStorageFeePerUnit] = useState(0.005);
@@ -51,6 +54,7 @@ export default function LandedCostCalculator({ showSaveButton }: LandedCostCalcu
       setDrayageCost(loadedInputs.drayageCost as number ?? 800);
       setWarehousingPerUnit(loadedInputs.warehousingPerUnit as number ?? 0.02);
       setFulfillmentPerUnit(loadedInputs.fulfillmentPerUnit as number ?? 0.15);
+      setCarrier(loadedInputs.carrier as string ?? "");
       setUseFTZ(loadedInputs.useFTZ as boolean ?? false);
       setFtzStorageMonths(loadedInputs.ftzStorageMonths as number ?? 3);
       setFtzStorageFeePerUnit(loadedInputs.ftzStorageFeePerUnit as number ?? 0.005);
@@ -73,6 +77,7 @@ export default function LandedCostCalculator({ showSaveButton }: LandedCostCalcu
     drayageCost,
     warehousingPerUnit,
     fulfillmentPerUnit,
+    carrier: carrier || undefined,
     useFTZ,
     ftzStorageMonths,
     ftzStorageFeePerUnit,
@@ -88,7 +93,7 @@ export default function LandedCostCalculator({ showSaveButton }: LandedCostCalcu
     productDescription, htsCode, countryOfOrigin, unitCostFOB, totalUnits,
     containerType, originPort, destPort, shippingMode, freightCostTotal,
     customsBrokerFee, insuranceRate, drayageCost, warehousingPerUnit,
-    fulfillmentPerUnit, useFTZ, ftzStorageMonths, ftzStorageFeePerUnit,
+    fulfillmentPerUnit, carrier, useFTZ, ftzStorageMonths, ftzStorageFeePerUnit,
   ]);
 
   return (
@@ -246,6 +251,31 @@ export default function LandedCostCalculator({ showSaveButton }: LandedCostCalcu
             </div>
           </div>
 
+          <div>
+            <label className="text-xs font-medium text-navy-500 block mb-1.5">
+              Ocean Carrier <span className="text-navy-300">(optional — checks Jones Act eligibility)</span>
+            </label>
+            <input
+              type="text"
+              list="jones-act-carriers"
+              value={carrier}
+              onChange={(e) => setCarrier(e.target.value)}
+              placeholder="e.g. Matson, Pasha Hawaii, Maersk"
+              className="input-light w-full"
+            />
+            <datalist id="jones-act-carriers">
+              {JONES_ACT_CARRIERS.map((c) => (
+                <option key={c.code} value={c.name} />
+              ))}
+            </datalist>
+          </div>
+
+          {result && (result.lane.isDomestic || !result.customsEntryRequired) && (
+            <div className="rounded-xl border border-ocean-100 bg-ocean-50/60 p-4">
+              <JonesActBadge lane={result.lane} showDetail />
+            </div>
+          )}
+
           <div className="flex items-center gap-3 pt-2">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -289,10 +319,13 @@ export default function LandedCostCalculator({ showSaveButton }: LandedCostCalcu
 
       {/* Results */}
       <div className="space-y-6">
-        <h3 className="text-lg font-semibold text-navy-900 flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-cargo-500" />
-          Landed Cost Breakdown
-        </h3>
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <h3 className="text-lg font-semibold text-navy-900 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-cargo-500" />
+            Landed Cost Breakdown
+          </h3>
+          {result && <JonesActBadge lane={result.lane} />}
+        </div>
 
         {result ? (
           <>
@@ -317,16 +350,25 @@ export default function LandedCostCalculator({ showSaveButton }: LandedCostCalcu
                 <div className="text-center">
                   <div className="text-xs text-navy-400">Effective Duty Rate</div>
                   <div className="text-lg font-semibold text-cargo-600">
-                    {result.effectiveDutyRate.toFixed(1)}%
+                    {result.customsEntryRequired ? `${result.effectiveDutyRate.toFixed(1)}%` : "n/a"}
                   </div>
                 </div>
                 <div className="text-center">
                   <div className="text-xs text-navy-400">Duty Total</div>
                   <div className="text-lg font-semibold text-cargo-600">
-                    ${result.total.duty.toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                    {result.customsEntryRequired
+                      ? `$${result.total.duty.toLocaleString("en-US", { maximumFractionDigits: 0 })}`
+                      : "$0"}
                   </div>
                 </div>
               </div>
+
+              {!result.customsEntryRequired && (
+                <p className="mt-3 pt-3 border-t border-navy-200 text-xs text-navy-500">
+                  Duty, MPF, HMF and customs broker excluded — {result.lane.label.toLowerCase()} is
+                  not an import, so no CBP entry is filed.
+                </p>
+              )}
             </div>
 
             {/* Breakdown list */}
