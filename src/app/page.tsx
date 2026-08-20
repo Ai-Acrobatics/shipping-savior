@@ -997,6 +997,8 @@ export default function Home() {
               <Link href="/privacy" className="hover:text-ocean-600">Privacy Policy</Link>
               <Link href="/terms" className="hover:text-ocean-600">Terms of Service</Link>
               <Link href="/dpa" className="hover:text-ocean-600">DPA</Link>
+              <Link href="/sub-processors" className="hover:text-ocean-600">Sub-processors</Link>
+              <Link href="/security" className="hover:text-ocean-600">Security</Link>
             </div>
           </div>
         </div>

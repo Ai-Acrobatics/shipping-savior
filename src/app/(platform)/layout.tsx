@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import PlatformShell from "./PlatformShell";
 import GuidedTour from "@/components/demo/GuidedTour";
 import { getOrgPlan } from "@/lib/billing/limits";
+import SiteFooter from "@/components/SiteFooter";
 
 export const metadata = {
   title: "Platform | Shipping Savior",
@@ -60,6 +61,8 @@ export default async function PlatformLayout({
       <Suspense fallback={null}>
         <GuidedTour />
       </Suspense>
+      {/* AI-8780 — legal documents must be reachable from inside the product too */}
+      <SiteFooter className="bg-transparent" />
     </PlatformShell>
   );
 }

@@ -14,6 +14,7 @@ import {
   auditLogs,
 } from "@/lib/db/schema";
 import { and, count, eq, inArray } from "drizzle-orm";
+import { stripe, isStripeConfigured } from "@/lib/stripe/server";
 
 const CONFIRM_PHRASE = "DELETE MY ACCOUNT";
 
@@ -27,6 +28,12 @@ const CONFIRM_PHRASE = "DELETE MY ACCOUNT";
  *   - Owner with other members → 409: ownership must be transferred first.
  *   - Non-owner member         → delete only their membership + user row.
  *
+ * When the org is being deleted and carries a Stripe subscription, the
+ * subscription is cancelled BEFORE the purge so an erased customer cannot keep
+ * being billed. A Stripe failure aborts the deletion with a 502 rather than
+ * silently orphaning a live subscription — the user can retry, and support can
+ * see exactly what happened in the logs.
+ *
  * An audit log entry is written BEFORE any deletion. The auditActionEnum has
  * no dedicated account-deletion value and the schema is frozen for this task,
  * so we use 'logout' (the closest existing terminal-auth event) with
@@ -35,8 +42,13 @@ const CONFIRM_PHRASE = "DELETE MY ACCOUNT";
  * onDelete: 'set null'.
  */
 export async function POST(request: NextRequest) {
+  // `auth()` can resolve to a session object whose `user` is undefined (e.g.
+  // auth.js returns a shell session when the host is untrusted or the JWT fails
+  // to decode). Checking only `!session` let that case through to the
+  // destructure below and turned an unauthenticated call into a 500 instead of
+  // a 401 — guard on the fields we actually read.
   const session = await auth();
-  if (!session) {
+  if (!session?.user?.id || !session.user.orgId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const { id: userId, orgId } = session.user;
@@ -78,6 +90,41 @@ export async function POST(request: NextRequest) {
         { error: "Transfer ownership before deleting your account" },
         { status: 409 }
       );
+    }
+
+    // Cancel billing before erasing the records that tell us what to cancel.
+    if (soleMember) {
+      const orgRows = await db
+        .select({ subscriptionId: organizations.stripeSubscriptionId })
+        .from(organizations)
+        .where(eq(organizations.id, orgId))
+        .limit(1);
+      const subscriptionId = orgRows[0]?.subscriptionId ?? null;
+
+      if (subscriptionId && isStripeConfigured()) {
+        try {
+          await stripe.subscriptions.cancel(subscriptionId);
+        } catch (error) {
+          const code = (error as { code?: string } | null)?.code;
+          // Already gone on Stripe's side is a success for our purposes.
+          if (code !== "resource_missing") {
+            console.error("Failed to cancel Stripe subscription before deletion:", error);
+            return NextResponse.json(
+              {
+                error:
+                  "We could not cancel your subscription, so your account was not deleted. Please try again or contact support.",
+              },
+              { status: 502 }
+            );
+          }
+        }
+      } else if (subscriptionId) {
+        // No Stripe credentials in this environment (local/preview). Record the
+        // gap loudly instead of pretending the subscription was cancelled.
+        console.warn(
+          `Account deletion for org ${orgId} left Stripe subscription ${subscriptionId} untouched — Stripe is not configured in this environment.`
+        );
+      }
     }
 
     await db.transaction(async (tx) => {

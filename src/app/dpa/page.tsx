@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SUBPROCESSOR_ROWS } from "@/lib/legal/subprocessors";
 
 export const metadata = {
   title: "Data Processing Agreement | Shipping Savior",
@@ -6,19 +7,6 @@ export const metadata = {
     "Data Processing Agreement (DPA) governing Shipping Savior's processing of customer personal data under GDPR.",
 };
 
-// Mirrors the sub-processor list on /privacy — keep the two in sync.
-const SUBPROCESSORS = [
-  ["Vercel", "Application hosting, edge network, file storage (uploaded documents)", "United States"],
-  ["Supabase / Neon", "PostgreSQL database hosting", "United States"],
-  ["Stripe", "Payment processing and subscription billing", "United States"],
-  ["Resend", "Transactional email (verification, password reset, invites)", "United States"],
-  ["Sentry", "Error monitoring and diagnostics", "United States"],
-  ["PostHog", "Product analytics", "United States / EU"],
-  ["Anthropic", "AI document extraction and assistant features (Claude)", "United States"],
-  ["Google", "OAuth sign-in; AI document extraction fallback (Gemini)", "United States"],
-  ["GitHub", "OAuth sign-in", "United States"],
-  ["Moonshot AI", "AI document extraction fallback (Kimi)", "International"],
-];
 
 const TOMS = [
   ["Encryption in transit", "All traffic is served over TLS 1.2+; plaintext HTTP is not accepted."],
@@ -121,7 +109,7 @@ export default function DpaPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {SUBPROCESSORS.map(([name, purpose, location]) => (
+                  {SUBPROCESSOR_ROWS.map(([name, purpose, location]) => (
                     <tr key={name} className="border-t border-navy-100">
                       <td className="px-3 py-2 font-medium text-navy-800">{name}</td>
                       <td className="px-3 py-2">{purpose}</td>
@@ -131,6 +119,13 @@ export default function DpaPage() {
                 </tbody>
               </table>
             </div>
+            <p className="mt-3 text-sm">
+              The authoritative, continuously-maintained register lives at{" "}
+              <Link href="/sub-processors" className="text-ocean-600 hover:text-ocean-700">
+                /sub-processors
+              </Link>
+              .
+            </p>
           </section>
 
           <section>

@@ -2,9 +2,12 @@
  * Browser-side PostHog wrapper.
  *
  * - No-op when NEXT_PUBLIC_POSTHOG_KEY is unset (so dev / non-analytics envs stay quiet).
- * - Cookie-consent-gated: PostHog is NOT initialized until the user accepts
- *   `localStorage['ss-cookie-consent'] === 'all'`. The CookieConsent banner
- *   (src/components/CookieConsent.tsx) writes this key and dispatches the
+ * - Cookie-consent-gated: PostHog is NOT initialized until the user accepts.
+ *   Consent is read from the server-set `cookie_consent` cookie first (the
+ *   durable, auditable record — see AI-8780) and falls back to
+ *   `localStorage['ss-cookie-consent']` for browsers that block cookies or for
+ *   sessions whose consent POST has not landed yet. The CookieConsent banner
+ *   (src/components/CookieConsent.tsx) writes both and dispatches the
  *   `ss-consent-changed` event. The legacy `ss_cookie_consent` key is still
  *   honored for sessions that consented before the banner shipped.
  *
@@ -16,6 +19,7 @@
  */
 
 import type { PostHog } from "posthog-js";
+import { CONSENT_COOKIE, CONSENT_STORAGE_KEY } from "@/lib/legal/consent";
 
 type EventName =
   | "signup_completed"
@@ -32,8 +36,20 @@ let initInFlight: Promise<PostHog | null> | null = null;
 function hasConsent(): boolean {
   if (typeof window === "undefined") return false;
   try {
+    const cookie = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith(`${CONSENT_COOKIE}=`));
+    if (cookie) {
+      // The cookie is authoritative: "essential" here must beat a stale
+      // localStorage "all" so a withdrawal of consent actually takes effect.
+      return decodeURIComponent(cookie.slice(CONSENT_COOKIE.length + 1)) === "all";
+    }
+  } catch {
+    // document.cookie unavailable — fall through to localStorage
+  }
+  try {
     return (
-      window.localStorage.getItem("ss-cookie-consent") === "all" ||
+      window.localStorage.getItem(CONSENT_STORAGE_KEY) === "all" ||
       // legacy key from before the CookieConsent banner shipped
       window.localStorage.getItem("ss_cookie_consent") === "all"
     );

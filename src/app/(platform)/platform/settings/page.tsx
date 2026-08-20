@@ -1,9 +1,10 @@
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { User, Building2, Users, Lock, ChevronRight } from 'lucide-react';
+import { User, Building2, Users, Lock, ChevronRight, ShieldCheck } from 'lucide-react';
 import { getOrgById, getOrgMembers, getOrgMembership } from '@/lib/db/queries/org';
 import InlineNameEditor from '@/components/platform/InlineNameEditor';
+import PrivacyControls from '@/components/platform/PrivacyControls';
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -197,6 +198,15 @@ export default async function SettingsPage() {
             </div>
           )}
         </div>
+      </section>
+
+      {/* Privacy & data rights (AI-8780) — GDPR Art. 15 export + Art. 17 erasure */}
+      <section className="bg-white border border-navy-200 rounded-xl overflow-hidden">
+        <div className="flex items-center gap-3 px-6 py-4 bg-navy-50 border-b border-navy-200">
+          <ShieldCheck className="w-5 h-5 text-navy-600" />
+          <h2 className="font-semibold text-navy-900">Privacy &amp; your data</h2>
+        </div>
+        <PrivacyControls email={user.email ?? ''} />
       </section>
     </div>
   );
