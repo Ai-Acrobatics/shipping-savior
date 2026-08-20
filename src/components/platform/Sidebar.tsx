@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Link2,
   Ship,
   Calculator,
   Clock,
@@ -107,6 +108,8 @@ const navSections: NavSection[] = [
       { label: "Inventory", href: "/platform/inventory", icon: Warehouse },
       { label: "Profitability", href: "/platform/analytics", icon: LineChart },
       { label: "Load Board", href: "/platform/load-board", icon: LayoutGrid },
+      // AI-12022 — read-only share links for the NVOCC's own customers.
+      { label: "Customer Portals", href: "/platform/customer-portals", icon: Link2 },
       { label: "BOL Upload", href: "/platform/shipments/import", icon: Upload },
       // AI-12016 — the rest of the paperwork set, not just the BOL.
       { label: "Trade Documents", href: "/platform/documents", icon: FileStack },
