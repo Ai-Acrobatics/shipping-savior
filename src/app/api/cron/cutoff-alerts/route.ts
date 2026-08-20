@@ -8,6 +8,7 @@ import {
   type CutoffShipmentRow,
 } from '@/lib/alerts/cutoff';
 import { sendExpoPushes, type ExpoPushMessage } from '@/lib/alerts/expo-push';
+import { createNotifications } from '@/lib/notifications/create';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -47,6 +48,39 @@ export async function GET(request: NextRequest) {
   const due = findDueCutoffs(candidates, new Date());
   if (due.length === 0) {
     return NextResponse.json({ scanned: candidates.length, due: 0, pushed: 0 });
+  }
+
+  // AI-12013 — mirror every due cutoff into the in-app notification centre
+  // before pushing. dedupeKey makes this idempotent across hourly runs, so a
+  // shipment whose push failed (and therefore wasn't marked below) doesn't
+  // stack up duplicate bell entries on the retry.
+  //
+  // Written for the whole org (userId null) because a cutoff belongs to a
+  // container, not a person — per-user filtering happens at read time via
+  // each user's notification preferences.
+  const polForNotify = new Map(candidates.map((c) => [c.id, c.pol]));
+  try {
+    await createNotifications(
+      due.map((d) => {
+        const { title, body } = cutoffMessage(d, polForNotify.get(d.shipmentId) ?? null);
+        return {
+          orgId: d.orgId,
+          type: 'cutoff' as const,
+          severity: 'critical' as const,
+          title,
+          message: body,
+          actionLabel: 'View shipment',
+          actionUrl: `/platform/shipments/${d.shipmentId}`,
+          dedupeKey: `cutoff:${d.shipmentId}:${d.kind}`,
+          sourceTable: 'shipments',
+          sourceId: d.shipmentId,
+        };
+      })
+    );
+  } catch (error) {
+    // The bell is additive to the push rail — a notification-centre failure
+    // must not stop the push that Blake actually depends on in the field.
+    console.error('[cutoff-alerts] failed to write in-app notifications:', error);
   }
 
   // One token fetch for all affected orgs.

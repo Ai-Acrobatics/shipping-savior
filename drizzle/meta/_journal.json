@@ -64,6 +64,13 @@
       "when": 1787325227256,
       "tag": "0008_inventory_incoterms_margin",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1787411627256,
+      "tag": "0009_notification_centre",
+      "breakpoints": true
     }
   ]
 }
