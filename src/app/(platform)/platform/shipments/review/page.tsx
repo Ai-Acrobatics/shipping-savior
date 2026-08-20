@@ -6,6 +6,10 @@
  * Lists every shipment whose importMeta.reviewIssues is non-empty and shows
  * inline inputs for ONLY the missing fields. Saving PATCHes the shipment; the
  * API recomputes reviewIssues and the row leaves the queue once clean.
+ *
+ * Once cleared, "Export clean workbook" (AI-12009) writes the corrected board
+ * back out as a .xlsx — one sheet per week, real dates, numeric weights — so
+ * the fixes land in Excel without anyone retyping them.
  */
 
 import { useState, useEffect, useCallback } from "react";
@@ -15,6 +19,7 @@ import {
   ArrowLeft,
   CheckCircle2,
   ClipboardCheck,
+  Download,
   Loader2,
   Save,
   X,
@@ -95,6 +100,8 @@ export default function ShipmentReviewPage() {
   const [savingId, setSavingId] = useState<string | null>(null);
   const [resolvedIds, setResolvedIds] = useState<Set<string>>(new Set());
   const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
+  const [exporting, setExporting] = useState(false);
+  const [exportNote, setExportNote] = useState<string | null>(null);
 
   const fetchQueue = useCallback(async () => {
     try {
@@ -186,6 +193,38 @@ export default function ShipmentReviewPage() {
     }
   };
 
+  // Streams the .xlsx as a blob (rather than a plain <a download>) so the
+  // X-Row-Count header can tell the user when the export came back empty.
+  const handleExport = async () => {
+    setExporting(true);
+    setExportNote(null);
+    try {
+      const res = await fetch("/api/shipments/export-workbook");
+      if (!res.ok) throw new Error("Export failed");
+
+      const count = Number(res.headers.get("X-Row-Count") ?? "0");
+      if (count === 0) {
+        setExportNote("Nothing to export yet — no cleared workbook rows.");
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `shipping-savior-board-${new Date().toISOString().slice(0, 10)}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      setExportNote(`Exported ${count} shipment${count === 1 ? "" : "s"}`);
+    } catch {
+      setExportNote("Export failed — please try again");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const pendingCount = rows.filter((r) => !resolvedIds.has(r.id)).length;
 
   return (
@@ -207,6 +246,23 @@ export default function ShipmentReviewPage() {
           <p className="mt-1 text-sm text-navy-500">
             Workbook rows imported with missing data — fill in the gaps and save to clear them
           </p>
+        </div>
+        <div className="flex flex-col items-end gap-1">
+          <button
+            onClick={handleExport}
+            disabled={exporting}
+            className="inline-flex items-center gap-2 rounded-xl border border-ocean-200 bg-ocean-50 px-4 py-2 text-sm font-semibold text-ocean-700 transition-colors hover:bg-ocean-100 disabled:opacity-50"
+          >
+            {exporting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4" />
+            )}
+            Export clean workbook
+          </button>
+          {exportNote && (
+            <span className="text-xs font-medium text-navy-500">{exportNote}</span>
+          )}
         </div>
       </div>
 
