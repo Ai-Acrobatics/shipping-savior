@@ -29,6 +29,12 @@ import { shipments, bolDocuments } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import ShipmentTimeline from "@/components/platform/ShipmentTimeline";
 import ShipmentLineItems from "@/components/platform/ShipmentLineItems";
+import DemurrageRiskMeter from "@/components/platform/DemurrageRiskMeter";
+import {
+  assessDemurrageRisk,
+  readMilestones,
+  readTariffOverride,
+} from "@/lib/alerts/demurrage";
 
 export const dynamic = "force-dynamic";
 
@@ -82,6 +88,27 @@ async function loadShipment(id: string) {
   }
 }
 
+/**
+ * Demurrage inputs live in the CSV-import columns that never made it to prod
+ * (see the migration-drift note at the top of this file), so they get their own
+ * guarded query. If the columns are missing this returns nulls and the meter
+ * falls back to an ETA-derived countdown rather than taking the page down.
+ */
+async function loadDemurrageInputs(id: string) {
+  try {
+    const [row] = await db
+      .select({
+        importMeta: shipments.importMeta,
+        containerCount: shipments.containerCount,
+      })
+      .from(shipments)
+      .where(eq(shipments.id, id));
+    return row ?? { importMeta: null, containerCount: null };
+  } catch {
+    return { importMeta: null, containerCount: null };
+  }
+}
+
 export default async function ShipmentDetailPage({
   params,
 }: {
@@ -89,6 +116,15 @@ export default async function ShipmentDetailPage({
 }) {
   const shipment = await loadShipment(params.id);
   if (!shipment) notFound();
+
+  const demurrageInputs = await loadDemurrageInputs(params.id);
+  const demurrageRisk = assessDemurrageRisk(
+    readMilestones(demurrageInputs.importMeta, shipment.eta),
+    {
+      tariff: readTariffOverride(demurrageInputs.importMeta, shipment.carrier),
+      containerCount: demurrageInputs.containerCount ?? 1,
+    }
+  );
 
   const statusCfg = STATUS_CONFIG[shipment.status] || STATUS_CONFIG.pending;
   const origin = shipment.pol || "Origin";
@@ -143,6 +179,12 @@ export default async function ShipmentDetailPage({
 
       {/* Timeline */}
       <ShipmentTimeline shipment={shipment} />
+
+      {/* Per-container free-time countdown (AI-12011). Hidden before arrival —
+          there is no clock to show until something discharges. */}
+      {demurrageRisk.clock !== "pending" && (
+        <DemurrageRiskMeter risk={demurrageRisk} />
+      )}
 
       {/* Container contents, Incoterm and sales (AI-8869).
           Client component: it loads line items over the API rather than in
