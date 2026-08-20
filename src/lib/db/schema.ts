@@ -929,3 +929,49 @@ export type NewNotificationPreference = typeof notificationPreferences.$inferIns
 export type NotificationType = (typeof notificationTypeEnum.enumValues)[number];
 export type NotificationSeverity = (typeof notificationSeverityEnum.enumValues)[number];
 export type DigestFrequency = (typeof digestFrequencyEnum.enumValues)[number];
+
+// ── NVOCC white-label customer portal (AI-12022) ──────
+//
+// An NVOCC's own customers want to see their boxes without getting a seat in
+// the NVOCC's account. A portal is a share link scoped to ONE customer code
+// on Blake's board (importMeta.customerCode) — read-only, no login, no
+// account, revocable.
+//
+// The token is the entire credential, so it is generated with 32 bytes of
+// CSPRNG and looked up by unique index. Revocation is `enabled = false`
+// rather than a delete, so a link can be turned off without losing the view
+// history that proves the customer was using it.
+
+export const customerPortals = pgTable(
+  'customer_portals',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    orgId: uuid('org_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    /** Matches shipments.import_meta ->> 'customerCode'. */
+    customerCode: varchar('customer_code', { length: 50 }).notNull(),
+    /** What the customer is called on their own portal ("Sunview Produce"). */
+    label: varchar('label', { length: 200 }).notNull(),
+    /** The share secret. Never logged, never rendered server-side in errors. */
+    token: varchar('token', { length: 64 }).notNull().unique(),
+    enabled: boolean('enabled').notNull().default(true),
+    createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+    lastViewedAt: timestamp('last_viewed_at', { withTimezone: true }),
+    viewCount: integer('view_count').notNull().default(0),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    // One portal per customer code per org — two links to the same customer
+    // would mean revoking one and still leaking through the other.
+    orgCustomerIdx: uniqueIndex('customer_portals_org_customer_idx').on(
+      table.orgId,
+      table.customerCode
+    ),
+    orgIdx: index('customer_portals_org_idx').on(table.orgId),
+  })
+);
+
+export type CustomerPortal = typeof customerPortals.$inferSelect;
+export type NewCustomerPortal = typeof customerPortals.$inferInsert;
