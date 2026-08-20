@@ -71,6 +71,13 @@
       "when": 1787411627256,
       "tag": "0009_notification_centre",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1787498027256,
+      "tag": "0010_customer_portals",
+      "breakpoints": true
     }
   ]
 }
