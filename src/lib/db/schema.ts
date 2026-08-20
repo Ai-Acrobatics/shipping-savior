@@ -735,3 +735,197 @@ export type NewSaleRecord = typeof saleRecords.$inferInsert;
 export type DutyStatus = (typeof dutyStatusEnum.enumValues)[number];
 export type IncotermValue = (typeof incotermEnum.enumValues)[number];
 export type TradeRoleValue = (typeof tradeRoleEnum.enumValues)[number];
+
+// ── Notification centre (AI-12013) ────────────────────
+//
+// In-app bell + email digests + per-user alert rules, layered on the Expo
+// push rail already shipped (see src/lib/alerts/expo-push.ts).
+//
+// A notification is org-scoped and optionally user-scoped. `userId = null`
+// means "everyone in the org" — the cutoff cron doesn't know which human
+// cares about a container, only which org booked it. The read state for an
+// org-wide notification is per-user, which is why reads live in their own
+// table rather than a boolean column.
+
+export const notificationTypeEnum = pgEnum('notification_type', [
+  'shipment',
+  'cutoff',
+  'demurrage',
+  'customs',
+  'cost',
+  'margin',
+  'partner',
+  'system',
+]);
+
+export const notificationSeverityEnum = pgEnum('notification_severity', [
+  'critical',
+  'warning',
+  'info',
+]);
+
+/** How often a user wants non-critical notifications collected into an email. */
+export const digestFrequencyEnum = pgEnum('digest_frequency', [
+  'off',
+  'immediate',
+  'daily',
+  'weekly',
+]);
+
+export const notifications = pgTable(
+  'notifications',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    orgId: uuid('org_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    /** null = fan out to every member of the org. */
+    userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }),
+    type: notificationTypeEnum('type').notNull().default('system'),
+    severity: notificationSeverityEnum('severity').notNull().default('info'),
+    title: varchar('title', { length: 300 }).notNull(),
+    message: text('message').notNull(),
+    actionLabel: varchar('action_label', { length: 100 }),
+    actionUrl: varchar('action_url', { length: 500 }),
+    /**
+     * Idempotency key, unique per org. Producers derive it from the thing
+     * being alerted about (`cutoff:<shipmentId>:reefer`), so an hourly cron
+     * that re-scans the same shipment inserts once and no-ops thereafter.
+     * Without this, every producer needs its own dedupe state — which is
+     * exactly the `importMeta.cutoffAlertsSent` hack this replaces.
+     */
+    dedupeKey: varchar('dedupe_key', { length: 200 }),
+    /** What produced this, for debugging and for deep links. */
+    sourceTable: varchar('source_table', { length: 50 }),
+    sourceId: uuid('source_id'),
+    /** Set once this notification has been included in a digest email. */
+    emailedAt: timestamp('emailed_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    orgIdx: index('notifications_org_idx').on(table.orgId, table.createdAt),
+    userIdx: index('notifications_user_idx').on(table.userId, table.createdAt),
+    // Partial-free unique: rows with a null dedupeKey are always distinct in
+    // Postgres, so ad-hoc notifications don't collide with each other.
+    dedupeIdx: uniqueIndex('notifications_dedupe_idx').on(table.orgId, table.dedupeKey),
+    // Digest scan: "unemailed notifications for this org since X".
+    emailedIdx: index('notifications_emailed_idx').on(table.orgId, table.emailedAt),
+  })
+);
+
+/**
+ * Per-user read state. Separate from `notifications` because one org-wide
+ * notification is read by each member independently — a boolean on the
+ * notification row would let one member's click mark it read for everyone.
+ */
+export const notificationReads = pgTable(
+  'notification_reads',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    notificationId: uuid('notification_id')
+      .notNull()
+      .references(() => notifications.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    readAt: timestamp('read_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    uniqueRead: uniqueIndex('notification_reads_unique_idx').on(
+      table.notificationId,
+      table.userId
+    ),
+    userIdx: index('notification_reads_user_idx').on(table.userId),
+  })
+);
+
+/**
+ * Per-user, per-org alert rules. A user in two orgs can want everything from
+ * their own book of business and only critical alerts from the other.
+ *
+ * Absence of a row means defaults (see DEFAULT_PREFERENCES in
+ * src/lib/notifications/preferences.ts) — we do not backfill a row per user,
+ * so the defaults live in one place and can change without a migration.
+ */
+export const notificationPreferences = pgTable(
+  'notification_preferences',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    orgId: uuid('org_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    /** Types the user wants at all. Empty array = none. */
+    mutedTypes: jsonb('muted_types').$type<string[]>().notNull().default([]),
+    /** Drop anything below this severity. */
+    minSeverity: notificationSeverityEnum('min_severity').notNull().default('info'),
+    inAppEnabled: boolean('in_app_enabled').notNull().default(true),
+    pushEnabled: boolean('push_enabled').notNull().default(true),
+    emailDigest: digestFrequencyEnum('email_digest').notNull().default('daily'),
+    /**
+     * Local-time hour bounds during which non-critical email/push is held.
+     * Critical always goes out — a customs hold at 2am is still a 2am problem.
+     */
+    quietHoursStart: integer('quiet_hours_start'),
+    quietHoursEnd: integer('quiet_hours_end'),
+    /** IANA zone the quiet hours are interpreted in. */
+    timezone: varchar('timezone', { length: 64 }).notNull().default('America/Los_Angeles'),
+    digestLastSentAt: timestamp('digest_last_sent_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    uniquePref: uniqueIndex('notification_preferences_user_org_idx').on(
+      table.userId,
+      table.orgId
+    ),
+  })
+);
+
+export const notificationsRelations = relations(notifications, ({ one, many }) => ({
+  organization: one(organizations, {
+    fields: [notifications.orgId],
+    references: [organizations.id],
+  }),
+  user: one(users, {
+    fields: [notifications.userId],
+    references: [users.id],
+  }),
+  reads: many(notificationReads),
+}));
+
+export const notificationReadsRelations = relations(notificationReads, ({ one }) => ({
+  notification: one(notifications, {
+    fields: [notificationReads.notificationId],
+    references: [notifications.id],
+  }),
+  user: one(users, {
+    fields: [notificationReads.userId],
+    references: [users.id],
+  }),
+}));
+
+export const notificationPreferencesRelations = relations(
+  notificationPreferences,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [notificationPreferences.userId],
+      references: [users.id],
+    }),
+    organization: one(organizations, {
+      fields: [notificationPreferences.orgId],
+      references: [organizations.id],
+    }),
+  })
+);
+
+export type Notification = typeof notifications.$inferSelect;
+export type NewNotification = typeof notifications.$inferInsert;
+export type NotificationRead = typeof notificationReads.$inferSelect;
+export type NotificationPreference = typeof notificationPreferences.$inferSelect;
+export type NewNotificationPreference = typeof notificationPreferences.$inferInsert;
+export type NotificationType = (typeof notificationTypeEnum.enumValues)[number];
+export type NotificationSeverity = (typeof notificationSeverityEnum.enumValues)[number];
+export type DigestFrequency = (typeof digestFrequencyEnum.enumValues)[number];

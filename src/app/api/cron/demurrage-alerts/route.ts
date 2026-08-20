@@ -8,6 +8,7 @@ import {
   type DemurrageShipmentRow,
 } from '@/lib/alerts/demurrage';
 import { sendExpoPushes, type ExpoPushMessage } from '@/lib/alerts/expo-push';
+import { createNotifications } from '@/lib/notifications/create';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -50,6 +51,39 @@ export async function GET(request: NextRequest) {
   const due = findDueDemurrageAlerts(candidates, new Date());
   if (due.length === 0) {
     return NextResponse.json({ scanned: candidates.length, due: 0, pushed: 0 });
+  }
+
+  // AI-12013 — mirror every escalation into the in-app notification centre.
+  // dedupeKey reuses the same `${clock}:${riskLevel}` stage the push rail
+  // dedupes on, so a box walking warning -> critical -> accruing raises one
+  // bell entry per step and an hourly re-scan of the same stage raises none.
+  //
+  // Org-wide (userId null): a running demurrage clock belongs to a container,
+  // not a person. Per-user muting happens at read time.
+  try {
+    await createNotifications(
+      due.map((d) => {
+        const { title, body } = demurrageMessage(d);
+        return {
+          orgId: d.orgId,
+          type: 'demurrage' as const,
+          // Money is already leaving once a clock is accruing; anything
+          // earlier is still a warning the user can act on.
+          severity: d.riskLevel === 'accruing' ? ('critical' as const) : ('warning' as const),
+          title,
+          message: body,
+          actionLabel: 'View shipment',
+          actionUrl: `/platform/shipments/${d.shipmentId}`,
+          dedupeKey: `demurrage:${d.shipmentId}:${d.stage}`,
+          sourceTable: 'shipments',
+          sourceId: d.shipmentId,
+        };
+      })
+    );
+  } catch (error) {
+    // Additive to the push rail — never let the bell block the alert Blake
+    // actually acts on in the field.
+    console.error('[demurrage-alerts] failed to write in-app notifications:', error);
   }
 
   const orgIds = [...new Set(due.map((d) => d.orgId))];

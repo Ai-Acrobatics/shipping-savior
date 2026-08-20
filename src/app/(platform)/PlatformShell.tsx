@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Sidebar from "@/components/platform/Sidebar";
 import UserMenu from "@/components/platform/UserMenu";
 import MobileNav from "@/components/platform/MobileNav";
 import { UpgradePromptHost } from "@/components/billing/UpgradePrompt";
 import ThemeToggle from "@/components/ThemeToggle";
-import { Bell } from "lucide-react";
+import NotificationBell from "@/components/platform/NotificationBell";
 
 const SIDEBAR_KEY = "shipping-savior-sidebar-collapsed";
 
@@ -60,16 +59,10 @@ export default function PlatformShell({ user, planTier, children }: PlatformShel
 
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            {/* Alerts — routes to the review queue (items needing attention).
-                Real-time push alerts land on the mobile app. */}
-            <Link
-              href="/platform/shipments/review"
-              className="p-2 text-navy-400 hover:text-navy-600 hover:bg-navy-100 rounded-lg transition-colors relative"
-              aria-label="Items needing review"
-              title="Items needing review"
-            >
-              <Bell className="w-5 h-5" />
-            </Link>
+            {/* AI-12013 — real notification centre. Was a placeholder link to
+                the review queue; the bell now carries an unread badge and a
+                feed fed by the same producers as the mobile push rail. */}
+            <NotificationBell />
 
             {/* User Avatar (desktop top bar) */}
             <div className="hidden lg:block">
