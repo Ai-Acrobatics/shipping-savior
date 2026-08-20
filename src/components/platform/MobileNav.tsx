@@ -25,6 +25,8 @@ import {
   Bell,
   LayoutDashboard,
   Upload,
+  Warehouse,
+  LineChart,
   Settings as SettingsIcon,
   Sparkles,
 } from "lucide-react";
@@ -78,6 +80,9 @@ const navSections: NavSection[] = [
     items: [
       { label: "Dashboard", href: "/platform", icon: LayoutDashboard },
       { label: "Shipments", href: "/platform/shipments", icon: Package },
+      // AI-8869 — inventory + profitability, same order as the desktop sidebar.
+      { label: "Inventory", href: "/platform/inventory", icon: Warehouse },
+      { label: "Profitability", href: "/platform/analytics", icon: LineChart },
       { label: "BOL Upload", href: "/platform/shipments/import", icon: Upload },
       { label: "History", href: "/platform/history", icon: Clock },
       { label: "Settings", href: "/platform/settings", icon: SettingsIcon },

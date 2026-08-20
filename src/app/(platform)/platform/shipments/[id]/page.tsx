@@ -28,6 +28,7 @@ import { db } from "@/lib/db";
 import { shipments, bolDocuments } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import ShipmentTimeline from "@/components/platform/ShipmentTimeline";
+import ShipmentLineItems from "@/components/platform/ShipmentLineItems";
 
 export const dynamic = "force-dynamic";
 
@@ -142,6 +143,12 @@ export default async function ShipmentDetailPage({
 
       {/* Timeline */}
       <ShipmentTimeline shipment={shipment} />
+
+      {/* Container contents, Incoterm and sales (AI-8869).
+          Client component: it loads line items over the API rather than in
+          this server query, so the page still renders on a database that
+          hasn't taken the 0008 migration yet. */}
+      <ShipmentLineItems shipmentId={shipment.id} />
 
       {/* Details grid */}
       <div className="card rounded-2xl p-6">

@@ -57,6 +57,13 @@
       "when": 1787238827256,
       "tag": "0007_needy_bug",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1787325227256,
+      "tag": "0008_inventory_incoterms_margin",
+      "breakpoints": true
     }
   ]
 }

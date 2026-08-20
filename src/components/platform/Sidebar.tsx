@@ -26,6 +26,8 @@ import {
   LayoutDashboard,
   LayoutGrid,
   Upload,
+  Warehouse,
+  LineChart,
   Settings as SettingsIcon,
   CreditCard,
 } from "lucide-react";
@@ -95,6 +97,9 @@ const navSections: NavSection[] = [
     items: [
       { label: "Dashboard", href: "/platform", icon: LayoutDashboard },
       { label: "Shipments", href: "/platform/shipments", icon: Package },
+      // AI-8869 — the longitudinal record: what's on hand, and what it earned.
+      { label: "Inventory", href: "/platform/inventory", icon: Warehouse },
+      { label: "Profitability", href: "/platform/analytics", icon: LineChart },
       { label: "Load Board", href: "/platform/load-board", icon: LayoutGrid },
       { label: "BOL Upload", href: "/platform/shipments/import", icon: Upload },
       { label: "History", href: "/platform/history", icon: Clock },
