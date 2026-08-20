@@ -10,6 +10,7 @@ import {
   integer,
   boolean,
   numeric,
+  index,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -367,6 +368,29 @@ export type ContractType = (typeof contractTypeEnum.enumValues)[number];
 export type Plan = (typeof planEnum.enumValues)[number];
 export type SubscriptionStatus = (typeof subscriptionStatusEnum.enumValues)[number];
 
+// ── Incoterms & Trade Role (AI-8869) ──────────────────
+//
+// Incoterms 2020. The rules table that decides which party owns which cost
+// segment lives in src/lib/incoterms — this enum only pins the vocabulary so
+// a typo can't reach the database.
+
+export const incotermEnum = pgEnum('incoterm', [
+  'EXW',
+  'FCA',
+  'FAS',
+  'FOB',
+  'CFR',
+  'CIF',
+  'CPT',
+  'CIP',
+  'DAP',
+  'DPU',
+  'DDP',
+]);
+
+/** Which side of the sale the org is on for a given shipment. */
+export const tradeRoleEnum = pgEnum('trade_role', ['buyer', 'seller']);
+
 // ── Shipment Enums ────────────────────────────────────
 
 export const shipmentStatusEnum = pgEnum('shipment_status', [
@@ -422,6 +446,13 @@ export const shipments = pgTable('shipments', {
   source: shipmentSourceEnum('source').notNull().default('manual'),
   rawBolText: text('raw_bol_text'),
   bolDocumentId: uuid('bol_document_id'),
+  // AI-8869 — Incoterm on the contract of sale, plus which side of that sale
+  // we are. Together these decide which landed-cost segments actually hit the
+  // customer's P&L (see src/lib/incoterms). Nullable because the vast majority
+  // of historical rows were imported before we asked for it.
+  incoterm: incotermEnum('incoterm'),
+  incotermPlace: varchar('incoterm_place', { length: 200 }),
+  tradeRole: tradeRoleEnum('trade_role').notNull().default('buyer'),
   // Reefer-export workbook fields with no dedicated column (AI-10777): type of
   // service, customer code, cross-dock appointment, temperature/vents, PU#/PO#,
   // reefer + document cutoffs, AES #, seal #, week label, source file, and
@@ -563,3 +594,144 @@ export const cookieConsents = pgTable('cookie_consents', {
 
 export type CookieConsent = typeof cookieConsents.$inferSelect;
 export type ConsentChoice = (typeof consentChoiceEnum.enumValues)[number];
+
+// ── Inventory: container line items (AI-8869) ─────────
+//
+// Blake's ask: "by taking into account the container contents, we can track
+// those". A shipment is the box; these are what is inside it. One row per
+// SKU per shipment, which is the grain a customs entry, a PO and a sale all
+// agree on.
+//
+// Duty status is tracked per line rather than per shipment because an FTZ
+// admission can split a container — some pallets go privileged foreign, some
+// stay non-privileged, some clear straight into commerce. That split is
+// exactly what the PF/NPF calculator already models, so inventory has to be
+// able to represent it or the two features disagree.
+
+export const dutyStatusEnum = pgEnum('duty_status', [
+  'in_transit',
+  'ftz_pf',
+  'ftz_npf',
+  'bonded',
+  'customs_cleared',
+  'delivered',
+  'consumed',
+]);
+
+export const lineItems = pgTable(
+  'line_items',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    orgId: uuid('org_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    shipmentId: uuid('shipment_id').references(() => shipments.id, { onDelete: 'cascade' }),
+    // Which container inside the shipment this line rode in. Free text because
+    // CSV imports carry the carrier's container number, not our own id.
+    containerNumber: varchar('container_number', { length: 20 }),
+    sku: varchar('sku', { length: 100 }),
+    description: text('description'),
+    htsCode: varchar('hts_code', { length: 20 }),
+    countryOfOrigin: varchar('country_of_origin', { length: 2 }),
+    quantity: numeric('quantity', { precision: 14, scale: 3 }).notNull().default('0'),
+    unitOfMeasure: varchar('unit_of_measure', { length: 20 }).default('EA'),
+    unitCostUsd: numeric('unit_cost_usd', { precision: 14, scale: 4 }).notNull().default('0'),
+    supplier: varchar('supplier', { length: 300 }),
+    poRef: varchar('po_ref', { length: 100 }),
+    dutyStatus: dutyStatusEnum('duty_status').notNull().default('in_transit'),
+    // Where the goods physically are: FTZ number, DC code, warehouse name.
+    locationCode: varchar('location_code', { length: 100 }),
+    locationName: varchar('location_name', { length: 200 }),
+    // Share of the shipment's non-goods landed cost carried by this line,
+    // allocated by goods value (see allocateShipmentCost). Cached here so the
+    // analytics rollups don't have to re-derive it on every read.
+    allocatedLandedCostUsd: numeric('allocated_landed_cost_usd', { precision: 14, scale: 2 }),
+    allocatedOverheadUsd: numeric('allocated_overhead_usd', { precision: 14, scale: 2 }),
+    // Anything the customer's ERP export carried that we have no column for.
+    importMeta: jsonb('import_meta'),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    orgIdx: index('line_items_org_idx').on(table.orgId, table.createdAt),
+    shipmentIdx: index('line_items_shipment_idx').on(table.shipmentId),
+    // Powers the /platform/inventory "on hand by location and duty status" view.
+    locationIdx: index('line_items_location_idx').on(table.orgId, table.locationCode, table.dutyStatus),
+    skuIdx: index('line_items_sku_idx').on(table.orgId, table.sku),
+  })
+);
+
+// ── Revenue: sale records (AI-8869) ───────────────────
+//
+// The other half of "track their financial progress and profitability". A
+// sale is recorded against a line item, not a shipment, because the same SKU
+// on two containers can sell at two prices — and the whole point is being
+// able to see that.
+//
+// Partial sales are the normal case: a line of 5,000 units sells across a
+// dozen rows over six months. COGS is charged per unit sold, never per unit
+// imported (see computeLineMargins).
+
+export const saleRecords = pgTable(
+  'sale_records',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    orgId: uuid('org_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    lineItemId: uuid('line_item_id')
+      .notNull()
+      .references(() => lineItems.id, { onDelete: 'cascade' }),
+    // Denormalized for cheap shipment-scoped rollups without a second join.
+    shipmentId: uuid('shipment_id').references(() => shipments.id, { onDelete: 'set null' }),
+    saleDate: timestamp('sale_date', { withTimezone: true }).notNull().defaultNow(),
+    quantitySold: numeric('quantity_sold', { precision: 14, scale: 3 }).notNull(),
+    unitSalePriceUsd: numeric('unit_sale_price_usd', { precision: 14, scale: 4 }).notNull(),
+    customer: varchar('customer', { length: 300 }),
+    channel: varchar('channel', { length: 100 }),
+    invoiceRef: varchar('invoice_ref', { length: 100 }),
+    notes: text('notes'),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    orgIdx: index('sale_records_org_idx').on(table.orgId, table.saleDate),
+    lineItemIdx: index('sale_records_line_item_idx').on(table.lineItemId),
+    shipmentIdx: index('sale_records_shipment_idx').on(table.shipmentId),
+  })
+);
+
+export const lineItemsRelations = relations(lineItems, ({ one, many }) => ({
+  organization: one(organizations, {
+    fields: [lineItems.orgId],
+    references: [organizations.id],
+  }),
+  shipment: one(shipments, {
+    fields: [lineItems.shipmentId],
+    references: [shipments.id],
+  }),
+  sales: many(saleRecords),
+}));
+
+export const saleRecordsRelations = relations(saleRecords, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [saleRecords.orgId],
+    references: [organizations.id],
+  }),
+  lineItem: one(lineItems, {
+    fields: [saleRecords.lineItemId],
+    references: [lineItems.id],
+  }),
+  shipment: one(shipments, {
+    fields: [saleRecords.shipmentId],
+    references: [shipments.id],
+  }),
+}));
+
+export type LineItem = typeof lineItems.$inferSelect;
+export type NewLineItem = typeof lineItems.$inferInsert;
+export type SaleRecord = typeof saleRecords.$inferSelect;
+export type NewSaleRecord = typeof saleRecords.$inferInsert;
+export type DutyStatus = (typeof dutyStatusEnum.enumValues)[number];
+export type IncotermValue = (typeof incotermEnum.enumValues)[number];
+export type TradeRoleValue = (typeof tradeRoleEnum.enumValues)[number];

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { shipments, bolDocuments, shipmentStatusEnum } from "@/lib/db/schema";
+import { parseIncoterm } from "@/lib/incoterms";
 import { eq } from "drizzle-orm";
 
 const VALID_STATUSES = shipmentStatusEnum.enumValues;
@@ -69,6 +70,8 @@ const STRING_FIELDS = [
   "pol",
   "pod",
   "carrier",
+  // AI-8869 — the named place that qualifies the Incoterm ("FOB Shanghai").
+  "incotermPlace",
 ] as const;
 const NUMBER_FIELDS = ["weightKg", "quantity"] as const;
 
@@ -120,6 +123,36 @@ export async function PATCH(
       }
       updates[field] = typeof value === "number" ? Math.round(value) : null;
     }
+  }
+
+  // AI-8869 — Incoterm and trade role. Validated against the Incoterms 2020
+  // vocabulary rather than trusted, because the whole cost-responsibility
+  // split downstream is keyed off this one field.
+  if ("incoterm" in body) {
+    const raw = body.incoterm;
+    if (raw === null || raw === "") {
+      updates.incoterm = null;
+    } else {
+      const term = parseIncoterm(raw);
+      if (!term) {
+        return NextResponse.json(
+          { error: "incoterm must be a valid Incoterms 2020 rule" },
+          { status: 400 }
+        );
+      }
+      updates.incoterm = term;
+    }
+  }
+
+  if ("tradeRole" in body) {
+    const raw = body.tradeRole;
+    if (raw !== "buyer" && raw !== "seller") {
+      return NextResponse.json(
+        { error: "tradeRole must be 'buyer' or 'seller'" },
+        { status: 400 }
+      );
+    }
+    updates.tradeRole = raw;
   }
 
   // Same contract as POST /api/shipments: 400 on unparseable dates.

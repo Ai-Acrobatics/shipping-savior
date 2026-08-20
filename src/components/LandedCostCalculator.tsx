@@ -5,6 +5,7 @@ import { DollarSign, Package, TrendingUp } from "lucide-react";
 import { calculateLandedCost } from "@/lib/calculators/landed-cost";
 import type { LandedCostInput } from "@/lib/types";
 import SaveCalculationButton from "@/components/platform/SaveCalculationButton";
+import IncotermResponsibility from "@/components/platform/IncotermResponsibility";
 import { useLoadCalculation } from "@/lib/hooks/useLoadCalculation";
 
 interface LandedCostCalculatorProps {
@@ -349,6 +350,17 @@ export default function LandedCostCalculator({ showSaveButton }: LandedCostCalcu
                 ))}
               </div>
             </div>
+
+            {/* AI-8869 — the total alone doesn't tell a trader what lands on
+                their P&L. The Incoterm does. Same breakdown, split by who
+                actually owes each segment. */}
+            <IncotermResponsibility
+              costs={result.breakdown.map((item) => ({
+                label: item.label,
+                amount: item.amount,
+              }))}
+              containerised={shippingMode.startsWith("ocean")}
+            />
 
             {showSaveButton && (
               <div className="flex justify-end pt-2">
