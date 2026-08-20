@@ -79,7 +79,7 @@ export default function SubProcessorsPage() {
               Where a sub-processor processes personal data outside the EEA or UK, the
               transfer is covered by the European Commission&apos;s Standard Contractual
               Clauses (SCCs) incorporated into our{" "}
-              <Link href="/dpa" className="text-ocean-600 hover:text-ocean-700">
+              <Link href="/dpa" className="text-ocean-600 hover:text-ocean-700 underline">
                 Data Processing Agreement
               </Link>
               , together with the technical and organisational measures described there.
@@ -94,7 +94,7 @@ export default function SubProcessorsPage() {
               We will update this page before a new sub-processor begins processing
               customer personal data. Customers on an enterprise agreement can subscribe to
               change notices by emailing{" "}
-              <a href="mailto:privacy@shippingsavior.com" className="text-ocean-600">
+              <a href="mailto:privacy@shippingsavior.com" className="text-ocean-600 underline">
                 privacy@shippingsavior.com
               </a>{" "}
               with the subject &quot;sub-processor notices&quot;; we will give at least 30
@@ -107,19 +107,19 @@ export default function SubProcessorsPage() {
             <h2 className="text-xl font-semibold text-navy-900">Related documents</h2>
             <ul className="mt-2 list-disc space-y-1 pl-5">
               <li>
-                <Link href="/privacy" className="text-ocean-600 hover:text-ocean-700">
+                <Link href="/privacy" className="text-ocean-600 hover:text-ocean-700 underline">
                   Privacy Policy
                 </Link>{" "}
                 — what we collect and why
               </li>
               <li>
-                <Link href="/dpa" className="text-ocean-600 hover:text-ocean-700">
+                <Link href="/dpa" className="text-ocean-600 hover:text-ocean-700 underline">
                   Data Processing Agreement
                 </Link>{" "}
                 — Article 28 terms and SCCs
               </li>
               <li>
-                <Link href="/security" className="text-ocean-600 hover:text-ocean-700">
+                <Link href="/security" className="text-ocean-600 hover:text-ocean-700 underline">
                   Security
                 </Link>{" "}
                 — controls protecting the data these vendors handle

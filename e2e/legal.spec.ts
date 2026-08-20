@@ -54,15 +54,16 @@ test.describe('Legal pages', () => {
     await expect(page.getByText(/SOC 2 Type II/i)).toBeVisible();
   });
 
-  test('/sub-processors has zero serious/critical a11y violations', async ({ page }) => {
-    await page.goto('/sub-processors');
-    await expectNoSeriousViolations(page);
-  });
-
-  test('/security has zero serious/critical a11y violations', async ({ page }) => {
-    await page.goto('/security');
-    await expectNoSeriousViolations(page);
-  });
+  // All five, not just the two new pages: legal documents are exactly the
+  // content a screen-reader user has the strongest interest in reading, and
+  // the whole family shares one link/typography treatment — so a regression in
+  // that treatment should fail here rather than only on the newest page.
+  for (const { path } of LEGAL_PAGES) {
+    test(`${path} has zero serious/critical a11y violations`, async ({ page }) => {
+      await page.goto(path);
+      await expectNoSeriousViolations(page);
+    });
+  }
 });
 
 test.describe('Cookie consent', () => {
@@ -84,9 +85,14 @@ test.describe('Cookie consent', () => {
 
     // The server-set cookie is the durable, auditable record — localStorage
     // alone was not demonstrable to a regulator.
+    // The banner dismisses optimistically and POSTs in the background, so the
+    // cookie lands slightly after the click — and a cold route compile in CI
+    // can outrun the default 5s poll window.
     await expect
-      .poll(async () =>
-        (await context.cookies()).find((c) => c.name === 'cookie_consent')?.value
+      .poll(
+        async () =>
+          (await context.cookies()).find((c) => c.name === 'cookie_consent')?.value,
+        { timeout: 20_000 }
       )
       .toBe('essential');
 

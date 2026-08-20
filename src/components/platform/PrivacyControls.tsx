@@ -155,15 +155,15 @@ export default function PrivacyControls({ email }: { email: string }) {
 
       <p className="border-t border-navy-100 pt-6 text-xs text-navy-400">
         Read how we handle your data in our{" "}
-        <Link href="/privacy" className="text-ocean-600 hover:text-ocean-700">
+        <Link href="/privacy" className="text-ocean-600 hover:text-ocean-700 underline">
           Privacy Policy
         </Link>
         ,{" "}
-        <Link href="/sub-processors" className="text-ocean-600 hover:text-ocean-700">
+        <Link href="/sub-processors" className="text-ocean-600 hover:text-ocean-700 underline">
           sub-processor register
         </Link>
         , and{" "}
-        <Link href="/security" className="text-ocean-600 hover:text-ocean-700">
+        <Link href="/security" className="text-ocean-600 hover:text-ocean-700 underline">
           security overview
         </Link>
         .

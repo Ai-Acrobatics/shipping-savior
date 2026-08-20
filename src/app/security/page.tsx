@@ -172,7 +172,7 @@ export default function SecurityPage() {
               day. Where a personal-data breach is confirmed, we notify affected controllers
               without undue delay and in any case within 72 hours of becoming aware, with the
               information required by Article 33 of the GDPR. Our{" "}
-              <Link href="/dpa" className="text-ocean-600 hover:text-ocean-700">
+              <Link href="/dpa" className="text-ocean-600 hover:text-ocean-700 underline">
                 DPA
               </Link>{" "}
               sets out the contractual version of this commitment.
@@ -186,7 +186,7 @@ export default function SecurityPage() {
               entries are retained for up to 12 months under a separate retention policy so
               that a security investigation survives an account deletion. When an account is
               deleted, platform data is removed irreversibly; see{" "}
-              <Link href="/privacy" className="text-ocean-600 hover:text-ocean-700">
+              <Link href="/privacy" className="text-ocean-600 hover:text-ocean-700 underline">
                 Privacy Policy
               </Link>{" "}
               for the full picture.
@@ -213,7 +213,7 @@ export default function SecurityPage() {
             </h2>
             <p className="mt-2">
               Email{" "}
-              <a href="mailto:security@shippingsavior.com" className="text-ocean-600">
+              <a href="mailto:security@shippingsavior.com" className="text-ocean-600 underline">
                 security@shippingsavior.com
               </a>{" "}
               with reproduction steps. We acknowledge reports within two business days and
@@ -226,24 +226,24 @@ export default function SecurityPage() {
             <h2 className="text-xl font-semibold text-navy-900">Related documents</h2>
             <ul className="mt-2 list-disc space-y-1 pl-5">
               <li>
-                <Link href="/privacy" className="text-ocean-600 hover:text-ocean-700">
+                <Link href="/privacy" className="text-ocean-600 hover:text-ocean-700 underline">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-ocean-600 hover:text-ocean-700">
+                <Link href="/terms" className="text-ocean-600 hover:text-ocean-700 underline">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/dpa" className="text-ocean-600 hover:text-ocean-700">
+                <Link href="/dpa" className="text-ocean-600 hover:text-ocean-700 underline">
                   Data Processing Agreement
                 </Link>
               </li>
               <li>
                 <Link
                   href="/sub-processors"
-                  className="text-ocean-600 hover:text-ocean-700"
+                  className="text-ocean-600 hover:text-ocean-700 underline"
                 >
                   Sub-processors
                 </Link>

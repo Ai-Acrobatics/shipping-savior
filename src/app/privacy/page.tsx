@@ -26,7 +26,7 @@ export default function PrivacyPage() {
               This policy describes how we handle personal data when you use
               shipping-savior.vercel.app and related applications. For privacy questions or
               requests, contact{" "}
-              <a href="mailto:privacy@shippingsavior.com" className="text-ocean-600">
+              <a href="mailto:privacy@shippingsavior.com" className="text-ocean-600 underline">
                 privacy@shippingsavior.com
               </a>.
             </p>
@@ -95,11 +95,11 @@ export default function PrivacyPage() {
               The full register — including the data categories each provider
               receives and the transfer basis for processing outside the EEA — is
               maintained at{" "}
-              <Link href="/sub-processors" className="text-ocean-600 hover:text-ocean-700">
+              <Link href="/sub-processors" className="text-ocean-600 hover:text-ocean-700 underline">
                 /sub-processors
               </Link>
               . For the controls protecting this data, see our{" "}
-              <Link href="/security" className="text-ocean-600 hover:text-ocean-700">
+              <Link href="/security" className="text-ocean-600 hover:text-ocean-700 underline">
                 security overview
               </Link>
               .
@@ -122,7 +122,7 @@ export default function PrivacyPage() {
               Depending on your jurisdiction (including GDPR and CCPA/CPRA), you may have the
               right to access, correct, export, or delete your personal data, and to object to
               or restrict certain processing. To exercise any of these rights, email{" "}
-              <a href="mailto:privacy@shippingsavior.com" className="text-ocean-600">
+              <a href="mailto:privacy@shippingsavior.com" className="text-ocean-600 underline">
                 privacy@shippingsavior.com
               </a>{" "}
               from your account email. We respond within 30 days.

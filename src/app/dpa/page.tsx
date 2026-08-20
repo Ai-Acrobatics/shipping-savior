@@ -36,7 +36,7 @@ export default function DpaPage() {
               This Data Processing Agreement (&quot;DPA&quot;) forms part of the agreement
               between <strong>Shipping Savior</strong> (the &quot;Processor&quot;) and the
               customer organization that accepts the{" "}
-              <Link href="/terms" className="text-ocean-600 hover:text-ocean-700">
+              <Link href="/terms" className="text-ocean-600 hover:text-ocean-700 underline">
                 Terms of Service
               </Link>{" "}
               (the &quot;Controller&quot;). It governs the processing of personal data the
@@ -53,7 +53,7 @@ export default function DpaPage() {
               the Shipping Savior platform. Processing continues for the duration of the
               Controller&apos;s subscription and ends when the account is deleted, after which
               data is removed in line with the retention terms of the{" "}
-              <Link href="/privacy" className="text-ocean-600 hover:text-ocean-700">
+              <Link href="/privacy" className="text-ocean-600 hover:text-ocean-700 underline">
                 Privacy Policy
               </Link>{" "}
               (backups roll off within 35 days).
@@ -121,7 +121,7 @@ export default function DpaPage() {
             </div>
             <p className="mt-3 text-sm">
               The authoritative, continuously-maintained register lives at{" "}
-              <Link href="/sub-processors" className="text-ocean-600 hover:text-ocean-700">
+              <Link href="/sub-processors" className="text-ocean-600 hover:text-ocean-700 underline">
                 /sub-processors
               </Link>
               .
@@ -180,7 +180,7 @@ export default function DpaPage() {
               This DPA is effective upon the Controller&apos;s acceptance of the Terms of
               Service. To request a countersigned copy or to negotiate enterprise terms,
               contact{" "}
-              <a href="mailto:legal@shippingsavior.com" className="text-ocean-600">
+              <a href="mailto:legal@shippingsavior.com" className="text-ocean-600 underline">
                 legal@shippingsavior.com
               </a>
               .
