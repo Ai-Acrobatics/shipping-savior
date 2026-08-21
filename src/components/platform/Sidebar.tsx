@@ -102,6 +102,7 @@ const navSections: NavSection[] = [
     items: [
       { label: "Dashboard", href: "/platform", icon: LayoutDashboard },
       { label: "Shipments", href: "/platform/shipments", icon: Package },
+      { label: "Vessel Map", href: "/platform/vessel-map", icon: Map },
       // AI-8869 — the longitudinal record: what's on hand, and what it earned.
       { label: "Inventory", href: "/platform/inventory", icon: Warehouse },
       { label: "Profitability", href: "/platform/analytics", icon: LineChart },
