@@ -30,6 +30,7 @@ import {
   LineChart,
   Settings as SettingsIcon,
   CreditCard,
+  Handshake,
 } from "lucide-react";
 import UserMenu from "./UserMenu";
 
@@ -88,6 +89,7 @@ const navSections: NavSection[] = [
     items: [
       // AI-12732: dropped the duplicate "Landed Cost Calculator" entry — it
       // already lives under Plan → Calculators.
+      { label: "Rate Negotiation", href: "/platform/negotiation", icon: Handshake },
       { label: "Contracts", href: "/platform/contracts", icon: FileText },
       { label: "Tariff Alerts", href: "/platform/contracts", icon: Bell },
     ],
