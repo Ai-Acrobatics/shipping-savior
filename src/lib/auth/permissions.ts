@@ -28,7 +28,8 @@ export type Permission =
   | 'calc:edit' // Edit own calculations
   | 'calc:delete' // Delete own calculations
   | 'calc:view' // View calculations in org
-  | 'audit:view'; // View audit logs
+  | 'audit:view' // View audit logs
+  | 'handoff:share'; // Build and revoke customs broker handoff packages (AI-12018)
 
 const PERMISSION_MIN_ROLE: Record<Permission, OrgRoleType> = {
   'org:manage': 'owner',
@@ -40,6 +41,10 @@ const PERMISSION_MIN_ROLE: Record<Permission, OrgRoleType> = {
   'calc:delete': 'member',
   'calc:view': 'viewer',
   'audit:view': 'admin',
+  // A handoff package leaves the org: it carries the declared value, the
+  // parties and the importer of record number, and the link works without a
+  // login. A viewer can read that data but must not be able to send it out.
+  'handoff:share': 'member',
 };
 
 /**

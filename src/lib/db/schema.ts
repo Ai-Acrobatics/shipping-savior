@@ -988,3 +988,98 @@ export type NewNotificationPreference = typeof notificationPreferences.$inferIns
 export type NotificationType = (typeof notificationTypeEnum.enumValues)[number];
 export type NotificationSeverity = (typeof notificationSeverityEnum.enumValues)[number];
 export type DigestFrequency = (typeof digestFrequencyEnum.enumValues)[number];
+
+// ── Customs broker handoff packages (AI-12018) ─────────
+//
+// One row per package handed to a customs broker: the exact document set, the
+// manifest the cover sheet was rendered from, and a share link that expires.
+//
+// The manifest is stored in full rather than re-derived on read. A broker may
+// come back to a package months later, by which time the underlying documents
+// may have been re-uploaded or corrected — and the question they are asking is
+// "what did you send me", not "what do you have now".
+
+export const brokerHandoffs = pgTable('broker_handoffs', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  orgId: uuid('org_id').references(() => organizations.id, { onDelete: 'set null' }),
+  shipmentId: uuid('shipment_id').references(() => shipments.id, { onDelete: 'set null' }),
+  createdByUserId: uuid('created_by_user_id').references(() => users.id, { onDelete: 'set null' }),
+  /** Shipment reference shown on the cover sheet, when the user supplied one. */
+  reference: varchar('reference', { length: 200 }),
+  brokerName: varchar('broker_name', { length: 300 }),
+  brokerEmail: varchar('broker_email', { length: 320 }),
+  /** SHA-256 hex of the share token. The token itself is never stored. */
+  tokenHash: varchar('token_hash', { length: 64 }).notNull(),
+  /** First few characters of the token, so the UI can distinguish links. Not a secret. */
+  tokenPrefix: varchar('token_prefix', { length: 16 }).notNull(),
+  /** trade_documents ids packaged, in cover-sheet order. */
+  documentIds: jsonb('document_ids').notNull(),
+  /** Full HandoffManifest — the source of truth for what was sent. */
+  manifestJson: jsonb('manifest_json').notNull(),
+  reconciliationJson: jsonb('reconciliation_json'),
+  clearedToFile: boolean('cleared_to_file').default(false).notNull(),
+  releasedWithBlockers: boolean('released_with_blockers').default(false).notNull(),
+  blockerCount: integer('blocker_count').default(0).notNull(),
+  warningCount: integer('warning_count').default(0).notNull(),
+  /** Server-side only. Blob storage is public-read, so this URL is never returned to a client. */
+  zipBlobUrl: text('zip_blob_url'),
+  zipFileName: varchar('zip_file_name', { length: 300 }),
+  zipSizeBytes: integer('zip_size_bytes'),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+  revokedAt: timestamp('revoked_at', { withTimezone: true }),
+  downloadCount: integer('download_count').default(0).notNull(),
+  firstAccessedAt: timestamp('first_accessed_at', { withTimezone: true }),
+  lastAccessedAt: timestamp('last_accessed_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => ({
+  tokenHashIdx: uniqueIndex('broker_handoffs_token_hash_idx').on(table.tokenHash),
+  orgCreatedIdx: index('broker_handoffs_org_created_idx').on(table.orgId, table.createdAt),
+  shipmentIdx: index('broker_handoffs_shipment_idx').on(table.shipmentId),
+}));
+
+// Every hit on a share link, including the denied ones. "Did the broker ever
+// open it" and "was the dead link still being tried after we revoked it" are
+// both questions someone asks after a shipment goes wrong.
+export const brokerHandoffAccess = pgTable('broker_handoff_access', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  handoffId: uuid('handoff_id')
+    .references(() => brokerHandoffs.id, { onDelete: 'cascade' })
+    .notNull(),
+  /** view | download | denied */
+  action: varchar('action', { length: 20 }).notNull(),
+  /** Set on denied: expired | revoked. */
+  reason: varchar('reason', { length: 40 }),
+  ipAddress: varchar('ip_address', { length: 64 }),
+  userAgent: varchar('user_agent', { length: 500 }),
+  accessedAt: timestamp('accessed_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => ({
+  handoffIdx: index('broker_handoff_access_handoff_idx').on(table.handoffId, table.accessedAt),
+}));
+
+export const brokerHandoffsRelations = relations(brokerHandoffs, ({ one, many }) => ({
+  organization: one(organizations, {
+    fields: [brokerHandoffs.orgId],
+    references: [organizations.id],
+  }),
+  shipment: one(shipments, {
+    fields: [brokerHandoffs.shipmentId],
+    references: [shipments.id],
+  }),
+  createdBy: one(users, {
+    fields: [brokerHandoffs.createdByUserId],
+    references: [users.id],
+  }),
+  access: many(brokerHandoffAccess),
+}));
+
+export const brokerHandoffAccessRelations = relations(brokerHandoffAccess, ({ one }) => ({
+  handoff: one(brokerHandoffs, {
+    fields: [brokerHandoffAccess.handoffId],
+    references: [brokerHandoffs.id],
+  }),
+}));
+
+export type BrokerHandoff = typeof brokerHandoffs.$inferSelect;
+export type NewBrokerHandoff = typeof brokerHandoffs.$inferInsert;
+export type BrokerHandoffAccess = typeof brokerHandoffAccess.$inferSelect;
+export type NewBrokerHandoffAccess = typeof brokerHandoffAccess.$inferInsert;
