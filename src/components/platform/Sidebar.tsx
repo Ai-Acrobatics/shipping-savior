@@ -90,6 +90,7 @@ const navSections: NavSection[] = [
       // AI-12732: dropped the duplicate "Landed Cost Calculator" entry — it
       // already lives under Plan → Calculators.
       { label: "Rate Negotiation", href: "/platform/negotiation", icon: Handshake },
+      { label: "FTZ Optimizer", href: "/platform/ftz-optimizer", icon: Warehouse },
       { label: "Contracts", href: "/platform/contracts", icon: FileText },
       { label: "Tariff Alerts", href: "/platform/contracts", icon: Bell },
     ],
