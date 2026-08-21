@@ -11,7 +11,7 @@
  * rendered here always matches what the API contract enforced.
  */
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -31,6 +31,9 @@ import type {
   ShipmentProfile,
   TradeDocumentType,
 } from "@/lib/documents/types";
+import BrokerHandoffPanel, {
+  type HandoffCandidate,
+} from "@/components/platform/BrokerHandoffPanel";
 
 const TYPE_LABELS: Record<TradeDocumentType, string> = {
   bill_of_lading: "Bill of Lading",
@@ -168,6 +171,17 @@ export default function TradeDocumentOcr() {
     setDocs((prev) => prev.filter((d) => d.key !== key));
     setReport(null);
   };
+
+  const handoffCandidates: HandoffCandidate[] = useMemo(
+    () =>
+      docs.map((d) => ({
+        documentId: d.documentId,
+        fileName: d.fileName,
+        label: TYPE_LABELS[d.documentType],
+        blockerCount: d.validation.issues.filter((i) => i.severity === "blocker").length,
+      })),
+    [docs]
+  );
 
   const toggleProfile = (patch: Partial<ShipmentProfile>) => {
     setProfile((prev) => ({ ...prev, ...patch }));
@@ -309,6 +323,17 @@ export default function TradeDocumentOcr() {
           </button>
 
           {report && <ReconciliationPanel report={report} />}
+
+          {/* The handoff is deliberately gated behind a reconciliation run:
+              packaging a set nobody has cross-checked is how a broker ends up
+              filing against an invoice and a packing list that disagree. */}
+          {report && (
+            <BrokerHandoffPanel
+              documents={handoffCandidates}
+              profile={profile}
+              report={report}
+            />
+          )}
         </section>
       )}
     </div>
