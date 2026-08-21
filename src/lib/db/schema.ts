@@ -502,6 +502,65 @@ export const bolDocumentsRelations = relations(bolDocuments, ({ one }) => ({
   }),
 }));
 
+// ── Trade Documents (multi-document OCR) ──────────────
+//
+// AI-12016 — extends BOL-only OCR to the full export document set. Kept as a
+// separate table from bol_documents rather than a type column on it, because
+// these rows carry a validation verdict and a compliance issue list that a
+// BOL row has no concept of, and because bol_documents is already joined
+// one-to-many against shipments.
+
+export const tradeDocumentTypeEnum = pgEnum('trade_document_type', [
+  'bill_of_lading',
+  'commercial_invoice',
+  'packing_list',
+  'isf',
+  'certificate_of_origin',
+  'phytosanitary_certificate',
+  'fda_prior_notice',
+]);
+
+export const tradeDocuments = pgTable('trade_documents', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  orgId: uuid('org_id').references(() => organizations.id, { onDelete: 'set null' }),
+  shipmentId: uuid('shipment_id').references(() => shipments.id, { onDelete: 'set null' }),
+  documentType: tradeDocumentTypeEnum('document_type').notNull(),
+  /** How the type was decided: requested | model | text. */
+  typeSource: varchar('type_source', { length: 20 }),
+  blobUrl: text('blob_url'),
+  fileName: varchar('file_name', { length: 500 }),
+  fileType: varchar('file_type', { length: 100 }),
+  fileSizeBytes: integer('file_size_bytes'),
+  rawText: text('raw_text'),
+  extractedJson: jsonb('extracted_json'),
+  confidenceJson: jsonb('confidence_json'),
+  /** Full DocumentValidation payload, so a past verdict stays auditable. */
+  validationJson: jsonb('validation_json'),
+  /** Denormalized from validationJson for cheap filtering of the problem queue. */
+  isValid: boolean('is_valid'),
+  blockerCount: integer('blocker_count').default(0).notNull(),
+  warningCount: integer('warning_count').default(0).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => ({
+  orgCreatedIdx: index('trade_documents_org_created_idx').on(table.orgId, table.createdAt),
+  shipmentIdx: index('trade_documents_shipment_idx').on(table.shipmentId),
+}));
+
+export const tradeDocumentsRelations = relations(tradeDocuments, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [tradeDocuments.orgId],
+    references: [organizations.id],
+  }),
+  shipment: one(shipments, {
+    fields: [tradeDocuments.shipmentId],
+    references: [shipments.id],
+  }),
+}));
+
+export type TradeDocumentRow = typeof tradeDocuments.$inferSelect;
+export type NewTradeDocument = typeof tradeDocuments.$inferInsert;
+
+
 // ── Model Comparison Audit Log ────────────────────────
 //
 // Every AI call in /api/bol and /api/contracts/parse is logged here.
