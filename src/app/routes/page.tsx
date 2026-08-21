@@ -11,18 +11,23 @@ import {
   ArrowLeft,
   Bell,
   RefreshCw,
+  Train,
 } from "lucide-react";
 import InteractiveRouteMap from "@/components/InteractiveRouteMap";
 import CostBreakdownChart from "@/components/CostBreakdownChart";
 import TransitTimeComparison from "@/components/TransitTimeComparison";
 import TrendAnalysisChart from "@/components/TrendAnalysisChart";
+import IntermodalRoutes from "@/components/IntermodalRoutes";
 
-type Tab = "map" | "costs" | "transit" | "trends";
+type Tab = "map" | "costs" | "transit" | "intermodal" | "trends";
 
 const tabs: { key: Tab; label: string; icon: typeof Navigation }[] = [
   { key: "map", label: "Route Map", icon: Navigation },
   { key: "costs", label: "Cost Breakdown", icon: DollarSign },
   { key: "transit", label: "Route Comparison", icon: Clock },
+  // AI-12015 — ocean/rail/air/drayage chains to an inland door, which the
+  // port-to-port views above cannot express.
+  { key: "intermodal", label: "Intermodal", icon: Train },
   { key: "trends", label: "Rate Trends", icon: Activity },
 ];
 
@@ -83,8 +88,8 @@ export default function RoutesPage() {
             Routes & Visualization
           </h1>
           <p className="text-sm text-navy-400 mt-1">
-            Interactive shipping routes, cost analysis, and freight rate trends
-            across SE Asia → US lanes
+            Interactive shipping routes, intermodal ocean/rail/air chains to inland
+            destinations, cost analysis, and freight rate trends across SE Asia → US lanes
           </p>
         </div>
 
@@ -111,6 +116,7 @@ export default function RoutesPage() {
           {activeTab === "map" && <InteractiveRouteMap />}
           {activeTab === "costs" && <CostBreakdownChart />}
           {activeTab === "transit" && <TransitTimeComparison />}
+          {activeTab === "intermodal" && <IntermodalRoutes />}
           {activeTab === "trends" && <TrendAnalysisChart />}
         </div>
 
