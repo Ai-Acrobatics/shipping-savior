@@ -16,6 +16,7 @@ import {
   Scale,
   Box,
   FileText,
+  FileStack,
   Users,
   Building2,
   Package,
@@ -105,6 +106,8 @@ const navSections: NavSection[] = [
       { label: "Profitability", href: "/platform/analytics", icon: LineChart },
       { label: "Load Board", href: "/platform/load-board", icon: LayoutGrid },
       { label: "BOL Upload", href: "/platform/shipments/import", icon: Upload },
+      // AI-12016 — the rest of the paperwork set, not just the BOL.
+      { label: "Trade Documents", href: "/platform/documents", icon: FileStack },
       { label: "History", href: "/platform/history", icon: Clock },
       { label: "Billing", href: "/platform/billing", icon: CreditCard },
       { label: "Settings", href: "/platform/settings", icon: SettingsIcon },
