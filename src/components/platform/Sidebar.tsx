@@ -32,6 +32,7 @@ import {
   Settings as SettingsIcon,
   CreditCard,
   Handshake,
+  ShieldAlert,
 } from "lucide-react";
 import UserMenu from "./UserMenu";
 
@@ -108,6 +109,8 @@ const navSections: NavSection[] = [
       { label: "BOL Upload", href: "/platform/shipments/import", icon: Upload },
       // AI-12016 — the rest of the paperwork set, not just the BOL.
       { label: "Trade Documents", href: "/platform/documents", icon: FileStack },
+      // AI-12017 — pre-departure screen; sits beside the paperwork it gates.
+      { label: "Compliance Screen", href: "/platform/compliance", icon: ShieldAlert },
       { label: "History", href: "/platform/history", icon: Clock },
       { label: "Billing", href: "/platform/billing", icon: CreditCard },
       { label: "Settings", href: "/platform/settings", icon: SettingsIcon },
