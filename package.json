@@ -21,6 +21,7 @@
     "load:ftz": "tsx scripts/data-pipeline/load-ftz-zones.ts",
     "load:routes": "tsx scripts/data-pipeline/load-carrier-routes.ts",
     "load:duties": "tsx scripts/data-pipeline/load-duty-rates-sea.ts",
+    "load:denied-parties": "tsx scripts/data-pipeline/load-denied-parties.ts",
     "load:containers": "tsx scripts/data-pipeline/load-container-specs.ts",
     "load:all": "tsx scripts/data-pipeline/load-hts-codes.ts && tsx scripts/data-pipeline/load-ports.ts && tsx scripts/data-pipeline/load-ftz-zones.ts && tsx scripts/data-pipeline/load-carrier-routes.ts && tsx scripts/data-pipeline/load-duty-rates-sea.ts && tsx scripts/data-pipeline/load-container-specs.ts",
     "db:generate": "drizzle-kit generate",
