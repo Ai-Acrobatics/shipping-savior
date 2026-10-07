@@ -83,6 +83,8 @@ const navSections: NavSection[] = [
       // AI-8869 — inventory + profitability, same order as the desktop sidebar.
       { label: "Inventory", href: "/platform/inventory", icon: Warehouse },
       { label: "Profitability", href: "/platform/analytics", icon: LineChart },
+      // AI-12007 — cross-dock appointment board.
+      { label: "Cross-Dock", href: "/platform/cross-dock", icon: Warehouse },
       { label: "BOL Upload", href: "/platform/shipments/import", icon: Upload },
       { label: "History", href: "/platform/history", icon: Clock },
       { label: "Settings", href: "/platform/settings", icon: SettingsIcon },
