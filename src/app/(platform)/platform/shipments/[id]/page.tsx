@@ -30,6 +30,7 @@ import { eq } from "drizzle-orm";
 import ShipmentTimeline from "@/components/platform/ShipmentTimeline";
 import ShipmentLineItems from "@/components/platform/ShipmentLineItems";
 import DemurrageRiskMeter from "@/components/platform/DemurrageRiskMeter";
+import AesFilingTracker from "@/components/platform/AesFilingTracker";
 import {
   assessDemurrageRisk,
   readMilestones,
@@ -191,6 +192,13 @@ export default async function ShipmentDetailPage({
           this server query, so the page still renders on a database that
           hasn't taken the 0008 migration yet. */}
       <ShipmentLineItems shipmentId={shipment.id} />
+
+      {/* AES / EEI filing status with CBP ACE deep links (AI-12006). State
+          lives in importMeta, read by the same guarded query as demurrage. */}
+      <AesFilingTracker
+        shipmentId={shipment.id}
+        initialImportMeta={demurrageInputs.importMeta}
+      />
 
       {/* Details grid */}
       <div className="card rounded-2xl p-6">
