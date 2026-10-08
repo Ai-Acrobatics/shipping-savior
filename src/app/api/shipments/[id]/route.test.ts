@@ -234,6 +234,70 @@ describe('PATCH /api/shipments/[id]', () => {
     expect(set.mock.calls[0][0].status).toBe('in_transit');
   });
 
+  it('AI-12006: marks a filing accepted with its ITN and clears the AES issue', async () => {
+    (auth as any).mockResolvedValue(SESSION);
+    mockLoad(BASE_SHIPMENT);
+    const set = mockUpdateChain({ id: 'ship-1' });
+    const res = await PATCH(
+      patchRequest({ aesStatus: 'accepted', aesNumber: 'x20250930123456' }),
+      PARAMS
+    );
+    expect(res.status).toBe(200);
+    const meta = set.mock.calls[0][0].importMeta;
+    expect(meta.aesStatus).toBe('accepted');
+    expect(meta.aesNumber).toBe('X20250930123456');
+    expect(typeof meta.aesAcceptedAt).toBe('string');
+    expect(meta.reviewIssues).not.toContain('missing AES filing number');
+    expect(meta.sealNumber).toBe('FX31870950');
+  });
+
+  it('AI-12006: rejects accepted without an ITN (400, no write)', async () => {
+    (auth as any).mockResolvedValue(SESSION);
+    mockLoad(BASE_SHIPMENT);
+    const res = await PATCH(patchRequest({ aesStatus: 'accepted' }), PARAMS);
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toMatch(/ITN/);
+    expect(db.update).not.toHaveBeenCalled();
+  });
+
+  it('AI-12006: exempt with a citation resolves the AES review issue', async () => {
+    (auth as any).mockResolvedValue(SESSION);
+    mockLoad(BASE_SHIPMENT);
+    const set = mockUpdateChain({ id: 'ship-1' });
+    const res = await PATCH(
+      patchRequest({ aesStatus: 'exempt', aesExemption: 'NOEEI 30.37(a)' }),
+      PARAMS
+    );
+    expect(res.status).toBe(200);
+    const meta = set.mock.calls[0][0].importMeta;
+    expect(meta.aesStatus).toBe('exempt');
+    expect(meta.reviewIssues).not.toContain('missing AES filing number');
+  });
+
+  it('AI-12006: filed keeps the AES issue open until an ITN arrives', async () => {
+    (auth as any).mockResolvedValue(SESSION);
+    mockLoad(BASE_SHIPMENT);
+    const set = mockUpdateChain({ id: 'ship-1' });
+    const res = await PATCH(patchRequest({ aesStatus: 'filed' }), PARAMS);
+    expect(res.status).toBe(200);
+    const meta = set.mock.calls[0][0].importMeta;
+    expect(meta.aesStatus).toBe('filed');
+    expect(meta.reviewIssues).toContain('missing AES filing number');
+  });
+
+  it('AI-12006: unrelated edits leave AES state untouched', async () => {
+    (auth as any).mockResolvedValue(SESSION);
+    mockLoad({
+      ...BASE_SHIPMENT,
+      importMeta: { ...BASE_SHIPMENT.importMeta, aesStatus: 'filed', aesFiledAt: '2026-10-01T00:00:00.000Z' },
+    });
+    const set = mockUpdateChain({ id: 'ship-1' });
+    await PATCH(patchRequest({ vesselName: 'MSC OSLO' }), PARAMS);
+    const meta = set.mock.calls[0][0].importMeta;
+    expect(meta.aesStatus).toBe('filed');
+    expect(meta.aesFiledAt).toBe('2026-10-01T00:00:00.000Z');
+  });
+
   it('returns 400 on malformed JSON', async () => {
     (auth as any).mockResolvedValue(SESSION);
     const res = await PATCH(

@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { shipments, bolDocuments, shipmentStatusEnum } from "@/lib/db/schema";
 import { parseIncoterm } from "@/lib/incoterms";
+import { applyAesUpdate, aesIssueResolved, readAesFiling } from "@/lib/shipments/aes";
 import { eq } from "drizzle-orm";
 
 const VALID_STATUSES = shipmentStatusEnum.enumValues;
@@ -188,19 +189,32 @@ export async function PATCH(
   }
 
   // importMeta-resident fields (Blake's board has no dedicated columns).
-  const currentMeta: ImportMeta =
+  let currentMeta: ImportMeta =
     existing.importMeta && typeof existing.importMeta === "object"
       ? { ...(existing.importMeta as ImportMeta) }
       : {};
-  for (const field of ["aesNumber", "sealNumber"] as const) {
-    if (field in body) {
-      const value = body[field];
-      if (value !== null && typeof value !== "string") {
-        return NextResponse.json({ error: `${field} must be a string` }, { status: 400 });
-      }
-      currentMeta[field] =
-        typeof value === "string" && value.trim().length ? value.trim() : null;
+  if ("sealNumber" in body) {
+    const value = body.sealNumber;
+    if (value !== null && typeof value !== "string") {
+      return NextResponse.json({ error: "sealNumber must be a string" }, { status: 400 });
     }
+    currentMeta.sealNumber =
+      typeof value === "string" && value.trim().length ? value.trim() : null;
+  }
+
+  // AI-12006 — AES filing tracker (status, ITN, exemption). Only the keys
+  // present in the body are passed through, so unrelated edits never touch
+  // the filing state.
+  const aesInput: Record<string, unknown> = {};
+  for (const key of ["aesStatus", "aesNumber", "aesExemption"] as const) {
+    if (key in body) aesInput[key] = body[key];
+  }
+  if (Object.keys(aesInput).length) {
+    const result = applyAesUpdate(currentMeta, aesInput);
+    if (!result.ok) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
+    }
+    currentMeta = result.meta as ImportMeta;
   }
 
   // Recompute reviewIssues against the post-update values: drop any issue
@@ -214,7 +228,8 @@ export async function PATCH(
     if (issue === "missing container number") return !finalValue("containerNumber");
     if (issue === "missing weight" || issue.startsWith("unparseable weight"))
       return finalValue("weightKg") == null;
-    if (issue === "missing AES filing number") return !currentMeta.aesNumber;
+    if (issue === "missing AES filing number")
+      return !aesIssueResolved(readAesFiling(currentMeta));
     if (issue === "missing/unparseable ETA") return !finalValue("eta");
     if (issue === "missing/unparseable departure date") return !finalValue("etd");
     return true;
