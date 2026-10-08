@@ -107,6 +107,8 @@ const navSections: NavSection[] = [
       { label: "Inventory", href: "/platform/inventory", icon: Warehouse },
       { label: "Profitability", href: "/platform/analytics", icon: LineChart },
       { label: "Load Board", href: "/platform/load-board", icon: LayoutGrid },
+      // AI-12007 — dock-by-day view of the same workbook rows.
+      { label: "Cross-Dock", href: "/platform/cross-dock", icon: Warehouse },
       { label: "BOL Upload", href: "/platform/shipments/import", icon: Upload },
       // AI-12016 — the rest of the paperwork set, not just the BOL.
       { label: "Trade Documents", href: "/platform/documents", icon: FileStack },
