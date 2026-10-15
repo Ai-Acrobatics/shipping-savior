@@ -129,7 +129,7 @@ export default async function CustomerTrackingPage({
   // confirm the customer relationship to anyone holding a stale URL.
   if (!view) notFound();
 
-  void recordPortalView(token);
+  await recordPortalView(token);
 
   const { summary } = view;
 

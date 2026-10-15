@@ -9,7 +9,7 @@
 
 import { db } from '@/lib/db';
 import { customerPortals, organizations, shipments } from '@/lib/db/schema';
-import { and, eq, sql } from 'drizzle-orm';
+import { and, asc, eq, sql } from 'drizzle-orm';
 import {
   sortForCustomer,
   summarize,
@@ -94,6 +94,9 @@ export async function loadPortalView(
         sql`upper(trim(${shipments.importMeta} ->> 'customerCode')) = ${portal.customerCode}`
       )
     )
+    // Order before the cap so truncation drops the furthest-out arrivals, not
+    // an arbitrary slice that could hide the box landing tomorrow.
+    .orderBy(sql`${shipments.eta} asc nulls last`, asc(shipments.id))
     .limit(MAX_SHIPMENTS)) as PortalSourceShipment[];
 
   const projected = sortForCustomer(rows.map((row) => toCustomerShipment(row, now)));
@@ -108,9 +111,8 @@ export async function loadPortalView(
 }
 
 /**
- * Best-effort view accounting. Deliberately not awaited by callers on the
- * render path and swallowed on failure — a customer must still see their
- * boxes if the counter write fails.
+ * Best-effort view accounting. Failures are swallowed — a customer must still
+ * see their boxes if the counter write fails.
  */
 export async function recordPortalView(token: string): Promise<void> {
   try {

@@ -29,7 +29,11 @@ export async function GET(
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
-    void recordPortalView(token);
+    // Awaited, not fire-and-forget: Next 14 has no after(), and on Vercel an
+    // unawaited write can be frozen with the invocation once the response is
+    // sent. recordPortalView swallows its own errors, so this never fails the
+    // read.
+    await recordPortalView(token);
 
     return NextResponse.json(view, {
       headers: { 'Cache-Control': 'no-store, max-age=0' },

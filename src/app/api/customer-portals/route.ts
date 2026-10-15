@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { requireRole, isAuthError } from '@/lib/auth/rbac';
 import { db } from '@/lib/db';
 import { customerPortals, shipments } from '@/lib/db/schema';
 import { and, eq, sql } from 'drizzle-orm';
@@ -17,11 +17,9 @@ export const runtime = 'nodejs';
  * operator having to remember which codes exist (AI-12022).
  */
 export async function GET() {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  const { orgId } = session.user;
+  const authResult = await requireRole('portal:view');
+  if (isAuthError(authResult)) return authResult;
+  const { orgId } = authResult;
 
   try {
     const [portals, codes] = await Promise.all([
@@ -60,11 +58,9 @@ export async function GET() {
  * revoking one and still leaking through the other.
  */
 export async function POST(request: NextRequest) {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  const { orgId, id: userId } = session.user;
+  const authResult = await requireRole('portal:share');
+  if (isAuthError(authResult)) return authResult;
+  const { orgId, userId } = authResult;
 
   let body: Record<string, unknown>;
   try {

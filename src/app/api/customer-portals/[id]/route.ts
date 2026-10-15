@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { requireRole, isAuthError } from '@/lib/auth/rbac';
 import { db } from '@/lib/db';
 import { customerPortals } from '@/lib/db/schema';
 import { and, eq } from 'drizzle-orm';
@@ -21,12 +21,10 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const authResult = await requireRole('portal:share');
+  if (isAuthError(authResult)) return authResult;
   const { id } = await params;
-  const { orgId } = session.user;
+  const { orgId } = authResult;
 
   let body: Record<string, unknown>;
   try {
@@ -85,16 +83,15 @@ export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const authResult = await requireRole('portal:share');
+  if (isAuthError(authResult)) return authResult;
   const { id } = await params;
+  const { orgId } = authResult;
 
   try {
     const [deleted] = await db
       .delete(customerPortals)
-      .where(and(eq(customerPortals.id, id), eq(customerPortals.orgId, session.user.orgId)))
+      .where(and(eq(customerPortals.id, id), eq(customerPortals.orgId, orgId)))
       .returning({ id: customerPortals.id });
 
     if (!deleted) {
