@@ -5,10 +5,10 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      // /handoff/* is a token-gated customs broker package (AI-12018). The page
-      // sets noindex itself, but a crawler that never fetches it cannot leak the
-      // token through a referer or a cached snippet in the first place.
-      disallow: ["/api/", "/platform/", "/admin/", "/handoff/"],
+      // /handoff/* (AI-12018) and /track/* (AI-12022) are token-gated share
+      // links. Both pages set noindex themselves, but keeping crawlers off the
+      // paths entirely means a token pasted somewhere public never gets indexed.
+      disallow: ["/api/", "/platform/", "/admin/", "/handoff/", "/track/"],
     },
     sitemap: "https://shipping-savior.vercel.app/sitemap.xml",
     host: "https://shipping-savior.vercel.app",

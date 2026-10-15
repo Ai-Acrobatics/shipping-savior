@@ -29,7 +29,9 @@ export type Permission =
   | 'calc:delete' // Delete own calculations
   | 'calc:view' // View calculations in org
   | 'audit:view' // View audit logs
-  | 'handoff:share'; // Build and revoke customs broker handoff packages (AI-12018)
+  | 'handoff:share' // Build and revoke customs broker handoff packages (AI-12018)
+  | 'portal:view' // List customer portal share links (AI-12022)
+  | 'portal:share'; // Mint, rotate, disable and delete customer portal links (AI-12022)
 
 const PERMISSION_MIN_ROLE: Record<Permission, OrgRoleType> = {
   'org:manage': 'owner',
@@ -45,6 +47,11 @@ const PERMISSION_MIN_ROLE: Record<Permission, OrgRoleType> = {
   // parties and the importer of record number, and the link works without a
   // login. A viewer can read that data but must not be able to send it out.
   'handoff:share': 'member',
+  // A portal token is a standing, login-free credential to one customer's
+  // whole book, so listing the links (which exposes the tokens) is limited to
+  // members, and creating or rotating them to admins and owners.
+  'portal:view': 'member',
+  'portal:share': 'admin',
 };
 
 /**
