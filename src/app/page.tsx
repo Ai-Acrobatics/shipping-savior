@@ -323,6 +323,26 @@ export default function Home() {
         <div className="absolute inset-0 hero-gradient" />
         <div className="absolute inset-0 pattern-dots-hero" />
 
+        {/* Looping shipping-lane video background (AI-8058). Muted, no
+            audio track, ~200KB; hidden for reduced-motion users, where the
+            gradient above remains the backdrop. */}
+        <video
+          className="absolute inset-0 h-full w-full object-cover opacity-60 pointer-events-none motion-reduce:hidden"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="/videos/hero-loop-poster.jpg"
+          aria-hidden="true"
+          tabIndex={-1}
+        >
+          <source src="/videos/hero-loop.webm" type="video/webm" />
+          <source src="/videos/hero-loop.mp4" type="video/mp4" />
+        </video>
+        {/* Soft white wash keeps the headline and search bar legible over the video */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/30 to-white pointer-events-none" />
+
         {/* Floating ocean blobs */}
         <div
           className="absolute top-[15%] -left-40 w-[560px] h-[560px] bg-ocean-200/40 rounded-full filter blur-[90px] animate-blob"
