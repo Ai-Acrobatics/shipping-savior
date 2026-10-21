@@ -40,7 +40,7 @@ interface RunOpts {
   system: string;
   messages: ChatMessage[];
   tools: Anthropic.Tool[];
-  executeTool: (name: string, input: Record<string, any>) => unknown;
+  executeTool: (name: string, input: Record<string, any>) => unknown | Promise<unknown>;
   maxIterations?: number;
   maxTokens?: number;
 }
@@ -114,7 +114,7 @@ async function runOpenAiCompatible(
       } catch {
         // malformed args — run the tool with empty input and let it error meaningfully
       }
-      const result = opts.executeTool(call.function.name, input);
+      const result = await opts.executeTool(call.function.name, input);
       toolSteps.push({ tool: call.function.name, input, result });
       messages.push({
         role: 'tool',
@@ -191,7 +191,7 @@ async function runGemini(opts: RunOpts, apiKey: string, model: string): Promise<
     const responseParts: Array<Record<string, unknown>> = [];
     for (const p of functionCalls) {
       const { name, args } = p.functionCall as { name: string; args?: Record<string, any> };
-      const result = opts.executeTool(name, args ?? {});
+      const result = await opts.executeTool(name, args ?? {});
       toolSteps.push({ tool: name, input: args ?? {}, result });
       responseParts.push({ functionResponse: { name, response: { result } } });
     }
@@ -232,7 +232,7 @@ async function runClaude(opts: RunOpts, apiKey: string, model: string): Promise<
 
     const toolResults: Anthropic.ToolResultBlockParam[] = [];
     for (const block of toolUseBlocks) {
-      const result = opts.executeTool(block.name, block.input as Record<string, any>);
+      const result = await opts.executeTool(block.name, block.input as Record<string, any>);
       toolSteps.push({ tool: block.name, input: block.input as Record<string, unknown>, result });
       toolResults.push({
         type: 'tool_result',

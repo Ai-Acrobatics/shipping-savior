@@ -5,6 +5,8 @@ import { runChatWithFallback } from '@/lib/ai/chat-providers';
 import * as fs from 'fs';
 import * as path from 'path';
 import Fuse from 'fuse.js';
+import { auth } from '@/lib/auth';
+import { loadShippingHistory } from '@/lib/shipments/history-stats';
 
 // ─── Rate limiting ───────────────────────────────────────────────────────────
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -516,6 +518,38 @@ const tools: Anthropic.Tool[] = [
 ];
 
 // ─── Execute a tool call ─────────────────────────────────────────────────────
+// AI-8060: "AI memory" — the org's own shipping history. Only offered to
+// signed-in users with an org; orgId comes from the session, never the model.
+const historyTool: Anthropic.Tool = {
+  name: 'get_my_shipping_history',
+  description:
+    "Summarize the signed-in organization's OWN shipment history: totals, status mix, top carriers (with delay rates), top lanes, average planned transit days, and the most recent shipments. Use for any question about the user's past or current shipments, volumes, carriers or lanes.",
+  input_schema: {
+    type: 'object' as const,
+    properties: {
+      windowDays: { type: 'number', description: 'Look-back window in days (default 90, max 730)' },
+      carrier: { type: 'string', description: 'Optional carrier name filter (e.g., "Maersk")' },
+      lane: { type: 'string', description: 'Optional port filter, matches origin or destination (e.g., "Rotterdam")' },
+      status: {
+        type: 'string',
+        description: 'Optional shipment status filter',
+        enum: ['booked', 'in_transit', 'at_port', 'customs', 'delivered', 'delayed', 'arrived', 'pending'],
+      },
+    },
+    required: [],
+  },
+};
+
+async function executeHistoryTool(orgId: string | null, input: Record<string, any>) {
+  if (!orgId) return { error: 'Sign in to an organization to see your shipping history.' };
+  try {
+    return await loadShippingHistory(orgId, input);
+  } catch (err) {
+    console.error('get_my_shipping_history failed:', err);
+    return { error: 'Shipping history is temporarily unavailable.' };
+  }
+}
+
 function executeTool(name: string, input: Record<string, any>): any {
   switch (name) {
     case 'search_hts':
@@ -546,6 +580,7 @@ const SYSTEM_PROMPT = `You are Shipping Savior AI — an expert logistics assist
 - Carrier schedule comparisons
 - FTZ savings analysis
 - Port and route information
+- The user's own shipping history (volumes, carriers, lanes, delays) when they are signed in
 
 You have access to real-time tools to look up data. Always use your tools to provide accurate, data-backed answers rather than guessing. When users ask about shipping costs, tariffs, or routes, use the appropriate tool.
 
@@ -597,6 +632,16 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // AI-8060: anonymous chat stays allowed (marketing site); the history tool
+  // is only exposed when the session has an org.
+  let orgId: string | null = null;
+  try {
+    const session = await auth();
+    orgId = session?.user?.orgId ?? null;
+  } catch {
+    orgId = null;
+  }
+
   try {
     // AI-12777: provider-fallback tool loop (openrouter → gemini → claude → kimi)
     const { text: textContent, toolSteps } = await runChatWithFallback({
@@ -605,8 +650,9 @@ export async function POST(request: NextRequest) {
         role: m.role as 'user' | 'assistant',
         content: m.content,
       })),
-      tools,
-      executeTool,
+      tools: orgId ? [...tools, historyTool] : tools,
+      executeTool: (name, input) =>
+        name === historyTool.name ? executeHistoryTool(orgId, input) : executeTool(name, input),
       maxIterations: 5,
       maxTokens: 2048,
     });
