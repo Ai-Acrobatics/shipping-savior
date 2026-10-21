@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Ship, Package, MapPin, Clock, ChevronRight, ChevronDown,
@@ -266,6 +266,22 @@ export default function TrackingPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<ShipmentStatus | "all">("all");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // Deep link from the homepage "Track a shipment" bar (AI-8066):
+  // /dashboard/tracking?q=<container|reference|port>. Prefill the search and,
+  // when exactly one shipment matches, open its timeline straight away.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get("q")?.trim();
+    if (!q) return;
+    setSearch(q);
+    const needle = q.toLowerCase();
+    const matches = dashboardShipments.filter((s) =>
+      [s.id, s.reference, s.origin, s.destination, s.carrier].some((f) =>
+        f.toLowerCase().includes(needle),
+      ),
+    );
+    if (matches.length === 1) setSelectedId(matches[0].id);
+  }, []);
 
   const filtered = dashboardShipments.filter((s) => {
     const matchesSearch = search === "" ||
