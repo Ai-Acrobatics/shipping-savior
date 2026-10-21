@@ -31,6 +31,7 @@ import {
   Globe2,
   Radar,
   CircleCheck,
+  Search,
 } from "lucide-react";
 
 /* ──────────────────────── DATA ──────────────────────── */
@@ -406,7 +407,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.75, duration: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+            className="flex flex-col sm:flex-row gap-4 justify-center mb-8"
           >
             <Link
               href="/demo"
@@ -423,6 +424,43 @@ export default function Home() {
               Watch How It Works
             </Link>
           </motion.div>
+
+          {/* Track-a-shipment search (AI-8066 — Blake: "intuitive search
+              bar" on a simple homepage). Plain GET form so it works before
+              hydration; the tracking dashboard reads ?q and opens the match. */}
+          <motion.form
+            action="/dashboard/tracking"
+            method="get"
+            role="search"
+            aria-label="Track a shipment"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85, duration: 0.6 }}
+            className="mx-auto mb-12 flex w-full max-w-2xl items-center gap-2 rounded-full glass-premium p-1.5 pl-5 shadow-soft focus-within:ring-2 focus-within:ring-ocean-400/60"
+          >
+            <Search className="h-5 w-5 shrink-0 text-ocean-600" aria-hidden="true" />
+            <label htmlFor="hero-track-q" className="sr-only">
+              Container number, booking reference, or port
+            </label>
+            <input
+              id="hero-track-q"
+              name="q"
+              type="search"
+              size={1}
+              required
+              autoComplete="off"
+              enterKeyHint="search"
+              placeholder="Container or booking #"
+              className="min-w-0 flex-1 bg-transparent py-2.5 text-base text-navy-900 placeholder:text-navy-400 focus:outline-none"
+            />
+            <button
+              type="submit"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-navy-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-ocean-700"
+            >
+              Track
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </motion.form>
 
           {/* Hero chat */}
           <motion.div
